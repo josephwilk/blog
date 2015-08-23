@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: agile | Joseph Wilk]]></title>
+  <link href="http://blogjosephwilk.github.io/blog//agile/atom.xml" rel="self"/>
+  <link href="http://blogjosephwilk.github.io/blog/"/>
+  <updated>2015-08-23T18:47:52+02:00</updated>
+  <id>http://blogjosephwilk.github.io/blog/</id>
+  <author>
+    <name><![CDATA[Joseph Wilk]]></name>
+    <email><![CDATA[joe@josephwilk.net]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Story Smells: The Valueless Story]]></title>
+    <link href="http://blogjosephwilk.github.io/blog/agile/story-smells-the-valueless-story.html"/>
+    <updated>2011-03-10T16:00:17+01:00</updated>
+    <id>http://blogjosephwilk.github.io/blog/agile/story-smells-the-valueless-story</id>
+    <content type="html"><![CDATA[<blockquote><p>&ldquo;Why bother discussing the value or writing it down for the stories, everybody already knows what it is&rdquo;</p></blockquote>
+
+<h2>Problem</h2>
+
+<p>The value of a story to a stakeholder is not discussed or written on a card. The group participating in story writing workshop feel there is no point in dealing with the value since it seems obvious.</p>
+
+<p>To a degree this is true, we should (hopefully) already know the high level business values that we want to achieve before we try and write any story cards. Otherwise we may end up with a <a href="http://blog.nayima.be/2009/12/30/how-do-you-estimate-the-business-value-of-user-stories/">vomit of user stories</a></p>
+
+<p>Avoiding discussing or writing down the value on story cards can result in cards like this:</p>
+
+<p><img src="/images/blog/2011/02/IMG_0473.jpg" alt="" /></p>
+
+<h3>Whose value is it anyway?</h3>
+
+<p>While we may already know our business values when writing stories I tend to shift the discussion to the users value. We know what we want, now why is a user going to do what we want? Note that this shift does not always apply, sometimes we want to force a user to do something that they don&rsquo;t want to do (such as filling in a captcha).</p>
+
+<h2>Problems</h2>
+
+<h3>Not discussing the value</h3>
+
+<ul>
+<li><p>Miss uncovering differences in underlying assumptions about why this feature is wanted.</p>
+
+<ul>
+<li>I&rsquo;ve witnessed too many groups who when jogged to think about the value start asking the right questions and discovering underlying differences in otherwise implicit assumptions.</li>
+</ul>
+</li>
+<li><p>Create features you don&rsquo;t need </p>
+
+<ul>
+<li><a href="http://www.theregister.co.uk/2007/06/25/thoughtworks_req_manage/">popping the value stack</a> helps identify if you really need to build a feature.</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>Not writing the value on a story card</h3>
+
+<ul>
+<li><p>Difficultly Prioritizing cards</p>
+
+<ul>
+<li>Knowing the value to a role of a feature can help guide a cards prioritisation.</li>
+</ul>
+</li>
+<li><p>Physical cards on a board without any value, mean its not clear quickly why you are building this feature.</p>
+
+<ul>
+<li>When a card is being worked on by various roles knowing the value helps guide you to re-assess and ask relevant questions through the cards journey to being delivered.</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>Using high level obvious values</h3>
+
+<p>This problem can also be a symptom of expressing the value at too high a level. We all know we need to:</p>
+
+<ul>
+<li>Protect revenue</li>
+<li>Increase revenue</li>
+<li>Manage cost</li>
+<li>Increase brand value</li>
+<li>Make the product remarkable</li>
+<li>Provide more value to your customers</li>
+</ul>
+
+
+<p>So putting it as a value for a narrative feels contrived and pointless.</p>
+
+<h2>Solutions</h2>
+
+<h3>Ask &lsquo;why?&rsquo;</h3>
+
+<p>If a group feels the value is obvious they will have no trouble popping the why stack. Popping the why stack quickly uncovers questions and can lead to a refinement of what seemed obvious. At worst everyone in the group  has a shared understanding alining what they all saw as obvious.</p>
+
+<h3>Feature Injection</h3>
+
+<p>Try and structure narratives using the <a href="http://lizkeogh.com/2010/02/02/theyre-not-user-stories/">Feature injection format</a>:
+<img src="/images/blog/2011/02/IMG_0475.jpg" alt="" /></p>
+
+<p>Starting with the value as the very first thing you write can help ensure you don&rsquo;t progress onto the other points until you have at least discussed it.</p>
+
+<h3>Avoid obvious values</h3>
+
+<p>Make sure when you&rsquo;re discussing the value you drop down from the highest value to something that seems sensible to everyone.</p>
+
+<h2>But what if the value really is obvious.</h2>
+
+<p>Ok, sometimes a value does seem obvious, perhaps it&rsquo;s the same as a previous card. It is still important to write it down for the story and at least ask the question &lsquo;is this value obvious to everyone?&rsquo; and &lsquo;is this value meaningful to everyone?&rsquo;. Sometimes that is discussion enough.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Story smells: In order to do X I want X]]></title>
+    <link href="http://blogjosephwilk.github.io/blog/agile/story-smells-in-order-to-do-x-i-want-x.html"/>
+    <updated>2010-11-23T19:40:48+01:00</updated>
+    <id>http://blogjosephwilk.github.io/blog/agile/story-smells-in-order-to-do-x-i-want-x</id>
+    <content type="html"><![CDATA[<p>I keep coming across story cards written like this:</p>
+
+<p><img src="/images/blog/2010/11/card.png" alt="" /></p>
+
+<p>This is usually a tell tale sign that the <a href="http://www.theregister.co.uk/2007/06/25/thoughtworks_req_manage/">why stack was not popped</a>. The value (<em>In order to <value></em>) has been written at the lowest possible level of abstraction, the same as the feature (<em>I want <feature></em>). The card does not tell us why this feature is being built.</p>
+
+<p>If you find yourself writing cards like this take it as a chance to find out a bit more about why you are adding this feature. Hopefully you will uncover a more meaningful value that you can write on the card or perhaps discover that you don&rsquo;t really need this feature after all.</p>
+]]></content>
+  </entry>
+  
+</feed>

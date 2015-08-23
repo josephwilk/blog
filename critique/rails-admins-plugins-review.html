@@ -1,0 +1,548 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Rails Admins Plugins Review - Joseph Wilk</title>
+  <meta name="author" content="Joseph Wilk">
+
+  
+  <meta name="description" content="A brief examination of some of the major Admin plugins for rails. Lipsiaadmin
+AutoAdmin
+ActiveScaffold
+Hobo
+Streamlined Lipsiadmin http://rails. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blogjosephwilk.github.io/blog/critique/rails-admins-plugins-review.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Joseph Wilk" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<script src="http://disqus.com/forums/josephwilk/embed.js"></script>
+<link href="http://fonts.googleapis.com/css?family=Bevan" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-3020740-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <img src="/images/joe_small.jpg" style="position:relative;border-radius: 8px;margin-right: 5px;border-style: solid;border-width: 1px;border-color: #DDD;" height="60" alt="Joseph Wilk">
+  <span style="display:inline-block">
+    <h1><a href="/">Joseph Wilk</a></h1>
+    <h2>Programming bits and bobs</h2>
+  </span>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blogjosephwilk.github.io/blog" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+ <li><a href="/">Home</a></li>
+ <li><a href="/about">About</a></li>
+ <li><a href="/speaking">Speaking</a></li>
+ <li><a href="/contact">Contact</a></li>
+ <li><a href="/archives">Archives</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Rails Admins Plugins Review</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-02-14T13:04:10+01:00" pubdate data-updated="true">Feb 14<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>A brief examination of some of the major Admin plugins for rails.</p>
+
+<ul>
+<li><p>Lipsiaadmin</p></li>
+<li><p>AutoAdmin</p></li>
+<li><p>ActiveScaffold</p></li>
+<li><p>Hobo</p></li>
+<li><p>Streamlined</p></li>
+</ul>
+
+
+<h3>Lipsiadmin</h3>
+
+<p><a href="http://rails.lipsiasoft.com/wiki/lipsiadmin">http://rails.lipsiasoft.com/wiki/lipsiadmin</a></p>
+
+<p><strong>Google group Members</strong><strong>: </strong>No group</p>
+
+<p><strong>Live Demo:</strong> <a href="http://demoadmin.lipsiasoft.org/admin/">http://demoadmin.lipsiasoft.org/admin/</a></p>
+
+<p><strong>Sample Projects: </strong>None</p>
+
+<p>This admin framework mixes Ajax/JavaScript (library <a href="http://extjs.com/">Ext 2.0</a> views) and old school HTML. The interface is presented in an application style reminiscent of Microsoft Outlook.</p>
+
+<p><img src="/wp-content/uploads/2008/02/lipsiaadmin2.png" alt="Lipsia Admin" /></p>
+
+<p><strong>Feature set</strong></p>
+
+<ul>
+<li><p><a href="http://extjs.com/">http://extjs.com/</a> JavaScript library.</p></li>
+<li><p>Generator Admin code.</p></li>
+<li><p>Permissions support</p></li>
+<li><p>Live search</p></li>
+<li><p>Creation of menus within migrations.</p></li>
+</ul>
+
+
+<p><strong>Weaknesses</strong></p>
+
+<ul>
+<li><p>Community seems non-existent</p></li>
+<li><p>Sparse documentation</p></li>
+</ul>
+
+
+<hr />
+
+<h3>AutoAdmin</h3>
+
+<p><a href="http://rails.lipsiasoft.com/wiki/lipsiadmin">http://code.trebex.net/auto-admin</a></p>
+
+<p><strong>Google group Members</strong><strong> (</strong><a href="http://groups.google.com/group/rails-autoadmin">http://groups.google.com/group/rails-autoadmin</a><strong>):</strong>  <strong>37</strong></p>
+
+<p><strong>Live Demo:</strong> None</p>
+
+<p><strong>Sample Projects: </strong>None</p>
+
+<p>Heavily influenced by Djangos admin system in both theme and with the definition of admin display configuration within in models. Sub-projects within Django have already started to move away from this approach (<a href="http://code.djangoproject.com/wiki/NewformsAdminBranch">newforms-admin</a>).</p>
+
+<p>Its goal is to generate views you otherwise wouldn&rsquo;t bother to create.</p>
+
+<h3><img src="/wp-content/uploads/2008/02/autoadmin.png" alt="AutoAdmin" /></h3>
+
+<p><strong>Feature set</strong></p>
+
+<ul>
+<li><p>Themes</p></li>
+<li><p>Basic Access Control &ndash; All or Nothing</p></li>
+</ul>
+
+
+<p><strong>Weaknesses</strong></p>
+
+<ul>
+<li><p>Lacks reliable set of Tests</p></li>
+<li><p>Admin display configuration is stored within Models (Django branches <a href="http://code.djangoproject.com/wiki/NewformsAdminBranch">newforms-admin</a> have already moved aways from this)</p></li>
+<li><p>Problems with editable sublists</p></li>
+<li><p>Access control does not support more complex use cases.</p></li>
+</ul>
+
+
+<hr />
+
+<h3>ActiveScaffold (Version <strong>1.1.1</strong>)</h3>
+
+<p><a href="http://www.activescaffold.com">http://www.activescaffold.com</a></p>
+
+<p><strong>Google group Members</strong><strong> (</strong><a href="http://groups.google.com/group/activescaffold">http://groups.google.com/group/activescaffold</a><strong>):</strong> 1075</p>
+
+<p><strong>Live Demo</strong>: <a href="http://demo.activescaffold.com/">http://demo.activescaffold.com/</a></p>
+
+<p><strong>Sample Projects: (SVN)</strong><a href="http://activescaffold.googlecode.com/svn/applications/demo/"> http://activescaffold.googlecode.com/svn/applications/demo/</a></p>
+
+<p>A Ajax driven admin system which promotes itself on being both configurable and customizable.</p>
+
+<p>Configuration: <em>&ldquo;throwing flags and setting options and manipulating the setup.&rdquo;</em></p>
+
+<p>Customizing: <em>&ldquo;defining conventional methods or .rhtml overrides that it will intelligently use when available.&rdquo;</em></p>
+
+<p><img src="/wp-content/uploads/2008/02/activescaffold.png" alt="ActiveScaffold" /></p>
+
+<p>Admin customisation is performed in the controller.</p>
+
+<p><strong>Feature Set </strong></p>
+
+<ul>
+<li><p>Installed through plugin</p></li>
+<li><p>Ajax driven interface</p></li>
+<li><p>Embed ActiveScaffold like a widget in your web page.</p></li>
+<li><p>High quality Documentation</p></li>
+<li><p>Supports Third Party plugins within active scaffold : <a href="http://wiki.activescaffold.com/wiki/published/ThirdPartyPlugins">http://wiki.activescaffold.com/wiki/published/ThirdPartyPlugins</a></p></li>
+<li><p>Graceful JavaScript degradation</p></li>
+<li><p>Hugely Customizable</p>
+
+<ul>
+<li><p>Admin interface</p>
+
+<ul>
+<li><p>Grouping form inputs</p></li>
+<li><p>Layout</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Guaranteed to work on Firefox 1+, IE 6+ and Safari 2+</p></li>
+</ul>
+
+
+<p><strong>Weaknesses</strong></p>
+
+<ul>
+<li><p>No concept of semantic markup for models so configuration takes over when a little magic could  help reduce  the work in some usages.</p></li>
+<li><p>Ajax interface is not amazingly usable.</p></li>
+</ul>
+
+
+<hr />
+
+<h3>Hobo (version 0.7.2)</h3>
+
+<p><a href="http://hobocentral.net/">http://hobocentral.net/</a></p>
+
+<p><strong>Google group Members</strong><strong>:</strong> No Group</p>
+
+<p><strong>Live Demo:</strong> None</p>
+
+<p><strong>Sample Projects:</strong> <a href="http://hobocentral.net/blog/demos/">http://hobocentral.net/blog/demos/</a></p>
+
+<p>The Web App Builder for Rails. Focuses on the models providing magic to make the admin appear.</p>
+
+<p><img src="/wp-content/uploads/2008/02/hoboadmin.png" alt="Hobo Admin" /></p>
+
+<p><strong>Feature Set</strong></p>
+
+<ul>
+<li><p>Installable through <em>gem</em></p></li>
+<li><p>DRYML &ndash; XML based markup language</p></li>
+<li><p>Migration generation from Models</p>
+
+<ul>
+<li><p>Define the table fields in the model</p></li>
+<li><p>High level semantic definitions for model fields (eg. email address)</p></li>
+</ul>
+</li>
+<li><p>Permission System</p></li>
+<li><p>Themes_
+_</p></li>
+<li><p>ActiveRecord extensions</p></li>
+</ul>
+
+
+<p><strong>Weaknesses</strong></p>
+
+<ul>
+<li><p>Documentation is a little incomplete.</p></li>
+<li><p>Screencasts are out of date</p></li>
+</ul>
+
+
+<hr />
+
+<h3>Streamlined (version 0.9)</h3>
+
+<p><a href="http://streamlinedframework.org/">http://streamlinedframework.org/</a></p>
+
+<p><strong>Google group Members</strong><strong> (</strong><a href="http://groups.google.com/group/streamlined">http://groups.google.com/group/streamlined</a> <strong>):</strong> 474</p>
+
+<p><strong>Live Demo:</strong> None</p>
+
+<p><strong>Sample Projects</strong>: <a href="http://trac.streamlinedframework.org/wiki/SampleProject">http://trac.streamlinedframework.org/wiki/SampleProject</a></p>
+
+<p>Streamlined provides an instant, production-ready UI for your ActiveRecord model. It aims to bring the declarative goodness of ActiveRecord to the view tie. It has a nice balance of ajax functionality with traditional page loads.</p>
+
+<p><img src="/wp-content/uploads/2008/02/streamlined-admin.png" alt="Streamlined admin" /></p>
+
+<p><strong>Feature Set</strong> <code>
+</code></p>
+
+<ul>
+<li><p>Separates Admin declarations and Model</p></li>
+<li><p>In place editing (edit content in listing)</p></li>
+<li><p>Export content to XML, CSV, and JSON</p></li>
+<li><p>Pluggable CSS styling</p></li>
+<li><p>Live data filtering</p></li>
+<li><p>Advanced Filtering</p></li>
+<li><p>Ajax-powered widgets and transitions</p></li>
+<li><p>Views are can be overwritten Globally and per model</p></li>
+<li><p>Good documentation + screencasts</p></li>
+<li><p>IBM guides &ndash; <a href="http://www.ibm.com/developerworks/java/library/j-cb09056/">http://www.ibm.com/developerworks/java/library/j-cb09056/</a></p></li>
+</ul>
+
+
+<p><strong>Weaknesses</strong></p>
+
+<ul>
+<li><p>No attaching of semantic markup to model fields.</p></li>
+<li><p>The documentation (while improving) is a little patchy in places.</p></li>
+</ul>
+
+
+<h2>Conclusions (winners)</h2>
+
+<p><strong>ActiveScaffold </strong></p>
+
+<p>If your goal is to have as much <strong>flexibility</strong> as possible within your admin then ActiveScaffold is you best candidate.  It is incredibly versatile and the  <strong>documentation</strong> is a pleasure to work through. With developers <strong>contributing plugins</strong> its future growth looks promising.</p>
+
+<p><strong>Hobo </strong></p>
+
+<p>If your looking for an admin system and a <strong>framework </strong> and are less concerned about the configuration  of the admin then Hobo is your is candidate. The power to attach <strong>semantic data</strong> <strong>to models</strong> has great potential for complex forms elements being generated automatically. Currently only the &lsquo;email&rsquo; type is provided so this feature is yet to take off.  Be prepared to deal with <strong>incomplete documentation</strong>. The Mirc #hobo group and the <a href="http://hobocentral.net/forum/">hobo forums</a> are happy to help if you get stuck.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">admin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-02-14T13:04:10+01:00" pubdate data-updated="true">Feb 14<span>th</span>, 2008</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/critique'>critique</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blogjosephwilk.github.io/blog/critique/rails-admins-plugins-review.html" data-via="josephwilk" data-counturl="http://blogjosephwilk.github.io/blog/critique/rails-admins-plugins-review.html" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="small"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/critique/automatic-admin-systems-semantics-with-rails-and-django.html" title="Previous Post: Automatic Admin Systems - Semantics with Rails & Django">&laquo; Automatic Admin Systems - Semantics with Rails & Django</a>
+      
+      
+        <a class="basic-alignment right" href="/projects/javascript-acting-as-a-robotic-agent.html" title="Next Post: JavaScript Acting as a Robotic Agent ">JavaScript Acting as a Robotic Agent  &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/clojure/overtone-driving-minecraft.html">Clojure and Overtone driving Minecraft</a>
+      </li>
+    
+      <li class="post">
+        <a href="/art/live-coding-repl-electric.html">Live Coding - Repl Electric</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/creative_machines.html">Creative Machines</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/sounds-of-the-human-brain.html">Sounds of the human brain</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/building-clojure-services-at-scale.html">Building Clojure services at scale</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/creating-instruments-with-overtone.html">Creating sampled instruments with Overtone</a>
+      </li>
+    
+      <li class="post">
+        <a href="/elixir/sets-in-elixir.html">Sets in Elixir</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/isolating-external-dependencies-in-clojure.html">Isolating external dependencies in Clojure</a>
+      </li>
+    
+      <li class="post">
+        <a href="/presentations/a-developers-guide-to-creating-presentations.html">A developers guide to creating presentations</a>
+      </li>
+    
+      <li class="post">
+        <a href="/software-craftmanship/the-aesthetics-of-density.html">The Aesthetics of Density</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/josephwilk">@josephwilk</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'josephwilk',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Joseph Wilk -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'josephwilk';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blogjosephwilk.github.io/blog/critique/rails-admins-plugins-review.html';
+        var disqus_url = 'http://blogjosephwilk.github.io/blog/critique/rails-admins-plugins-review.html';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,412 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Testing Javascript with Cucumber in Javascript - Joseph Wilk</title>
+  <meta name="author" content="Joseph Wilk">
+
+  
+  <meta name="description" content="I recently created an adapter in Cucumber which provides support for writing step definitions in Javascript. So as a Javascript programmer you can &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blogjosephwilk.github.io/blog/ruby/testing-javascript-with-cucumber-in-javascript.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Joseph Wilk" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<script src="http://disqus.com/forums/josephwilk/embed.js"></script>
+<link href="http://fonts.googleapis.com/css?family=Bevan" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-3020740-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <img src="/images/joe_small.jpg" style="position:relative;border-radius: 8px;margin-right: 5px;border-style: solid;border-width: 1px;border-color: #DDD;" height="60" alt="Joseph Wilk">
+  <span style="display:inline-block">
+    <h1><a href="/">Joseph Wilk</a></h1>
+    <h2>Programming bits and bobs</h2>
+  </span>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blogjosephwilk.github.io/blog" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+ <li><a href="/">Home</a></li>
+ <li><a href="/about">About</a></li>
+ <li><a href="/speaking">Speaking</a></li>
+ <li><a href="/contact">Contact</a></li>
+ <li><a href="/archives">Archives</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Testing Javascript With Cucumber in Javascript</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-22T10:55:42+02:00" pubdate data-updated="true">May 22<span>nd</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I recently created an adapter in Cucumber which provides support for writing step definitions in Javascript. So as a Javascript programmer you can test your code with Cucumber without having to write any Ruby.</p>
+
+<p>It does this through TheRubyRacer (<a href="http://github.com/cowboyd/therubyracer">http://github.com/cowboyd/therubyracer</a> written by Charles Lowell) which provides Ruby bindings to V8 (<a href="http://code.google.com/p/v8/">http://code.google.com/p/v8/</a>).</p>
+
+<p>Lets look at an example:</p>
+
+<h3>The Feature</h3>
+
+<pre><code>Feature: Fibonacci
+  In order to calculate super fast fibonacci series
+  As a Javascriptist
+  I want to use Javascript for that
+
+  @fibonacci
+  Scenario Outline: Series
+    When I ask Javascript to calculate fibonacci up to &lt;n&gt;
+    Then it should give me &lt;series&gt;
+
+    Examples:
+      | n   | series                                 |
+      | 1   | []                                     |
+      | 2   | [1, 1]                                 |
+      | 3   | [1, 1, 2]                              |
+      | 4   | [1, 1, 2, 3]                           |
+      | 6   | [1, 1, 2, 3, 5]                        |
+      | 9   | [1, 1, 2, 3, 5, 8]                     |
+      | 100 | [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89] |
+</code></pre>
+
+<h3>The Step Definitions</h3>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Before</span><span class="p">(</span><span class="o">[</span><span class="s1">&#39;@fibonacci&#39;</span><span class="o">]</span><span class="p">,</span> <span class="n">function</span><span class="p">(){</span>
+</span><span class='line'>  <span class="n">fibResult</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">When</span><span class="p">(</span><span class="sr">/^I ask Javascript to calculate fibonacci up to (\d+)$/</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">n</span><span class="p">){</span>
+</span><span class='line'>  <span class="n">assertEqual</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">fibResult</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">fibResult</span> <span class="o">=</span> <span class="n">fibonacciSeries</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Then</span><span class="p">(</span><span class="sr">/^it should give me (\[.*\])$/</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">expectedResult</span><span class="p">){</span>
+</span><span class='line'>  <span class="n">assertEqual</span><span class="p">(</span><span class="n">expectedResult</span><span class="p">,</span> <span class="n">fibResult</span><span class="p">)</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>The Cucumber Javascript API</h3>
+
+<p>The best reference for the Javascript Api is the examples within the Cucumber source:
+<a href="http://github.com/aslakhellesoy/cucumber/tree/master/examples/javascript/features/">http://github.com/aslakhellesoy/cucumber/tree/master/examples/javascript/features/</a></p>
+
+<p>I have tried to make the Javascript Api as close to the Cucumber Ruby Api as possible. However it currently does not support a couple of things the Ruby version is capable of: Calling step definitions from within step definitions with multiline arguments and giving line reporting on step definitions.</p>
+
+<h4>Loading your Javascript code into the World</h4>
+
+<p>The most important difference to take note of in the Javascript Api compared with the Ruby one is how we load code into the World so it is in scope within the step definitions.</p>
+
+<p>Given the following folder structure:</p>
+
+<pre><code>my_js_project/lib/code_lives_here.js
+my_js_project/features/support/env.js
+my_js_project/features/my_feature.feature
+</code></pre>
+
+<p>Within our features/support/env.js setup file we would have:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">//</span><span class="no">Cucumber</span> <span class="n">resolves</span> <span class="n">the</span> <span class="n">files</span> <span class="n">relative</span> <span class="n">to</span> <span class="n">the</span> <span class="n">folder</span> <span class="n">that</span> <span class="n">contains</span> <span class="n">the</span> <span class="n">features</span> <span class="n">folder</span><span class="o">.</span>
+</span><span class='line'><span class="no">World</span><span class="p">(</span><span class="o">[</span><span class="s1">&#39;lib/code_lives_here.js&#39;</span><span class="o">]</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The code within code_lives_here.js would be availabe in the step definitions.</p>
+
+<h3>Full Javascript Example</h3>
+
+<p>You can see the full example in the Cucumber project:</p>
+
+<p><a href="http://github.com/aslakhellesoy/cucumber/tree/master/examples/javascript/features/">http://github.com/aslakhellesoy/cucumber/tree/master/examples/javascript/features/</a></p>
+
+<h3>Feedback</h3>
+
+<p>This Javascript Cucumber adapter represents an experiment to see how well we can use Cucumber through Javascript and V8. I would love to hear ideas and feedback on the Javascript Api.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">admin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-22T10:55:42+02:00" pubdate data-updated="true">May 22<span>nd</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/ruby'>ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blogjosephwilk.github.io/blog/ruby/testing-javascript-with-cucumber-in-javascript.html" data-via="josephwilk" data-counturl="http://blogjosephwilk.github.io/blog/ruby/testing-javascript-with-cucumber-in-javascript.html" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="small"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/ruby/specing-cucumber-step-definitions.html" title="Previous Post: Specing Cucumber Step Definitions">&laquo; Specing Cucumber Step Definitions</a>
+      
+      
+        <a class="basic-alignment right" href="/ruby/rocket-fuelled-cucumbers.html" title="Next Post: Rocket Fuelled Cucumbers">Rocket Fuelled Cucumbers &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/clojure/overtone-driving-minecraft.html">Clojure and Overtone driving Minecraft</a>
+      </li>
+    
+      <li class="post">
+        <a href="/art/live-coding-repl-electric.html">Live Coding - Repl Electric</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/creative_machines.html">Creative Machines</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/sounds-of-the-human-brain.html">Sounds of the human brain</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/building-clojure-services-at-scale.html">Building Clojure services at scale</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/creating-instruments-with-overtone.html">Creating sampled instruments with Overtone</a>
+      </li>
+    
+      <li class="post">
+        <a href="/elixir/sets-in-elixir.html">Sets in Elixir</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/isolating-external-dependencies-in-clojure.html">Isolating external dependencies in Clojure</a>
+      </li>
+    
+      <li class="post">
+        <a href="/presentations/a-developers-guide-to-creating-presentations.html">A developers guide to creating presentations</a>
+      </li>
+    
+      <li class="post">
+        <a href="/software-craftmanship/the-aesthetics-of-density.html">The Aesthetics of Density</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/josephwilk">@josephwilk</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'josephwilk',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Joseph Wilk -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'josephwilk';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blogjosephwilk.github.io/blog/ruby/testing-javascript-with-cucumber-in-javascript.html';
+        var disqus_url = 'http://blogjosephwilk.github.io/blog/ruby/testing-javascript-with-cucumber-in-javascript.html';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,541 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Recurrent neural networks in Ruby - Joseph Wilk</title>
+  <meta name="author" content="Joseph Wilk">
+
+  
+  <meta name="description" content="We look at how neural networks work, what is different about a recurrent networks and a library which allows us to use recurrent networks in Ruby ( &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blogjosephwilk.github.io/blog/ruby/recurrent-neural-networks-in-ruby.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Joseph Wilk" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<script src="http://disqus.com/forums/josephwilk/embed.js"></script>
+<link href="http://fonts.googleapis.com/css?family=Bevan" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-3020740-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <img src="/images/joe_small.jpg" style="position:relative;border-radius: 8px;margin-right: 5px;border-style: solid;border-width: 1px;border-color: #DDD;" height="60" alt="Joseph Wilk">
+  <span style="display:inline-block">
+    <h1><a href="/">Joseph Wilk</a></h1>
+    <h2>Programming bits and bobs</h2>
+  </span>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blogjosephwilk.github.io/blog" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+ <li><a href="/">Home</a></li>
+ <li><a href="/about">About</a></li>
+ <li><a href="/speaking">Speaking</a></li>
+ <li><a href="/contact">Contact</a></li>
+ <li><a href="/archives">Archives</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Recurrent Neural Networks in Ruby</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-29T15:00:30+01:00" pubdate data-updated="true">Oct 29<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>We look at how neural networks work, what is different about a recurrent networks and a library which allows us to use recurrent networks in Ruby (<a href="https://github.com/josephwilk/tlearn-rb">tlearn-rb</a>).</p>
+
+<h2>What the heck is a Recurrent Network?</h2>
+
+<p>First lets look briefly at how a neural network works:</p>
+
+<h2>Neural Networks</h2>
+
+<p>Neural networks use the model of neurones in the human brain. Put very simply the artifical neuron given some inputs (the dendrites) sums them to produce an output (the neuron&rsquo;s axon) which is usually passed through some non-linear function. The sum of the nodes is usually weighted.</p>
+
+<p><img src="/images/blog/2012/10/image1.jpg" alt="" /></p>
+
+<p>By taking a set of training data we can teach a neural network such that it can be applied to new data outside of the training set. For example we could have as inputs the states of a chess board and the output as a rank for how good the position is for white. We could after training, input an unseen board state and as output get a rank for how effective the position is for white.</p>
+
+<p>As a neural network is trained it builds up the set of weights for the connections between nodes. Through many training iterations comparing expected outputs and the inputs these weights are built up.</p>
+
+<h4>Feedforward Neural Network</h4>
+
+<p><img src="/images/blog/2012/10/neural_network1.png" alt="" /></p>
+
+<p>In some problems the order in which the inputs arrive at the network is important. A normal network fails at this as there is no explicit sense of the relationships between sets of inputs.</p>
+
+<p>Lets consider an example. A network that is trained to detect how satisfying a word sounds to children.</p>
+
+<p>We feed our network all the syllables of a word and get an output:</p>
+
+<pre><code>["mon", "key"]
+["o", "key", "do", "key"]
+</code></pre>
+
+<p>When we feed the syllable <em>&ldquo;key&rdquo; </em>into the neural network it will always return the same output irrelevant of what came before it. This misses a relationship between the syllables of the word.</p>
+
+<p>A recurrent network aims to solve this problem by using both the input layer and the output layer to devise weights of the hidden layer.</p>
+
+<h4>Recurrent Network</h4>
+
+<p><img src="/images/blog/2012/10/recurrent_neural_network1.png" alt="" /></p>
+
+<p>Going back to our example:</p>
+
+<pre><code>["mon", "key"]
+["o", "key", "do", "key"]
+</code></pre>
+
+<p>When we feed <em>&ldquo;key&rdquo;</em> into the neural network the weight returned will be effected by what the previous input was, [&ldquo;mon&rdquo;] or [&ldquo;o&rdquo;, &ldquo;key&rdquo;, &ldquo;do&rdquo;].</p>
+
+<p>So our recurrent neural network would detect that &ldquo;o-key-do-key&rdquo; has a rhythm between the syllables that is appealing to children.</p>
+
+<p>A recurrent network allows us to decided when to wipe the previous output and start again. So in our example we would reset the output layer after we have fed in all the syllables of the word. We are interested in the relationships between syllables of a word, not syllables of different words.</p>
+
+<p><strong>So all this is a complicated way of saying Recurrent networks have state. Yes.</strong></p>
+
+<h2>Recurrent Networks in Ruby</h2>
+
+<p>There was no Ruby library that support Recurrent Networks. There was an <a href="http://leenissen.dk/fann/forum/viewtopic.php?t=47">attempt to add Recurrent networks</a> to <a href="http://leenissen.dk/fann/wp">FANN</a> (which has a <a href="http://ruby-fann.rubyforge.org/">ruby-fann gem</a> with bindings) but it was never merged in.</p>
+
+<p>So I adapted the <a href="http://crl.ucsd.edu/innate/tlearn.html">TLearn C library</a> which supports Recurrent Neural Networks and wrapped it in Ruby Love.</p>
+
+<p>It&rsquo;s having some trouble coming to terms with its new found rubyness, so there is a big alpha warning hanging on the door.</p>
+
+<h3>Installing TLearn</h3>
+
+<pre><code>gem install tlearn
+</code></pre>
+
+<h3>Using TLearn</h3>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;tlearn&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">tlearn</span> <span class="o">=</span> <span class="ss">TLearn</span><span class="p">:</span><span class="ss">:Run</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:number_of_nodes</span> <span class="o">=&gt;</span> <span class="mi">10</span><span class="p">,</span>
+</span><span class='line'>                    <span class="ss">:&#39;output_nodes&#39;</span>    <span class="o">=&gt;</span> <span class="mi">5</span><span class="o">.</span><span class="n">.</span><span class="mi">6</span><span class="p">,</span>
+</span><span class='line'>                    <span class="ss">:linear</span>          <span class="o">=&gt;</span> <span class="mi">7</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="p">,</span>
+</span><span class='line'>                    <span class="ss">:weight_limit</span>    <span class="o">=&gt;</span> <span class="mi">1</span><span class="o">.</span><span class="mo">00</span><span class="p">,</span>
+</span><span class='line'>                    <span class="ss">:connections</span>     <span class="o">=&gt;</span> <span class="o">[</span><span class="p">{</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">6</span>   <span class="o">=&gt;</span> <span class="mi">0</span><span class="p">},</span>
+</span><span class='line'>                                         <span class="p">{</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">4</span>   <span class="o">=&gt;</span> <span class="ss">:i1</span><span class="o">.</span><span class="n">.</span><span class="ss">:i3</span><span class="p">},</span>
+</span><span class='line'>                                         <span class="p">{</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">4</span>  <span class="o">=&gt;</span> <span class="mi">7</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="p">},</span>
+</span><span class='line'>                                         <span class="p">{</span><span class="mi">5</span><span class="o">.</span><span class="n">.</span><span class="mi">6</span>   <span class="o">=&gt;</span> <span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">4</span><span class="p">},</span>
+</span><span class='line'>                                         <span class="p">{</span><span class="mi">7</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span>  <span class="o">=&gt;</span> <span class="o">[</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">4</span><span class="p">,</span> <span class="p">{</span><span class="ss">:min</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="ss">:max</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">},</span> <span class="ss">:fixed</span><span class="p">,</span> <span class="ss">:&#39;one_to_one&#39;</span><span class="p">}</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">training_data</span> <span class="o">=</span> <span class="o">[</span><span class="p">{</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">]</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">}</span><span class="o">]</span><span class="p">,</span>
+</span><span class='line'>                 <span class="o">[</span><span class="p">{</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span>  <span class="o">=&gt;</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="o">]</span><span class="p">}</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">tlearn</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">training_data</span><span class="p">,</span> <span class="n">sweeps</span> <span class="o">=</span> <span class="mi">200</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">tlearn</span><span class="o">.</span><span class="n">fitness</span><span class="p">(</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="n">sweeps</span> <span class="o">=</span> <span class="mi">200</span><span class="p">)</span>
+</span><span class='line'><span class="c1"># =&gt; [0.2, 0.9]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Wait! What does that output mean?</h3>
+
+<p>In our example we had 2 outputs. The result we get from running the fitness test are the final weights:</p>
+
+<pre><code>[0.2, 0.9]
+</code></pre>
+
+<p>In this example we can think of the first output as rank 1, and the second output as rank 2. We look at which has the highest weighting in the fitness test, In this case it shows us that the input &ldquo;000&rdquo; has rank 2. So really we can map the output to many different classifications.</p>
+
+<h3>How is state reset?</h3>
+
+<p>Tlearn resets the state for each list of elements</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">[</span><span class="p">{</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">]</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">},</span> <span class="p">{</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">]</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">}</span><span class="o">]</span><span class="p">,</span>
+</span><span class='line'><span class="c1"># State will be reset here</span>
+</span><span class='line'><span class="o">[</span><span class="p">{</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span>  <span class="o">=&gt;</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="o">]</span><span class="p">}</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Wait! What the heck does all that config mean?</h3>
+
+<p>Part of the work of using Neural networks is finding the right configuration settings. TLearn supports a lot of different options. Lets look at what all that  configuration options means. (Checkout the <a href="https://github.com/josephwilk/tlearn-rb#configuring-tlearn-what-the-heck-does-all-that-config-mean">TLearn Github Readme</a> for full details of the config options):</p>
+
+<pre><code>:number_of_nodes =&gt; 10
+</code></pre>
+
+<p>The total number of nodes in this network (not including input nodes)</p>
+
+<pre><code>:'output_nodes'    =&gt; 5..6
+</code></pre>
+
+<p>Which nodes are used for output.</p>
+
+<pre><code>:linear          =&gt; 7..10
+</code></pre>
+
+<p>Nodes 7 to 10 are linear. This defines the activation function of the nodes. The activation function is how all the weights and input are combined for a node to create an output. Linear nodes output the inner-product of the input and weight vectors.</p>
+
+<pre><code>:weight_limit    =&gt; 1.00
+</code></pre>
+
+<p>Limit of 1.0 must not be exceeded in the random initialization of weights.</p>
+
+<h4>Connections</h4>
+
+<p>Connections specify how all the nodes of the neural network connect. This is the architecture of the neural network. Lets look at the connection settings:</p>
+
+<pre><code>{1..6   =&gt; 0}
+</code></pre>
+
+<p>Node 0 feeds into node 1 to 6. Node 0 is the bias node that is always 1.</p>
+
+<p><img src="/images/blog/2012/10/bias_node.png" alt="" /></p>
+
+<pre><code> {1..4   =&gt; :i1..:i3}
+</code></pre>
+
+<p>The input nodes 1-3 feed into each node from 1 to 4.
+<img src="/images/blog/2012/10/inputs1.png" alt="" /></p>
+
+<pre><code>{1..4  =&gt; 7..10},
+</code></pre>
+
+<p>Nodes nodes 7-10 feed into each node from 1 to 4
+<img src="/images/blog/2012/10/outout.png" alt="" /></p>
+
+<pre><code>{5..6   =&gt; 1..4},
+</code></pre>
+
+<p>Nodes nodes 1..4 feed into each node from 5 to 6
+<img src="/images/blog/2012/10/outes.png" alt="" /></p>
+
+<pre><code> {7..10  =&gt; [1..4, {:min =&gt; 1.0, :max =&gt; 1.0}, :fixed, :'one_to_one'}]
+</code></pre>
+
+<p>This connection contains a couple of special options. Rather than node 1-4 being fed into node 7, node 1 only connects with node 7, node 2 only with node 8, node 3 only with node 9, node 4 only with node 10. The <em>:&lsquo;one_to_one&rsquo;</em> option causes this.
+The weights of the connections between these nodes is <em>fixed</em> at 1.0 and never changes throughout training</p>
+
+<p><img src="/images/blog/2012/10/ins.png" alt="" /></p>
+
+<p>So put all these together our full neural network is:</p>
+
+<p><img src="/images/blog/2012/10/network-out1.png" alt="" /></p>
+
+<h3>Urmm&hellip; So how do I know what connection settings to use?</h3>
+
+<p>When it comes to deciding how many hidden nodes to have in your network there is a general rule:</p>
+
+<blockquote><p>The optimal number of hidden nodes is usually between the size of the input and size of the output layers</p></blockquote>
+
+<p>When deciding what connections to specify in your neural network you can start with everything connected to everything and slowly experiment with pruning connections/nodes which will increase the performance of your network without radically affecting the output efficiency.</p>
+
+<p>Its important to have the bias node connect to all the nodes in the hidden layer and output. This is required so a zero input to the neural network can generate outputs other than 0.</p>
+
+<p>With recurrent networks it is important to build connections and nodes in your network to maintain state. It is quite possible with TLearn to build a plain old neural network with no state.  It can be helpful like the example given above to draw out your state, hidden layer and output layer nodes and use this to decided how the network connects.</p>
+
+<p>How do you decide what activation functions to use? Linear, bipolar, etc.
+Checkout this great paper on the effectiveness of different functions: <a href="http://www.cscjournals.org/csc/manuscript/Journals/IJAE/volume1/Issue4/IJAE-26.pdf">http://www.cscjournals.org/csc/manuscript/Journals/IJAE/volume1/Issue4/IJAE-26.pdf</a></p>
+
+<p>One neat (crazy) experimental (crazy) path to explore is neural network toplogies generated from using a genetic algorithm to assess the effectiveness of the network: <a href="http://www.cs.ucf.edu/~kstanley/neat.html">http://www.cs.ucf.edu/~kstanley/neat.html</a>.</p>
+
+<h3>TLearn&rsquo;s Source</h3>
+
+<p>If you want to peer into the heart of TLearn the source code is on Github:</p>
+
+<pre><code>git clone git://github.com/josephwilk/tlearn-rb.git
+</code></pre>
+
+<h3>Further reading</h3>
+
+<ul>
+<li><a href="http://www.amazon.co.uk/gp/product/B00845UQL6/ref=as_li_ss_tl?ie=UTF8&amp;camp=1634&amp;creative=19450&amp;creativeASIN=B00845UQL6&amp;linkCode=as2&amp;tag=joswilblo-21">Introduction to the Math of Neural Networks</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=joswilblo-21&amp;l=as2&amp;o=2&amp;a=B00845UQL6" alt="" /></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">admin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-29T15:00:30+01:00" pubdate data-updated="true">Oct 29<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/ruby'>ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blogjosephwilk.github.io/blog/ruby/recurrent-neural-networks-in-ruby.html" data-via="josephwilk" data-counturl="http://blogjosephwilk.github.io/blog/ruby/recurrent-neural-networks-in-ruby.html" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="small"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/presentations/someone-is-wrong.html" title="Previous Post: Someone is wrong">&laquo; Someone is wrong</a>
+      
+      
+        <a class="basic-alignment right" href="/rhetorical-programming/why-are-you-shouting-programmer.html" title="Next Post: Why are you SHOUTING programmer?">Why are you SHOUTING programmer? &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/clojure/overtone-driving-minecraft.html">Clojure and Overtone driving Minecraft</a>
+      </li>
+    
+      <li class="post">
+        <a href="/art/live-coding-repl-electric.html">Live Coding - Repl Electric</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/creative_machines.html">Creative Machines</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/sounds-of-the-human-brain.html">Sounds of the human brain</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/building-clojure-services-at-scale.html">Building Clojure services at scale</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/creating-instruments-with-overtone.html">Creating sampled instruments with Overtone</a>
+      </li>
+    
+      <li class="post">
+        <a href="/elixir/sets-in-elixir.html">Sets in Elixir</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/isolating-external-dependencies-in-clojure.html">Isolating external dependencies in Clojure</a>
+      </li>
+    
+      <li class="post">
+        <a href="/presentations/a-developers-guide-to-creating-presentations.html">A developers guide to creating presentations</a>
+      </li>
+    
+      <li class="post">
+        <a href="/software-craftmanship/the-aesthetics-of-density.html">The Aesthetics of Density</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/josephwilk">@josephwilk</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'josephwilk',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Joseph Wilk -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'josephwilk';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blogjosephwilk.github.io/blog/ruby/recurrent-neural-networks-in-ruby.html';
+        var disqus_url = 'http://blogjosephwilk.github.io/blog/ruby/recurrent-neural-networks-in-ruby.html';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

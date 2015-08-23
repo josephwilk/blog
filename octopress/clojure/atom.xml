@@ -1,0 +1,1298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: clojure | Joseph Wilk]]></title>
+  <link href="http://josephwilk.github.io/blog//clojure/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io/blog/"/>
+  <updated>2015-08-23T19:25:41+02:00</updated>
+  <id>http://josephwilk.github.io/blog/</id>
+  <author>
+    <name><![CDATA[Joseph Wilk]]></name>
+    <email><![CDATA[joe@josephwilk.net]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Clojure and Overtone driving Minecraft]]></title>
+    <link href="http://josephwilk.github.io/blog/clojure/overtone-driving-minecraft.html"/>
+    <updated>2015-03-01T15:58:12+01:00</updated>
+    <id>http://josephwilk.github.io/blog/clojure/overtone-driving-minecraft</id>
+    <content type="html"><![CDATA[<p>Using Clojure we create interesting 3D shapes in Minecraft to the beat of music generated from Overtone.</p>
+
+<p>We achieve this by embedding a Clojure REPL inside a Java Minecraft server which loads Overtone and connects to an external Supercollider instance (What Overtone uses for sound).</p>
+
+<h3>Demo</h3>
+
+<iframe src="http://josephwilk.github.io/blog//player.vimeo.com/video/120907923" width="500" height="375" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+
+
+<p>Demo Source code: <a href="https://github.com/josephwilk/clj-minecraft/blob/master/src/cljminecraft/overtone.clj">https://github.com/josephwilk/clj-minecraft/blob/master/src/cljminecraft/overtone.clj</a></p>
+
+<h4>Tools</h4>
+
+<ul>
+<li>Java Minecraft server Craftbukkit/Spigot: <a href="http://www.spigotmc.org/">http://www.spigotmc.org/</a></li>
+<li>Minecraft client (requires purchase) <a href="https://minecraft.net">https://minecraft.net</a></li>
+<li>clj-minecraft Bukkit plugin: <a href="https://github.com/josephwilk/clj-minecraft">https://github.com/josephwilk/clj-minecraft</a></li>
+<li>Overtone (patched): <a href="https://github.com/josephwilk/overtone/tree/minecraft_overtone">https://github.com/josephwilk/overtone/tree/minecraft_overtone</a></li>
+<li>MUD (useful helpers for Overtone): <a href="https://github.com/josephwilk/mud">https://github.com/josephwilk/mud</a></li>
+<li>Supercollider: <a href="http://supercollider.sourceforge.net">http://supercollider.sourceforge.net</a></li>
+</ul>
+
+
+<p>(Dependent on your IDE of choice)</p>
+
+<ul>
+<li>Emacs &ndash; cider: <a href="https://github.com/clojure-emacs/cider">https://github.com/clojure-emacs/cider</a></li>
+<li>Vim   &ndash; fireplace: <a href="https://github.com/tpope/vim-fireplace">https://github.com/tpope/vim-fireplace</a></li>
+</ul>
+
+
+<h2>Building the world</h2>
+
+<p>We need to install Spigot which is an optimized version of the Craftbukkit Java Minecraft server and install clj-minecraft project as a plugin. Things are complicated by Bukkit no longer being registered in Maven.</p>
+
+<p>Read through the Makefile install:</p>
+
+<p><a href="https://github.com/josephwilk/clj-minecraft/blob/master/Makefile">https://github.com/josephwilk/clj-minecraft/blob/master/Makefile</a></p>
+
+<p>If your happy clone and run:</p>
+
+<p><code>
+git clone git@github.com:josephwilk/clj-minecraft.git &amp;&amp; make install
+</code></p>
+
+<p>Bukkit + clj-minecraft will be installed for you.</p>
+
+<h2>Running the world</h2>
+
+<p>You will need to edit the <code>minecraft/eula.txt</code> indicating you agree with the license. Then you can run your Minecraft server:</p>
+
+<p><code>
+java -XX:MaxPermSize=1G -jar spigot-1.8.jar
+</code></p>
+
+<h2>Seeing the world</h2>
+
+<p>Buy and install a Minecraft client: <a href="https://minecraft.net">https://minecraft.net</a></p>
+
+<p>Select >&ldquo;Multiplayer&rdquo; >&ldquo;Direct connect&rdquo; and enter the &ldquo;Server Address&rdquo; as localhost.</p>
+
+<h1>Bring music to the world</h1>
+
+<h3>Install and Boot Supercollider</h3>
+
+<p><a href="http://supercollider.github.io">http://supercollider.github.io</a></p>
+
+<p>Once installed:</p>
+
+<p>```</p>
+
+<h1>Find the Supercollider binary (scsynth)</h1>
+
+<p>$ sudo find /. -name &ldquo;scsynth&rdquo;</p>
+
+<p>/Applications/SuperCollider/SuperCollider.app/Contents/Resources/scsynth</p>
+
+<h1>Run Supercollider server</h1>
+
+<p>/Applications/SuperCollider/SuperCollider.app/Contents/Resources/scsynth -u 57110
+```</p>
+
+<h3>Speaking to the Minecraft REPL</h3>
+
+<p>clj-minecraft opens a REPL on localhost port 4005.  Using emacs and <code>cider</code> connect to this REPL instance.</p>
+
+<p>Boot and connect Overtone:</p>
+
+<p>```clojure
+(use &lsquo;overtone.core)</p>
+
+<p>(connect-external-server)  #=> :happy-hacking
+```</p>
+
+<h3>Interaction</h3>
+
+<p>Using <code>MUD</code> we have some useful wrappers around Overtone for scheduling functions on beats.</p>
+
+<p>To coordinate graphics and sound we schedule both within a single function.</p>
+
+<p>```clojure
+(require &lsquo;[mud.core :as mud])</p>
+
+<p>(defonce highhat-sample (freesound 53532))</p>
+
+<p>(def ride-trigger
+  (mud/on-beat-trigger 8       ;; Every 8th beat
+   (fn []</p>
+
+<pre><code> (highhat-sample)      ;; Play sample
+ (block 2 10 2 :grass) ;; Place a block into the Minecraft world
+</code></pre>
+
+<p>)))
+```</p>
+
+<p>Most functions that change the state of the Minecraft world need to be run in the main GUI thread. To achieve this we wrap any state changing function within  <code>ui-sync</code> (<a href="https://github.com/CmdrDats/clj-minecraft/blob/a3331e925b56becf88d9ef96cab225856e2f7ead/src/cljminecraft/bukkit.clj#L39-L42">https://github.com/CmdrDats/clj-minecraft/blob/a3331e925b56becf88d9ef96cab225856e2f7ead/src/cljminecraft/bukkit.clj#L39-L42</a>).</p>
+
+<p>For example a function to place a block into the Minecraft world:</p>
+
+<p>```clojure
+(import &lsquo;[org.bukkit Location Material])
+(require &rsquo;[cljminecraft.bukkit :as bk])
+(require &lsquo;[cljminecraft.items :as i])</p>
+
+<p>(def player (first (.getOnlinePlayers (bk/server))))</p>
+
+<p>(defn block
+  &ldquo;place a block relative to current players position
+  Example:</p>
+
+<pre><code>(block 2 10 2 :grass)
+</code></pre>
+
+<p>  &ldquo;
+  [x y z material]
+  (let [l (.getLocation player))</p>
+
+<pre><code>    m (i/get-material material)]
+(doto l
+  (.setX (+ x (.getX l)))
+  (.setY (+ y (.getY l)))
+  (.setZ (+ z (.getZ l))))
+(bk/ui-sync
+ @cljminecraft.core/clj-plugin
+ (fn []
+   (doto (.getBlock l)
+     (.setData 0)
+     (.setType (.getItemType m))
+     (.setData (.getData m)))))))
+</code></pre>
+
+<p>```</p>
+
+<p>For further documentation of whats possible, the Bukkit Java docs:
+<a href="https://hub.spigotmc.org/javadocs/bukkit/">https://hub.spigotmc.org/javadocs/bukkit/</a></p>
+
+<p>clj-minecaft has lots of helpers + examples: <a href="https://github.com/CmdrDats/clj-minecraft/tree/master/src/cljminecraft">https://github.com/CmdrDats/clj-minecraft/tree/master/src/cljminecraft</a></p>
+
+<h2>Fun</h2>
+
+<p>Create, play and share all the crazy things you can come up with using Clojure and Minecraft.</p>
+
+<p><img src="http://josephwilk.github.io/blog/images/pig_algo_rave.png" width="450" alt="The Pig Algo Rave"/></p>
+
+<p>For more live programming music and sound checkout my performances as Repl Electric: <a href="http://www.repl-electric.com">http://www.repl-electric.com</a></p>
+
+<h2>Credits</h2>
+
+<p>Built on the back of lots of great open source projects.
+Thanks to the Craftbukkit/Spigot contributors, <a href="https://twitter.com/cmdrdats">@CmdrDats</a> for clj-minecraft and <a href="https://twitter.com/samaaron">@samaaron</a> for Overtone and inspiring this crazy journey with the musical <a href="http://sonic-pi.net/">Sonic Pi</a> (which supports combining music and Minecraft on the RaspberryPi).</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Creative Machines]]></title>
+    <link href="http://josephwilk.github.io/blog/clojure/creative_machines.html"/>
+    <updated>2014-02-23T13:23:00+01:00</updated>
+    <id>http://josephwilk.github.io/blog/clojure/creative_machines</id>
+    <content type="html"><![CDATA[<p>When Alan Turing asked if a machine can be intelligent one aspect of this question focused on &ldquo;could machines be creative&rdquo;?</p>
+
+<p>Ada Lovelace seemed convinced that originality was not a feat a computer was capable of:</p>
+
+<blockquote><p>it can do whatever we know how to order it to perform,
+it has no pretensions whatever to originate anything</p></blockquote>
+
+<p>Before we outrightly dismiss the idea of creative machines do we even understand what creativity is?</p>
+
+<p>Join me on a journey examining these questions while also meeting a new generation of artists born through code. Looking into their hearts and brains examining different algorithms/techniques and there effectiveness at exhibiting creativity.</p>
+
+<p><strong>Decide for yourself, can machines be creative?</strong></p>
+
+<p>My Strangeloop talk: Creative Machines &ndash; <a href="http://www.infoq.com/presentations/ai-machine-creativity">http://www.infoq.com/presentations/ai-machine-creativity</a></p>
+
+<p>Slides: <script async class="speakerdeck-embed" data-id="9b2acfa020760131db422ebaf23009b5" data-ratio="1.33333333333333" src="http://josephwilk.github.io/blog//speakerdeck.com/assets/embed.js"></script></p>
+
+<p>Full source code: <a href="https://github.com/josephwilk/musical-creativity">https://github.com/josephwilk/musical-creativity</a></p>
+
+<h3>Continuing the Journey</h3>
+
+<p>In order to continue my research into creativity and music I&rsquo;ve started the project <a href="http://www.repl-electric.com">Repl Electric</a>.
+A space for humans and machines to learn and create music together.</p>
+
+<h2>Further Reading</h2>
+
+<ul>
+<li>The Creative Mind: Myths and Mechanisms <br/> <a href="http://www.amazon.com/The-Creative-Mind-Myths-Mechanisms/dp/0415314534">http://www.amazon.com/The-Creative-Mind-Myths-Mechanisms/dp/0415314534</a></li>
+<li>Explaining Creativity: The Science of Human Innovation <br/> <a href="http://www.amazon.com/gp/product/0199737576">http://www.amazon.com/gp/product/0199737576</a></li>
+<li>Artificial Intelligence and Literary Creativity: Inside the Mind of Brutus, A Storytelling Machine <br/> <a href="http://www.amazon.com/Artificial-Intelligence-Literary-Creativity-Storytelling/dp/0805819878">http://www.amazon.com/Artificial-Intelligence-Literary-Creativity-Storytelling/dp/0805819878</a>)</li>
+<li>Computer Models of Musical Creativity <br/> <a href="http://www.amazon.com/Computer-Models-Musical-Creativity-David/dp/0262033380">http://www.amazon.com/Computer-Models-Musical-Creativity-David/dp/0262033380</a></li>
+<li>Virtual Music: Computer Synthesis of Musical Style <br/> <a href="http://www.amazon.com/Virtual-Music-Computer-Synthesis-Musical/dp/0262532611/">http://www.amazon.com/Virtual-Music-Computer-Synthesis-Musical/dp/0262532611/</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Sounds of the human brain]]></title>
+    <link href="http://josephwilk.github.io/blog/clojure/sounds-of-the-human-brain.html"/>
+    <updated>2013-12-02T13:23:00+01:00</updated>
+    <id>http://josephwilk.github.io/blog/clojure/sounds-of-the-human-brain</id>
+    <content type="html"><![CDATA[<p>What does your brain sound like? Does it sound like &ldquo;Rise of the Valkyrie&rdquo; or more like &ldquo;Hit me baby one more time&rdquo;?</p>
+
+<h2>Step 1: Acquire a human brain (alive)</h2>
+
+<p><img src="http://josephwilk.github.io/blog/images/brain.png" width="200px"></p>
+
+<p>We are interested in capturing the brain waves. Specifically the:</p>
+
+<ul>
+<li>Delta waves: Deepest stages of sleep.</li>
+<li>Beta waves:  Normal waking consciousness.</li>
+<li>Alpha waves: Relaxation and meditation (creativity).</li>
+<li>Theta waves: REM sleep (dreams).</li>
+<li>Gamma waves: Hyper-alertness, perception, and integration of sensory input.</li>
+</ul>
+
+
+<h2>Step 2: EEG machine</h2>
+
+<p>I am using a EEG machine brought from <a href="http://www.neurosky.com">Neurosky</a> which is rated as Research grade (whatever that means).
+This measures voltage fluctuations resulting from ionic current flows within the neurons of the brain. While EEG machines are not the most accurate they are now reasonably cheap.</p>
+
+<h2>Step 3: EEG &ndash;> Overtone</h2>
+
+<p>In order to generate music I want to import the EEG brainwave data into <a href="http://overtone.github.io">Overtone</a>.</p>
+
+<p>We interact with the EEG machine over a serial port. The most mature library for this interface is in Python so there is a little jiggery pokery to get the data into Overtone.</p>
+
+<p><img src="http://josephwilk.github.io/blog/images/brain-diagram.png"></p>
+
+<h4>The Brainwave Poller</h4>
+
+<p>We use <a href="https://github.com/akloster/python-mindwave">https://github.com/akloster/python-mindwave</a> to interface with the EEG machines data.</p>
+
+<p>Writing all the data out to a <a href="http://www.gnu.org/software/libc/manual/html_node/FIFO-Special-Files.html">FIFO file</a> file as json.</p>
+
+<p>```python
+import re
+import time
+import json
+import unicodedata</p>
+
+<p>import gevent
+from gevent import monkey</p>
+
+<p>from pymindwave import headset
+from pymindwave.pyeeg import bin_power</p>
+
+<p>monkey.patch_all()</p>
+
+<h1>connect to the headset</h1>
+
+<p>hs = None
+hs = headset.Headset(&lsquo;/dev/tty.MindWave&rsquo;)
+hs.disconnect()
+time.sleep(1)
+print &lsquo;connecting to headset&hellip;&rsquo;
+hs.connect()
+time.sleep(1)
+while hs.get(&lsquo;state&rsquo;) != &lsquo;connected&rsquo;:</p>
+
+<pre><code>print hs.get('state')
+time.sleep(0.5)
+if hs.get('state') == 'standby':
+    hs.connect()
+    print 'retrying connecting to headset'
+</code></pre>
+
+<p>def raw_to_spectrum(rawdata):</p>
+
+<pre><code>flen = 50
+spectrum, relative_spectrum = bin_power(rawdata, range(flen), 512)
+return spectrum
+</code></pre>
+
+<p>while True:</p>
+
+<pre><code>t = time.time()
+waves_vector = hs.get('waves_vector')
+meditation = hs.get('meditation')
+attention = hs.get('attention')
+spectrum = raw_to_spectrum(hs.get('rawdata')).tolist()
+
+with open("/tmp/brain-data","w") as fp:
+    s = {'timestamp': t,
+         'meditation': meditation,
+         'attention': attention,
+         'raw_spectrum': spectrum,
+         'delta_waves': waves_vector[0],
+         'theta_waves': waves_vector[1],
+         'alpha_waves': (waves_vector[2]+waves_vector[3])/2,
+         'low_alpha_waves': waves_vector[2],
+         'high_alpha_waves': waves_vector[3],
+         'beta_waves': (waves_vector[4]+waves_vector[5])/2,
+         'low_beta_waves': waves_vector[4],
+         'high_beta_waves': waves_vector[5],
+         'gamma_waves': (waves_vector[6]+waves_vector[7])/2,
+         'low_gamma_waves': waves_vector[6],
+         'mid_gamma_waves': waves_vector[7]}
+
+    s = json.dumps(s)
+    fp.write(s)
+gevent.sleep(0.4)
+</code></pre>
+
+<p>```</p>
+
+<p>Reading from the FIFO file is simple in Clojure.</p>
+
+<p>```clojure
+(while true
+  (with-open [reader (clojure.java.io/reader &ldquo;/tmp/brain-data&rdquo;)]</p>
+
+<pre><code>(brainwave-&gt;music (json/decode (first (line-seq reader)) true))))
+</code></pre>
+
+<p>```</p>
+
+<h2>Step 3: Sonification</h2>
+
+<p>Sonification is the process of taking data and turning it into sound. Here is an example of the data we are now receiving:</p>
+
+<p>A single JSON brainwave packet:</p>
+
+<p><code>
+ {"gamma_waves": 95408,
+  "high_beta_waves": 205681,
+  "beta_waves": 293928,
+  "low_beta_waves": 382176,
+  "mid_gamma_waves": 84528,
+  "low_alpha_waves": 172417,
+  "delta_waves": 117933,
+  "low_gamma_waves": 106288,
+  "alpha_waves": 112605,
+  "theta_waves": 635628,
+  "high_alpha_waves": 52793,
+  "attention": 0,
+  "meditation": 0,
+  "timestamp": 1.375811275696894E9}
+</code></p>
+
+<p>We will focus on the beta-waves for simplicity. Beta-waves fall between 16.5–20Hz.</p>
+
+<p><img alt="EEG beta waves" src="http://josephwilk.github.io/blog/images/eeg_beta.png"></p>
+
+<p>Beta waves related to:</p>
+
+<ul>
+<li>Alertness</li>
+<li>Logic</li>
+<li>Critical reasoning</li>
+</ul>
+
+
+<p> We need to map a signal within 16.5-20Hz into the musical pitches of a sampled piano (21-108 pitches).</p>
+
+<p>```clojure
+(require &lsquo;[clojure.math.numeric-tower :as math])</p>
+
+<p>(defn linear-map [x0 x1 y0 y1 x]
+  (let [dydx (/ (&ndash; y1 y0) (&ndash; x1 x0))</p>
+
+<pre><code>    dx (- x x0)]  
+(+ y0 (* dydx dx))))
+</code></pre>
+
+<p>;; Piano range: 0..87
+;; Beta wave range: 16500..20000</p>
+
+<p>(defn beta-wave->pitch [signal] (&ndash;> (linear-map 16500 20000 21 108 signal) float math/round))</p>
+
+<p>(beta-wave->pitch 16500) ;&ndash;> 21
+(beta-wave->pitch 20000) ;&ndash;> 108
+```</p>
+
+<p>Now we extract the beta-waves from the brainwave data and play them. We play them live as they arrive rather than worrying about scheduling notes:</p>
+
+<p>```
+(use &lsquo;overtone.live)
+(use 'overtone.inst.sampled-piano)
+(require &rsquo;[cheshire.core :as json])</p>
+
+<p>(while true
+  (with-open [reader (clojure.java.io/reader &ldquo;/tmp/brain-data&rdquo;)]</p>
+
+<pre><code>(let [beta-wave (-&gt; (first (line-seq reader)) (json/decode true) :beta_waves)]
+  (println beta-wave)
+  (sampled-piano :note (beta-wave-&gt;pitch beta-wave) :sustain 0.2))))
+</code></pre>
+
+<p>```</p>
+
+<h1>Would you like to hear my brain?</h1>
+
+<p>The results, please listen to my brain.</p>
+
+<div><iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F108320470&amp;color=ff6600&amp;auto_play=false&amp;show_artwork=false"></iframe></div>
+
+
+<p>Not really music is it? With beta-waves we get a serious of high to low transitions. While we can control at what pitch the transitions occur by performing activities that shape our brain waves the transitions don&rsquo;t provide the order or structure we need to recognize this as music.</p>
+
+<h2>Brain controlled Dubstep</h2>
+
+<p>The only logical path left is to try and control Dubstep with our brain. Rather than generative music we can use our brain waves to control the tempo and volume of existing synthesized music.</p>
+
+<p>Here is a Dubstep synth taken from Overtone:</p>
+
+<p>```
+(use &lsquo;overtone.live)</p>
+
+<p>(defsynth dubstep [bpm 120 wobble 1 note 50 snare-vol 1 kick-vol 1 volume 1 out-bus 0]
+  (let [trig (impulse:kr (/ bpm 120))</p>
+
+<pre><code>    freq (midicps note)
+    swr (demand trig 0 (dseq [wobble] INF))
+    sweep (lin-exp (lf-tri swr) -1 1 40 3000)
+    wob (apply + (saw (* freq [0.99 1.01])))
+    wob (lpf wob sweep)
+    wob (* 0.8 (normalizer wob))
+    wob (+ wob (bpf wob 1500 2))
+    wob (+ wob (* 0.2 (g-verb wob 9 0.7 0.7)))
+
+    kickenv (decay (t2a (demand (impulse:kr (/ bpm 30)) 0 (dseq [1 0 0 0 0 0 1 0 1 0 0 1 0 0 0 0] INF))) 0.7)
+    kick (* (* kickenv 7) (sin-osc (+ 40 (* kickenv kickenv kickenv 200))))
+    kick (clip2 kick 1)
+
+    snare (* 3 (pink-noise) (apply + (* (decay (impulse (/ bpm 240) 0.5) [0.4 2]) [1 0.05])))
+    snare (+ snare (bpf (* 4 snare) 2000))
+    snare (clip2 snare 1)]
+
+   (out out-bus (* volume (clip2 (+ wob (* kick-vol kick) (* snare-vol snare)) 1)))))
+</code></pre>
+
+<p>```</p>
+
+<p>Once the synth is running we can send it control signals which will vary any of the properties defined in the arguments to the dubstep function:</p>
+
+<ul>
+<li>bpm</li>
+<li>wobble</li>
+<li>note</li>
+<li>snare-vol</li>
+<li>kick-vol</li>
+<li>volume</li>
+</ul>
+
+
+<p>```
+(def d (dubstep))</p>
+
+<p>(ctl d :snare-vol 0)
+(ctl d :kick-vol 0)
+(ctl d :wooble 0)
+(ctl d :bpm 20)
+(ctl d :v 0.2)
+```</p>
+
+<p>We again have to linearise the beta wave signal to the range of volume 0.0-1.1 and to the bpm 0-400.</p>
+
+<p>Now all thats left to do is connect it to our brain.</p>
+
+<p>Here&rsquo;s what brain controlled Dubstep sounds like:</p>
+
+<div><iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/119776808&amp;color=ff6600&amp;auto_play=false&amp;show_artwork=false"></iframe></div>
+
+
+<p>And for comparison what playing Go does to your brain activity (I turned the Dubstep down while playing, concentrating with that noise is hard):</p>
+
+<div><iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/122704897&amp;color=ff6600&amp;auto_play=false&amp;show_artwork=false"></iframe></div>
+
+
+<h1>Discovery through sound</h1>
+
+<p>Mapping brain waves into live music is a challenging task and while we can control music through an EEG machine that control is hard since we are using the brain to do many other things. What is interesting in the path of this experiment is not in fact the music generated but the use of sound to provide a way to hear the differences in datasets.</p>
+
+<p>Hearing the difference between play Go or sleeping, between young people or old people.</p>
+
+<p>Sound as a means of discovering patterns is a largely untapped source.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Building Clojure services at scale]]></title>
+    <link href="http://josephwilk.github.io/blog/clojure/building-clojure-services-at-scale.html"/>
+    <updated>2013-09-13T11:00:00+02:00</updated>
+    <id>http://josephwilk.github.io/blog/clojure/building-clojure-services-at-scale</id>
+    <content type="html"><![CDATA[<p>At SoundCloud I&rsquo;ve been experimenting over the last year with how we build the services that power a number of heavily loaded areas across our site. All these services have been built in Clojure with bits of Java tacked on the sides. Here are some of my personal thoughts on how to build Clojure services:</p>
+
+<h2>Netflix or Twitter</h2>
+
+<p><img alt="choose your own adventure" src="http://josephwilk.github.io/blog/images/adventure.jpg"></p>
+
+<p>At some-point when you require a sufficient level of scaling you turn to the open source work of <a href="https://github.com/twitter">Twitter</a> with <a href="http://twitter.github.io/finagle">Finagle</a> or <a href="https://github.com/Netflix">Netflix</a> with <a href="https://github.com/Netflix/Hystrix">Hystrix</a>/<a href="https://github.com/Netflix/RxJava">RxJava</a>.
+Netflix libs are written in Java while Twitters are written in Scala. Both are easy to use from any JVM based language but the Finagle route will bring in an extra dependency on Scala. I&rsquo;ve heard little from people using interop between Clojure &amp; Scala and that extra Scala dependency makes me nervous. Further I like the simplicity of Netflix&rsquo;s libs and they have been putting a lot of effort into pushing support for many JVM based languages.</p>
+
+<p>Hence with Clojure, Netflix projects are my preference. (I should add we do use Finagle with Scala at SoundCloud as well).</p>
+
+<h2>Failure, Monitoring &amp; Composition Complexity</h2>
+
+<div style="display:inline-block;">
+<img align="left" style="margin-right:5px;" src="http://josephwilk.github.io/blog/images/failure.jpg" width="150px" height="150px">
+
+In a service reliant on other services, databases, caches any other external dependencies its a guarantee at some-point some of those will fail. When working with critical services we want to gracefully provide a degraded service.
+</div>
+
+
+
+
+<p></p>
+
+
+
+
+<div style="display:inline-block;">
+<img align="left" style="margin-right:5px;" src="http://josephwilk.github.io/blog/images/scary-eye.png" width="150px" height="150px">
+While we can think about degrading gracefully in the case of failure, ultimately we want to fix wants broken as soon as possible. An eye into the runtime system allows us to monitor exactly whats going on and take appropriate action. 
+</div>
+
+
+
+
+<p></p>
+
+
+
+
+<div style="display:inline-block;">
+<img align="left" style="margin-right:5px;" src="http://josephwilk.github.io/blog/images/complexity.png" width="150px" height="150px">
+
+Your service needs to call other services. Dependent on those service results you might need to call other services which in turn might require calls to other services. Composing service calls is hard to get right without a tangle of complex code.
+</div>
+
+
+
+
+<p></p>
+
+
+<h3>Fault Tolerance</h3>
+
+<p>How should we build fault tolerance into our Clojure services?</p>
+
+<h4>Single thread pool</h4>
+
+<p>Consider you have this line within a service response:</p>
+
+<p><code>clojure
+{:body @(future (client/get "http://soundcloud.com/blah/wah")) :status 200}
+</code></p>
+
+<p>Now <code>http://soundcloud.com/blah/wah</code> goes down and those client requests start getting blocked on the request. In Clojure all <code>future</code> calls acquire a thread from the same thread pool. In our example the service is blocked up, is pilling new requests onto the blocked pool and we are in trouble.</p>
+
+<p>My first solution to this problem was to introduce circuit breakers (<a href="https://github.com/josephwilk/circuit-breaker">https://github.com/josephwilk/circuit-breaker</a>).
+I also stop using <code>@</code> to dereference futures and used <code>deref</code> <a href="http://clojuredocs.org/clojure_core/clojure.core/deref">http://clojuredocs.org/clojure_core/clojure.core/deref</a> which supports defaults and timeouts.</p>
+
+<p>```clojure
+(defncircuitbreaker :blah-http {:timeout 30 :threshold 2})</p>
+
+<p>(def future-timeout 1000)
+(def timeout-value nil)</p>
+
+<p>(defn http-get [url]
+  (with-circuit-breaker :blah-http {</p>
+
+<pre><code>:connected (fn [] (client/get "http://soundcloud.com/blah/wah")) 
+:tripped (fn [] nil)}))
+</code></pre>
+
+<p>{:body (http-get <a href="http://www.soundcloud.com/blah/wah">http://www.soundcloud.com/blah/wah</a>) :status 200}
+```</p>
+
+<p>Problem solved, now even though the thread pool may become blocked we back off the following requests and avoid pilling more work onto the blocked thread pool.</p>
+
+<p>This worked pretty well, but then we decided we would to try and go even further in gracefully degrading.
+Why don&rsquo;t we serve from a cache on failure, slightly stale data is better than none.</p>
+
+<p>```clojure
+(defn http-get [url]
+  (with-circuit-breaker :blah-http {</p>
+
+<pre><code>:connected (fn [] (client/get "http://soundcloud.com/blah/wah")) 
+:tripped (fn [] (memcache/get client url))}))
+</code></pre>
+
+<p>```</p>
+
+<p>Now consider <code>(client/get "http://soundcloud.com/blah/wah")</code> starts failing, the thread pool gets blocked up, the circuit trigger flips and <code>(memcache/get client url)</code> is now fighting to get threads from the blocked thread pool.</p>
+
+<p>Pants.</p>
+
+<h5>Scheduling over thread pools: Hystrix</h5>
+
+<p><a href="https://github.com/Netflix/Hystrix">Hystrix</a> is Netflix library which I think of as circuit breakers on steroids.</p>
+
+<p><img src ="http://josephwilk.github.io/blog/images/hystrix.png" height="400px" width="400px"/></p>
+
+<pre><code>Hystrix is a latency and fault tolerance library designed to isolate points of access to remote systems, 
+services and 3rd party libraries, stop cascading failure and enable resilience in complex distributed systems 
+where failure is inevitable.
+</code></pre>
+
+<p>Dave Ray (<a href="http://darevay.com">http://darevay.com</a>) has been doing lots of excellent work on producing <a href="https://github.com/Netflix/Hystrix/tree/master/hystrix-contrib/hystrix-clj">Clojure bindings for Hystrix</a>:</p>
+
+<p>Hystrix gives me 2 big wins:</p>
+
+<h5>1. Separation of thread pools</h5>
+
+<p>Hystrix creates a separate thread pool for each Clojure namespace, if one thread pool becomes blocked due to a failure, a circuit breaker can be triggered with a fallback that uses a different thread pool.</p>
+
+<p>This however does come with a cost:</p>
+
+<ol>
+<li> We have a performance hit due to moving to a scheduling based method for executing Hystrix commands.</li>
+<li> We cannot use Clojure&rsquo;s concurrency primitives (futures/promises/agents).</li>
+</ol>
+
+
+<p>Here is an example of our service rewritten with Hystrix:</p>
+
+<p>```clojure
+(ns example
+  (:require [[com.netflix.hystrix.core :as hystrix]]))</p>
+
+<p>(hystrix/defcommand http-get
+  {:hystrix/fallback-fn (fn [url] (memcache-get url)}
+  [url]
+  (client/get url))</p>
+
+<p>(hystrix/defcommand memcache-get
+  {:hystrix/fallback-fn (constantly nil)}
+  [url]
+  (memcache/get client key))</p>
+
+<p>(defn http-get [url]
+   {:body (http/get &ldquo;<a href="http://soundcloud.com/blah/wah">http://soundcloud.com/blah/wah</a>&rdquo;) :status 200})
+```</p>
+
+<p>Beautiful, Just adding the <code>defcommand</code> brings us fault tolerance with no other changes to the shape of our code.</p>
+
+<p>See the Hystrix Clojure adapter for all the possible configuration: <a href="https://github.com/Netflix/Hystrix/tree/master/hystrix-contrib/hystrix-clj">https://github.com/Netflix/Hystrix/tree/master/hystrix-contrib/hystrix-clj</a></p>
+
+<h5>2.  Monitoring</h5>
+
+<p>Hystrix supports exposing metrics on all circuit breakers within a process. It exposes these calls through an event stream.</p>
+
+<p>How you expose that Hystrix event stream depends slightly on which web server you are using with your Clojure app.</p>
+
+<h4>Netty and Hystrix Event Streams (without servlets)</h4>
+
+<p><a href="https://github.com/josephwilk/hystrix-event-stream-clj">https://github.com/josephwilk/hystrix-event-stream-clj</a></p>
+
+<p>```clojure
+(:require [hystrix-event-stream-clj.core as hystrix-event])</p>
+
+<p>(defroutes app (GET &ldquo;/hystrix.stream&rdquo; (hystrix-event/stream))
+```</p>
+
+<h4>Jetty and Hystrix Event Streams (with servlets)</h4>
+
+<p>If they are using Jetty you will need to change your app to add your main web app as a servlet. Then we can also add the Hystrix event stream servlet.</p>
+
+<p>```clojure
+(ns sc-clj-kit.hystrix.jetty
+  (:import [com.netflix.hystrix.contrib.metrics.eventstream HystrixMetricsStreamServlet])
+  (:import [org.eclipse.jetty.server Server])
+  (:import [org.eclipse.jetty.servlet ServletContextHandler])
+  (:import [org.eclipse.jetty.servlet ServletHolder])
+  (:import [org.eclipse.jetty.server.bio SocketConnector])
+  (:import [org.eclipse.jetty.server.ssl SslSocketConnector])</p>
+
+<p>  (:import (org.eclipse.jetty.server Server Request)</p>
+
+<pre><code>       (org.eclipse.jetty.server.handler AbstractHandler)
+       (org.eclipse.jetty.server.nio SelectChannelConnector)
+       (org.eclipse.jetty.server.ssl SslSelectChannelConnector)
+       (org.eclipse.jetty.util.thread QueuedThreadPool)
+       (org.eclipse.jetty.util.ssl SslContextFactory)
+       (javax.servlet.http HttpServletRequest HttpServletResponse))
+</code></pre>
+
+<p>  (:require
+   [compojure.core          :refer :all]
+   [ring.adapter.jetty      :as jetty]
+   [ring.util.servlet :as servlet]))</p>
+
+<p>(defn run-jetty-with-hystrix-stream [app options]
+  (let [^Server server (#&lsquo;jetty/create-server (dissoc options :configurator))</p>
+
+<pre><code>    ^QueuedThreadPool pool (QueuedThreadPool. ^Integer (options :max-threads 50))]
+(when (:daemon? options false) (.setDaemon pool true))
+(doto server (.setThreadPool pool))
+(when-let [configurator (:configurator options)]
+  (configurator server))
+(let [hystrix-holder  (ServletHolder. HystrixMetricsStreamServlet)
+      app-holder (ServletHolder. (servlet/servlet app))
+      context (ServletContextHandler. server "/" ServletContextHandler/SESSIONS)]
+  (.addServlet context hystrix-holder "/hystrix.stream")
+  (.addServlet context app-holder "/"))
+(.start server)
+(when (:join? options true) (.join server))
+server))
+</code></pre>
+
+<p>(defroutes app (GET &ldquo;/hello&rdquo; [] {:status 200 :body &ldquo;Hello&rdquo;})</p>
+
+<p>(run-jetty-with-hystrix app {:port http-port :join? false})
+```</p>
+
+<h4>Aggregation and discovery</h4>
+
+<p>While you can monitor a single process using Hystrix in our example we have many processes serving an endpoint. To aggregate all these Hystrix metric services we use <a href="https://github.com/Netflix/Turbine">Turbine</a>.</p>
+
+<p>Physical endpoints for a service at SoundCloud are discovered using DNS lookup. We configured Turbine to use this method to auto discover which machines are serving an endpoint.</p>
+
+<p>```
+(ns sc-turbine.discovery
+  (:import [org.xbill.DNS Type]</p>
+
+<pre><code>       [com.netflix.turbine.discovery InstanceDiscovery Instance])
+</code></pre>
+
+<p>  (:require [clj-dns.core :refer :all]))</p>
+
+<p>(gen-class
+   :name ScInstanceDiscovery
+   :implements [com.netflix.turbine.discovery.InstanceDiscovery])</p>
+
+<p>(defn -getInstanceList [this]
+  (map (fn [instance]</p>
+
+<pre><code>     (Instance. (str (:host instance) ":" (:port instance)) "example-prod" true))
+   (map (fn [answer] {:host (-&gt; answer .getTarget str) :port (.getPort answer)})
+        (:answers (dns-lookup "" Type/SRV)))))
+</code></pre>
+
+<p>```</p>
+
+<p>And the config.properties:</p>
+
+<p><code>
+InstanceDiscovery.impl=ScInstanceDiscovery
+turbine.aggregator.clusterConfig=example-prod
+turbine.instanceUrlSuffix=/hystrix.stream
+</code></p>
+
+<p>Putting this all together our monitoring looks like this:</p>
+
+<p><img src="http://josephwilk.github.io/blog/images/service_discovery.png"></p>
+
+<h4>Pretty graphs: Hystrix Dashboard</h4>
+
+<p>Finally we run the <a href="https://github.com/Netflix/Hystrix/tree/master/hystrix-dashboard">Hystrix Dashboard</a> and watch our circuit breakers live.</p>
+
+<p><img src="http://josephwilk.github.io/blog/images/hystrix_dashboard.png"></p>
+
+<p>And heres an example with triggered circuit breakers:</p>
+
+<p><img src="http://josephwilk.github.io/blog/images/hystrix_dashboard_failures.jpg"></p>
+
+<p>Since I cannot show you the dashboard running, you will have to make do with music generated from the metrics. I normalize the live Hystrix metrics to piano pitches and play the notes as the arrive from the stream.</p>
+
+<h4>Hystrix Metrics as Sounds</h4>
+
+<div>
+<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F109115434&amp;color=ff6600&amp;auto_play=false&amp;show_artwork=false"></iframe>
+</div>
+
+
+
+
+<p></p>
+
+
+<h3>Complexity &amp; Composition</h3>
+
+<p>Working with many services, composition of service calls becomes hard to think and write about. Callbacks try to solve this but nested callbacks leave us with a mess.</p>
+
+<p><a href="https://github.com/Netflix/RxJava">RxJava</a> tries to solve this using the Reactive Functional model. While RxJava provides lots of features I see it primarily as a way of expressing concurrent actions as a directed graph which provides a single callback on success or failure. The graph is expressed in terms or maps/reduces/filters/etc, things we are familiar with in the functional world.</p>
+
+<p>To separate the request thread from the response thread we use RxJava with <a href="http://netty.io">Netty</a> and <a href="https://github.com/ztellman/aleph">Aleph</a>.</p>
+
+<p>Here is a very simple example firing 2 concurrent requests and then joining the results into a single map response:</p>
+
+<p>```clojure
+;;Hystrix integrates with RxJava and can return Observables for use with Rx.
+(defn- find-user-observable [id] (hystrix/observe #&lsquo;find-user id))</p>
+
+<p>(defn- meta-data [user-urn]
+  (let [user-observable (&ndash;> (find-user-observable id) (.map (λ [user] &hellip;)))</p>
+
+<pre><code>    meta-observable (-&gt; (find-user-meta-observable id) (.map (λ [subscription] ...))))
+(-&gt; (Observable/zip user-observable
+                    meta-observable
+                    (λ [&amp; maps] {:user (apply merge maps)}))))
+</code></pre>
+
+<p>```</p>
+
+<p>The function <code>meta-data</code> returns an Observerable which we subscribe to and using Aleph return the resulting JSON to a channel.</p>
+
+<p>```clojure
+(defn- subscribe-request [channel request]
+  (let [id (get-in request [:route-params :id])]</p>
+
+<pre><code>(-&gt; (meta-data id)
+    (.subscribe
+      #(enqueue channel {:status 200 :body %}))
+      #(logging/exception %))))))  
+</code></pre>
+
+<p>(defroutes app
+  (GET &ldquo;/users/:id&rdquo; [id] (wrap-aleph-handler subscribe-request)))
+```</p>
+
+<p>The shape of the <a href="https://github.com/Netflix/RxJava/tree/master/language-adaptors/rxjava-clojure">RxJava Clojure bindings</a> are still under development.</p>
+
+<h4>That single thread pool again&hellip;</h4>
+
+<p>With RxJava we are also in a situation were we cannot use Clojure&rsquo;s <code>future</code>. In order for RxJava to block optimally we don&rsquo;t want to use a single thread pool.
+Hence we use Hystrix as our means of providing concurreny.</p>
+
+<h2>Clojure services at scale</h2>
+
+<p>I&rsquo;m very happy with the shape of these services running at SoundCloud. In production they are performing very well under heavy load with useful near realtime monitoring.
+In part thanks to Netflix&rsquo;s hard work there is no reason you cannot write elegant Clojure services at scale.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Creating sampled instruments with Overtone]]></title>
+    <link href="http://josephwilk.github.io/blog/clojure/creating-instruments-with-overtone.html"/>
+    <updated>2013-08-26T21:28:00+02:00</updated>
+    <id>http://josephwilk.github.io/blog/clojure/creating-instruments-with-overtone</id>
+    <content type="html"><![CDATA[<p><a href="http://overtone.github.io">Overtone</a> is an open source audio environment which uses Clojure and <a href="http://supercollider.sourceforge.net/">SuperCollider</a> (an environment and programming language for real time audio synthesis and algorithmic composition).</p>
+
+<p>Overtone makes it very easy to define instruments based on sound samples from <a href="http://www.freesound.org">freesound</a>.
+We will walk through getting samples for a flute and then using them to define the flute instrument in Overtone.</p>
+
+<h2>The Flute</h2>
+
+<p><img src="http://josephwilk.github.io/blog/images/flute.jpg"/></p>
+
+<h3>Getting the samples</h3>
+
+<p>Firstly we need to manually grab all the IDs from freesound. Sounds are often grouped into packs making this a little less painful.</p>
+
+<p>We will be using the <a href="http://www.freesound.org/search/?q=flute&amp;f=grouping_pack%3A%229549_Transverse+Flute%3A+Tenuto+Vibrato+C4-C7%22&amp;s=score+desc&amp;advanced=0&amp;g=1">&ldquo;Transverse Flute: Tenuto Vibrato C4-C7&rdquo;</a> pack.</p>
+
+<p>A little Ruby script I use to produce a map of freesound ids to notes (which are usually in the filename of the sample):
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;h1&gt;!/us</span><span class="n">r</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">env</span> <span class="n">ruby</span> <span class="o">-</span><span class="n">w</span><span class="o">&lt;</span><span class="sr">/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;require &amp;lsquo;rubygems&amp;rsquo;</span>
+</span><span class='line'><span class="sr">require &amp;lsquo;json&amp;rsquo;&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span><span class="k">raise</span> <span class="no">Exception</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="no">You</span> <span class="n">must</span> <span class="n">pass</span> <span class="k">in</span> <span class="n">the</span> <span class="n">pack</span> <span class="nb">id</span><span class="o">!&amp;</span><span class="n">rdquo</span><span class="p">;)</span> <span class="k">unless</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">0</span><span class="o">]&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;pack_id = ARGV[0]</span>
+</span><span class='line'><span class="sr">note_extractor = λ{|filename| filename.gsub(/</span><span class="no">Transverse</span><span class="o">-</span><span class="no">Flute</span> <span class="o">|.</span><span class="n">wav</span><span class="o">|</span><span class="no">Tenuto</span><span class="o">|</span><span class="no">NonVibrato</span><span class="o">|&amp;</span><span class="n">ndash</span><span class="p">;</span><span class="o">/</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;)</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/ NonVibrato/</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;)}</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;data = JSON.parse(&lt;code&gt;curl --silent &quot;http:/</span><span class="o">/</span><span class="n">www</span><span class="o">.</span><span class="n">freesound</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">packs</span><span class="o">/</span><span class="c1">#{pack_id}/sounds/?api_key=47efd585321048819a2328721507ee23&quot;&lt;/code&gt;)</span>
+</span><span class='line'><span class="n">number_of_pages</span> <span class="o">=</span> <span class="n">data</span><span class="o">[&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">num_pages</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">]</span> <span class="o">||</span> <span class="mi">1</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;number_of_pages.times do |page|</span>
+</span><span class='line'><span class="sr">  data = JSON.parse(&lt;code&gt;curl --silent &quot;http:/</span><span class="o">/</span><span class="n">www</span><span class="o">.</span><span class="n">freesound</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">packs</span><span class="o">/</span><span class="c1">#{pack_id}/sounds/?api_key=47efd585321048819a2328721507ee23&amp;amp;p=#{page + 1}&quot;&lt;/code&gt;)</span>
+</span><span class='line'>  <span class="n">sound_ids</span> <span class="o">=</span> <span class="n">data</span><span class="o">[&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">sounds</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">].</span><span class="n">map</span><span class="p">{</span><span class="o">|</span><span class="n">sound</span><span class="o">|</span> <span class="n">sound</span><span class="o">[&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="nb">id</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">]</span><span class="p">}</span>
+</span><span class='line'>  <span class="n">note_names</span> <span class="o">=</span> <span class="n">data</span><span class="o">[&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">sounds</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">].</span><span class="n">map</span><span class="p">{</span><span class="o">|</span><span class="n">sound</span><span class="o">|</span> <span class="n">note_extractor</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">sound</span><span class="o">[&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">original_filename</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">]</span><span class="p">)}</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;  sound_ids.each_with_index do |sound_id, index|&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">sound_id</span><span class="si">}</span><span class="s2"> :</span><span class="si">#{</span><span class="n">note_names</span><span class="o">[</span><span class="n">index</span><span class="o">]</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="sr">/code&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Adding these to our Clojure code we have a Freesound ID to note mapping:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">FREESOUND-VIBRATO-FLUTE-SAMPLES</span>
+</span><span class='line'>  <span class="o">&amp;</span><span class="nv">ldquo</span><span class="c1">;Freesound ids for all samples in the Vibrato Transverse Flute pack&amp;rdquo;</span>
+</span><span class='line'>  <span class="p">{</span><span class="mi">154274</span> <span class="ss">:C7</span>  <span class="mi">154273</span> <span class="ss">:B6</span> <span class="mi">154272</span> <span class="ss">:A#6</span> <span class="mi">154271</span> <span class="ss">:A6</span> <span class="mi">154270</span> <span class="ss">:G#6</span> <span class="mi">154269</span> <span class="ss">:G6</span>  <span class="mi">154268</span> <span class="ss">:F#6</span>
+</span><span class='line'>   <span class="mi">154267</span> <span class="ss">:F6</span>  <span class="mi">154266</span> <span class="ss">:E6</span> <span class="mi">154265</span> <span class="ss">:D#6</span> <span class="mi">154264</span> <span class="ss">:D6</span> <span class="mi">154263</span> <span class="ss">:C#6</span> <span class="mi">154262</span> <span class="ss">:C6</span>  <span class="mi">154261</span> <span class="ss">:B5</span>
+</span><span class='line'>   <span class="mi">154260</span> <span class="ss">:A#5</span> <span class="mi">154259</span> <span class="ss">:A5</span> <span class="mi">154258</span> <span class="ss">:G#5</span> <span class="mi">154257</span> <span class="ss">:G5</span> <span class="mi">154256</span> <span class="ss">:F#5</span> <span class="mi">154255</span> <span class="ss">:F5</span>  <span class="mi">154254</span> <span class="ss">:E5</span>
+</span><span class='line'>   <span class="mi">154253</span> <span class="ss">:D#5</span> <span class="mi">154252</span> <span class="ss">:D5</span> <span class="mi">154251</span> <span class="ss">:C#5</span> <span class="mi">154250</span> <span class="ss">:C5</span> <span class="mi">154249</span> <span class="ss">:B4</span>  <span class="mi">154248</span> <span class="ss">:A#4</span> <span class="mi">154247</span> <span class="ss">:A4</span>
+</span><span class='line'>   <span class="mi">154246</span> <span class="ss">:G#4</span> <span class="mi">154245</span> <span class="ss">:G4</span> <span class="mi">154244</span> <span class="ss">:F#4</span> <span class="mi">154243</span> <span class="ss">:E4</span> <span class="mi">154242</span> <span class="ss">:F4</span>  <span class="mi">154241</span> <span class="ss">:D#4</span> <span class="mi">154240</span> <span class="ss">:D4</span>
+</span><span class='line'>   <span class="mi">154239</span> <span class="ss">:C#4</span> <span class="mi">154238</span> <span class="ss">:C4</span><span class="p">})</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>These samples are cached in the asset store (usually ~/.overtone/assets) so we don&rsquo;t have to keep downloading them. We define a cache key for our downloaded samples.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">defn- </span><span class="nv">registered-samples</span>
+</span><span class='line'>  <span class="o">&amp;</span><span class="nv">ldquo</span><span class="c1">;Fetch flute samples from the asset store if they have been manually registered&amp;rdquo;</span>
+</span><span class='line'>  <span class="p">[]</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">registered-assets</span> <span class="ss">::TransverseFluteTenutoVibrato</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Load all the samples into Overtone. This will automatically download the samples if they are not already present.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">flute-samples</span>
+</span><span class='line'>  <span class="p">(</span><span class="nb">doall </span><span class="p">(</span><span class="nb">map </span><span class="nv">freesound-sample</span> <span class="p">(</span><span class="nb">keys </span><span class="nv">FREESOUND-VIBRATO-FLUTE-SAMPLES</span><span class="p">))))</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>In order to play the samples we need to produce a mapping between the buffer that has the sound loaded and the midi pitch that buffer relates to.</p>
+
+<p>First we convert a freesound-id into a midi note (pitch)</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">defn- </span><span class="nv">buffer-&gt;midi-note</span> <span class="p">[</span><span class="nv">buf</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">(</span><span class="o">&amp;</span><span class="nv">ndash</span><span class="c1">;&gt; buf :freesound-id FREESOUND-VIBRATO-FLUTE-SAMPLES name note))</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Now we can generate the buffer id to midi note map.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">defn- </span><span class="nv">note-index</span>
+</span><span class='line'>  <span class="o">&amp;</span><span class="nv">ldquo</span><span class="c1">;Returns a map of midi-note values [0-127] to buffer ids.&amp;rdquo;</span>
+</span><span class='line'>  <span class="p">[</span><span class="nv">buffers</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">(</span><span class="nb">reduce </span><span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nb">index </span><span class="nv">buf</span><span class="p">]</span><span class="nv">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;pre&gt;&lt;code&gt;</span>        <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">id</span> <span class="p">(</span><span class="nf">-</span><span class="o">&amp;</span><span class="nv">gt</span><span class="c1">; buf :id)</span>
+</span><span class='line'>              <span class="nv">note</span> <span class="p">(</span><span class="nf">buffer-</span><span class="o">&amp;</span><span class="nv">gt</span><span class="c1">;midi-note buf)]</span>
+</span><span class='line'>          <span class="p">(</span><span class="nb">assoc index </span><span class="nv">note</span> <span class="nv">id</span><span class="p">)))</span>
+</span><span class='line'>      <span class="p">{}</span>
+</span><span class='line'>      <span class="nv">buffers</span><span class="p">))</span>
+</span><span class='line'><span class="nv">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>And we use this to set the buffers:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="c1">;Silent buffer used to ensure all 127 buffer spaces are filled</span>
+</span><span class='line'><span class="p">(</span><span class="kd">defonce </span><span class="o">^</span><span class="ss">:private</span> <span class="nv">silent-buffer</span> <span class="p">(</span><span class="nf">buffer</span> <span class="mi">0</span><span class="p">))</span><span class="nv">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;p&gt;</span><span class="p">(</span><span class="kd">defonce </span><span class="nv">index-buffer</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">tab</span> <span class="p">(</span><span class="nf">note-index</span> <span class="nv">flute-samples</span><span class="p">)</span><span class="nv">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;pre&gt;&lt;code&gt;</span>    <span class="nv">buf</span> <span class="p">(</span><span class="nf">buffer</span> <span class="mi">128</span><span class="p">)]</span>
+</span><span class='line'><span class="p">(</span><span class="nf">buffer-fill!</span> <span class="nv">buf</span> <span class="p">(</span><span class="ss">:id</span> <span class="nv">silent-buffer</span><span class="p">))</span>
+</span><span class='line'><span class="p">(</span><span class="nb">doseq </span><span class="p">[[</span><span class="nv">idx</span> <span class="nv">val</span><span class="p">]</span> <span class="nv">tab</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">buffer-set!</span> <span class="nv">buf</span> <span class="nv">idx</span> <span class="nv">val</span><span class="p">))</span>
+</span><span class='line'><span class="nv">buf</span><span class="p">))</span>
+</span><span class='line'><span class="nv">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>Defining the Instrument</h2>
+
+<p>Now we have all our samples we define a instrument in Overtone using <code>definst</code>:</p>
+
+<p>This allows us to specify a (huge) number of options on how our samples are played.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="nf">definst</span> <span class="nv">sampled-flute-vibrato</span>
+</span><span class='line'>  <span class="p">[</span><span class="nv">note</span> <span class="mi">60</span> <span class="nv">level</span> <span class="mi">1</span> <span class="nv">rate</span> <span class="mi">1</span> <span class="nv">loop?</span> <span class="mi">0</span> <span class="nv">attack</span> <span class="mi">0</span> <span class="nv">decay</span> <span class="mi">1</span> <span class="nv">sustain</span> <span class="mi">1</span> <span class="nv">release</span> <span class="mf">0.1</span> <span class="nv">curve</span> <span class="mi">-4</span> <span class="nv">gate</span> <span class="mi">1</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">buf</span> <span class="p">(</span><span class="nf">index</span><span class="ss">:kr</span> <span class="p">(</span><span class="ss">:id</span> <span class="nv">index-buffer</span><span class="p">)</span> <span class="nv">note</span><span class="p">)</span><span class="nv">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;pre&gt;&lt;code&gt;</span>    <span class="nv">env</span> <span class="p">(</span><span class="nf">env-gen</span> <span class="p">(</span><span class="nf">adsr</span> <span class="nv">attack</span> <span class="nv">decay</span> <span class="nv">sustain</span> <span class="nv">release</span> <span class="nv">level</span> <span class="nv">curve</span><span class="p">)</span>
+</span><span class='line'>                 <span class="ss">:gate</span> <span class="nv">gate</span>
+</span><span class='line'>                 <span class="ss">:action</span> <span class="nv">FREE</span><span class="p">)]</span>
+</span><span class='line'><span class="p">(</span><span class="nb">* </span><span class="nv">env</span> <span class="p">(</span><span class="nf">scaled-play-buf</span> <span class="mi">2</span> <span class="nv">buf</span> <span class="ss">:level</span> <span class="nv">level</span> <span class="ss">:loop</span> <span class="nv">loop?</span> <span class="ss">:action</span> <span class="nv">FREE</span><span class="p">))))</span>
+</span><span class='line'><span class="nv">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>There is quite a lot going on here. Lets focus on the configuration that effects how our sound samples are played.</p>
+
+<h3>Defining the Envelope Generator (env-gen).</h3>
+
+<p>An envelope generator (mapping to function <code>env-gen</code>) makes an audio signal that smoothly rises and falls. We are taking the recording of the real flute instrument as a digitized waveform, and then playing back its recordings at different speeds to produce different tones.</p>
+
+<p>The most common form of envelope generator and the one we are using here is ADSR:</p>
+
+<p>attack (A), decay (D), sustain (S) and release &#40;R)</p>
+
+<p><img src="http://josephwilk.github.io/blog/images/ADSR.png" /></p>
+
+<p>There are a number of other config settings in our example:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">[</span>
+</span><span class='line'> <span class="nv">note</span> <span class="mi">60</span>     <span class="c1">; Default pitch</span>
+</span><span class='line'> <span class="nv">level</span> <span class="mi">1</span>     <span class="c1">; Volume</span>
+</span><span class='line'> <span class="nv">rate</span> <span class="mi">1</span>      <span class="c1">; Playback rate</span>
+</span><span class='line'> <span class="nv">loop?</span> <span class="mi">0</span>     <span class="c1">; The note should loop after the first play</span>
+</span><span class='line'> <span class="nv">attack</span> <span class="mi">0</span>    <span class="c1">; The way a sound is initiated. Fast attack (gunshot) vs Slow attack (closing a door slowly)</span>
+</span><span class='line'> <span class="nv">decay</span> <span class="mi">1</span>     <span class="c1">; The time for notes to decay after the initial strike</span>
+</span><span class='line'> <span class="nv">sustain</span> <span class="mi">1</span>   <span class="c1">; Once a sound has reached its peak, the length of time that the sound will sustain.</span>
+</span><span class='line'> <span class="nv">release</span> <span class="mf">0.1</span> <span class="c1">; The time for notes to decay after the key is released</span>
+</span><span class='line'> <span class="nv">curve</span> <span class="mi">-4</span>    <span class="c1">; Curve factor</span>
+</span><span class='line'> <span class="nv">gate</span> <span class="mi">1</span>      <span class="c1">; note occurs when gate goes from nonpositive to positive. Note off occurs when it goes from positive to nonpositive</span>
+</span><span class='line'><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Look to the <a href="http://supercollider.sourceforge.net/">SuperCollider</a> documentation on <a href="http://doc.sccode.org/Classes/UGen.html">UGENs</a> if you want to see all possible configuration options. Overtone is really a wrapper around the extremely powerful SuperCollider.</p>
+
+<h2>Grand finale</h2>
+
+<p>Finally we can start to play music in overtone using our flute:</p>
+
+<p><code>clojure
+(sampled-flute-vibrato 60) #=&gt; pitch 60
+(sampled-flute-vibrato 61) #=&gt; pitch 61
+(sampled-flute-vibrato 60) #=&gt; pitch 60
+</code></p>
+
+<p>Hear for yourself:</p>
+
+<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F107183072&amp;color=ff6600&amp;auto_play=false&amp;show_artwork=false"></iframe>
+
+
+<h2>The Code in Full</h2>
+
+<p>Defining an instrument in Overtone:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Loading buffers </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">ns </span><span class="nv">overtone.samples.flute-vibrato</span>
+</span><span class='line'>  <span class="p">(</span><span class="ss">:use</span> <span class="p">[</span><span class="nv">overtone.core</span><span class="p">])</span>
+</span><span class='line'>  <span class="p">(</span><span class="ss">:require</span> <span class="p">[</span><span class="nv">clojure.string</span> <span class="ss">:as</span> <span class="nv">str</span><span class="p">]))</span><span class="nv">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;p&gt;</span><span class="p">(</span><span class="kd">defn- </span><span class="nv">registered-samples</span>
+</span><span class='line'>  <span class="o">&amp;</span><span class="nv">ldquo</span><span class="c1">;Fetch flute samples from the asset store if they have been manually</span>
+</span><span class='line'>  <span class="nv">registered</span><span class="o">&amp;</span><span class="nv">rdquo</span><span class="c1">;</span>
+</span><span class='line'>  <span class="p">[]</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">registered-assets</span> <span class="ss">::TransverseFluteTenutoVibrato</span><span class="p">))</span><span class="nv">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;p&gt;</span><span class="p">(</span><span class="k">def </span><span class="nv">FREESOUND-VIBRATO-FLUTE-SAMPLES</span>
+</span><span class='line'>  <span class="o">&amp;</span><span class="nv">ldquo</span><span class="c1">;Freesound ids for all samples in the Vibrato Transverse Flute pack&amp;rdquo;</span>
+</span><span class='line'>  <span class="p">{</span><span class="mi">154274</span> <span class="ss">:C7</span>  <span class="mi">154273</span> <span class="ss">:B6</span> <span class="mi">154272</span> <span class="ss">:A#6</span> <span class="mi">154271</span> <span class="ss">:A6</span> <span class="mi">154270</span> <span class="ss">:G#6</span> <span class="mi">154269</span> <span class="ss">:G6</span>  <span class="mi">154268</span> <span class="ss">:F#6</span>
+</span><span class='line'>   <span class="mi">154267</span> <span class="ss">:F6</span>  <span class="mi">154266</span> <span class="ss">:E6</span> <span class="mi">154265</span> <span class="ss">:D#6</span> <span class="mi">154264</span> <span class="ss">:D6</span> <span class="mi">154263</span> <span class="ss">:C#6</span> <span class="mi">154262</span> <span class="ss">:C6</span>  <span class="mi">154261</span> <span class="ss">:B5</span>
+</span><span class='line'>   <span class="mi">154260</span> <span class="ss">:A#5</span> <span class="mi">154259</span> <span class="ss">:A5</span> <span class="mi">154258</span> <span class="ss">:G#5</span> <span class="mi">154257</span> <span class="ss">:G5</span> <span class="mi">154256</span> <span class="ss">:F#5</span> <span class="mi">154255</span> <span class="ss">:F5</span>  <span class="mi">154254</span> <span class="ss">:E5</span>
+</span><span class='line'>   <span class="mi">154253</span> <span class="ss">:D#5</span> <span class="mi">154252</span> <span class="ss">:D5</span> <span class="mi">154251</span> <span class="ss">:C#5</span> <span class="mi">154250</span> <span class="ss">:C5</span> <span class="mi">154249</span> <span class="ss">:B4</span>  <span class="mi">154248</span> <span class="ss">:A#4</span> <span class="mi">154247</span> <span class="ss">:A4</span>
+</span><span class='line'>   <span class="mi">154246</span> <span class="ss">:G#4</span> <span class="mi">154245</span> <span class="ss">:G4</span> <span class="mi">154244</span> <span class="ss">:F#4</span> <span class="mi">154243</span> <span class="ss">:E4</span> <span class="mi">154242</span> <span class="ss">:F4</span>  <span class="mi">154241</span> <span class="ss">:D#4</span> <span class="mi">154240</span> <span class="ss">:D4</span>
+</span><span class='line'>   <span class="mi">154239</span> <span class="ss">:C#4</span> <span class="mi">154238</span> <span class="ss">:C4</span><span class="p">})</span><span class="nv">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;p&gt;</span><span class="p">(</span><span class="k">def </span><span class="nv">FLUTE-SAMPLE-IDS</span> <span class="p">(</span><span class="nb">keys </span><span class="nv">FREESOUND-VIBRATO-FLUTE-SAMPLES</span><span class="p">))</span><span class="nv">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;p&gt;</span><span class="p">(</span><span class="k">def </span><span class="nv">flute-samples</span>
+</span><span class='line'>  <span class="p">(</span><span class="nb">doall </span><span class="p">(</span><span class="nb">map </span><span class="nv">freesound-sample</span> <span class="nv">FLUTE-SAMPLE-IDS</span><span class="p">)))</span><span class="nv">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;p&gt;</span><span class="p">(</span><span class="kd">defn- </span><span class="nv">buffer-&gt;midi-note</span> <span class="p">[</span><span class="nv">buf</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">(</span><span class="o">&amp;</span><span class="nv">ndash</span><span class="c1">;&gt; buf :freesound-id FREESOUND-VIBRATO-FLUTE-SAMPLES name note))&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;p&gt;</span><span class="p">(</span><span class="kd">defn- </span><span class="nv">note-index</span>
+</span><span class='line'>  <span class="o">&amp;</span><span class="nv">ldquo</span><span class="c1">;Returns a map of midi-note values [0-127] to buffer ids.&amp;rdquo;</span>
+</span><span class='line'>  <span class="p">[</span><span class="nv">buffers</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">(</span><span class="nb">reduce </span><span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nb">index </span><span class="nv">buf</span><span class="p">]</span><span class="nv">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;pre&gt;&lt;code&gt;</span>        <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">id</span> <span class="p">(</span><span class="nf">-</span><span class="o">&amp;</span><span class="nv">gt</span><span class="c1">; buf :id)</span>
+</span><span class='line'>              <span class="nv">note</span> <span class="p">(</span><span class="nf">buffer-</span><span class="o">&amp;</span><span class="nv">gt</span><span class="c1">;midi-note buf)]</span>
+</span><span class='line'>          <span class="p">(</span><span class="nb">assoc index </span><span class="nv">note</span> <span class="nv">id</span><span class="p">)))</span>
+</span><span class='line'>      <span class="p">{}</span>
+</span><span class='line'>      <span class="nv">buffers</span><span class="p">))</span>
+</span><span class='line'><span class="nv">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;p&gt;</span><span class="c1">;; Silent buffer used to fill in the gaps.</span>
+</span><span class='line'><span class="p">(</span><span class="kd">defonce </span><span class="o">^</span><span class="ss">:private</span> <span class="nv">silent-buffer</span> <span class="p">(</span><span class="nf">buffer</span> <span class="mi">0</span><span class="p">))</span><span class="nv">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;p&gt;</span><span class="p">(</span><span class="kd">defonce </span><span class="nv">index-buffer</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">tab</span> <span class="p">(</span><span class="nf">note-index</span> <span class="nv">flute-samples</span><span class="p">)</span><span class="nv">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;pre&gt;&lt;code&gt;</span>    <span class="nv">buf</span> <span class="p">(</span><span class="nf">buffer</span> <span class="mi">128</span><span class="p">)]</span>
+</span><span class='line'><span class="p">(</span><span class="nf">buffer-fill!</span> <span class="nv">buf</span> <span class="p">(</span><span class="ss">:id</span> <span class="nv">silent-buffer</span><span class="p">))</span>
+</span><span class='line'><span class="p">(</span><span class="nb">doseq </span><span class="p">[[</span><span class="nv">idx</span> <span class="nv">val</span><span class="p">]</span> <span class="nv">tab</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">buffer-set!</span> <span class="nv">buf</span> <span class="nv">idx</span> <span class="nv">val</span><span class="p">))</span>
+</span><span class='line'><span class="nv">buf</span><span class="p">))</span>
+</span><span class='line'><span class="nv">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Defining the instrument </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">ns </span><span class="nv">overtone.inst.sampled-flute</span>
+</span><span class='line'>  <span class="p">(</span><span class="ss">:use</span> <span class="p">[</span><span class="nv">overtone.core</span><span class="p">])</span>
+</span><span class='line'>  <span class="p">(</span><span class="ss">:require</span>
+</span><span class='line'>   <span class="p">[</span><span class="nv">overtone.samples.flute-vibrato</span> <span class="ss">:as</span> <span class="nv">vibrato</span><span class="p">]))</span><span class="nv">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;p&gt;</span><span class="p">(</span><span class="nf">definst</span> <span class="nv">sampled-flute-vibrato</span>
+</span><span class='line'>  <span class="p">[</span><span class="nv">note</span> <span class="mi">60</span> <span class="nv">level</span> <span class="mi">1</span> <span class="nv">rate</span> <span class="mi">1</span> <span class="nv">loop?</span> <span class="mi">0</span>
+</span><span class='line'>   <span class="nv">attack</span> <span class="mi">0</span> <span class="nv">decay</span> <span class="mi">1</span> <span class="nv">sustain</span> <span class="mi">1</span> <span class="nv">release</span> <span class="mf">0.1</span> <span class="nv">curve</span> <span class="mi">-4</span> <span class="nv">gate</span> <span class="mi">1</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">buf</span> <span class="p">(</span><span class="nf">index</span><span class="ss">:kr</span> <span class="p">(</span><span class="ss">:id</span> <span class="nv">vibrato/index-buffer</span><span class="p">)</span> <span class="nv">note</span><span class="p">)</span><span class="nv">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;pre&gt;&lt;code&gt;</span>    <span class="nv">env</span> <span class="p">(</span><span class="nf">env-gen</span> <span class="p">(</span><span class="nf">adsr</span> <span class="nv">attack</span> <span class="nv">decay</span> <span class="nv">sustain</span> <span class="nv">release</span> <span class="nv">level</span> <span class="nv">curve</span><span class="p">)</span>
+</span><span class='line'>                 <span class="ss">:gate</span> <span class="nv">gate</span>
+</span><span class='line'>                 <span class="ss">:action</span> <span class="nv">FREE</span><span class="p">)]</span>
+</span><span class='line'><span class="p">(</span><span class="nb">* </span><span class="nv">env</span> <span class="p">(</span><span class="nf">scaled-play-buf</span> <span class="mi">2</span> <span class="nv">buf</span> <span class="ss">:level</span> <span class="nv">level</span> <span class="ss">:loop</span> <span class="nv">loop?</span> <span class="ss">:action</span> <span class="nv">FREE</span><span class="p">))))</span>
+</span><span class='line'><span class="nv">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+]]></content>
+  </entry>
+  
+</feed>

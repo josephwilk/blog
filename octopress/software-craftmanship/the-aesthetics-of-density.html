@@ -1,0 +1,771 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>The Aesthetics of Density - Joseph Wilk</title>
+  <meta name="author" content="Joseph Wilk">
+
+  
+  <meta name="description" content="Programming languages can be described as Dense. What does dense mean? Closely compacted in substance.
+Having the constituent parts crowded closely &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://josephwilk.github.io/blog/software-craftmanship/the-aesthetics-of-density.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Joseph Wilk" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<script src="http://disqus.com/forums/josephwilk/embed.js"></script>
+<link href="http://fonts.googleapis.com/css?family=Bevan" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-3020740-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <img src="/images/joe_small.jpg" style="position:relative;border-radius: 8px;margin-right: 5px;border-style: solid;border-width: 1px;border-color: #DDD;" height="60" alt="Joseph Wilk">
+  <span style="display:inline-block">
+    <h1><a href="/">Joseph Wilk</a></h1>
+    <h2>Programming bits and bobs</h2>
+  </span>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:josephwilk.github.io/blog" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+ <li><a href="/">Home</a></li>
+ <li><a href="/about">About</a></li>
+ <li><a href="/speaking">Speaking</a></li>
+ <li><a href="/contact">Contact</a></li>
+ <li><a href="/archives">Archives</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">The Aesthetics of Density</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-14T12:02:48+01:00" pubdate data-updated="true">Dec 14<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Programming languages can be described as Dense.</p>
+
+<p>What does dense mean?</p>
+
+<blockquote><p>Closely compacted in substance.
+Having the constituent parts crowded closely together:</p></blockquote>
+
+<p><img src="/images/blog/2012/12/density_model-284x300.jpg" alt="" /></p>
+
+<p>What does it mean for a programming language to be dense?</p>
+
+<p>I consider there are two axis for the density of programming languages:</p>
+
+<blockquote><p><strong>Density of syntax</strong>
+The syntax is very dense/compact.</p></blockquote>
+
+<p>For example Assembly has a very dense syntax, abbreviate commands, small register names, etc&hellip; It takes a lot to express simple expressions</p>
+
+<p>A simple &ldquo;for&rdquo; loop in Assembly</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mov cx, 3
+</span><span class='line'>startloop:
+</span><span class='line'>   cmp cx, 0
+</span><span class='line'>   jz endofloop
+</span><span class='line'>   push cx
+</span><span class='line'>loopy:
+</span><span class='line'>   Call ClrScr
+</span><span class='line'>   pop cx
+</span><span class='line'>   dec cx
+</span><span class='line'>   jmp startloop
+</span><span class='line'>endofloop:
+</span><span class='line'>   ; Loop ended
+</span><span class='line'>   ; Do what ever you have to do here</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p><strong>Density of expression</strong>
+The means of expressing simple concepts or solutions is very compact.</p></blockquote>
+
+<p>This is a little fuzzier than syntax, it can depend on what you are trying to express and languages often provide many different ways to express something. For example string processing in Erlang is a lot messier than say, Ruby. Paul Graham measures this form of density by <a href="http://www.paulgraham.com/power.html">the number of elements</a></p>
+
+<p>As an example PROLOG scores highly in expressive density. One of the main reasons why is when you give up control of execution (imperative style) and describe the problem (declarative style) you increase the expressive density.</p>
+
+<p>The towers of hanoi in Prolog:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='prolog'><span class='line'><span class="nf">move</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="nv">X</span><span class="p">,</span><span class="nv">Y</span><span class="p">,</span><span class="k">_</span><span class="p">)</span> <span class="p">:-</span>
+</span><span class='line'>    <span class="nf">write</span><span class="p">(</span><span class="s-Atom">&#39;Move top disk from &#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="nf">write</span><span class="p">(</span><span class="nv">X</span><span class="p">),</span>
+</span><span class='line'>    <span class="nf">write</span><span class="p">(</span><span class="s-Atom">&#39; to &#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="nf">write</span><span class="p">(</span><span class="nv">Y</span><span class="p">),</span>
+</span><span class='line'>    <span class="s-Atom">nl</span><span class="p">.</span>
+</span><span class='line'><span class="nf">move</span><span class="p">(</span><span class="nv">N</span><span class="p">,</span><span class="nv">X</span><span class="p">,</span><span class="nv">Y</span><span class="p">,</span><span class="nv">Z</span><span class="p">)</span> <span class="p">:-</span>
+</span><span class='line'>    <span class="nv">N</span><span class="o">&gt;</span><span class="m">1</span><span class="p">,</span>
+</span><span class='line'>    <span class="nv">M</span> <span class="o">is</span> <span class="nv">N</span><span class="o">-</span><span class="m">1</span><span class="p">,</span>
+</span><span class='line'>    <span class="nf">move</span><span class="p">(</span><span class="nv">M</span><span class="p">,</span><span class="nv">X</span><span class="p">,</span><span class="nv">Z</span><span class="p">,</span><span class="nv">Y</span><span class="p">),</span>
+</span><span class='line'>    <span class="nf">move</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="nv">X</span><span class="p">,</span><span class="nv">Y</span><span class="p">,</span><span class="k">_</span><span class="p">),</span>
+</span><span class='line'>    <span class="nf">move</span><span class="p">(</span><span class="nv">M</span><span class="p">,</span><span class="nv">Z</span><span class="p">,</span><span class="nv">Y</span><span class="p">,</span><span class="nv">X</span><span class="p">).</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Programming languages fit along a spectrum within these forms of density. Ruby provides the means to express concepts very syntactically densely. Just look at <a href="http://rubysource.com/ruby-golf">Ruby Golf</a> (solving a problem with the smallest possible number of characters) for example:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">fizzbuzz</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</span><span class='line'><span class="n">n</span><span class="o">%</span><span class="mi">3</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&amp;&amp;</span><span class="n">f</span><span class="o">=</span><span class="s2">&quot;Fizz&quot;</span><span class="p">;</span><span class="n">n</span><span class="o">%</span><span class="mi">5</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">?</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">f</span><span class="si">}</span><span class="s2">Buzz&quot;</span><span class="ss">:f</span><span class="o">||</span><span class="n">n</span><span class="o">.</span><span class="n">to_s</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It is also always posible to build a DSL within a programming language to maximise density.</p>
+
+<h2>Where does Density fit with Literate Programming?</h2>
+
+<p>Dense syntax moves code away from being an easily accessible form of documentation.</p>
+
+<p>Density of expression <strong>can</strong> move code away from being easily accessible as documentation. For example do you understand how that PROLOG towers of hanoi works?</p>
+
+<p>The more focused a language is on expressive/syntactical density the further it moves the art of programming away from Literate programming where we focus on our code being the documentation. Much like writing an essay:</p>
+
+<blockquote><p>Instead of writing code containing documentation, the literate programmer writes documentation containing code.</p></blockquote>
+
+<p>Ross Williams. FunnelWeb Tutorial Manual, pg 4.</p>
+
+<p>The readability of the code to humans is the priority.</p>
+
+<blockquote><p>Under the literate programming paradigm, the central activity of programming becomes that of conveying meaning to other intelligent beings rather than merely convincing the computer to behave in a particular way.</p></blockquote>
+
+<p>Ross Williams. FunnelWeb Tutorial Manual, pg 4.</p>
+
+<h3>Density within our heads</h3>
+
+<p><img src="/images/blog/2012/12/head-in-hands-150x150.jpg" alt="" /></p>
+
+<p>One could argue that dense code can still be literate in style. Its just that you have to fit all the programming languages syntax into your head. Its not unrealistic to ask developers to know the syntax/api of their language. Though holding it all in memory when its particularly dense can be challenging.</p>
+
+<p>If your a Clojure programmer you might have a good understanding of this code as documentation:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="k">def </span><span class="o">^</span><span class="p">{</span><span class="ss">:dynamic</span> <span class="nv">true</span>
+</span><span class='line'>       <span class="ss">:doc</span> <span class="s">&quot;some doc here&quot;</span><span class="p">}</span>
+</span><span class='line'>     <span class="nv">*allow-default-prerequisites*</span> <span class="nv">false</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And if you&rsquo;re a Ruby or Perl programming you might read this with ease:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vg">$!</span><span class="o">.</span><span class="n">is_a?</span><span class="p">(</span><span class="no">MonkeyError</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Can dense languages be a good idea?</h2>
+
+<blockquote><p>&ldquo;The quantity of meaning compressed into a small space by algebraic signs, is another circumstance that facilitates the reasonings we are accustomed to carry on by their aid.&rdquo;</p></blockquote>
+
+<ul>
+<li>Charles Babbage, quoted in Iverson&rsquo;s Turing Award Lecture</li>
+</ul>
+
+
+<p>Is there a trade-off in moving to a more dense form of expression in helping shape the way we think and the kind of thoughts we have?</p>
+
+<p>How easy is it to hold a dense language in our heads, remembering all the syntax in order to easily read code?</p>
+
+<h2>Regular Expressions</h2>
+
+<p>While regular expressions are not a programming language they are one of the best examples of a very dense language both syntactically and expressively  that has persisted in its syntax through many programming languages.</p>
+
+<p>Is that a sign that regular expressions have succeeded in encoding pattern matching text?</p>
+
+<h3>Write Once</h3>
+
+<p>Do you understand this pattern?</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='perl'><span class='line'><span class="sr">/^[\w]$/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>How about we push the complexity level and try some of the more esoteric symbols in regular expressions:</p>
+
+<p>Do you know what this does?</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='perl'><span class='line'><span class="sr">/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>How about this?</p>
+
+<p><a href="http://www.ex-parrot.com/pdw/Mail-RFC822-Address.html">Full email detection regular expression (RFC822)</a></p>
+
+<p>While regular expressions are very well suited to small patterns, with a very dense language our ability to parse complex statements is reduced.</p>
+
+<p>Which has a knock on effect for maintenance, its read-only and even then its not easy to read.</p>
+
+<h3>Readability</h3>
+
+<p>In fact its considered bad practice to write a regular expression of the form above. Its understood that its hard to read and hence programmers have to add to the dense language to increase readability:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='perl'><span class='line'><span class="o">/</span>
+</span><span class='line'><span class="o">^</span>                                             <span class="c1"># start of string</span>
+</span><span class='line'><span class="p">(</span>                                             <span class="c1"># first group start</span>
+</span><span class='line'>  <span class="p">(?:</span>
+</span><span class='line'>    <span class="p">(?:[</span><span class="o">^</span><span class="p">?</span><span class="o">+*</span><span class="p">{}()[</span><span class="o">\</span><span class="p">]</span><span class="o">\\|</span><span class="p">]</span><span class="o">+</span>                      <span class="c1"># literals and ^, $</span>
+</span><span class='line'>     <span class="o">|</span> <span class="o">\\.</span>                                    <span class="c1"># escaped characters</span>
+</span><span class='line'>     <span class="o">|</span> <span class="o">\</span><span class="p">[</span> <span class="p">(?:</span> <span class="o">\^</span><span class="p">?</span><span class="o">\\.</span> <span class="o">|</span> <span class="o">\^</span><span class="p">[</span><span class="o">^\\</span><span class="p">]</span> <span class="o">|</span> <span class="p">[</span><span class="o">^\\^</span><span class="p">]</span> <span class="p">)</span>     <span class="c1"># character classes</span>
+</span><span class='line'>          <span class="p">(?:</span> <span class="p">[</span><span class="o">^\</span><span class="p">]</span><span class="o">\\</span><span class="p">]</span><span class="o">+</span> <span class="o">|</span> <span class="o">\\.</span> <span class="p">)</span><span class="o">*</span> <span class="o">\</span><span class="p">]</span>
+</span><span class='line'>     <span class="o">|</span> <span class="o">\</span><span class="p">(</span> <span class="p">(?:</span><span class="o">\</span><span class="p">?[:</span><span class="o">=!</span><span class="p">]</span><span class="o">|\</span><span class="p">?</span><span class="sr">&lt;[=!]|\?&gt;</span><span class="p">)?</span> <span class="p">(?</span><span class="mi">1</span><span class="p">)??</span> <span class="o">\</span><span class="p">)</span>  <span class="c1"># parenthesis, with recursive content</span>
+</span><span class='line'>     <span class="o">|</span> <span class="o">\</span><span class="p">(</span><span class="o">\</span><span class="p">?</span> <span class="p">(?:</span><span class="n">R</span><span class="o">|</span><span class="p">[</span><span class="o">+-</span><span class="p">]?</span><span class="o">\</span><span class="n">d</span><span class="o">+</span><span class="p">)</span> <span class="o">\</span><span class="p">)</span>                 <span class="c1"># recursive matching</span>
+</span><span class='line'>     <span class="p">)</span>
+</span><span class='line'>    <span class="p">(?:</span> <span class="p">(?:[?</span><span class="o">+*</span><span class="p">]</span><span class="o">|\</span><span class="p">{</span><span class="o">\</span><span class="n">d</span><span class="o">+</span><span class="p">(?:,</span><span class="o">\</span><span class="n">d</span><span class="o">*</span><span class="p">)?</span><span class="o">\</span><span class="p">})</span> <span class="p">[?</span><span class="o">+</span><span class="p">]?</span> <span class="p">)?</span>   <span class="c1"># quantifiers</span>
+</span><span class='line'>  <span class="o">|</span> <span class="o">\|</span>                                        <span class="c1"># alternative</span>
+</span><span class='line'>  <span class="p">)</span><span class="o">*</span>                                          <span class="c1"># repeat content</span>
+</span><span class='line'><span class="p">)</span>                                             <span class="c1"># end first group</span>
+</span><span class='line'><span class="nv">$</span>                                             <span class="err">#</span> <span class="nv">end</span> <span class="n">of</span> <span class="n">string</span>
+</span><span class='line'><span class="o">/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is definitely not literate programming, comments and code are clearly separate things.</p>
+
+<p>Named captures groups are also an optional feature to improve and document the readability.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">user_regexp</span> <span class="o">=</span> <span class="sr">%r{</span>
+</span><span class='line'><span class="sr">   (?&lt;username&gt; [a-z]+ ){0}</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">   (?&lt;ip_number&gt; [0-9]{1,3} ){0}</span>
+</span><span class='line'><span class="sr">   (?&lt;ip_address&gt; (\g&lt;ip_number&gt;\.){3}\g&lt;ip_number&gt; ){0}</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">   (?&lt;admin&gt; true | false ){0}</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">   \g&lt;username&gt;:\g&lt;ip_address&gt;:\g&lt;admin&gt;</span>
+</span><span class='line'><span class="sr"> }x</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Mnemonics</h3>
+
+<p>Our memory also struggles to find mnemonics or associations to remember the full vocabary of regexps:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='perl'><span class='line'><span class="c1">#Some easy ones</span>
+</span><span class='line'><span class="o">/</span><span class="n">w</span> <span class="c1">#word</span>
+</span><span class='line'><span class="o">/</span><span class="n">s</span> <span class="c1">#space</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">#Harder ones</span>
+</span><span class='line'><span class="p">(?</span><span class="o">&lt;!</span><span class="n">pat</span><span class="p">)</span>
+</span><span class='line'><span class="p">(?</span><span class="o">&lt;=</span><span class="n">pat</span><span class="p">)</span>
+</span><span class='line'><span class="p">(?</span><span class="o">!</span><span class="n">pat</span><span class="p">)</span>
+</span><span class='line'><span class="p">(?</span><span class="o">=</span><span class="n">pat</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Reducing the Density of Regular Expressions</h2>
+
+<p>Creating a DSL for parsing text is a huge domain. The power of regular expressions is very clear.</p>
+
+<p>Yet there have been attempts in various languages to move regular expressions towards a more verbose form to improve readability.</p>
+
+<h3>Regexp::English</h3>
+
+<p>The Perl community has attempted to provide a more English, verbose syntax for regular expressions:</p>
+
+<blockquote><p><a href="http://search.cpan.org/~chromatic/Regexp-English-1.01/lib/Regexp/English.pm">Regexp::English</a> provides an alternate regular expression syntax, one that is slightly more verbose than the standard mechanisms</p></blockquote>
+
+<p>Lets look at an example:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='perl'><span class='line'>        <span class="k">use</span> <span class="nn">Regexp::</span><span class="n">English</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">my</span> <span class="nv">$re</span> <span class="o">=</span> <span class="nn">Regexp::</span><span class="n">English</span>
+</span><span class='line'>                <span class="o">-&gt;</span> <span class="n">start_of_line</span>
+</span><span class='line'>                <span class="o">-&gt;</span> <span class="n">literal</span><span class="p">(</span><span class="s">&#39;Flippers&#39;</span><span class="p">)</span>
+</span><span class='line'>                <span class="o">-&gt;</span> <span class="n">literal</span><span class="p">(</span><span class="s">&#39;:&#39;</span><span class="p">)</span>
+</span><span class='line'>                <span class="o">-&gt;</span> <span class="n">optional</span>
+</span><span class='line'>                        <span class="o">-&gt;</span> <span class="n">whitespace_char</span>
+</span><span class='line'>                <span class="o">-&gt;</span> <span class="n">end</span>
+</span><span class='line'>                <span class="o">-&gt;</span> <span class="n">remember</span>
+</span><span class='line'>                        <span class="o">-&gt;</span> <span class="n">multiple</span>
+</span><span class='line'>                                <span class="o">-&gt;</span> <span class="n">digit</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">while</span> <span class="p">(</span><span class="o">&lt;</span><span class="n">input</span> <span class="o">/&gt;</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>                <span class="k">if</span> <span class="p">(</span><span class="k">my</span> <span class="nv">$match</span> <span class="o">=</span> <span class="nv">$re</span><span class="o">-&gt;</span><span class="n">match</span><span class="p">(</span><span class="nv">$_</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>                        <span class="k">print</span> <span class="s">&quot;$match\n&quot;</span><span class="p">;</span>
+</span><span class='line'>                <span class="p">}</span>
+</span><span class='line'>        <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Better?</p>
+
+<h2>Loving the Density of Regular Expressions</h2>
+
+<p>Clearly there has been some recognition among developers that regexp could be improved by being more verbose. Its interesting that these attempts are considered failures. It would imply the majority of developers prefer dense regexps.</p>
+
+<blockquote><p>&ldquo;you can document them with comments, named capture groups, composing them from well-named variables. of course, no one does those things.&rdquo;
+Tom Stuart</p></blockquote>
+
+<p>In the Perl community some people have given up completely on the humans and their dense, hard to maintain regular expressions.
+They create tools to decode the density automatically:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='perl'><span class='line'><span class="k">use</span> <span class="nn">YAPE::Regex::</span><span class="n">Explain</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">print</span> <span class="nn">YAPE::Regex::</span><span class="n">Explain</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="sx">qr/this.*(?:that)?(?!another)/</span><span class="p">)</span>
+</span><span class='line'>      <span class="o">-&gt;</span><span class="n">explain</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Outputs:</p>
+
+<pre><code>The regular expression:
+
+(?-imsx:this.*(?:that)?(?!another))
+
+matches as follows:
+
+NODE                     EXPLANATION
+----------------------------------------------------------------------
+(?-imsx:                 group, but do not capture (case-sensitive)
+                         (with ^ and $ matching normally) (with . not
+                         matching \n) (matching whitespace and #
+                         normally):
+----------------------------------------------------------------------
+  this                     'this'
+----------------------------------------------------------------------
+  .*                       any character except \n (0 or more times
+                           (matching the most amount possible))
+----------------------------------------------------------------------
+  (?:                      group, but do not capture (optional
+                           (matching the most amount possible)):
+----------------------------------------------------------------------
+    that                     'that'
+----------------------------------------------------------------------
+  )?                       end of grouping
+----------------------------------------------------------------------
+  (?!                      look ahead to see if there is not:
+----------------------------------------------------------------------
+    another                  'another'
+----------------------------------------------------------------------
+  )                        end of look-ahead
+----------------------------------------------------------------------
+)                        end of grouping
+----------------------------------------------------------------------
+</code></pre>
+
+<p>Some snippets on developers thoughts about regular expressions:</p>
+
+<blockquote><p>&ldquo;Love them, probably because they’re a form of arcane magic and they make me feel special for being able to control them&rdquo;</p>
+
+<p>&ldquo;I think they are geek candy &hellip; sometimes used to show off maximum geekness&rdquo;</p>
+
+<p>&ldquo;Love them because they make me look clever and LIKE A H4XX0rrrrr!&rdquo;</p></blockquote>
+
+<h2>The Aesthetics of Density</h2>
+
+<p>Regular expressions have succeeded and they are one of the few very dense languages to have done so.</p>
+
+<p>The density of regular expressions make the initial barrier to getting started and moving to expert high. They are far from what we imagine in a literate programming style, yet once you have the syntax in your head, movement becomes fluid, you think in regular expressions. Dense languages with a very limited common syntax set allow experimenting rapidly. Without practice dense languages quickly drop from your mind and you struggle to fit the problem into the right expressive form.</p>
+
+<p>There is an undeniable beauty in the density of regular expressions, in both syntax and expression.</p>
+
+<p>Finding prime numbers using a single  Regexp:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='perl'><span class='line'><span class="sr">/^1?$|^(11+?)\1+$/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It&rsquo;s also drink absinthe and cut off your own ear crazy.</p>
+
+<p><img src="/images/blog/2012/12/Vincent-Van-Gogh-001-150x150.jpg" alt="" /></p>
+
+<p>I wrote this <a href="https://github.com/josephwilk/iwfms/blob/master/cgi-bin/planner/eventCalculusPlanner.pl">PROLOG code for my thesis</a>. I have no idea how it works now and it would take me about a month of playing with it to get back to a state where the dense language was back in my head and I could express ideas in the PROLOG way.</p>
+
+<p>I spent over a month adding nothing more than a single &ldquo;!&rdquo; mark in the code.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='prolog'><span class='line'><span class="nf">abdemo_holds_ats</span><span class="p">([</span><span class="nf">holds_at</span><span class="p">(</span><span class="nv">F</span><span class="p">,</span><span class="nv">T</span><span class="p">)|</span><span class="nv">Gs</span><span class="p">],</span><span class="nv">R1</span><span class="p">,</span><span class="nv">R3</span><span class="p">,</span><span class="nv">N1</span><span class="p">,</span><span class="nv">N3</span><span class="p">,</span><span class="nv">D</span><span class="p">)</span> <span class="p">:-</span>
+</span><span class='line'>     <span class="p">!,</span>
+</span><span class='line'>     <span class="nf">abdemo</span><span class="p">([</span><span class="nf">holds_at</span><span class="p">(</span><span class="nv">F</span><span class="p">,</span><span class="nv">T</span><span class="p">)],</span><span class="nv">R1</span><span class="p">,</span><span class="nv">R2</span><span class="p">,</span><span class="nv">N1</span><span class="p">,</span><span class="nv">N2</span><span class="p">,</span><span class="nv">D</span><span class="p">),</span>
+</span><span class='line'>
+</span><span class='line'>     <span class="c1">%cut added Joseph Wilk 16/03/2004</span>
+</span><span class='line'>     <span class="p">!,</span>
+</span><span class='line'>     <span class="nf">abdemo_holds_ats</span><span class="p">(</span><span class="nv">Gs</span><span class="p">,</span><span class="nv">R2</span><span class="p">,</span><span class="nv">R3</span><span class="p">,</span><span class="nv">N2</span><span class="p">,</span><span class="nv">N3</span><span class="p">,</span><span class="nv">D</span><span class="p">).</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I still feel its some of the most beautiful code I&rsquo;ve written. Why?</p>
+
+<p>I revel in the expressive density. Bending my brain to express my thoughts in the densely expressive PROLOG way.</p>
+
+<p>I guiltily dip into the syntactical density because it&rsquo;s like the detailing on the brush strokes of a painting.</p>
+
+<p><img src="/images/blog/2012/12/Grunge-Brush-Strokes-Banner-150x150.jpg" alt="" /></p>
+
+<p>Would I ever write this code in a production system that developers would have to maintain? Hell no.</p>
+
+<p>Would I consider this literate programming? Hell no. Just look at the 100 of lines of comments.</p>
+
+<p>But for the sake of art and realising a form of flow I&rsquo;ve not encountered since, I would happily revel in the aesthetics of density.</p>
+
+<p><img src="/images/blog/2012/12/6751247749_4f91cb69f2_z.jpg" alt="" />
+Michael Wolf “Architecture of Density no.36”: <a href="http://www.flickr.com/photos/worldeconomicforum/6751247749">http://www.flickr.com/photos/worldeconomicforum/6751247749/</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">admin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-14T12:02:48+01:00" pubdate data-updated="true">Dec 14<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/software-craftmanship'>software-craftmanship</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://josephwilk.github.io/blog/software-craftmanship/the-aesthetics-of-density.html" data-via="josephwilk" data-counturl="http://josephwilk.github.io/blog/software-craftmanship/the-aesthetics-of-density.html" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="small"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/rhetorical-programming/why-are-you-shouting-programmer.html" title="Previous Post: Why are you SHOUTING programmer?">&laquo; Why are you SHOUTING programmer?</a>
+      
+      
+        <a class="basic-alignment right" href="/presentations/a-developers-guide-to-creating-presentations.html" title="Next Post: A developers guide to creating presentations">A developers guide to creating presentations &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/clojure/overtone-driving-minecraft.html">Clojure and Overtone driving Minecraft</a>
+      </li>
+    
+      <li class="post">
+        <a href="/art/live-coding-repl-electric.html">Live Coding - Repl Electric</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/creative_machines.html">Creative Machines</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/sounds-of-the-human-brain.html">Sounds of the human brain</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/building-clojure-services-at-scale.html">Building Clojure services at scale</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/creating-instruments-with-overtone.html">Creating sampled instruments with Overtone</a>
+      </li>
+    
+      <li class="post">
+        <a href="/elixir/sets-in-elixir.html">Sets in Elixir</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/isolating-external-dependencies-in-clojure.html">Isolating external dependencies in Clojure</a>
+      </li>
+    
+      <li class="post">
+        <a href="/presentations/a-developers-guide-to-creating-presentations.html">A developers guide to creating presentations</a>
+      </li>
+    
+      <li class="post">
+        <a href="/software-craftmanship/the-aesthetics-of-density.html">The Aesthetics of Density</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/josephwilk">@josephwilk</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'josephwilk',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Joseph Wilk -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'josephwilk';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://josephwilk.github.io/blog/software-craftmanship/the-aesthetics-of-density.html';
+        var disqus_url = 'http://josephwilk.github.io/blog/software-craftmanship/the-aesthetics-of-density.html';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

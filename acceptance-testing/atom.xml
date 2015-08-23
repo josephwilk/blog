@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: acceptance-testing | Joseph Wilk]]></title>
+  <link href="http://blogjosephwilk.github.io/blog//acceptance-testing/atom.xml" rel="self"/>
+  <link href="http://blogjosephwilk.github.io/blog/"/>
+  <updated>2015-08-23T18:47:52+02:00</updated>
+  <id>http://blogjosephwilk.github.io/blog/</id>
+  <author>
+    <name><![CDATA[Joseph Wilk]]></name>
+    <email><![CDATA[joe@josephwilk.net]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Allowing Features to Breathe]]></title>
+    <link href="http://blogjosephwilk.github.io/blog/acceptance-testing/allowing-features-to-breathe.html"/>
+    <updated>2010-11-17T17:42:22+01:00</updated>
+    <id>http://blogjosephwilk.github.io/blog/acceptance-testing/allowing-features-to-breathe</id>
+    <content type="html"><![CDATA[<p>Your Cucumber features are living documentation. The world is evolving around them and without exposure they tend to rot.</p>
+
+<h3>Evolving language</h3>
+
+<p>When features are written we use a snapshot of the domain language at some specific timeframe. This ubiquitous language changes and grows outside the codebase and is influenced by more than just developers. When do we refactor features to reflect these changes?</p>
+
+<h3>Taints</h3>
+
+<p>Since the features are in the code base it becomes the developers/QAs responsibility to maintain them. When writing the features for the first time we have lots of discussion. But at a later date the feature language may be tweaked by a developer to allow reuse or some new technical constraint means they want a special step added. This is where taints can sneak into the language.</p>
+
+<h3>Quality</h3>
+
+<p>It&rsquo;s amazing what a difference it makes when people know something they are writing will be published and read by others. Exposing the features can help increase their quality.</p>
+
+<h3>Barriers to entry</h3>
+
+<p>It&rsquo;s great that the features sit close to the code but there is a barrier in how you gain access to that code. While developers find source control like second nature its something that gets in the way for non-technical people.</p>
+
+<h2>Allowing features to breathe</h2>
+
+<p>When someone wants to know about the behaviour of a feature they should be able to turn to the features irrelevant of technical expertise. This engenders discussion which helps bring about changes to the features to better reflect the ubiquitous language and remove taints. The easier it is to access the features the more likely they are to be the first port of call.</p>
+
+<p>So my advice is exposure your Cucumber features to your team (and if possible your users, which <a href="http://relishapp.com/rspec">Rspec has done with Relish</a>), allowing them to browse and question them.</p>
+
+<h3>Relish</h3>
+
+<p>To expose features I currently use <a href="http://relishapp.com">Relish</a>. This is a web based browser for features.</p>
+
+<p><img src="/images/blog/2010/11/Screen-shot-2010-11-17-at-14.27.21.png" alt="" /></p>
+
+<p>Relish has a <a href="https://github.com/justinko/relish">command line gem</a> for pushing features up to the website. I use a post-receive server git hook which upon every push also pushes the features to Relish.</p>
+
+<p>.git/hooks/post-receive
+<code></code></p>
+
+<pre><code>#!/bin/sh
+relish push --project air --organization breathe
+</code></pre>
+
+<p><code></code></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Acceptance Testing Lifecycle]]></title>
+    <link href="http://blogjosephwilk.github.io/blog/acceptance-testing/acceptance-testing-lifecycle.html"/>
+    <updated>2010-11-13T00:29:57+01:00</updated>
+    <id>http://blogjosephwilk.github.io/blog/acceptance-testing/acceptance-testing-lifecycle</id>
+    <content type="html"><![CDATA[<p>Through various meetings at Agile2010 and London agile testing meetings <a href="http://gojko.net/">Gojko Adzic</a> and others have been converging on a common language to talk about Acceptance testing and the different phases. In doing so we have fleshed out a lifecycle for Acceptance testing.</p>
+
+<p><img src="/images/blog/2010/10/Acceptance-test-lifecycle5.png" alt="" /></p>
+
+<p>Seeing a wider picture of the lifecycle helped me gain a better scope of how Cucumber Features are born. I thought I would share a real example demonstrating how the acceptance testing lifecycle (can) flow at Songkick.com.</p>
+
+<h2>Example</h2>
+
+<h3>Business goal</h3>
+
+<pre><code>Increase the ratio of people signing up
+</code></pre>
+
+<p>This gives us something to <em>measure</em> and <em>learn</em> from to assess the success of the features <em>built</em>.</p>
+
+<h3>User stories &ndash; MMFs</h3>
+
+<p>Generating ideas through discussion and brainstorming that achieve this business goal. These are captured as Minimal Marketable Features and have our business goal as their value:</p>
+
+<pre><code>In order to increase signups
+I want visitors to signup through their facebook accounts
+</code></pre>
+
+<p>We break the minimal marketable features into user stories. We try and break the stories into as small as possible units.</p>
+
+<pre><code>Successful signup through Facebook
+In order to sign up with as little effort as possible
+As a non-member
+I want to signup through my facebook account
+
+
+
+
+Failed signup up through Facebook
+In order to sign with as little effort as possible
+As a non-member
+I want to know what I can do to correct errors preventing signup
+</code></pre>
+
+<h3>Key examples</h3>
+
+<p>We have a card with the story narrative representing a token for conversation. We use this card to start discussions with QAs, developers and UX exploring the requirements through concrete examples. Playing the what-if game.</p>
+
+<p>Through this we generate a list of scenarios:</p>
+
+<pre><code>Scenario: Successful signup through facebook
+
+Scenario: Failing due to already having a facebook account connected
+
+Scenario: Facebook is unavailable
+</code></pre>
+
+<p>Note that while we express these as scenarios its not implied that all are going to be tested at the acceptance test level. The developer for scaling/performance issues may push a scenario down to lower level tests.</p>
+
+<h3>Specification with examples</h3>
+
+<p>Pairing with a QA we take the cards and our exploration notes and codify them into Cucumber features.</p>
+
+<pre><code>Feature: Visitor signups up through Facebook ﻿
+  In order to reduce friction in signing up
+  As a non-member
+  I want to signup through my facebook account ﻿
+
+Scenario: Successful signup through facebook
+    Given ...
+    When ...
+    Then ...
+
+Scenario:﻿Failing due to already having a facebook account connected
+    Given ...
+    When ...
+    Then ...
+
+Scenario: ﻿Failed due to Facebook being unavailable
+    Given ...
+    When ...
+    Then ...
+</code></pre>
+
+<p>Note that there is not a 1-1 mapping between a Feature and a User Story.</p>
+
+<h3>Literal automation: Mapping Feature down to step definitions</h3>
+
+<p>The developer turns the feature into an executable test at the same time as writing the feature. When using Cucumber this consists of writing the step definitions.</p>
+
+<h3>Continuous validation</h3>
+
+<p>The feature is continuously run upon every commit (Using a Continuous integration server)</p>
+
+<h3>Living documentation</h3>
+
+<p>Exposing features for all to read. Using a web based system such as <a href="http://relishapp.com/">Relish</a> the features are easily browserable by everyone yet they live in the codebase.</p>
+]]></content>
+  </entry>
+  
+</feed>

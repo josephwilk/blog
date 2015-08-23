@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: rhetorical-programming | Joseph Wilk]]></title>
+  <link href="http://blogjosephwilk.github.io/blog//rhetorical-programming/atom.xml" rel="self"/>
+  <link href="http://blogjosephwilk.github.io/blog/"/>
+  <updated>2015-08-23T18:47:52+02:00</updated>
+  <id>http://blogjosephwilk.github.io/blog/</id>
+  <author>
+    <name><![CDATA[Joseph Wilk]]></name>
+    <email><![CDATA[joe@josephwilk.net]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Why are you SHOUTING programmer?]]></title>
+    <link href="http://blogjosephwilk.github.io/blog/rhetorical-programming/why-are-you-shouting-programmer.html"/>
+    <updated>2012-11-19T01:00:51+01:00</updated>
+    <id>http://blogjosephwilk.github.io/blog/rhetorical-programming/why-are-you-shouting-programmer</id>
+    <content type="html"><![CDATA[<p>Being shouted at is not a lot of fun. So why do we shout in code?</p>
+
+<p><img src="/images/blog/2012/11/image1-201x300.jpg" alt="" /></p>
+
+<h2>Shouting code</h2>
+
+<p>Compare</p>
+
+<pre><code>"how_many_monkeys_can_a_monkey_eat_before_it_explodes"
+</code></pre>
+
+<p>and:</p>
+
+<pre><code>"HOW_MANY_MONKEYS_CAN_A_MONKEY_EAT_BEFORE_IT_EXPLODES"
+</code></pre>
+
+<p>How do you read those differently in your head?</p>
+
+<p>We associate capital letters with someone shouting.</p>
+
+<p>Now lets turn to two functionally equivalent pieces of Ruby code:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Monkey</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">capacity</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;10</span>
+</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;  end&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span>  <span class="k">def</span> <span class="nf">stomach</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;  &quot;I can fit </span><span class="si">#{</span><span class="n">capacity</span><span class="si">}</span><span class="sr"> monkeys in my belly&quot;</span>
+</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;  end</span>
+</span><span class='line'><span class="sr">end</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>And</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Monkey</span>
+</span><span class='line'>  <span class="no">CAPACITY</span> <span class="o">=</span> <span class="mi">10</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;  def stomach&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="s2">&quot;I can fit </span><span class="si">#{</span><span class="no">CAPACITY</span><span class="si">}</span><span class="s2"> monkeys in my belly&quot;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="sr">/code&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Constants are shouted. Why do we shout? Because:</p>
+
+<ul>
+<li><p>We are angry</p></li>
+<li><p>We have something we think is important and we want everyone to hear it.</p></li>
+</ul>
+
+
+<p>Why in Ruby are constants uppercase? Well they don&rsquo;t have to be, Ruby constrains us to ensuring the first letter is a capital.
+We get warnings if we try and reassign their value but ultimately they are just Fixnums. In order to stick with our Ruby naming convention we use &lsquo;_&rsquo; and all caps.</p>
+
+<p>So its a combination or <strong>telling the compiler that this value is a constant</strong> and <strong>fitting with the naming scheme</strong> in Ruby.</p>
+
+<p>We shout because society indicates to us thats the normal behaviour and we all want to be nice citizens of the Ruby republic.</p>
+
+<p>As a side effect constants feel like they are more important than the other variables or methods. They should take our attention first.</p>
+
+<h2>Reading uppercase is slow</h2>
+
+<p>What wait a minute isn&rsquo;t uppercase text harder to read? There is evidence [1] to show that all-caps is less legible and less readable than lower case. So constants are harder for us to read.</p>
+
+<blockquote><p>lowercase permits reading by word units, while all capitals tend to be read letter by letter</p></blockquote>
+
+<h2>Numbers, letters and uppercase</h2>
+
+<p>A common use of shouting case is constants used to remove magic numbers from calculations.</p>
+
+<pre><code>1000 * 667895 / LIMIT + 475436
+</code></pre>
+
+<p>The brain recognises numbers and letters very differently. The brain in general can recognise words faster than a sequence of digits since with a word we do not need to read each character in order to recognise the word.</p>
+
+<p>To see for yourself try and read the following:</p>
+
+<blockquote><p>The hmaun mind does not raed eervy letter by istlef but the word as aa woelh.</p></blockquote>
+
+<p>Compare how much more time it takes you to read the numbers.</p>
+
+<blockquote><p>124 3456 3234 5443 3342 55334 66554 47567</p></blockquote>
+
+<p>By uppercasing the constant we are slowing down this natural ability to read words.</p>
+
+<p>Compare again:</p>
+
+<pre><code>1000 * 667895 / LIMIT + 475436
+</code></pre>
+
+<p>With:</p>
+
+<pre><code>1000 * 667895 / limit + 475436
+</code></pre>
+
+<p>Do we really need this further uppercase difference? With the instinctive separation between words and letters the further effort and cognitive slow down has little value.</p>
+
+<h3>Immutability vs Mutability</h3>
+
+<p>A legitimate case were it does become useful to use shouting case is where you want to distinguish between variables/functions and constants. Expressing that a value is immutable in comparison to a mutable variable is important in a language like Ruby were immutability is not the norm.</p>
+
+<pre><code>1000 * 667895 + scale / LIMIT + 475436 - radius
+</code></pre>
+
+<h2>Shouting in technicolor</h2>
+
+<p>Editors often provide color markup for words in uppercase. For example for Ruby in Textmate:</p>
+
+<p><img src="/images/blog/2012/11/Screen-Shot-2012-11-17-at-15.00.41.png" alt="" /></p>
+
+<p>Though they also provide the difference between variables/function and numbers.
+Shouting provides us with a discernible way to see all constants within the code at glance based on colour.</p>
+
+<h2>History of shouting in code</h2>
+
+<p>How or where did this convention of uppercasing constants come from?
+Why is it a convention?
+When did we start shouting in our code?</p>
+
+<p>What made us so mad?</p>
+
+<h4>Assembly</h4>
+
+<p>It started with assembly,  the convention was to uppercase variables names and lowercase instructions.</p>
+
+<pre><code>ADCTL  = 0x30
+staa ADCTL,X
+</code></pre>
+
+<p>Variable names were limited in length, so often variable names were acronyms, which in English are often capitalised (we just skipped the dot). Registers, memory &amp; caches all had nice acronyms which you could reference in your assembly.</p>
+
+<p><img src="/images/blog/2012/11/image5-150x150.jpg" alt="" /></p>
+
+<p>Assembly was more machine centric than human centric. Not quite shouting as we know it now (though its understandable we were angry with all that ugly code).</p>
+
+<h4>FLOW-MATIC</h4>
+
+<p>The birth of programming in English. It was not a pretty birth, this thing was born shouting very loudly. EVERYTHING is in capitals, even the programming languages name!</p>
+
+<pre><code>INPUT  INVENTORY FILE=A
+ PRICE FILE=B,
+ OUTPUT PRICED-INV FILE=C
+ UNPRICED-INV FILE=D,
+ HSP D.
+</code></pre>
+
+<p>Flow-Matic had the builtin in constant ZERO. Our first example of a Constant but where everything is capitalised so it is not distinguished from other code.</p>
+
+<h4>FORTRAN</h4>
+
+<p>FORTRAN was a confused language when it came to shouting. The use of lowercase letters in keywords was strictly nonstandard.</p>
+
+<pre><code>IF (IA+IC-IB) 777,777,705
+IF (IB+IC-IA) 777,777,799
+STOP 1
+C USING HERON'S FORMULA WE CALCULATE THE
+C AREA OF THE TRIANGLE
+S = FLOATF (IA + IB + IC) / 2.0
+AREA = SQRT( S * (S - FLOATF(IA)) * (S - FLOATF(IB)) + (S - FLOATF(IC)))
+WRITE OUTPUT TAPE 6, 601, IA, IB,
+STOP
+END
+</code></pre>
+
+<p>But then the liberation came and after a bloody battle FORTRAN was renamed Fortran.</p>
+
+<p><img src="/images/blog/2012/11/fist-150x150.png" alt="" /></p>
+
+<p>In this new post revolution age Fortran&rsquo;s compiler was a liberal one, not caring about shouting or case at all.</p>
+
+<pre><code>program helloworld
+     print *, "Hello, world."
+end program helloworld
+</code></pre>
+
+<p>The society on the other hand was still very keen to tell its citizens when they should shout. It was a social coding convention that local variables be in lowercase and language keywords be in uppercase.</p>
+
+<p>Language keywords were more important and hence shouted. Far more important than those pesky human named local variables. This inverted the previous Assembly conventions on the use of case.</p>
+
+<h4>LISP</h4>
+
+<p>Common Lisp is case sensitive but the Common Lisp reader converts all uppercase to lower case:</p>
+
+<pre><code>(defun hi () "Hi!)
+(hi) ;; outputs "Hi"
+(HI) ;; outputs "Hi"
+(Hi) ;; outputs "Hi"
+</code></pre>
+
+<p>LISP had a social convention to only use lowercase (one might think to avoid confusing situations like the one above). Did LISPeans shout at all? They did when it came to  documentation strings:</p>
+
+<blockquote><p>&ldquo;In a documentation string, when you need to refer to function arguments, names of classes, or other lisp objects, write these names in all uppercase, so that they are easy to find&rdquo;</p></blockquote>
+
+<p>This was to help humans easily find them and because documentation generation tools could detect them.</p>
+
+<p>Shouting the references in unstructured text made them clearly visible to both machines and humans.</p>
+
+<h4>COBOL</h4>
+
+<p>COBOL is another of those shouting languages which liked everything in uppercase. Which makes reading a COBOL program akin to having someone shout very loudly in your face. Until you cry. Lots.</p>
+
+<p><img src="/images/blog/2012/11/image6-150x150.jpg" alt="" /></p>
+
+<pre><code>01 RECORD-NAME.
+02 DATA-NAME-1-ALPHA PIC X(2).
+02 DATA-NAME-2.
+03 DATA-NAME-3-NUMERIC PIC 99.
+03 DATA-NAME-4.
+04 DATA-NAME-5-ALPHA PIC X(2).
+04 DATA-NAME-6-NUMERIC PIC 9(5).
+02 DATA-NAME-7-ALPHA PIC X(6).
+</code></pre>
+
+<p>The only thing that was not upper case was comments.</p>
+
+<blockquote><p>It helps if all comments are in lower-case, to differentiate from actual commands which should always be in upper-case</p></blockquote>
+
+<p>Comments where not important, so no need to shout them. Which in turn makes them easier to read. Perhaps there is an understanding here that shouting makes code hard to read. Comments which might contain a lot of text should also be easier to read.</p>
+
+<p>If you were still in doubt about COBOL&rsquo;s evilness: user defined constants were distinguished by using a <strong>single character variable name</strong>. MAD. YES THAT WAS WORTH SHOUTING.</p>
+
+<h4>Basic</h4>
+
+<p>In basic keywords were capitalised to distinguish between variables names. The case is insignificant, it&rsquo;s for the humans not the compiler.</p>
+
+<pre><code>LET m = 2
+LET a = 4
+LET force = m*a
+PRINT force
+END
+</code></pre>
+
+<p>Keys words are important, so shout them. But in turn make it easier to read the user named variables by leaving them lower case.</p>
+
+<h4>C</h4>
+
+<p>C uses uppercase by convention for object-like Macros which get replaced during pre-processing.</p>
+
+<pre><code>#define BUFFER_SIZE 1024
+foo = (char *) malloc (BUFFER_SIZE);
+</code></pre>
+
+<p>Uppercase is used to defined a templating language within C, which we can quickly distinguish from the code. It also makes the job of the pre-processor easier, parsing macros.</p>
+
+<h2>So is shouting a bad thing?</h2>
+
+<p>When it comes to expressing ideas in nothing but text we use everything we can to provide structure and separation to help improve clarity. Shouting or uppercasing words provides a very powerful way of rapidly distinguishing certain aspects of text.</p>
+
+<p>How programming languages spend this limited currency of instinctive separation reflects the languages understanding of readability (i&rsquo;m looking at you COBOL) and what they find to be important enough to earn shouting case.</p>
+
+<p>However most modern languages provide you with the choice of shouting. In Ruby we can skip it all together.</p>
+
+<p>Try not shouting for a while. See how it makes you feel.</p>
+
+<p><img src="/images/blog/2012/11/shhh1-150x150.png" alt="" /></p>
+
+<p>And always:</p>
+
+<p>TRY AND AVOID SHOUTING FOR TOO LONG AS IT IS HARD TO READ.</p>
+
+<p>Keep it <strong>sharp</strong>, <strong>short</strong> and <strong>loud</strong>.</p>
+
+<h2>References</h2>
+
+<p>[1] <a href="http://www.amazon.co.uk/gp/product/0962489158/ref=as_li_ss_tl?ie=UTF8&amp;camp=1634&amp;creative=19450&amp;creativeASIN=0962489158&amp;linkCode=as2&amp;tag=joswilblo-21">Type and Layout: How Topography and Design Can Get Your Message Across &ndash; Or get in the Way</a></p>
+]]></content>
+  </entry>
+  
+</feed>

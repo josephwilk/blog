@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: startups | Joseph Wilk]]></title>
+  <link href="http://josephwilk.github.io/blog//startups/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io/blog/"/>
+  <updated>2015-08-23T19:25:41+02:00</updated>
+  <id>http://josephwilk.github.io/blog/</id>
+  <author>
+    <name><![CDATA[Joseph Wilk]]></name>
+    <email><![CDATA[joe@josephwilk.net]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Startups Infiltrating Agile and XP]]></title>
+    <link href="http://josephwilk.github.io/blog/startups/startups-infiltrating-agile-and-xp.html"/>
+    <updated>2011-05-27T17:34:00+02:00</updated>
+    <id>http://josephwilk.github.io/blog/startups/startups-infiltrating-agile-and-xp</id>
+    <content type="html"><![CDATA[<p><img src="/images/blog/2011/05/Agile2011-badge.jpg" alt="" /> I&rsquo;m very excited to be talking at this years <a href="http://agile2011.agilealliance.org/">Agile2011</a> conference. Its a goal I&rsquo;ve been working towards for a long time.</p>
+
+<p>I&rsquo;ve been to lots of agile conferences where I have listen to consultants talk about how they have made their multi-nationals or large organisations better through x. Interesting but often not much I could take away and apply at a startup.</p>
+
+<p>Sadly there are only 4 talks at Agile2011 tagged with <em>Startups</em> and 6 tagged with <em>Lean Startup</em>.</p>
+
+<p>I&rsquo;m passionate about startups and I want there to be more focus at agile events around them. Having spoken to lots of startups all over the world and living in the London startup hub, I all to often hear people dismiss Agile and XP events as not relevant. While there is a lot of activity around the <a href="http://en.wikipedia.org/wiki/Lean_Startup">Lean Startup</a> little is said about <a href="http://www.extremeprogramming.org/">Extreme Programming</a> and startups. The rich experience of the Agile community tends to  get lost. The Lean Startup has provided a movement which has helped deliver ideas from agile to startups, something agile conferences have failed at.</p>
+
+<p>I&rsquo;m happy to be injecting a dose of startup with my talk at Agile2011 about <a href="http://submit2011.agilealliance.org/node/10782">Acceptance testing in the world of the startup</a>. I&rsquo;ll be drawing from my experiences of working at the startup <a href="http://www.songkick.com">Songkick.com</a>. Looking at the things we did badly, things we did well and things we still have no clue about.</p>
+
+<p>I&rsquo;m also helping organise events in London and other major cities around Extreme Programming and Startups.</p>
+]]></content>
+  </entry>
+  
+</feed>

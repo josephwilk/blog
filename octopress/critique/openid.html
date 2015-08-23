@@ -1,0 +1,494 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>OpenId - Joseph Wilk</title>
+  <meta name="author" content="Joseph Wilk">
+
+  
+  <meta name="description" content="OpenID is an open loosely distributed single sign on protocol. It looks at why Microsoft&rsquo;s single sign on has not taken off on a large scale. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://josephwilk.github.io/blog/critique/openid.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Joseph Wilk" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<script src="http://disqus.com/forums/josephwilk/embed.js"></script>
+<link href="http://fonts.googleapis.com/css?family=Bevan" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-3020740-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <img src="/images/joe_small.jpg" style="position:relative;border-radius: 8px;margin-right: 5px;border-style: solid;border-width: 1px;border-color: #DDD;" height="60" alt="Joseph Wilk">
+  <span style="display:inline-block">
+    <h1><a href="/">Joseph Wilk</a></h1>
+    <h2>Programming bits and bobs</h2>
+  </span>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:josephwilk.github.io/blog" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+ <li><a href="/">Home</a></li>
+ <li><a href="/about">About</a></li>
+ <li><a href="/speaking">Speaking</a></li>
+ <li><a href="/contact">Contact</a></li>
+ <li><a href="/archives">Archives</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">OpenId</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-11-11T11:19:47+01:00" pubdate data-updated="true">Nov 11<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>OpenID is an open loosely distributed single sign on protocol. It looks at why Microsoft&rsquo;s single sign on has not taken off on a large scale. Concluding that no-one wants a single company storing all details, hence create a distributed single sign-on protocol.</p>
+
+<p>OpenIDs take the form of URLS:</p>
+
+<pre><code>exampleuser.livejournal.com
+</code></pre>
+
+<h3>OpenID 1.1 Protocol Summary</h3>
+
+<p>OpenID specifications |<a href="http://openid.net/specs.bml">http://openid.net/specs.bml</a></p>
+
+<p>The openid protocol 1.1 specification in summary.</p>
+
+<ul>
+<li><p>Identify the Identify Provider associated with openid submitted by the End User.</p></li>
+<li><p>Agree a shared key between the Consumer and Identify Provider.</p></li>
+<li><p>Redirect the End User to the Identify Provider to authenticate themselves with a password.</p></li>
+<li><p>End User gets redirected back to Consumer with authentication data signed by the shared key.</p></li>
+</ul>
+
+
+<p>Dumb mode &ndash;> Consumer asks Identify Provider to return whether authentication data is valid.</p>
+
+<p>Smart mode &ndash;> Consumer checks signed data with shared key</p>
+
+<p>Diffie hellman <a href="http://en.wikipedia.org/wiki/Diffie-Hellman_key_exchange">http://en.wikipedia.org/wiki/Diffie-Hellman_key_exchange</a> can optionally be used when agreeing the shared key.</p>
+
+<h3>Trust</h3>
+
+<p>OpenID does not cover the concept of trust. Anyone could create a OpenID Identify Provider, create an id and then use this to login.</p>
+
+<p>Hence its important to realise that the OpenID library implementations do not cover trust. A white list should be made which is then used to validate users Identify Providers and decide whether the consumer should trust them.</p>
+
+<p>OpenID Provider Server URLs</p>
+
+<ul>
+<li><p>LiveJournal &ndash; <a href="http://www.livejournal.com/openid/server.bml">http://www.livejournal.com/openid/server.bml</a></p></li>
+<li><p>Vox &ndash; <a href="http://www.vox.com/services/openid/server">http://www.vox.com/services/openid/server</a></p></li>
+<li><p>VeriSign &ndash; <a href="https://pip.verisignlabs.com/server">https://pip.verisignlabs.com/server</a></p></li>
+<li><p>MyOpenID &ndash; <a href="http://www.myopenid.com/server">http://www.myopenid.com/server</a></p></li>
+</ul>
+
+
+<p>There are other options than using white/black lists. Some of the more interesting ideas floating around about the use of Reputation.</p>
+
+<p>Reputation for OpenID <a href="http://www.windley.com/archives/2007/03/reputation_for_openid.shtml">http://www.windley.com/archives/2007/03/reputation_for_openid.shtml</a></p>
+
+<p>Wired &ndash; Herding the mob <a href="http://www.wired.com/wired/archive/15.03/herding.html">http://www.wired.com/wired/archive/15.03/herding.html</a></p>
+
+<h3>Security Issues (On-going analysis)</h3>
+
+<h4>Malicious End User &ndash; Denial Of Service</h4>
+
+<p>A Malicious End User could have a OpenId which resolves to a malicious internal network. This internal connection could be for example: a [Tarpit|<a href="http://en.wikipedia.org/wiki/Tarpit_%28networking%29">http://en.wikipedia.org/wiki/Tarpit_%28networking%29</a>]. The Consumer is stuck in the tar pit, possibly timing out due to exceeding a maximum execution time.</p>
+
+<p>Using a paranoid HTTP Library can help protect against this issue.</p>
+
+<p><a href="http://search.cpan.org/~bradfitz/LWPx-ParanoidAgent-1.02/lib/LWPx/ParanoidAgent.pm">http://search.cpan.org/~bradfitz/LWPx-ParanoidAgent-1.02/lib/LWPx/ParanoidAgent.pm</a></p>
+
+<h4>Secret keys passed plain text</h4>
+
+<p>Its optional to pass the shared key using Diffie Hellman. Hence without Diffie Hellman the key could be sniffed passing between the Consumer and the Identity Provider.</p>
+
+<h4>Replay attacks</h4>
+
+<p>Nonces|<a href="http://en.wikipedia.org/wiki/Cryptographic_nonce">http://en.wikipedia.org/wiki/Cryptographic_nonce</a>] are not an integral part of the OpenID protocol.</p>
+
+<p><em>&ldquo;OpenID Consumer&rsquo;s SHOULD add a self-signed nonce with Consumer-local timestamp in the openid.return_to URL parameters to prevent replay attacks. Details of that are left up to the Consumer.&rdquo;</em></p>
+
+<p>Consumers can operate in dumb mode, meaning they store no state. Without storing state it is not possible to protect against replay attacks. The Consumer has no history of previous nonces. Hence it would not detect a old nonce used in a replay attack.</p>
+
+<h4>Nonce Passing</h4>
+
+<p>The nonce generated by the Consumer can cross the network 3 times in plaintext as GET parameters.</p>
+
+<ul>
+<li><p>Consumer Request to Identity Provider.</p></li>
+<li><p>Identity Provider Redirection sent to End User (telling them to redirect to the Consumer)</p></li>
+<li><p>End User request to Consumer.</p></li>
+</ul>
+
+
+<p>The greater the exposure of the nonce and the potential to sniff the shared key means a malicious attacker could create a fake/replay/pre-play response that the Consumer would accept.</p>
+
+<h4>Delegating Authentication</h4>
+
+<p>OpenID supports a URL delegating to a Identify Provider.
+The URL delegates by providing &lsquo;links&rsquo; in the html at the URL location.</p>
+
+<p>Example:</p>
+
+<pre><code>&lt;link rel="openid.server" href="http://www.livejournal.com/openid/server.bml"&gt;
+
+
+
+
+&lt;link rel="openid.delegate" href="http://exampleuser.livejournal.com/"&gt;
+</code></pre>
+
+<p>With a single point for delegation which is resolved without user interaction there is a risk that if this homepage is comprised the delegater could be changed to a malicious identify provider. This change could go un-noticed due to the automatic resolution.</p>
+
+<p>This is a Trust issue and can be solved using whitelists and phishing protection at the Consumer.</p>
+
+<h4>Phishing</h4>
+
+<p>With the redirection from one login page to another there is a worry about phishing. How do you know you have not be redirected to some malicious signin page which steals you details rather than logging you in. URLs are an answer but a lot of people do not examine the URLS. This problem is not part of the OpenID protocol but rather a problem existing for all internet sites.</p>
+
+<p>Verisign has a firefox plugin SeatBelt which attempts to detect if the OpenId site is legitimate.
+SeatBelt|<a href="https://pip.verisignlabs.com/seatbelt.do">https://pip.verisignlabs.com/seatbelt.do</a></p>
+
+<h4>Single Sign on &ndash; Break a single password = access to all accounts.</h4>
+
+<p>A person on average has:
+18 user accounts
+3.47 passwords.</p>
+
+<p>So people are using the same password for multiple accounts already. Single email accounts are tied to many user accounts. Any forgotten email reminders sent to an email address from a website mean the comprise of an email account can mean access to many other user accounts is possible.</p>
+
+<p>Single sign-on is a risk and it would be safer to have separate user accounts each with different passwords. This however does not fit with how people are using the internet.</p>
+
+<p>Its a comprise of convenience vs security and that decision needs to be made on a per solution basis.</p>
+
+<h3>Security Summary</h3>
+
+<p>The OpenID specification has optional features which if not used decrease the security of the system.</p>
+
+<p>There are also security issues that are outside the OpenID protocol.</p>
+
+<p>When using OpenID its important to access the security requirements of the problem and ensure that library implementations provide these optional features.</p>
+
+<p>Different OpenID libraries implement the protocol and go beyond it dealing with issues like Nonces being passed in the clear to many times. Assess the libraries support of these issues.</p>
+
+<p>Work outside of the OpenID is required to deal with the issue of Trust.</p>
+
+<p>Phishing remains an issue.</p>
+
+<h3>Openid Libraries</h3>
+
+<p>The currently list of libraries implementations of OpenId are available in:</p>
+
+<ul>
+<li><p> C#</p></li>
+<li><p> C++</p></li>
+<li><p> Java</p></li>
+<li><p> Perl</p></li>
+<li><p> Python</p></li>
+<li><p> Ruby</p></li>
+<li><p> PHP</p></li>
+<li><p> ColdFusion</p></li>
+</ul>
+
+
+<p>Many libraries go beyond the openid protocol and add protection against replay attacks.</p>
+
+<h3>Yadis Protocol</h3>
+
+<p>Although not part of the specification OpenID can use the [Yadis|<a href="http://yadis.org/wiki/Main_Page">http://yadis.org/wiki/Main_Page</a>] protocol:</p>
+
+<p><em>The Yadis protocol enables discovery of service definitions from an <a href="http://">http://</a> or <a href="https://">https://</a> URL. The protocol consists of performing HTTP requests to obtain a Yadis Resource Descriptor.</em></p>
+
+<p>This enables identify providers to be discovered through an OpenID. For our example OpenID we could look at the url:
+exampleuser.livejournal.com</p>
+
+<p><a href="http://exampleuser.livejournal.com">http://exampleuser.livejournal.com</a></p>
+
+<h3>Links</h3>
+
+<p><a href="http://openid.net/">http://openid.net/</a></p>
+
+<p><a href="http://en.wikipedia.org/wiki/Diffie-Hellman_key_exchange">http://en.wikipedia.org/wiki/Diffie-Hellman_key_exchange</a></p>
+
+<p><a href="https://pip.verisignlabs.com/seatbelt.do">https://pip.verisignlabs.com/seatbelt.do</a></p>
+
+<p><a href="http://yadis.org/wiki/Main_Page">http://yadis.org/wiki/Main_Page</a></p>
+
+<p><a href="http://en.wikipedia.org/wiki/Cryptographic_nonce">http://en.wikipedia.org/wiki/Cryptographic_nonce</a></p>
+
+<p><a href="http://en.wikipedia.org/wiki/Tarpit_%28networking%29">http://en.wikipedia.org/wiki/Tarpit_%28networking%29</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">admin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-11-11T11:19:47+01:00" pubdate data-updated="true">Nov 11<span>th</span>, 2007</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/critique'>critique</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://josephwilk.github.io/blog/critique/openid.html" data-via="josephwilk" data-counturl="http://josephwilk.github.io/blog/critique/openid.html" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="small"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/snippets/curl-and-certificates-with-windows-php.html" title="Previous Post: Curl and Certificates with Windows PHP">&laquo; Curl and Certificates with Windows PHP</a>
+      
+      
+        <a class="basic-alignment right" href="/projects/squid-and-members.html" title="Next Post: Squid and members">Squid and members &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/clojure/overtone-driving-minecraft.html">Clojure and Overtone driving Minecraft</a>
+      </li>
+    
+      <li class="post">
+        <a href="/art/live-coding-repl-electric.html">Live Coding - Repl Electric</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/creative_machines.html">Creative Machines</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/sounds-of-the-human-brain.html">Sounds of the human brain</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/building-clojure-services-at-scale.html">Building Clojure services at scale</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/creating-instruments-with-overtone.html">Creating sampled instruments with Overtone</a>
+      </li>
+    
+      <li class="post">
+        <a href="/elixir/sets-in-elixir.html">Sets in Elixir</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/isolating-external-dependencies-in-clojure.html">Isolating external dependencies in Clojure</a>
+      </li>
+    
+      <li class="post">
+        <a href="/presentations/a-developers-guide-to-creating-presentations.html">A developers guide to creating presentations</a>
+      </li>
+    
+      <li class="post">
+        <a href="/software-craftmanship/the-aesthetics-of-density.html">The Aesthetics of Density</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/josephwilk">@josephwilk</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'josephwilk',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Joseph Wilk -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'josephwilk';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://josephwilk.github.io/blog/critique/openid.html';
+        var disqus_url = 'http://josephwilk.github.io/blog/critique/openid.html';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: critique | Joseph Wilk]]></title>
+  <link href="http://josephwilk.github.io/blog//critique/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io/blog/"/>
+  <updated>2015-08-23T19:25:41+02:00</updated>
+  <id>http://josephwilk.github.io/blog/</id>
+  <author>
+    <name><![CDATA[Joseph Wilk]]></name>
+    <email><![CDATA[joe@josephwilk.net]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Admins Plugins Review]]></title>
+    <link href="http://josephwilk.github.io/blog/critique/rails-admins-plugins-review.html"/>
+    <updated>2008-02-14T13:04:10+01:00</updated>
+    <id>http://josephwilk.github.io/blog/critique/rails-admins-plugins-review</id>
+    <content type="html"><![CDATA[<p>A brief examination of some of the major Admin plugins for rails.</p>
+
+<ul>
+<li><p>Lipsiaadmin</p></li>
+<li><p>AutoAdmin</p></li>
+<li><p>ActiveScaffold</p></li>
+<li><p>Hobo</p></li>
+<li><p>Streamlined</p></li>
+</ul>
+
+
+<h3>Lipsiadmin</h3>
+
+<p><a href="http://rails.lipsiasoft.com/wiki/lipsiadmin">http://rails.lipsiasoft.com/wiki/lipsiadmin</a></p>
+
+<p><strong>Google group Members</strong><strong>: </strong>No group</p>
+
+<p><strong>Live Demo:</strong> <a href="http://demoadmin.lipsiasoft.org/admin/">http://demoadmin.lipsiasoft.org/admin/</a></p>
+
+<p><strong>Sample Projects: </strong>None</p>
+
+<p>This admin framework mixes Ajax/JavaScript (library <a href="http://extjs.com/">Ext 2.0</a> views) and old school HTML. The interface is presented in an application style reminiscent of Microsoft Outlook.</p>
+
+<p><img src="/wp-content/uploads/2008/02/lipsiaadmin2.png" alt="Lipsia Admin" /></p>
+
+<p><strong>Feature set</strong></p>
+
+<ul>
+<li><p><a href="http://extjs.com/">http://extjs.com/</a> JavaScript library.</p></li>
+<li><p>Generator Admin code.</p></li>
+<li><p>Permissions support</p></li>
+<li><p>Live search</p></li>
+<li><p>Creation of menus within migrations.</p></li>
+</ul>
+
+
+<p><strong>Weaknesses</strong></p>
+
+<ul>
+<li><p>Community seems non-existent</p></li>
+<li><p>Sparse documentation</p></li>
+</ul>
+
+
+<hr />
+
+<h3>AutoAdmin</h3>
+
+<p><a href="http://rails.lipsiasoft.com/wiki/lipsiadmin">http://code.trebex.net/auto-admin</a></p>
+
+<p><strong>Google group Members</strong><strong> (</strong><a href="http://groups.google.com/group/rails-autoadmin">http://groups.google.com/group/rails-autoadmin</a><strong>):</strong>  <strong>37</strong></p>
+
+<p><strong>Live Demo:</strong> None</p>
+
+<p><strong>Sample Projects: </strong>None</p>
+
+<p>Heavily influenced by Djangos admin system in both theme and with the definition of admin display configuration within in models. Sub-projects within Django have already started to move away from this approach (<a href="http://code.djangoproject.com/wiki/NewformsAdminBranch">newforms-admin</a>).</p>
+
+<p>Its goal is to generate views you otherwise wouldn&rsquo;t bother to create.</p>
+
+<h3><img src="/wp-content/uploads/2008/02/autoadmin.png" alt="AutoAdmin" /></h3>
+
+<p><strong>Feature set</strong></p>
+
+<ul>
+<li><p>Themes</p></li>
+<li><p>Basic Access Control &ndash; All or Nothing</p></li>
+</ul>
+
+
+<p><strong>Weaknesses</strong></p>
+
+<ul>
+<li><p>Lacks reliable set of Tests</p></li>
+<li><p>Admin display configuration is stored within Models (Django branches <a href="http://code.djangoproject.com/wiki/NewformsAdminBranch">newforms-admin</a> have already moved aways from this)</p></li>
+<li><p>Problems with editable sublists</p></li>
+<li><p>Access control does not support more complex use cases.</p></li>
+</ul>
+
+
+<hr />
+
+<h3>ActiveScaffold (Version <strong>1.1.1</strong>)</h3>
+
+<p><a href="http://www.activescaffold.com">http://www.activescaffold.com</a></p>
+
+<p><strong>Google group Members</strong><strong> (</strong><a href="http://groups.google.com/group/activescaffold">http://groups.google.com/group/activescaffold</a><strong>):</strong> 1075</p>
+
+<p><strong>Live Demo</strong>: <a href="http://demo.activescaffold.com/">http://demo.activescaffold.com/</a></p>
+
+<p><strong>Sample Projects: (SVN)</strong><a href="http://activescaffold.googlecode.com/svn/applications/demo/"> http://activescaffold.googlecode.com/svn/applications/demo/</a></p>
+
+<p>A Ajax driven admin system which promotes itself on being both configurable and customizable.</p>
+
+<p>Configuration: <em>&ldquo;throwing flags and setting options and manipulating the setup.&rdquo;</em></p>
+
+<p>Customizing: <em>&ldquo;defining conventional methods or .rhtml overrides that it will intelligently use when available.&rdquo;</em></p>
+
+<p><img src="/wp-content/uploads/2008/02/activescaffold.png" alt="ActiveScaffold" /></p>
+
+<p>Admin customisation is performed in the controller.</p>
+
+<p><strong>Feature Set </strong></p>
+
+<ul>
+<li><p>Installed through plugin</p></li>
+<li><p>Ajax driven interface</p></li>
+<li><p>Embed ActiveScaffold like a widget in your web page.</p></li>
+<li><p>High quality Documentation</p></li>
+<li><p>Supports Third Party plugins within active scaffold : <a href="http://wiki.activescaffold.com/wiki/published/ThirdPartyPlugins">http://wiki.activescaffold.com/wiki/published/ThirdPartyPlugins</a></p></li>
+<li><p>Graceful JavaScript degradation</p></li>
+<li><p>Hugely Customizable</p>
+
+<ul>
+<li><p>Admin interface</p>
+
+<ul>
+<li><p>Grouping form inputs</p></li>
+<li><p>Layout</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Guaranteed to work on Firefox 1+, IE 6+ and Safari 2+</p></li>
+</ul>
+
+
+<p><strong>Weaknesses</strong></p>
+
+<ul>
+<li><p>No concept of semantic markup for models so configuration takes over when a little magic could  help reduce  the work in some usages.</p></li>
+<li><p>Ajax interface is not amazingly usable.</p></li>
+</ul>
+
+
+<hr />
+
+<h3>Hobo (version 0.7.2)</h3>
+
+<p><a href="http://hobocentral.net/">http://hobocentral.net/</a></p>
+
+<p><strong>Google group Members</strong><strong>:</strong> No Group</p>
+
+<p><strong>Live Demo:</strong> None</p>
+
+<p><strong>Sample Projects:</strong> <a href="http://hobocentral.net/blog/demos/">http://hobocentral.net/blog/demos/</a></p>
+
+<p>The Web App Builder for Rails. Focuses on the models providing magic to make the admin appear.</p>
+
+<p><img src="/wp-content/uploads/2008/02/hoboadmin.png" alt="Hobo Admin" /></p>
+
+<p><strong>Feature Set</strong></p>
+
+<ul>
+<li><p>Installable through <em>gem</em></p></li>
+<li><p>DRYML &ndash; XML based markup language</p></li>
+<li><p>Migration generation from Models</p>
+
+<ul>
+<li><p>Define the table fields in the model</p></li>
+<li><p>High level semantic definitions for model fields (eg. email address)</p></li>
+</ul>
+</li>
+<li><p>Permission System</p></li>
+<li><p>Themes_
+_</p></li>
+<li><p>ActiveRecord extensions</p></li>
+</ul>
+
+
+<p><strong>Weaknesses</strong></p>
+
+<ul>
+<li><p>Documentation is a little incomplete.</p></li>
+<li><p>Screencasts are out of date</p></li>
+</ul>
+
+
+<hr />
+
+<h3>Streamlined (version 0.9)</h3>
+
+<p><a href="http://streamlinedframework.org/">http://streamlinedframework.org/</a></p>
+
+<p><strong>Google group Members</strong><strong> (</strong><a href="http://groups.google.com/group/streamlined">http://groups.google.com/group/streamlined</a> <strong>):</strong> 474</p>
+
+<p><strong>Live Demo:</strong> None</p>
+
+<p><strong>Sample Projects</strong>: <a href="http://trac.streamlinedframework.org/wiki/SampleProject">http://trac.streamlinedframework.org/wiki/SampleProject</a></p>
+
+<p>Streamlined provides an instant, production-ready UI for your ActiveRecord model. It aims to bring the declarative goodness of ActiveRecord to the view tie. It has a nice balance of ajax functionality with traditional page loads.</p>
+
+<p><img src="/wp-content/uploads/2008/02/streamlined-admin.png" alt="Streamlined admin" /></p>
+
+<p><strong>Feature Set</strong> <code>
+</code></p>
+
+<ul>
+<li><p>Separates Admin declarations and Model</p></li>
+<li><p>In place editing (edit content in listing)</p></li>
+<li><p>Export content to XML, CSV, and JSON</p></li>
+<li><p>Pluggable CSS styling</p></li>
+<li><p>Live data filtering</p></li>
+<li><p>Advanced Filtering</p></li>
+<li><p>Ajax-powered widgets and transitions</p></li>
+<li><p>Views are can be overwritten Globally and per model</p></li>
+<li><p>Good documentation + screencasts</p></li>
+<li><p>IBM guides &ndash; <a href="http://www.ibm.com/developerworks/java/library/j-cb09056/">http://www.ibm.com/developerworks/java/library/j-cb09056/</a></p></li>
+</ul>
+
+
+<p><strong>Weaknesses</strong></p>
+
+<ul>
+<li><p>No attaching of semantic markup to model fields.</p></li>
+<li><p>The documentation (while improving) is a little patchy in places.</p></li>
+</ul>
+
+
+<h2>Conclusions (winners)</h2>
+
+<p><strong>ActiveScaffold </strong></p>
+
+<p>If your goal is to have as much <strong>flexibility</strong> as possible within your admin then ActiveScaffold is you best candidate.  It is incredibly versatile and the  <strong>documentation</strong> is a pleasure to work through. With developers <strong>contributing plugins</strong> its future growth looks promising.</p>
+
+<p><strong>Hobo </strong></p>
+
+<p>If your looking for an admin system and a <strong>framework </strong> and are less concerned about the configuration  of the admin then Hobo is your is candidate. The power to attach <strong>semantic data</strong> <strong>to models</strong> has great potential for complex forms elements being generated automatically. Currently only the &lsquo;email&rsquo; type is provided so this feature is yet to take off.  Be prepared to deal with <strong>incomplete documentation</strong>. The Mirc #hobo group and the <a href="http://hobocentral.net/forum/">hobo forums</a> are happy to help if you get stuck.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Automatic Admin Systems - Semantics with Rails & Django]]></title>
+    <link href="http://josephwilk.github.io/blog/critique/automatic-admin-systems-semantics-with-rails-and-django.html"/>
+    <updated>2008-01-18T12:52:59+01:00</updated>
+    <id>http://josephwilk.github.io/blog/critique/automatic-admin-systems-semantics-with-rails-and-django</id>
+    <content type="html"><![CDATA[<h3>The Magically Appearing Admin</h3>
+
+<p>Web developers using an MVC framework produce their websites playing with their models, views and controllers. Then by adding a few lines of magic an admin system appears which allows users to add/edit/delete/view/search their models.</p>
+
+<p>Examples:
+<a href="http://www.djangoproject.com/">Django&rsquo;s</a> Magic Admin (Also <a href="http://code.djangoproject.com/wiki/NewformsAdminBranch">NewFormsAdmin</a> &ndash; a branch of Django focused on making it easier to customise auto-admin)
+<a href="http://www.rubyonrails.org/"> Ruby on rails</a> Plugins:</p>
+
+<ul>
+<li><p>Streamlined framework &ndash; <a href="http://streamlinedframework.org/">http://streamlinedframework.org/</a></p>
+
+<ul>
+<li>Admin magic/config  &ndash; outside of the models</li>
+</ul>
+</li>
+<li><p>Auto-Admin &ndash; <a href="http://code.trebex.net/auto-admin">http://code.trebex.net/auto-admin</a></p>
+
+<ul>
+<li>Admin magic/config &ndash; inside the models</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>Limitations of Database types and Semantics</h3>
+
+<p>While we could have an admin that displayed all a models attributes as text inputs, it would be nice if it was a bit more intelligent. We need the magic admin to infer what type of form input should be used from database types.</p>
+
+<p>If within our database (and hence in the model) we have a</p>
+
+<p><code>partyDate -&gt; Datetime</code></p>
+
+<p>Then we would like the admin to display a date styled input.</p>
+
+<p><img src="http://www.joesniff.co.uk/wp-content/uploads/2008/01/datetime-form.png" alt="Django Datetime Input In Auto Admin" /></p>
+
+<p>We have a limited set of database types:</p>
+
+<ul>
+<li>varchar</li>
+<li>text</li>
+<li>integer</li>
+<li>blob</li>
+<li>datetime</li>
+<li>timestamp</li>
+<li>&hellip;</li>
+</ul>
+
+
+<p>For very simple magic admins these database types are good enough.</p>
+
+<p>But we find in more complex instances the database types are not expressive enough. Within our models we have an implicit idea about the meaning of the attributes (generally derived from our naming of variables) not just the type.</p>
+
+<p>For example we may have the concept of <em>IPAddress</em> within our model. We have a clear idea of the semantic meaning of <em>IPAddress</em> and that it should be presented as a form input in a specific way. e.g.</p>
+
+<p><img src="http://www.joesniff.co.uk/wp-content/uploads/2008/01/ipaddress-small.jpg" alt="IP Address Form" /></p>
+
+<p>The database type is just char(12), so  the database types are not enough for our magic admin to build a more complex admin.</p>
+
+<h3>Django Approach &ndash; Explicit &amp; High level</h3>
+
+<p>Within Django we explicitly define all our Model fields in Python. We can introduce high level concepts like model attributes of type &lsquo;<em>IPAddressField</em>&rsquo; and not worry about the way this maps to the db (Django deals with the transformation between <em>IPAddressField</em> and  the database types).</p>
+
+<p>[viewcode] src=../projects/python/examples/model.py geshi=python [/viewcode]</p>
+
+<h3>Ruby on Rails Approach &ndash; Implicit &amp; Low Level</h3>
+
+<p>In rails our models define relationships between themselves but we generally do not list all model fields explicitly. That&rsquo;s one of the beauty&rsquo;s of rails compared to heavy <a href="http://en.wikipedia.org/wiki/Object-relational_mapping">ORM</a> layers.</p>
+
+<p>[viewcode] src=../projects/ruby/examples/Post.rb geshi=ruby [/viewcode]</p>
+
+<p>To quote the <a href="http://ar.rubyonrails.com/classes/ActiveRecord/Base.html">Rails Active Record API</a></p>
+
+<p><em>&ldquo;Adding, removing, and changing attributes and their type is done directly in the database&rdquo;</em></p>
+
+<p>Hence we cannot easily attach metadata to attributes which are only defined in the database. We can overcome this by listing these fields in the model and attaching some metadata to describe the semantic meaning of the fields (rather than using special types for the fields in the model, keeping ActiveRecord happy).</p>
+
+<p>But does this remove the idea of having lean and simple models?</p>
+
+<h3>Thoughts</h3>
+
+<p>Django&rsquo;s high level model provides a very natural way to attach semantic meaning to model attributes which  the  admin can use. Its also all located in a single place, the model.</p>
+
+<p>Rail has lower level models embracing the database, and attaching semantic meaning requires us to add more detail to the model, which feels like its breaking the <a href="http://en.wikipedia.org/wiki/Don't_repeat_yourself">DRY</a> principle. Since Ruby embraces the idea of the only place certain model attributes are defined is in the database it feels like having the atributes mentioned in the model as-well is duplication.</p>
+
+<p>Streamlined&rsquo;s attempt (which is defined in a separate file to the model):</p>
+
+<p>[viewcode] src=../projects/ruby/examples/streamlined.rb geshi=ruby [/viewcode]</p>
+
+<p>There are potentially other ways of handling Rails representation of semantic information:</p>
+
+<ul>
+<li><p>Storing the semantics in the database.</p></li>
+<li><p>Imply semantic meaning from naming of database columns (&lsquo;myZipCode&rsquo;  should use zipcode input type in the admin).</p></li>
+<li><p>Customize Migrations to map semantic types to db types.</p></li>
+</ul>
+
+
+<p><strong>Rails has the flexibility to mirror Django, so can we find a good way for Rails to represent semantic meaning for models?</strong></p>
+
+<h3>Interesting Further Projects</h3>
+
+<p>SemanticAttributes &ndash;  <a href="http://code.google.com/p/semanticattributes/">http://code.google.com/p/semanticattributes/</a></p>
+
+<p>Semantic Web, meet Ruby on Rails &ndash; <a href="http://www.jroller.com/obie/entry/more_about_ontologies">http://www.jroller.com/obie/entry/more_about_ontologies</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[OpenId]]></title>
+    <link href="http://josephwilk.github.io/blog/critique/openid.html"/>
+    <updated>2007-11-11T11:19:47+01:00</updated>
+    <id>http://josephwilk.github.io/blog/critique/openid</id>
+    <content type="html"><![CDATA[<p>OpenID is an open loosely distributed single sign on protocol. It looks at why Microsoft&rsquo;s single sign on has not taken off on a large scale. Concluding that no-one wants a single company storing all details, hence create a distributed single sign-on protocol.</p>
+
+<p>OpenIDs take the form of URLS:</p>
+
+<pre><code>exampleuser.livejournal.com
+</code></pre>
+
+<h3>OpenID 1.1 Protocol Summary</h3>
+
+<p>OpenID specifications |<a href="http://openid.net/specs.bml">http://openid.net/specs.bml</a></p>
+
+<p>The openid protocol 1.1 specification in summary.</p>
+
+<ul>
+<li><p>Identify the Identify Provider associated with openid submitted by the End User.</p></li>
+<li><p>Agree a shared key between the Consumer and Identify Provider.</p></li>
+<li><p>Redirect the End User to the Identify Provider to authenticate themselves with a password.</p></li>
+<li><p>End User gets redirected back to Consumer with authentication data signed by the shared key.</p></li>
+</ul>
+
+
+<p>Dumb mode &ndash;> Consumer asks Identify Provider to return whether authentication data is valid.</p>
+
+<p>Smart mode &ndash;> Consumer checks signed data with shared key</p>
+
+<p>Diffie hellman <a href="http://en.wikipedia.org/wiki/Diffie-Hellman_key_exchange">http://en.wikipedia.org/wiki/Diffie-Hellman_key_exchange</a> can optionally be used when agreeing the shared key.</p>
+
+<h3>Trust</h3>
+
+<p>OpenID does not cover the concept of trust. Anyone could create a OpenID Identify Provider, create an id and then use this to login.</p>
+
+<p>Hence its important to realise that the OpenID library implementations do not cover trust. A white list should be made which is then used to validate users Identify Providers and decide whether the consumer should trust them.</p>
+
+<p>OpenID Provider Server URLs</p>
+
+<ul>
+<li><p>LiveJournal &ndash; <a href="http://www.livejournal.com/openid/server.bml">http://www.livejournal.com/openid/server.bml</a></p></li>
+<li><p>Vox &ndash; <a href="http://www.vox.com/services/openid/server">http://www.vox.com/services/openid/server</a></p></li>
+<li><p>VeriSign &ndash; <a href="https://pip.verisignlabs.com/server">https://pip.verisignlabs.com/server</a></p></li>
+<li><p>MyOpenID &ndash; <a href="http://www.myopenid.com/server">http://www.myopenid.com/server</a></p></li>
+</ul>
+
+
+<p>There are other options than using white/black lists. Some of the more interesting ideas floating around about the use of Reputation.</p>
+
+<p>Reputation for OpenID <a href="http://www.windley.com/archives/2007/03/reputation_for_openid.shtml">http://www.windley.com/archives/2007/03/reputation_for_openid.shtml</a></p>
+
+<p>Wired &ndash; Herding the mob <a href="http://www.wired.com/wired/archive/15.03/herding.html">http://www.wired.com/wired/archive/15.03/herding.html</a></p>
+
+<h3>Security Issues (On-going analysis)</h3>
+
+<h4>Malicious End User &ndash; Denial Of Service</h4>
+
+<p>A Malicious End User could have a OpenId which resolves to a malicious internal network. This internal connection could be for example: a [Tarpit|<a href="http://en.wikipedia.org/wiki/Tarpit_%28networking%29">http://en.wikipedia.org/wiki/Tarpit_%28networking%29</a>]. The Consumer is stuck in the tar pit, possibly timing out due to exceeding a maximum execution time.</p>
+
+<p>Using a paranoid HTTP Library can help protect against this issue.</p>
+
+<p><a href="http://search.cpan.org/~bradfitz/LWPx-ParanoidAgent-1.02/lib/LWPx/ParanoidAgent.pm">http://search.cpan.org/~bradfitz/LWPx-ParanoidAgent-1.02/lib/LWPx/ParanoidAgent.pm</a></p>
+
+<h4>Secret keys passed plain text</h4>
+
+<p>Its optional to pass the shared key using Diffie Hellman. Hence without Diffie Hellman the key could be sniffed passing between the Consumer and the Identity Provider.</p>
+
+<h4>Replay attacks</h4>
+
+<p>Nonces|<a href="http://en.wikipedia.org/wiki/Cryptographic_nonce">http://en.wikipedia.org/wiki/Cryptographic_nonce</a>] are not an integral part of the OpenID protocol.</p>
+
+<p><em>&ldquo;OpenID Consumer&rsquo;s SHOULD add a self-signed nonce with Consumer-local timestamp in the openid.return_to URL parameters to prevent replay attacks. Details of that are left up to the Consumer.&rdquo;</em></p>
+
+<p>Consumers can operate in dumb mode, meaning they store no state. Without storing state it is not possible to protect against replay attacks. The Consumer has no history of previous nonces. Hence it would not detect a old nonce used in a replay attack.</p>
+
+<h4>Nonce Passing</h4>
+
+<p>The nonce generated by the Consumer can cross the network 3 times in plaintext as GET parameters.</p>
+
+<ul>
+<li><p>Consumer Request to Identity Provider.</p></li>
+<li><p>Identity Provider Redirection sent to End User (telling them to redirect to the Consumer)</p></li>
+<li><p>End User request to Consumer.</p></li>
+</ul>
+
+
+<p>The greater the exposure of the nonce and the potential to sniff the shared key means a malicious attacker could create a fake/replay/pre-play response that the Consumer would accept.</p>
+
+<h4>Delegating Authentication</h4>
+
+<p>OpenID supports a URL delegating to a Identify Provider.
+The URL delegates by providing &lsquo;links&rsquo; in the html at the URL location.</p>
+
+<p>Example:</p>
+
+<pre><code>&lt;link rel="openid.server" href="http://www.livejournal.com/openid/server.bml"&gt;
+
+
+
+
+&lt;link rel="openid.delegate" href="http://exampleuser.livejournal.com/"&gt;
+</code></pre>
+
+<p>With a single point for delegation which is resolved without user interaction there is a risk that if this homepage is comprised the delegater could be changed to a malicious identify provider. This change could go un-noticed due to the automatic resolution.</p>
+
+<p>This is a Trust issue and can be solved using whitelists and phishing protection at the Consumer.</p>
+
+<h4>Phishing</h4>
+
+<p>With the redirection from one login page to another there is a worry about phishing. How do you know you have not be redirected to some malicious signin page which steals you details rather than logging you in. URLs are an answer but a lot of people do not examine the URLS. This problem is not part of the OpenID protocol but rather a problem existing for all internet sites.</p>
+
+<p>Verisign has a firefox plugin SeatBelt which attempts to detect if the OpenId site is legitimate.
+SeatBelt|<a href="https://pip.verisignlabs.com/seatbelt.do">https://pip.verisignlabs.com/seatbelt.do</a></p>
+
+<h4>Single Sign on &ndash; Break a single password = access to all accounts.</h4>
+
+<p>A person on average has:
+18 user accounts
+3.47 passwords.</p>
+
+<p>So people are using the same password for multiple accounts already. Single email accounts are tied to many user accounts. Any forgotten email reminders sent to an email address from a website mean the comprise of an email account can mean access to many other user accounts is possible.</p>
+
+<p>Single sign-on is a risk and it would be safer to have separate user accounts each with different passwords. This however does not fit with how people are using the internet.</p>
+
+<p>Its a comprise of convenience vs security and that decision needs to be made on a per solution basis.</p>
+
+<h3>Security Summary</h3>
+
+<p>The OpenID specification has optional features which if not used decrease the security of the system.</p>
+
+<p>There are also security issues that are outside the OpenID protocol.</p>
+
+<p>When using OpenID its important to access the security requirements of the problem and ensure that library implementations provide these optional features.</p>
+
+<p>Different OpenID libraries implement the protocol and go beyond it dealing with issues like Nonces being passed in the clear to many times. Assess the libraries support of these issues.</p>
+
+<p>Work outside of the OpenID is required to deal with the issue of Trust.</p>
+
+<p>Phishing remains an issue.</p>
+
+<h3>Openid Libraries</h3>
+
+<p>The currently list of libraries implementations of OpenId are available in:</p>
+
+<ul>
+<li><p> C#</p></li>
+<li><p> C++</p></li>
+<li><p> Java</p></li>
+<li><p> Perl</p></li>
+<li><p> Python</p></li>
+<li><p> Ruby</p></li>
+<li><p> PHP</p></li>
+<li><p> ColdFusion</p></li>
+</ul>
+
+
+<p>Many libraries go beyond the openid protocol and add protection against replay attacks.</p>
+
+<h3>Yadis Protocol</h3>
+
+<p>Although not part of the specification OpenID can use the [Yadis|<a href="http://yadis.org/wiki/Main_Page">http://yadis.org/wiki/Main_Page</a>] protocol:</p>
+
+<p><em>The Yadis protocol enables discovery of service definitions from an <a href="http://">http://</a> or <a href="https://">https://</a> URL. The protocol consists of performing HTTP requests to obtain a Yadis Resource Descriptor.</em></p>
+
+<p>This enables identify providers to be discovered through an OpenID. For our example OpenID we could look at the url:
+exampleuser.livejournal.com</p>
+
+<p><a href="http://exampleuser.livejournal.com">http://exampleuser.livejournal.com</a></p>
+
+<h3>Links</h3>
+
+<p><a href="http://openid.net/">http://openid.net/</a></p>
+
+<p><a href="http://en.wikipedia.org/wiki/Diffie-Hellman_key_exchange">http://en.wikipedia.org/wiki/Diffie-Hellman_key_exchange</a></p>
+
+<p><a href="https://pip.verisignlabs.com/seatbelt.do">https://pip.verisignlabs.com/seatbelt.do</a></p>
+
+<p><a href="http://yadis.org/wiki/Main_Page">http://yadis.org/wiki/Main_Page</a></p>
+
+<p><a href="http://en.wikipedia.org/wiki/Cryptographic_nonce">http://en.wikipedia.org/wiki/Cryptographic_nonce</a></p>
+
+<p><a href="http://en.wikipedia.org/wiki/Tarpit_%28networking%29">http://en.wikipedia.org/wiki/Tarpit_%28networking%29</a></p>
+]]></content>
+  </entry>
+  
+</feed>
