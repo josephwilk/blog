@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: testing | Joseph Wilk]]></title>
-  <link href="http://josephwilk.github.io///testing/atom.xml" rel="self"/>
-  <link href="http://josephwilk.github.io//"/>
-  <updated>2015-08-23T19:38:56+02:00</updated>
-  <id>http://josephwilk.github.io//</id>
+  <link href="http://josephwilk.github.io/blog//testing/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io/blog/"/>
+  <updated>2015-08-23T19:41:45+02:00</updated>
+  <id>http://josephwilk.github.io/blog/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
     <email><![CDATA[joe@josephwilk.net]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Co-chair of the Agile Alliance Functional Testing Tools group]]></title>
-    <link href="http://josephwilk.github.io//testing/co-chair-of-the-agile-alliance-functional-testing-tools-group.html"/>
+    <link href="http://josephwilk.github.io/blog/testing/co-chair-of-the-agile-alliance-functional-testing-tools-group.html"/>
     <updated>2012-02-13T19:40:27+01:00</updated>
-    <id>http://josephwilk.github.io//testing/co-chair-of-the-agile-alliance-functional-testing-tools-group</id>
+    <id>http://josephwilk.github.io/blog/testing/co-chair-of-the-agile-alliance-functional-testing-tools-group</id>
     <content type="html"><![CDATA[<p>I&rsquo;m happy to announce that I have joined <a href="http://testobsessed.com">Elizabeth Hendrickson</a> as Co-Chair of the Agile Alliance Functional Testing Tools group (AAFTT, yes the name is a bit of a mouthful).</p>
 
 <p>I came across the AAFTT group when they organised a pattern writing workshop in London 2010, facilitated by <a href="http://www.lindarising.org/">Linda Rising</a>. It was an opportunity to bringing together some of the thought leaders in testing and share experiences. Somehow I managed to sneak in and proceded to steal all these experts knowledge. The AAFTT also runs an open space pria to the Agile conference. Last year I was surprised to find people who had travelled to the conference just for the AAFTT open space!</p>
@@ -39,14 +39,14 @@
   
   <entry>
     <title type="html"><![CDATA[Testing Outside of the Ruby World]]></title>
-    <link href="http://josephwilk.github.io//testing/testing-outside-of-the-ruby-world.html"/>
+    <link href="http://josephwilk.github.io/blog/testing/testing-outside-of-the-ruby-world.html"/>
     <updated>2011-04-11T14:48:29+02:00</updated>
-    <id>http://josephwilk.github.io//testing/testing-outside-of-the-ruby-world</id>
+    <id>http://josephwilk.github.io/blog/testing/testing-outside-of-the-ruby-world</id>
     <content type="html"><![CDATA[<p>I recently spoke at the Scotland Ruby Conference about interesting testing tools and ideas outside of the Ruby community. The goal was to inspire the Ruby community to push the state of the art in testing.</p>
 
 <h2>Slides</h2>
 
-<script async class="speakerdeck-embed" data-id="4e7b46a413614c003f000dc9" data-ratio="1.33333333333333" src="http://josephwilk.github.io///speakerdeck.com/assets/embed.js"></script>
+<script async class="speakerdeck-embed" data-id="4e7b46a413614c003f000dc9" data-ratio="1.33333333333333" src="http://josephwilk.github.io/blog//speakerdeck.com/assets/embed.js"></script>
 
 
 <h2>Further Resources</h2>

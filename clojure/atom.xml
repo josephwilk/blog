@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: clojure | Joseph Wilk]]></title>
-  <link href="http://josephwilk.github.io///clojure/atom.xml" rel="self"/>
-  <link href="http://josephwilk.github.io//"/>
-  <updated>2015-08-23T19:38:56+02:00</updated>
-  <id>http://josephwilk.github.io//</id>
+  <link href="http://josephwilk.github.io/blog//clojure/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io/blog/"/>
+  <updated>2015-08-23T19:41:45+02:00</updated>
+  <id>http://josephwilk.github.io/blog/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
     <email><![CDATA[joe@josephwilk.net]]></email>
@@ -15,16 +15,16 @@
   
   <entry>
     <title type="html"><![CDATA[Clojure and Overtone driving Minecraft]]></title>
-    <link href="http://josephwilk.github.io//clojure/overtone-driving-minecraft.html"/>
+    <link href="http://josephwilk.github.io/blog/clojure/overtone-driving-minecraft.html"/>
     <updated>2015-03-01T15:58:12+01:00</updated>
-    <id>http://josephwilk.github.io//clojure/overtone-driving-minecraft</id>
+    <id>http://josephwilk.github.io/blog/clojure/overtone-driving-minecraft</id>
     <content type="html"><![CDATA[<p>Using Clojure we create interesting 3D shapes in Minecraft to the beat of music generated from Overtone.</p>
 
 <p>We achieve this by embedding a Clojure REPL inside a Java Minecraft server which loads Overtone and connects to an external Supercollider instance (What Overtone uses for sound).</p>
 
 <h3>Demo</h3>
 
-<iframe src="http://josephwilk.github.io///player.vimeo.com/video/120907923" width="500" height="375" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+<iframe src="http://josephwilk.github.io/blog//player.vimeo.com/video/120907923" width="500" height="375" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 
 
 <p>Demo Source code: <a href="https://github.com/josephwilk/clj-minecraft/blob/master/src/cljminecraft/overtone.clj">https://github.com/josephwilk/clj-minecraft/blob/master/src/cljminecraft/overtone.clj</a></p>
@@ -181,7 +181,7 @@ java -XX:MaxPermSize=1G -jar spigot-1.8.jar
 
 <p>Create, play and share all the crazy things you can come up with using Clojure and Minecraft.</p>
 
-<p><img src="http://josephwilk.github.io//images/pig_algo_rave.png" width="450" alt="The Pig Algo Rave"/></p>
+<p><img src="http://josephwilk.github.io/blog/images/pig_algo_rave.png" width="450" alt="The Pig Algo Rave"/></p>
 
 <p>For more live programming music and sound checkout my performances as Repl Electric: <a href="http://www.repl-electric.com">http://www.repl-electric.com</a></p>
 
@@ -194,9 +194,9 @@ Thanks to the Craftbukkit/Spigot contributors, <a href="https://twitter.com/cmdr
   
   <entry>
     <title type="html"><![CDATA[Creative Machines]]></title>
-    <link href="http://josephwilk.github.io//clojure/creative_machines.html"/>
+    <link href="http://josephwilk.github.io/blog/clojure/creative_machines.html"/>
     <updated>2014-02-23T13:23:00+01:00</updated>
-    <id>http://josephwilk.github.io//clojure/creative_machines</id>
+    <id>http://josephwilk.github.io/blog/clojure/creative_machines</id>
     <content type="html"><![CDATA[<p>When Alan Turing asked if a machine can be intelligent one aspect of this question focused on &ldquo;could machines be creative&rdquo;?</p>
 
 <p>Ada Lovelace seemed convinced that originality was not a feat a computer was capable of:</p>
@@ -212,7 +212,7 @@ it has no pretensions whatever to originate anything</p></blockquote>
 
 <p>My Strangeloop talk: Creative Machines &ndash; <a href="http://www.infoq.com/presentations/ai-machine-creativity">http://www.infoq.com/presentations/ai-machine-creativity</a></p>
 
-<p>Slides: <script async class="speakerdeck-embed" data-id="9b2acfa020760131db422ebaf23009b5" data-ratio="1.33333333333333" src="http://josephwilk.github.io///speakerdeck.com/assets/embed.js"></script></p>
+<p>Slides: <script async class="speakerdeck-embed" data-id="9b2acfa020760131db422ebaf23009b5" data-ratio="1.33333333333333" src="http://josephwilk.github.io/blog//speakerdeck.com/assets/embed.js"></script></p>
 
 <p>Full source code: <a href="https://github.com/josephwilk/musical-creativity">https://github.com/josephwilk/musical-creativity</a></p>
 
@@ -236,14 +236,14 @@ A space for humans and machines to learn and create music together.</p>
   
   <entry>
     <title type="html"><![CDATA[Sounds of the human brain]]></title>
-    <link href="http://josephwilk.github.io//clojure/sounds-of-the-human-brain.html"/>
+    <link href="http://josephwilk.github.io/blog/clojure/sounds-of-the-human-brain.html"/>
     <updated>2013-12-02T13:23:00+01:00</updated>
-    <id>http://josephwilk.github.io//clojure/sounds-of-the-human-brain</id>
+    <id>http://josephwilk.github.io/blog/clojure/sounds-of-the-human-brain</id>
     <content type="html"><![CDATA[<p>What does your brain sound like? Does it sound like &ldquo;Rise of the Valkyrie&rdquo; or more like &ldquo;Hit me baby one more time&rdquo;?</p>
 
 <h2>Step 1: Acquire a human brain (alive)</h2>
 
-<p><img src="http://josephwilk.github.io//images/brain.png" width="200px"></p>
+<p><img src="http://josephwilk.github.io/blog/images/brain.png" width="200px"></p>
 
 <p>We are interested in capturing the brain waves. Specifically the:</p>
 
@@ -267,7 +267,7 @@ This measures voltage fluctuations resulting from ionic current flows within the
 
 <p>We interact with the EEG machine over a serial port. The most mature library for this interface is in Python so there is a little jiggery pokery to get the data into Overtone.</p>
 
-<p><img src="http://josephwilk.github.io//images/brain-diagram.png"></p>
+<p><img src="http://josephwilk.github.io/blog/images/brain-diagram.png"></p>
 
 <h4>The Brainwave Poller</h4>
 
@@ -382,7 +382,7 @@ gevent.sleep(0.4)
 
 <p>We will focus on the beta-waves for simplicity. Beta-waves fall between 16.5–20Hz.</p>
 
-<p><img alt="EEG beta waves" src="http://josephwilk.github.io//images/eeg_beta.png"></p>
+<p><img alt="EEG beta waves" src="http://josephwilk.github.io/blog/images/eeg_beta.png"></p>
 
 <p>Beta waves related to:</p>
 
@@ -522,14 +522,14 @@ gevent.sleep(0.4)
   
   <entry>
     <title type="html"><![CDATA[Building Clojure services at scale]]></title>
-    <link href="http://josephwilk.github.io//clojure/building-clojure-services-at-scale.html"/>
+    <link href="http://josephwilk.github.io/blog/clojure/building-clojure-services-at-scale.html"/>
     <updated>2013-09-13T11:00:00+02:00</updated>
-    <id>http://josephwilk.github.io//clojure/building-clojure-services-at-scale</id>
+    <id>http://josephwilk.github.io/blog/clojure/building-clojure-services-at-scale</id>
     <content type="html"><![CDATA[<p>At SoundCloud I&rsquo;ve been experimenting over the last year with how we build the services that power a number of heavily loaded areas across our site. All these services have been built in Clojure with bits of Java tacked on the sides. Here are some of my personal thoughts on how to build Clojure services:</p>
 
 <h2>Netflix or Twitter</h2>
 
-<p><img alt="choose your own adventure" src="http://josephwilk.github.io//images/adventure.jpg"></p>
+<p><img alt="choose your own adventure" src="http://josephwilk.github.io/blog/images/adventure.jpg"></p>
 
 <p>At some-point when you require a sufficient level of scaling you turn to the open source work of <a href="https://github.com/twitter">Twitter</a> with <a href="http://twitter.github.io/finagle">Finagle</a> or <a href="https://github.com/Netflix">Netflix</a> with <a href="https://github.com/Netflix/Hystrix">Hystrix</a>/<a href="https://github.com/Netflix/RxJava">RxJava</a>.
 Netflix libs are written in Java while Twitters are written in Scala. Both are easy to use from any JVM based language but the Finagle route will bring in an extra dependency on Scala. I&rsquo;ve heard little from people using interop between Clojure &amp; Scala and that extra Scala dependency makes me nervous. Further I like the simplicity of Netflix&rsquo;s libs and they have been putting a lot of effort into pushing support for many JVM based languages.</p>
@@ -539,7 +539,7 @@ Netflix libs are written in Java while Twitters are written in Scala. Both are e
 <h2>Failure, Monitoring &amp; Composition Complexity</h2>
 
 <div style="display:inline-block;">
-<img align="left" style="margin-right:5px;" src="http://josephwilk.github.io//images/failure.jpg" width="150px" height="150px">
+<img align="left" style="margin-right:5px;" src="http://josephwilk.github.io/blog/images/failure.jpg" width="150px" height="150px">
 
 In a service reliant on other services, databases, caches any other external dependencies its a guarantee at some-point some of those will fail. When working with critical services we want to gracefully provide a degraded service.
 </div>
@@ -553,7 +553,7 @@ In a service reliant on other services, databases, caches any other external dep
 
 
 <div style="display:inline-block;">
-<img align="left" style="margin-right:5px;" src="http://josephwilk.github.io//images/scary-eye.png" width="150px" height="150px">
+<img align="left" style="margin-right:5px;" src="http://josephwilk.github.io/blog/images/scary-eye.png" width="150px" height="150px">
 While we can think about degrading gracefully in the case of failure, ultimately we want to fix wants broken as soon as possible. An eye into the runtime system allows us to monitor exactly whats going on and take appropriate action. 
 </div>
 
@@ -566,7 +566,7 @@ While we can think about degrading gracefully in the case of failure, ultimately
 
 
 <div style="display:inline-block;">
-<img align="left" style="margin-right:5px;" src="http://josephwilk.github.io//images/complexity.png" width="150px" height="150px">
+<img align="left" style="margin-right:5px;" src="http://josephwilk.github.io/blog/images/complexity.png" width="150px" height="150px">
 
 Your service needs to call other services. Dependent on those service results you might need to call other services which in turn might require calls to other services. Composing service calls is hard to get right without a tangle of complex code.
 </div>
@@ -633,7 +633,7 @@ Why don&rsquo;t we serve from a cache on failure, slightly stale data is better 
 
 <p><a href="https://github.com/Netflix/Hystrix">Hystrix</a> is Netflix library which I think of as circuit breakers on steroids.</p>
 
-<p><img src ="http://josephwilk.github.io//images/hystrix.png" height="400px" width="400px"/></p>
+<p><img src ="http://josephwilk.github.io/blog/images/hystrix.png" height="400px" width="400px"/></p>
 
 <pre><code>Hystrix is a latency and fault tolerance library designed to isolate points of access to remote systems, 
 services and 3rd party libraries, stop cascading failure and enable resilience in complex distributed systems 
@@ -786,17 +786,17 @@ turbine.instanceUrlSuffix=/hystrix.stream
 
 <p>Putting this all together our monitoring looks like this:</p>
 
-<p><img src="http://josephwilk.github.io//images/service_discovery.png"></p>
+<p><img src="http://josephwilk.github.io/blog/images/service_discovery.png"></p>
 
 <h4>Pretty graphs: Hystrix Dashboard</h4>
 
 <p>Finally we run the <a href="https://github.com/Netflix/Hystrix/tree/master/hystrix-dashboard">Hystrix Dashboard</a> and watch our circuit breakers live.</p>
 
-<p><img src="http://josephwilk.github.io//images/hystrix_dashboard.png"></p>
+<p><img src="http://josephwilk.github.io/blog/images/hystrix_dashboard.png"></p>
 
 <p>And heres an example with triggered circuit breakers:</p>
 
-<p><img src="http://josephwilk.github.io//images/hystrix_dashboard_failures.jpg"></p>
+<p><img src="http://josephwilk.github.io/blog/images/hystrix_dashboard_failures.jpg"></p>
 
 <p>Since I cannot show you the dashboard running, you will have to make do with music generated from the metrics. I normalize the live Hystrix metrics to piano pitches and play the notes as the arrive from the stream.</p>
 
@@ -869,9 +869,9 @@ In part thanks to Netflix&rsquo;s hard work there is no reason you cannot write 
   
   <entry>
     <title type="html"><![CDATA[Creating sampled instruments with Overtone]]></title>
-    <link href="http://josephwilk.github.io//clojure/creating-instruments-with-overtone.html"/>
+    <link href="http://josephwilk.github.io/blog/clojure/creating-instruments-with-overtone.html"/>
     <updated>2013-08-26T21:28:00+02:00</updated>
-    <id>http://josephwilk.github.io//clojure/creating-instruments-with-overtone</id>
+    <id>http://josephwilk.github.io/blog/clojure/creating-instruments-with-overtone</id>
     <content type="html"><![CDATA[<p><a href="http://overtone.github.io">Overtone</a> is an open source audio environment which uses Clojure and <a href="http://supercollider.sourceforge.net/">SuperCollider</a> (an environment and programming language for real time audio synthesis and algorithmic composition).</p>
 
 <p>Overtone makes it very easy to define instruments based on sound samples from <a href="http://www.freesound.org">freesound</a>.
@@ -879,7 +879,7 @@ We will walk through getting samples for a flute and then using them to define t
 
 <h2>The Flute</h2>
 
-<p><img src="http://josephwilk.github.io//images/flute.jpg"/></p>
+<p><img src="http://josephwilk.github.io/blog/images/flute.jpg"/></p>
 
 <h3>Getting the samples</h3>
 
@@ -1096,7 +1096,7 @@ We will walk through getting samples for a flute and then using them to define t
 
 <p>attack (A), decay (D), sustain (S) and release &#40;R)</p>
 
-<p><img src="http://josephwilk.github.io//images/ADSR.png" /></p>
+<p><img src="http://josephwilk.github.io/blog/images/ADSR.png" /></p>
 
 <p>There are a number of other config settings in our example:</p>
 

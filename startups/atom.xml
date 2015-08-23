@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: startups | Joseph Wilk]]></title>
-  <link href="http://josephwilk.github.io///startups/atom.xml" rel="self"/>
-  <link href="http://josephwilk.github.io//"/>
-  <updated>2015-08-23T19:38:56+02:00</updated>
-  <id>http://josephwilk.github.io//</id>
+  <link href="http://josephwilk.github.io/blog//startups/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io/blog/"/>
+  <updated>2015-08-23T19:41:45+02:00</updated>
+  <id>http://josephwilk.github.io/blog/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
     <email><![CDATA[joe@josephwilk.net]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Startups Infiltrating Agile and XP]]></title>
-    <link href="http://josephwilk.github.io//startups/startups-infiltrating-agile-and-xp.html"/>
+    <link href="http://josephwilk.github.io/blog/startups/startups-infiltrating-agile-and-xp.html"/>
     <updated>2011-05-27T17:34:00+02:00</updated>
-    <id>http://josephwilk.github.io//startups/startups-infiltrating-agile-and-xp</id>
+    <id>http://josephwilk.github.io/blog/startups/startups-infiltrating-agile-and-xp</id>
     <content type="html"><![CDATA[<p><img src="/images/blog/2011/05/Agile2011-badge.jpg" alt="" /> I&rsquo;m very excited to be talking at this years <a href="http://agile2011.agilealliance.org/">Agile2011</a> conference. Its a goal I&rsquo;ve been working towards for a long time.</p>
 
 <p>I&rsquo;ve been to lots of agile conferences where I have listen to consultants talk about how they have made their multi-nationals or large organisations better through x. Interesting but often not much I could take away and apply at a startup.</p>

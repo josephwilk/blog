@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: software-craftmanship | Joseph Wilk]]></title>
-  <link href="http://josephwilk.github.io///software-craftmanship/atom.xml" rel="self"/>
-  <link href="http://josephwilk.github.io//"/>
-  <updated>2015-08-23T19:38:56+02:00</updated>
-  <id>http://josephwilk.github.io//</id>
+  <link href="http://josephwilk.github.io/blog//software-craftmanship/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io/blog/"/>
+  <updated>2015-08-23T19:41:45+02:00</updated>
+  <id>http://josephwilk.github.io/blog/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
     <email><![CDATA[joe@josephwilk.net]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[The Aesthetics of Density]]></title>
-    <link href="http://josephwilk.github.io//software-craftmanship/the-aesthetics-of-density.html"/>
+    <link href="http://josephwilk.github.io/blog/software-craftmanship/the-aesthetics-of-density.html"/>
     <updated>2012-12-14T12:02:48+01:00</updated>
-    <id>http://josephwilk.github.io//software-craftmanship/the-aesthetics-of-density</id>
+    <id>http://josephwilk.github.io/blog/software-craftmanship/the-aesthetics-of-density</id>
     <content type="html"><![CDATA[<p>Programming languages can be described as Dense.</p>
 
 <p>What does dense mean?</p>

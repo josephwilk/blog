@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: katas | Joseph Wilk]]></title>
-  <link href="http://josephwilk.github.io///katas/atom.xml" rel="self"/>
-  <link href="http://josephwilk.github.io//"/>
-  <updated>2015-08-23T19:38:56+02:00</updated>
-  <id>http://josephwilk.github.io//</id>
+  <link href="http://josephwilk.github.io/blog//katas/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io/blog/"/>
+  <updated>2015-08-23T19:41:45+02:00</updated>
+  <id>http://josephwilk.github.io/blog/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
     <email><![CDATA[joe@josephwilk.net]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Awari Kata]]></title>
-    <link href="http://josephwilk.github.io//katas/awari-kata.html"/>
+    <link href="http://josephwilk.github.io/blog/katas/awari-kata.html"/>
     <updated>2011-03-01T15:00:32+01:00</updated>
-    <id>http://josephwilk.github.io//katas/awari-kata</id>
+    <id>http://josephwilk.github.io/blog/katas/awari-kata</id>
     <content type="html"><![CDATA[<h2>The Game</h2>
 
 <p><a href="http://en.wikipedia.org/wiki/Oware">Awari</a> is an ancient game originating from Africa which consists of 12 holes in the ground (called houses) split up into 2 rows of 6. Designed for two players, each player selects a row as their territory. Each house starts with 4 seeds in it.</p>

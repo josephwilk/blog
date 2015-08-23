@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: big-data | Joseph Wilk]]></title>
-  <link href="http://josephwilk.github.io///big-data/atom.xml" rel="self"/>
-  <link href="http://josephwilk.github.io//"/>
-  <updated>2015-08-23T19:38:56+02:00</updated>
-  <id>http://josephwilk.github.io//</id>
+  <link href="http://josephwilk.github.io/blog//big-data/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io/blog/"/>
+  <updated>2015-08-23T19:41:45+02:00</updated>
+  <id>http://josephwilk.github.io/blog/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
     <email><![CDATA[joe@josephwilk.net]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[A little bit of Pig]]></title>
-    <link href="http://josephwilk.github.io//big-data/a-little-bit-of-pig.html"/>
+    <link href="http://josephwilk.github.io/blog/big-data/a-little-bit-of-pig.html"/>
     <updated>2012-06-11T18:35:41+02:00</updated>
-    <id>http://josephwilk.github.io//big-data/a-little-bit-of-pig</id>
+    <id>http://josephwilk.github.io/blog/big-data/a-little-bit-of-pig</id>
     <content type="html"><![CDATA[<p>Currently in the Science team at Songkick I&rsquo;ve been working with Apache Pig to generate lots of interesting metrics for our business intelligence. We use Amazon&rsquo;s MapReduce and Pig to avoid having to run complex, long running and intensive queries on our live db, we can run them on Amazon in a timely fashion instead. So lets dive into Pig and how we use it at Songkick.com.</p>
 
 <h2>Pig (whats with all these silly names)</h2>
