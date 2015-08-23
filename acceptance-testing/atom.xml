@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: acceptance-testing | Joseph Wilk]]></title>
-  <link href="http://blogjosephwilk.github.io/blog//acceptance-testing/atom.xml" rel="self"/>
-  <link href="http://blogjosephwilk.github.io/blog/"/>
-  <updated>2015-08-23T18:47:52+02:00</updated>
-  <id>http://blogjosephwilk.github.io/blog/</id>
+  <link href="http://josephwilk.github.io///acceptance-testing/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io//"/>
+  <updated>2015-08-23T19:38:56+02:00</updated>
+  <id>http://josephwilk.github.io//</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
     <email><![CDATA[joe@josephwilk.net]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Allowing Features to Breathe]]></title>
-    <link href="http://blogjosephwilk.github.io/blog/acceptance-testing/allowing-features-to-breathe.html"/>
+    <link href="http://josephwilk.github.io//acceptance-testing/allowing-features-to-breathe.html"/>
     <updated>2010-11-17T17:42:22+01:00</updated>
-    <id>http://blogjosephwilk.github.io/blog/acceptance-testing/allowing-features-to-breathe</id>
+    <id>http://josephwilk.github.io//acceptance-testing/allowing-features-to-breathe</id>
     <content type="html"><![CDATA[<p>Your Cucumber features are living documentation. The world is evolving around them and without exposure they tend to rot.</p>
 
 <h3>Evolving language</h3>
@@ -63,9 +63,9 @@ relish push --project air --organization breathe
   
   <entry>
     <title type="html"><![CDATA[Acceptance Testing Lifecycle]]></title>
-    <link href="http://blogjosephwilk.github.io/blog/acceptance-testing/acceptance-testing-lifecycle.html"/>
+    <link href="http://josephwilk.github.io//acceptance-testing/acceptance-testing-lifecycle.html"/>
     <updated>2010-11-13T00:29:57+01:00</updated>
-    <id>http://blogjosephwilk.github.io/blog/acceptance-testing/acceptance-testing-lifecycle</id>
+    <id>http://josephwilk.github.io//acceptance-testing/acceptance-testing-lifecycle</id>
     <content type="html"><![CDATA[<p>Through various meetings at Agile2010 and London agile testing meetings <a href="http://gojko.net/">Gojko Adzic</a> and others have been converging on a common language to talk about Acceptance testing and the different phases. In doing so we have fleshed out a lifecycle for Acceptance testing.</p>
 
 <p><img src="/images/blog/2010/10/Acceptance-test-lifecycle5.png" alt="" /></p>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: conferences | Joseph Wilk]]></title>
-  <link href="http://blogjosephwilk.github.io/blog//conferences/atom.xml" rel="self"/>
-  <link href="http://blogjosephwilk.github.io/blog/"/>
-  <updated>2015-08-23T18:47:52+02:00</updated>
-  <id>http://blogjosephwilk.github.io/blog/</id>
+  <link href="http://josephwilk.github.io///conferences/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io//"/>
+  <updated>2015-08-23T19:38:56+02:00</updated>
+  <id>http://josephwilk.github.io//</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
     <email><![CDATA[joe@josephwilk.net]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Conferences and the Cult of Celebrity]]></title>
-    <link href="http://blogjosephwilk.github.io/blog/conferences/conferences-and-the-cult-of-celebrity.html"/>
+    <link href="http://josephwilk.github.io//conferences/conferences-and-the-cult-of-celebrity.html"/>
     <updated>2012-06-19T14:58:56+02:00</updated>
-    <id>http://blogjosephwilk.github.io/blog/conferences/conferences-and-the-cult-of-celebrity</id>
+    <id>http://josephwilk.github.io//conferences/conferences-and-the-cult-of-celebrity</id>
     <content type="html"><![CDATA[<p>How much should character be a factor for a conference talk being selected?  Big names sell conference tickets. Yet I believe that we can do a lot more to help promote conferences where content takes greater weight than character and in the process help people who have never spoken before start speaking at conferences.</p>
 
 <h2>Risk.</h2>

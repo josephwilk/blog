@@ -1,449 +1,411 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http://blogjosephwilk.github.io/blog/projects/automatic-tag-generation.html</loc>
+        <loc>http://josephwilk.github.io//projects/automatic-tag-generation.html</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
         <loc>
-            http://blogjosephwilk.github.io/blog/snippets/curl-and-certificates-with-windows-php.html
+            http://josephwilk.github.io//snippets/curl-and-certificates-with-windows-php.html
         </loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>http://blogjosephwilk.github.io/blog/critique/openid.html</loc>
+        <loc>http://josephwilk.github.io//critique/openid.html</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>http://blogjosephwilk.github.io/blog/projects/squid-and-members.html</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/databases/pdo-zend-framework-playing-nicely-with-mssql.html
-        </loc>
+        <loc>http://josephwilk.github.io//projects/squid-and-members.html</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
         <loc>
-            http://blogjosephwilk.github.io/blog/projects/intelligent-workflow-management-system.html
-        </loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/projects/running-prolog-as-cgi.html</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/projects/prolog-asldicn-event-calculus-planner.html
+            http://josephwilk.github.io//databases/pdo-zend-framework-playing-nicely-with-mssql.html
         </loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
         <loc>
-            http://blogjosephwilk.github.io/blog/projects/building-a-vector-space-search-engine-in-python.html
+            http://josephwilk.github.io//projects/intelligent-workflow-management-system.html
+        </loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//projects/running-prolog-as-cgi.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://josephwilk.github.io//projects/prolog-asldicn-event-calculus-planner.html
         </loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
         <loc>
-            http://blogjosephwilk.github.io/blog/projects/latent-semantic-analysis-in-python.html
+            http://josephwilk.github.io//projects/building-a-vector-space-search-engine-in-python.html
+        </loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//projects/latent-semantic-analysis-in-python.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://josephwilk.github.io//critique/automatic-admin-systems-semantics-with-rails-and-django.html
+        </loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//critique/rails-admins-plugins-review.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//projects/javascript-acting-as-a-robotic-agent.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//snippets/rspec-stories-keeping-steps-dry.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://josephwilk.github.io//utilities/textmate-bundle-for-rr-test-double-framework.html
         </loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
         <loc>
-            http://blogjosephwilk.github.io/blog/critique/automatic-admin-systems-semantics-with-rails-and-django.html
+            http://josephwilk.github.io//snippets/rspec-rails-mock_model-helper-for-the-rr-test-double-framework.html
         </loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>http://blogjosephwilk.github.io/blog/critique/rails-admins-plugins-review.html</loc>
+        <loc>http://josephwilk.github.io//ruby/rubyrails-interview-questions.html</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
         <loc>
-            http://blogjosephwilk.github.io/blog/projects/javascript-acting-as-a-robotic-agent.html
+            http://josephwilk.github.io//ruby/telling-a-good-story-rspec-stories-from-the-trenches.html
         </loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/snippets/rspec-stories-keeping-steps-dry.html
-        </loc>
+        <loc>http://josephwilk.github.io//ruby/rboss-rubygem-for-yahoo-search-boss.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//ruby/latent-semantic-analysis-in-ruby.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//ruby/speaking-at-scotland-on-rails-2009.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//ruby/cucumber-waves-goodbye-to-givenscenario.html</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
         <loc>
-            http://blogjosephwilk.github.io/blog/utilities/textmate-bundle-for-rr-test-double-framework.html
-        </loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/snippets/rspec-rails-mock_model-helper-for-the-rr-test-double-framework.html
-        </loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/ruby/rubyrails-interview-questions.html</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/ruby/telling-a-good-story-rspec-stories-from-the-trenches.html
+            http://josephwilk.github.io//ruby/outside-in-development-with-cucumber-and-rspec.html
         </loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
         <loc>
-            http://blogjosephwilk.github.io/blog/ruby/rboss-rubygem-for-yahoo-search-boss.html
-        </loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/ruby/latent-semantic-analysis-in-ruby.html</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/ruby/speaking-at-scotland-on-rails-2009.html
+            http://josephwilk.github.io//ruby/cucumber-tags-and-continuous-integration-oh-my.html
         </loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
         <loc>
-            http://blogjosephwilk.github.io/blog/ruby/cucumber-waves-goodbye-to-givenscenario.html
+            http://josephwilk.github.io//ruby/mind-the-gap-european-software-tester-magazine-article.html
+        </loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//ruby/futureruby-talk-cucumbered.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//ruby/jvm-call-to-arms-with-cucumbers.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//ruby/ruby-metric-fu-hudson-plugin.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//ruby/metrics-for-plain-text-acceptance-tests.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//ruby/pairwise-testing-with-cucumber.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//ruby/specing-cucumber-step-definitions.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://josephwilk.github.io//ruby/testing-javascript-with-cucumber-in-javascript.html
+        </loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//ruby/rocket-fuelled-cucumbers.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//cucumber/cucumber-patterns.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://josephwilk.github.io//ruby/limiting-red-smarter-test-builds-through-metrics.html
+        </loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//cucumber/limited-red-demo-with-cucumber.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://josephwilk.github.io//cucumber/cucumber-interview-for-software-development-times.html
         </loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
         <loc>
-            http://blogjosephwilk.github.io/blog/ruby/outside-in-development-with-cucumber-and-rspec.html
+            http://josephwilk.github.io//acceptance-testing/acceptance-testing-lifecycle.html
         </loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
         <loc>
-            http://blogjosephwilk.github.io/blog/ruby/cucumber-tags-and-continuous-integration-oh-my.html
+            http://josephwilk.github.io//acceptance-testing/allowing-features-to-breathe.html
+        </loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//agile/story-smells-in-order-to-do-x-i-want-x.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//katas/awari-kata.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//cucumber/page-object-pattern.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//agile/story-smells-the-valueless-story.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//testing/testing-outside-of-the-ruby-world.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//training/the-art-of-cucumber-london-workshop.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//startups/startups-infiltrating-agile-and-xp.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://josephwilk.github.io//personal/conferences-and-accessibility-please-try-harder.html
+        </loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//cucumber/mining-cucumber-features.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://josephwilk.github.io//testing/co-chair-of-the-agile-alliance-functional-testing-tools-group.html
+        </loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//cucumber/examples-are-not-a-specification.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//big-data/a-little-bit-of-pig.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://josephwilk.github.io//conferences/conferences-and-the-cult-of-celebrity.html
+        </loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//ruby/fake-execution.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//presentations/someone-is-wrong.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://josephwilk.github.io//ruby/recurrent-neural-networks-in-ruby.html</loc>
+        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://josephwilk.github.io//rhetorical-programming/why-are-you-shouting-programmer.html
         </loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
         <loc>
-            http://blogjosephwilk.github.io/blog/ruby/mind-the-gap-european-software-tester-magazine-article.html
-        </loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/ruby/futureruby-talk-cucumbered.html</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/ruby/jvm-call-to-arms-with-cucumbers.html</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/ruby/ruby-metric-fu-hudson-plugin.html</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/ruby/metrics-for-plain-text-acceptance-tests.html
-        </loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/ruby/pairwise-testing-with-cucumber.html</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/ruby/specing-cucumber-step-definitions.html
+            http://josephwilk.github.io//software-craftmanship/the-aesthetics-of-density.html
         </loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
         <loc>
-            http://blogjosephwilk.github.io/blog/ruby/testing-javascript-with-cucumber-in-javascript.html
-        </loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/ruby/rocket-fuelled-cucumbers.html</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/cucumber/cucumber-patterns.html</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/ruby/limiting-red-smarter-test-builds-through-metrics.html
+            http://josephwilk.github.io//presentations/a-developers-guide-to-creating-presentations.html
         </loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
         <loc>
-            http://blogjosephwilk.github.io/blog/cucumber/limited-red-demo-with-cucumber.html
+            http://josephwilk.github.io//clojure/isolating-external-dependencies-in-clojure.html
         </loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/cucumber/cucumber-interview-for-software-development-times.html
-        </loc>
+        <loc>http://josephwilk.github.io//elixir/sets-in-elixir.html</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/acceptance-testing/acceptance-testing-lifecycle.html
-        </loc>
+        <loc>http://josephwilk.github.io//clojure/creating-instruments-with-overtone.html</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/acceptance-testing/allowing-features-to-breathe.html
-        </loc>
+        <loc>http://josephwilk.github.io//clojure/building-clojure-services-at-scale.html</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/agile/story-smells-in-order-to-do-x-i-want-x.html
-        </loc>
+        <loc>http://josephwilk.github.io//clojure/sounds-of-the-human-brain.html</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>http://blogjosephwilk.github.io/blog/katas/awari-kata.html</loc>
+        <loc>http://josephwilk.github.io//clojure/creative_machines.html</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>http://blogjosephwilk.github.io/blog/cucumber/page-object-pattern.html</loc>
+        <loc>http://josephwilk.github.io//art/live-coding-repl-electric.html</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/agile/story-smells-the-valueless-story.html
-        </loc>
+        <loc>http://josephwilk.github.io//clojure/overtone-driving-minecraft.html</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/testing/testing-outside-of-the-ruby-world.html
-        </loc>
+        <loc>http://josephwilk.github.io//about/</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/training/the-art-of-cucumber-london-workshop.html
-        </loc>
+        <loc>http://josephwilk.github.io//about/joseph-wilk-cv/</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/startups/startups-infiltrating-agile-and-xp.html
-        </loc>
+        <loc>http://josephwilk.github.io//archives/</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/personal/conferences-and-accessibility-please-try-harder.html
-        </loc>
+        <loc>http://josephwilk.github.io//contact/</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>http://blogjosephwilk.github.io/blog/cucumber/mining-cucumber-features.html</loc>
+        <loc>http://josephwilk.github.io//</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/testing/co-chair-of-the-agile-alliance-functional-testing-tools-group.html
-        </loc>
+        <loc>http://josephwilk.github.io//music/2003-imperial-the-last-crusade/</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/cucumber/examples-are-not-a-specification.html
-        </loc>
+        <loc>http://josephwilk.github.io//music/2003-semantic-overload/</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>http://blogjosephwilk.github.io/blog/big-data/a-little-bit-of-pig.html</loc>
+        <loc>http://josephwilk.github.io//music/2004-a-new-dawn/</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/conferences/conferences-and-the-cult-of-celebrity.html
-        </loc>
+        <loc>http://josephwilk.github.io//music/2004-iwfms-or-bust/</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>http://blogjosephwilk.github.io/blog/ruby/fake-execution.html</loc>
+        <loc>http://josephwilk.github.io//music/2004-josephs-2004-mix/</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>http://blogjosephwilk.github.io/blog/presentations/someone-is-wrong.html</loc>
+        <loc>http://josephwilk.github.io//music/2004-monotonic-indeterminism/</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/ruby/recurrent-neural-networks-in-ruby.html
-        </loc>
+        <loc>http://josephwilk.github.io//music/2005-all-the-music-is-in-a-rainbow/</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/rhetorical-programming/why-are-you-shouting-programmer.html
-        </loc>
+        <loc>http://josephwilk.github.io//music/2005-eternal-sunshine-with-my-eyes-closed/</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/software-craftmanship/the-aesthetics-of-density.html
-        </loc>
+        <loc>http://josephwilk.github.io//music/2005-igrisu-ni-kaerimasu/</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/presentations/a-developers-guide-to-creating-presentations.html
-        </loc>
+        <loc>http://josephwilk.github.io//music/2005-japan-playlist/</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/clojure/isolating-external-dependencies-in-clojure.html
-        </loc>
+        <loc>http://josephwilk.github.io//music/2005-joes-brain-expressed-as-music/</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>http://blogjosephwilk.github.io/blog/elixir/sets-in-elixir.html</loc>
+        <loc>http://josephwilk.github.io//music/2005-year-of-the-pink/</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/clojure/creating-instruments-with-overtone.html
-        </loc>
+        <loc>http://josephwilk.github.io//music/2009-scotland-on-rails/</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/clojure/building-clojure-services-at-scale.html
-        </loc>
+        <loc>http://josephwilk.github.io//music/</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>http://blogjosephwilk.github.io/blog/clojure/sounds-of-the-human-brain.html</loc>
+        <loc>http://josephwilk.github.io//music/las-vegas-2009/</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>http://blogjosephwilk.github.io/blog/clojure/creative_machines.html</loc>
+        <loc>http://josephwilk.github.io//music/musical-discoveries/</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>http://blogjosephwilk.github.io/blog/art/live-coding-repl-electric.html</loc>
+        <loc>http://josephwilk.github.io//music/musical-smellness/</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>http://blogjosephwilk.github.io/blog/clojure/overtone-driving-minecraft.html</loc>
+        <loc>http://josephwilk.github.io//robots.txt</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
     <url>
-        <loc>http://blogjosephwilk.github.io/blog/about/</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/about/joseph-wilk-cv/</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/archives/</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/contact/</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/music/2003-imperial-the-last-crusade/</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/music/2003-semantic-overload/</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/music/2004-a-new-dawn/</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/music/2004-iwfms-or-bust/</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/music/2004-josephs-2004-mix/</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/music/2004-monotonic-indeterminism/</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/music/2005-all-the-music-is-in-a-rainbow/</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://blogjosephwilk.github.io/blog/music/2005-eternal-sunshine-with-my-eyes-closed/
-        </loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/music/2005-igrisu-ni-kaerimasu/</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/music/2005-japan-playlist/</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/music/2005-joes-brain-expressed-as-music/</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/music/2005-year-of-the-pink/</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/music/2009-scotland-on-rails/</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/music/</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/music/las-vegas-2009/</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/music/musical-discoveries/</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/music/musical-smellness/</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/robots.txt</loc>
-        <lastmod>2015-07-05T13:21:12+02:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blogjosephwilk.github.io/blog/speaking/</loc>
+        <loc>http://josephwilk.github.io//speaking/</loc>
         <lastmod>2015-07-05T13:21:12+02:00</lastmod>
     </url>
 </urlset>

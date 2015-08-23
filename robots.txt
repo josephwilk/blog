@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 
-Sitemap: http://blogjosephwilk.github.io/blog/sitemap.xml 
+Sitemap: http://josephwilk.github.io//sitemap.xml 

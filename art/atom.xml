@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: art | Joseph Wilk]]></title>
-  <link href="http://blogjosephwilk.github.io/blog//art/atom.xml" rel="self"/>
-  <link href="http://blogjosephwilk.github.io/blog/"/>
-  <updated>2015-08-23T18:47:52+02:00</updated>
-  <id>http://blogjosephwilk.github.io/blog/</id>
+  <link href="http://josephwilk.github.io///art/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io//"/>
+  <updated>2015-08-23T19:38:56+02:00</updated>
+  <id>http://josephwilk.github.io//</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
     <email><![CDATA[joe@josephwilk.net]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Live Coding - Repl Electric]]></title>
-    <link href="http://blogjosephwilk.github.io/blog/art/live-coding-repl-electric.html"/>
+    <link href="http://josephwilk.github.io//art/live-coding-repl-electric.html"/>
     <updated>2014-06-13T16:58:12+02:00</updated>
-    <id>http://blogjosephwilk.github.io/blog/art/live-coding-repl-electric</id>
+    <id>http://josephwilk.github.io//art/live-coding-repl-electric</id>
     <content type="html"><![CDATA[<p>Live coding is the act of turning a programming session into a performance. This can constitute improvisation, music, visuals, poetry, hardware, robots, dance, textiles and people. Pretty much anything with an input and output can be controlled live by programming.</p>
 
 <p>This is not just a performance by programmers for programmers. While this is often where it starts as a live coder, the type of audience and the accessibility of the performance lies in the performers imagination. Abstraction can get us pretty much anywhere.</p>
@@ -36,7 +36,7 @@
 
 <h3>The Stars</h3>
 
-<iframe src="http://blogjosephwilk.github.io/blog//player.vimeo.com/video/95988263" width="500" height="313" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+<iframe src="http://josephwilk.github.io///player.vimeo.com/video/95988263" width="500" height="313" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 
 
 <h3>Open Live Coding</h3>

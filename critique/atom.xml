@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: critique | Joseph Wilk]]></title>
-  <link href="http://blogjosephwilk.github.io/blog//critique/atom.xml" rel="self"/>
-  <link href="http://blogjosephwilk.github.io/blog/"/>
-  <updated>2015-08-23T18:47:52+02:00</updated>
-  <id>http://blogjosephwilk.github.io/blog/</id>
+  <link href="http://josephwilk.github.io///critique/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io//"/>
+  <updated>2015-08-23T19:38:56+02:00</updated>
+  <id>http://josephwilk.github.io//</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
     <email><![CDATA[joe@josephwilk.net]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Rails Admins Plugins Review]]></title>
-    <link href="http://blogjosephwilk.github.io/blog/critique/rails-admins-plugins-review.html"/>
+    <link href="http://josephwilk.github.io//critique/rails-admins-plugins-review.html"/>
     <updated>2008-02-14T13:04:10+01:00</updated>
-    <id>http://blogjosephwilk.github.io/blog/critique/rails-admins-plugins-review</id>
+    <id>http://josephwilk.github.io//critique/rails-admins-plugins-review</id>
     <content type="html"><![CDATA[<p>A brief examination of some of the major Admin plugins for rails.</p>
 
 <ul>
@@ -251,9 +251,9 @@ _</p></li>
   
   <entry>
     <title type="html"><![CDATA[Automatic Admin Systems - Semantics with Rails & Django]]></title>
-    <link href="http://blogjosephwilk.github.io/blog/critique/automatic-admin-systems-semantics-with-rails-and-django.html"/>
+    <link href="http://josephwilk.github.io//critique/automatic-admin-systems-semantics-with-rails-and-django.html"/>
     <updated>2008-01-18T12:52:59+01:00</updated>
-    <id>http://blogjosephwilk.github.io/blog/critique/automatic-admin-systems-semantics-with-rails-and-django</id>
+    <id>http://josephwilk.github.io//critique/automatic-admin-systems-semantics-with-rails-and-django</id>
     <content type="html"><![CDATA[<h3>The Magically Appearing Admin</h3>
 
 <p>Web developers using an MVC framework produce their websites playing with their models, views and controllers. Then by adding a few lines of magic an admin system appears which allows users to add/edit/delete/view/search their models.</p>
@@ -364,9 +364,9 @@ _</p></li>
   
   <entry>
     <title type="html"><![CDATA[OpenId]]></title>
-    <link href="http://blogjosephwilk.github.io/blog/critique/openid.html"/>
+    <link href="http://josephwilk.github.io//critique/openid.html"/>
     <updated>2007-11-11T11:19:47+01:00</updated>
-    <id>http://blogjosephwilk.github.io/blog/critique/openid</id>
+    <id>http://josephwilk.github.io//critique/openid</id>
     <content type="html"><![CDATA[<p>OpenID is an open loosely distributed single sign on protocol. It looks at why Microsoft&rsquo;s single sign on has not taken off on a large scale. Concluding that no-one wants a single company storing all details, hence create a distributed single sign-on protocol.</p>
 
 <p>OpenIDs take the form of URLS:</p>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: databases | Joseph Wilk]]></title>
-  <link href="http://blogjosephwilk.github.io/blog//databases/atom.xml" rel="self"/>
-  <link href="http://blogjosephwilk.github.io/blog/"/>
-  <updated>2015-08-23T18:47:52+02:00</updated>
-  <id>http://blogjosephwilk.github.io/blog/</id>
+  <link href="http://josephwilk.github.io///databases/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io//"/>
+  <updated>2015-08-23T19:38:56+02:00</updated>
+  <id>http://josephwilk.github.io//</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
     <email><![CDATA[joe@josephwilk.net]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[PDO & Zend Framework Playing nicely with MSSQL]]></title>
-    <link href="http://blogjosephwilk.github.io/blog/databases/pdo-zend-framework-playing-nicely-with-mssql.html"/>
+    <link href="http://josephwilk.github.io//databases/pdo-zend-framework-playing-nicely-with-mssql.html"/>
     <updated>2007-11-15T11:04:34+01:00</updated>
-    <id>http://blogjosephwilk.github.io/blog/databases/pdo-zend-framework-playing-nicely-with-mssql</id>
+    <id>http://josephwilk.github.io//databases/pdo-zend-framework-playing-nicely-with-mssql</id>
     <content type="html"><![CDATA[<p>The task was to use the MSSQL database adapter (Zend_Db_Adapter_Pdo_Mssql) from the Zend-Framework and ensure it worked on both windows and Unix
 platforms.</p>
 
