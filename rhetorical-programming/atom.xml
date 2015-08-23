@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: rhetorical-programming | Joseph Wilk]]></title>
-  <link href="http://josephwilk.github.io/blog//rhetorical-programming/atom.xml" rel="self"/>
-  <link href="http://josephwilk.github.io/blog/"/>
-  <updated>2015-08-23T19:41:45+02:00</updated>
-  <id>http://josephwilk.github.io/blog/</id>
+  <link href="http://josephwilk.github.io//rhetorical-programming/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io/"/>
+  <updated>2015-08-23T19:43:19+02:00</updated>
+  <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
     <email><![CDATA[joe@josephwilk.net]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Why are you SHOUTING programmer?]]></title>
-    <link href="http://josephwilk.github.io/blog/rhetorical-programming/why-are-you-shouting-programmer.html"/>
+    <link href="http://josephwilk.github.io/rhetorical-programming/why-are-you-shouting-programmer.html"/>
     <updated>2012-11-19T01:00:51+01:00</updated>
-    <id>http://josephwilk.github.io/blog/rhetorical-programming/why-are-you-shouting-programmer</id>
+    <id>http://josephwilk.github.io/rhetorical-programming/why-are-you-shouting-programmer</id>
     <content type="html"><![CDATA[<p>Being shouted at is not a lot of fun. So why do we shout in code?</p>
 
 <p><img src="/images/blog/2012/11/image1-201x300.jpg" alt="" /></p>

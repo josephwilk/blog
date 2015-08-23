@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: utilities | Joseph Wilk]]></title>
-  <link href="http://josephwilk.github.io/blog//utilities/atom.xml" rel="self"/>
-  <link href="http://josephwilk.github.io/blog/"/>
-  <updated>2015-08-23T19:41:45+02:00</updated>
-  <id>http://josephwilk.github.io/blog/</id>
+  <link href="http://josephwilk.github.io//utilities/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io/"/>
+  <updated>2015-08-23T19:43:19+02:00</updated>
+  <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
     <email><![CDATA[joe@josephwilk.net]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Textmate bundle for RR test double framework]]></title>
-    <link href="http://josephwilk.github.io/blog/utilities/textmate-bundle-for-rr-test-double-framework.html"/>
+    <link href="http://josephwilk.github.io/utilities/textmate-bundle-for-rr-test-double-framework.html"/>
     <updated>2008-07-07T19:37:32+02:00</updated>
-    <id>http://josephwilk.github.io/blog/utilities/textmate-bundle-for-rr-test-double-framework</id>
+    <id>http://josephwilk.github.io/utilities/textmate-bundle-for-rr-test-double-framework</id>
     <content type="html"><![CDATA[<p>A simple Textmate bundle for  RR the Ruby test double framework.  You can read about RR at <a href="http://github.com/btakita/rr/tree/master">http://github.com/btakita/rr/tree/master</a> and look through the latest rdocs at <a href="http://rubypub.com/search/results?q=RR">Rubypub</a></p>
 
 <p><img src="/images/blog/2008/07/gwget.png" alt="" /></p>

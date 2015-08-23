@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: projects | Joseph Wilk]]></title>
-  <link href="http://josephwilk.github.io/blog//projects/atom.xml" rel="self"/>
-  <link href="http://josephwilk.github.io/blog/"/>
-  <updated>2015-08-23T19:41:45+02:00</updated>
-  <id>http://josephwilk.github.io/blog/</id>
+  <link href="http://josephwilk.github.io//projects/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io/"/>
+  <updated>2015-08-23T19:43:19+02:00</updated>
+  <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
     <email><![CDATA[joe@josephwilk.net]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[JavaScript Acting as a Robotic Agent ]]></title>
-    <link href="http://josephwilk.github.io/blog/projects/javascript-acting-as-a-robotic-agent.html"/>
+    <link href="http://josephwilk.github.io/projects/javascript-acting-as-a-robotic-agent.html"/>
     <updated>2008-02-23T18:06:18+01:00</updated>
-    <id>http://josephwilk.github.io/blog/projects/javascript-acting-as-a-robotic-agent</id>
+    <id>http://josephwilk.github.io/projects/javascript-acting-as-a-robotic-agent</id>
     <content type="html"><![CDATA[<p>We can think of JavaScript running within a clients browser as a robotic agent. It has an environment in which it can sense things. The ability to look at the environment and make decisions based on plans.</p>
 
 <p><img src="/images/blog/2007/12/clientagent.JPG" alt="clientagent.JPG" /></p>
@@ -100,9 +100,9 @@ The planner needs to be able to handle temporal restrictions on the form element
   
   <entry>
     <title type="html"><![CDATA[Latent Semantic Analysis in Python]]></title>
-    <link href="http://josephwilk.github.io/blog/projects/latent-semantic-analysis-in-python.html"/>
+    <link href="http://josephwilk.github.io/projects/latent-semantic-analysis-in-python.html"/>
     <updated>2007-12-19T12:14:42+01:00</updated>
-    <id>http://josephwilk.github.io/blog/projects/latent-semantic-analysis-in-python</id>
+    <id>http://josephwilk.github.io/projects/latent-semantic-analysis-in-python</id>
     <content type="html"><![CDATA[<p>Latent Semantic Analysis (LSA) is a mathematical method that tries to bring out latent relationships within a collection of documents. Rather than looking at each document isolated from the others it looks at all the documents as a whole and the terms within them to identify relationships.</p>
 
 <p>An example of LSA:
@@ -303,9 +303,9 @@ D4 [-0.01 -0.01 +0.63 -0.01 -0.01 +0.04 -0.01 -0.01 &lt;strong&gt;&lt;span style
   
   <entry>
     <title type="html"><![CDATA[Building a Vector Space Search Engine in Python]]></title>
-    <link href="http://josephwilk.github.io/blog/projects/building-a-vector-space-search-engine-in-python.html"/>
+    <link href="http://josephwilk.github.io/projects/building-a-vector-space-search-engine-in-python.html"/>
     <updated>2007-11-27T09:08:49+01:00</updated>
-    <id>http://josephwilk.github.io/blog/projects/building-a-vector-space-search-engine-in-python</id>
+    <id>http://josephwilk.github.io/projects/building-a-vector-space-search-engine-in-python</id>
     <content type="html"><![CDATA[<p>A vector space search involves converting documents into vectors. Each dimension within the vectors represents a term. If a document contains that term then the value within the vector is greater than zero.</p>
 
 <p>Here is an implementation of Vector space searching using python (2.4+).</p>
@@ -521,9 +521,9 @@ CONNECTIONS</em></p>
   
   <entry>
     <title type="html"><![CDATA[Prolog ASLDICN Event Calculus Planner]]></title>
-    <link href="http://josephwilk.github.io/blog/projects/prolog-asldicn-event-calculus-planner.html"/>
+    <link href="http://josephwilk.github.io/projects/prolog-asldicn-event-calculus-planner.html"/>
     <updated>2007-11-23T08:31:27+01:00</updated>
-    <id>http://josephwilk.github.io/blog/projects/prolog-asldicn-event-calculus-planner</id>
+    <id>http://josephwilk.github.io/projects/prolog-asldicn-event-calculus-planner</id>
     <content type="html"><![CDATA[<p>The event calculus planner used within my thesis was based on Dr. Murray Shanahan&rsquo;s ASLDICN (Abductive SLD with Integrity constraints and proof by Negation) planner with compound action support. This planner is an adaptation from one published in one of Dr. Shanahan&rsquo;s research papers</p>
 
 <p><a href="http://casbah.ee.ic.ac.uk/~mpsha/planners.html">http://casbah.ee.ic.ac.uk/%7Empsha/planners.html</a></p>
@@ -549,9 +549,9 @@ CONNECTIONS</em></p>
   
   <entry>
     <title type="html"><![CDATA[Running Prolog as CGI]]></title>
-    <link href="http://josephwilk.github.io/blog/projects/running-prolog-as-cgi.html"/>
+    <link href="http://josephwilk.github.io/projects/running-prolog-as-cgi.html"/>
     <updated>2007-11-23T08:27:25+01:00</updated>
-    <id>http://josephwilk.github.io/blog/projects/running-prolog-as-cgi</id>
+    <id>http://josephwilk.github.io/projects/running-prolog-as-cgi</id>
     <content type="html"><![CDATA[<p>Prolog can be run as CGI by using a PHP wrapper script which invokes the Prolog engine from within PHP. Prolog can be invoked indicating Prolog files to load and goals to initially achieve once loaded.</p>
 
 <p>Executing the following in PHP can spawn a process which runs Prolog.</p>

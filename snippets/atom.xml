@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: snippets | Joseph Wilk]]></title>
-  <link href="http://josephwilk.github.io/blog//snippets/atom.xml" rel="self"/>
-  <link href="http://josephwilk.github.io/blog/"/>
-  <updated>2015-08-23T19:41:45+02:00</updated>
-  <id>http://josephwilk.github.io/blog/</id>
+  <link href="http://josephwilk.github.io//snippets/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io/"/>
+  <updated>2015-08-23T19:43:19+02:00</updated>
+  <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
     <email><![CDATA[joe@josephwilk.net]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Rspec-rails mock_model helper for the RR test double framework]]></title>
-    <link href="http://josephwilk.github.io/blog/snippets/rspec-rails-mock_model-helper-for-the-rr-test-double-framework.html"/>
+    <link href="http://josephwilk.github.io/snippets/rspec-rails-mock_model-helper-for-the-rr-test-double-framework.html"/>
     <updated>2008-07-09T18:07:30+02:00</updated>
-    <id>http://josephwilk.github.io/blog/snippets/rspec-rails-mock_model-helper-for-the-rr-test-double-framework</id>
+    <id>http://josephwilk.github.io/snippets/rspec-rails-mock_model-helper-for-the-rr-test-double-framework</id>
     <content type="html"><![CDATA[<p><a href="http://rspec.info/">Rspec-rails</a> is a rails plugin which brings the Rspec Ruby Behaviour Driven Development framework to rails along with some rails specific helpers. One of these hugely useful helper functions is:</p>
 
 <pre><code>mock_model(model_class, options_and_stubs = {})
@@ -49,9 +49,9 @@ It throws this error message:</p>
   
   <entry>
     <title type="html"><![CDATA[Rspec Stories - Keeping Steps Dry]]></title>
-    <link href="http://josephwilk.github.io/blog/snippets/rspec-stories-keeping-steps-dry.html"/>
+    <link href="http://josephwilk.github.io/snippets/rspec-stories-keeping-steps-dry.html"/>
     <updated>2008-04-30T20:00:36+02:00</updated>
-    <id>http://josephwilk.github.io/blog/snippets/rspec-stories-keeping-steps-dry</id>
+    <id>http://josephwilk.github.io/snippets/rspec-stories-keeping-steps-dry</id>
     <content type="html"><![CDATA[<p>When using <a href="http://rspec.info/">Rspec stories</a> you have plain text stories which we call the <strong>&lsquo;story&rsquo;</strong> file and the <strong>&lsquo;story steps&rsquo;</strong> file that maps the plain text story to programmatic code. Generally you end up with your <strong>story files not being DRY</strong>. This is not a worry, your stories are the domain specific languages detailing your acceptance/integration tests. Its like saying that your Rails Models are not DRY because they repeat lots of <code>'has_one'</code>!</p>
 
 <p>However within a single story file you can DRY things up a bit by reusing scenarios.</p>
@@ -108,9 +108,9 @@ It throws this error message:</p>
   
   <entry>
     <title type="html"><![CDATA[Curl and Certificates with Windows PHP]]></title>
-    <link href="http://josephwilk.github.io/blog/snippets/curl-and-certificates-with-windows-php.html"/>
+    <link href="http://josephwilk.github.io/snippets/curl-and-certificates-with-windows-php.html"/>
     <updated>2007-11-06T09:11:30+01:00</updated>
-    <id>http://josephwilk.github.io/blog/snippets/curl-and-certificates-with-windows-php</id>
+    <id>http://josephwilk.github.io/snippets/curl-and-certificates-with-windows-php</id>
     <content type="html"><![CDATA[<p>Curl on a Windows PHP installation does not know where to look for certificates. Hence when you try and curl a https url it fails. The default value for CURLOPT_SSL_VERIFYPEER is true which means curl will always try and validate ssl by default. I discovered this while working with an OpenID library (v1.2.3):
 <a href="http://openidenabled.com/php-openid/">http://openidenabled.com/php-openid/</a></p>
 

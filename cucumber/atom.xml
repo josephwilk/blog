@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: cucumber | Joseph Wilk]]></title>
-  <link href="http://josephwilk.github.io/blog//cucumber/atom.xml" rel="self"/>
-  <link href="http://josephwilk.github.io/blog/"/>
-  <updated>2015-08-23T19:41:45+02:00</updated>
-  <id>http://josephwilk.github.io/blog/</id>
+  <link href="http://josephwilk.github.io//cucumber/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io/"/>
+  <updated>2015-08-23T19:43:19+02:00</updated>
+  <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
     <email><![CDATA[joe@josephwilk.net]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Examples alone are not a Specification]]></title>
-    <link href="http://josephwilk.github.io/blog/cucumber/examples-are-not-a-specification.html"/>
+    <link href="http://josephwilk.github.io/cucumber/examples-are-not-a-specification.html"/>
     <updated>2012-02-24T15:25:30+01:00</updated>
-    <id>http://josephwilk.github.io/blog/cucumber/examples-are-not-a-specification</id>
+    <id>http://josephwilk.github.io/cucumber/examples-are-not-a-specification</id>
     <content type="html"><![CDATA[<p>The Gherkin syntax used by Cucumber enforces that Feature files contain scenarios which are examples of the behaviour of a feature. However Gherkin has no constraints on if there is a specification present. Examples are great at helping us understand specifications but <strong>they are not specifications themselves</strong>.</p>
 
 <p>What do we mean when we say specification?</p>
@@ -141,9 +141,9 @@ end
   
   <entry>
     <title type="html"><![CDATA[Mining Cucumber Features]]></title>
-    <link href="http://josephwilk.github.io/blog/cucumber/mining-cucumber-features.html"/>
+    <link href="http://josephwilk.github.io/cucumber/mining-cucumber-features.html"/>
     <updated>2011-07-26T19:00:23+02:00</updated>
-    <id>http://josephwilk.github.io/blog/cucumber/mining-cucumber-features</id>
+    <id>http://josephwilk.github.io/cucumber/mining-cucumber-features</id>
     <content type="html"><![CDATA[<h2>Failure Rates vs Change Rates</h2>
 
 <p>I&rsquo;ve been spending a lot of  time recently data mining our test suite at Songkick.com. I&rsquo;ve been using our own internal version of <a href="http://www.limited-red.com">www.limited-red.com</a> which records all our test fails for every build on our continuous integration server.</p>
@@ -289,9 +289,9 @@ end
   
   <entry>
     <title type="html"><![CDATA[Page Object Pattern]]></title>
-    <link href="http://josephwilk.github.io/blog/cucumber/page-object-pattern.html"/>
+    <link href="http://josephwilk.github.io/cucumber/page-object-pattern.html"/>
     <updated>2011-03-09T13:00:23+01:00</updated>
-    <id>http://josephwilk.github.io/blog/cucumber/page-object-pattern</id>
+    <id>http://josephwilk.github.io/cucumber/page-object-pattern</id>
     <content type="html"><![CDATA[<h2>What Is the Page Object Pattern?</h2>
 
 <p>The Page model is a pattern that maps a UI page to a class, where for example a page could be a HTML page. The functionality to interact or make assertions about that that page is captured within the Page class. Then these methods may be called by a test. So ultimately we are introducing a gatekeeper to the GUI of a page.</p>
@@ -427,9 +427,9 @@ No easy way to be reused outside of Cucumber or test in isolation. By isolating 
   
   <entry>
     <title type="html"><![CDATA[Cucumber Interview for The Software Development Times ]]></title>
-    <link href="http://josephwilk.github.io/blog/cucumber/cucumber-interview-for-software-development-times.html"/>
+    <link href="http://josephwilk.github.io/cucumber/cucumber-interview-for-software-development-times.html"/>
     <updated>2010-09-14T00:26:01+02:00</updated>
-    <id>http://josephwilk.github.io/blog/cucumber/cucumber-interview-for-software-development-times</id>
+    <id>http://josephwilk.github.io/cucumber/cucumber-interview-for-software-development-times</id>
     <content type="html"><![CDATA[<p>I was recently interviewed about Cucumber and whether it solves the problem of getting business people writing specifications.
 You can read the article on SDTimes:
 <a href="http://www.sdtimes.com/link/34631">Cucumber puts plain English on requirements</a></p>
@@ -441,9 +441,9 @@ You can read the article on SDTimes:
   
   <entry>
     <title type="html"><![CDATA[Limited Red Demo with Cucumber]]></title>
-    <link href="http://josephwilk.github.io/blog/cucumber/limited-red-demo-with-cucumber.html"/>
+    <link href="http://josephwilk.github.io/cucumber/limited-red-demo-with-cucumber.html"/>
     <updated>2010-09-09T21:50:45+02:00</updated>
-    <id>http://josephwilk.github.io/blog/cucumber/limited-red-demo-with-cucumber</id>
+    <id>http://josephwilk.github.io/cucumber/limited-red-demo-with-cucumber</id>
     <content type="html"><![CDATA[<p>A demonstration of working with <a href="http://www.limited-red.com">Limited Red</a> (previously known as CukeMax) on a <a href="http://cukes.info/">Cucumber</a> project.</p>
 
 <p><a href="http://vimeo.com/14838359">Using Limited Red with a cucumber project</a> from <a href="http://vimeo.com/user1227884">Joseph Wilk</a></p>

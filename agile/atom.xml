@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: agile | Joseph Wilk]]></title>
-  <link href="http://josephwilk.github.io/blog//agile/atom.xml" rel="self"/>
-  <link href="http://josephwilk.github.io/blog/"/>
-  <updated>2015-08-23T19:41:45+02:00</updated>
-  <id>http://josephwilk.github.io/blog/</id>
+  <link href="http://josephwilk.github.io//agile/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io/"/>
+  <updated>2015-08-23T19:43:19+02:00</updated>
+  <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
     <email><![CDATA[joe@josephwilk.net]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Story Smells: The Valueless Story]]></title>
-    <link href="http://josephwilk.github.io/blog/agile/story-smells-the-valueless-story.html"/>
+    <link href="http://josephwilk.github.io/agile/story-smells-the-valueless-story.html"/>
     <updated>2011-03-10T16:00:17+01:00</updated>
-    <id>http://josephwilk.github.io/blog/agile/story-smells-the-valueless-story</id>
+    <id>http://josephwilk.github.io/agile/story-smells-the-valueless-story</id>
     <content type="html"><![CDATA[<blockquote><p>&ldquo;Why bother discussing the value or writing it down for the stories, everybody already knows what it is&rdquo;</p></blockquote>
 
 <h2>Problem</h2>
@@ -113,9 +113,9 @@
   
   <entry>
     <title type="html"><![CDATA[Story smells: In order to do X I want X]]></title>
-    <link href="http://josephwilk.github.io/blog/agile/story-smells-in-order-to-do-x-i-want-x.html"/>
+    <link href="http://josephwilk.github.io/agile/story-smells-in-order-to-do-x-i-want-x.html"/>
     <updated>2010-11-23T19:40:48+01:00</updated>
-    <id>http://josephwilk.github.io/blog/agile/story-smells-in-order-to-do-x-i-want-x</id>
+    <id>http://josephwilk.github.io/agile/story-smells-in-order-to-do-x-i-want-x</id>
     <content type="html"><![CDATA[<p>I keep coming across story cards written like this:</p>
 
 <p><img src="/images/blog/2010/11/card.png" alt="" /></p>
