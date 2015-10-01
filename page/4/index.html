@@ -1,0 +1,1789 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Joseph Wilk</title>
+  <meta name="author" content="Joseph Wilk">
+
+  
+  <meta name="description" content="A demonstration of working with Limited Red (previously known as CukeMax) on a Cucumber project. Using Limited Red with a cucumber project from &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://josephwilk.github.io/page/4/index.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Joseph Wilk" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<script src="http://disqus.com/forums/josephwilk/embed.js"></script>
+<link href="http://fonts.googleapis.com/css?family=Bevan" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-3020740-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <img src="/images/joe_small.jpg" style="position:relative;border-radius: 8px;margin-right: 5px;border-style: solid;border-width: 1px;border-color: #DDD;" height="60" alt="Joseph Wilk">
+  <span style="display:inline-block">
+    <h1><a href="/">Joseph Wilk</a></h1>
+    <h2>Programming bits and bobs</h2>
+  </span>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:josephwilk.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+ <li><a href="/">Home</a></li>
+ <li><a href="/about">About</a></li>
+ <li><a href="/speaking">Speaking</a></li>
+ <li><a href="/contact">Contact</a></li>
+ <li><a href="/archives">Archives</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cucumber/limited-red-demo-with-cucumber.html">Limited Red Demo With Cucumber</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-09T20:50:45+01:00" pubdate data-updated="true">Sep 9<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>A demonstration of working with <a href="http://www.limited-red.com">Limited Red</a> (previously known as CukeMax) on a <a href="http://cukes.info/">Cucumber</a> project.</p>
+
+<p><a href="http://vimeo.com/14838359">Using Limited Red with a cucumber project</a> from <a href="http://vimeo.com/user1227884">Joseph Wilk</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/ruby/limiting-red-smarter-test-builds-through-metrics.html">Limiting Red: Smarter Test Builds Through Metrics</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-15T03:28:31+01:00" pubdate data-updated="true">Aug 15<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>The Current State of the Art</h2>
+
+<p>In the Ruby world there is a wealth of metrics which can provide insight into our code. Looking at such things as:</p>
+
+<ul>
+<li><p>Structural similar code (<a href="http://ruby.sadi.st/Flay.html">Flay</a>)</p></li>
+<li><p>Complexity (<a href="http://ruby.sadi.st/Flog.html">Flog</a>)</p></li>
+<li><p><a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity">Cyclic complexity</a> (<a href="http://saikuro.rubyforge.org/">Saikuro</a>)</p></li>
+<li><p>Code smells (<a href="http://wiki.github.com/kevinrutherford/reek/">Reek</a>)</p></li>
+<li><p>Design issues (<a href="http://github.com/martinjandrews/roodi/tree">Roodi</a>)</p></li>
+<li><p>File change frequencies (<a href="http://github.com/danmayer/churn">Churn</a>)</p></li>
+</ul>
+
+
+<p><a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"></a></p>
+
+<p>When it comes to metrics involving our tests we have:</p>
+
+<ul>
+<li><p>Code coverage (<a href="http://eigenclass.org/hiki.rb?rcov">Rcov</a>)</p></li>
+<li><p>Tools to help identify missed edge cases (<a href="http://ruby.sadi.st/Heckle.html">Heckle</a>).</p></li>
+<li><p>Random Testing tools (<a href="http://rushcheck.rubyforge.org/">RushCheck</a>)</p></li>
+</ul>
+
+
+<p>Is that it? I think we can do better than that!</p>
+
+<p>What useful metrics are we missing that our tests could provide and what should we be recording?</p>
+
+<h2>Recording Test Builds</h2>
+
+<p>Your using a <a href="http://en.wikipedia.org/wiki/Continuous_integration">Continuous Integration</a> server right? Running all your tests at every checkin in your source control repository. The CI environment represents our pipeline in which all code needs to flow through. It tends to be the place where all of the tests are run before the code flows into the outside world. Hence this is a perfect environment to start capturing detailed metrics about all of our tests. It&rsquo;s also not the end of the world if we add a little extra time to the test build in-order to capture these metrics.</p>
+
+<h2>Mining Metrics from Test Builds</h2>
+
+<p>What interesting things can we discover? Here are some suggestions:</p>
+
+<ul>
+<li><p><strong>Failure rates</strong></p>
+
+<ul>
+<li>Areas of your product which are prone to failure/bugs and tests which might be fragile. Perhaps highlighting area QA&rsquo;s should focus extra attention to.</li>
+</ul>
+</li>
+<li><p><strong>Flickering tests</strong></p>
+
+<ul>
+<li>If a test keeps failing and passing frequently.</li>
+</ul>
+</li>
+<li><p><strong>Fragile Tests</strong></p>
+
+<ul>
+<li>An all or nothing feature where all the tests fail or none fail.</li>
+</ul>
+</li>
+<li><p><strong>Never failing tests</strong></p>
+
+<ul>
+<li>Tests which have never failed, do we need to run them all the time, are they now redundant?</li>
+</ul>
+</li>
+<li><p><strong>Average build failures a day</strong></p>
+
+<ul>
+<li><strong>How often is the build broken.</strong></li>
+</ul>
+</li>
+<li><p><strong>Discover <a href="http://en.wikipedia.org/wiki/Shotgun_surgery">Shotgun Surgery</a><br/>
+</strong></p>
+
+<ul>
+<li>Small code changes broke all the tests!</li>
+</ul>
+</li>
+</ul>
+
+
+<p>What other metrics do you think would be useful?</p>
+
+<h2>Kent Beck is Smart</h2>
+
+<p><a href="http://www.threeriversinstitute.org/">Kent Beck</a> has some additional ideas, lets copy him and pretend to look smart.</p>
+
+<h3>Intelligent Selection of the Tests to Run</h3>
+
+<p>Kent Beck﻿ wrote a tool called <a href="http://www.threeriversinstitute.org/junitmax/subscribe.html">JUnit Max</a> which is a plugin for <a href="http://www.eclipse.org/">Eclipse</a> and <a href="http://www.junit.org/">JUnit</a> which helps programmers stay focused on coding by running tests intelligently.</p>
+
+<p>&ldquo;<em>Max fails fast, running the tests most likely to fail first.</em>&rdquo;</p>
+
+<p>One of the key principles behind this tool is that:</p>
+
+<p><em>&ldquo;Tests that failed recently are more likely to fail than tests which have never failed.&rdquo;</em></p>
+
+<h3>Super Fast Feedback</h3>
+
+<p>If we prioritise the tests that failed recently and those which have been recorded as being likely to fail we increase the chance that a failure occurs early on in the test build. The closer the distance between pushing the code and knowing there is a fail the better.</p>
+
+<p>One problem this helps alleviate is when a test fails 99% of the way through the build. To know you&rsquo;re fix worked you have to sit and wait for the entire build to run.</p>
+
+<h2>CukeMax (alpha-1)</h2>
+
+<p>CukeMax is a project that aims to:</p>
+
+<ul>
+<li><p>Provide a web service to record Cucumber test builds</p></li>
+<li><p>Provide﻿ a web based interface to uncover juicy metrics about your tests.</p></li>
+<li><p>Feed recorded metrics back into the running of tests prioritising those most likely to fail.</p></li>
+<li><p>Cool stuff</p></li>
+</ul>
+
+
+<p><a href="http://www.cukemax.com">CukeMax</a> is intended to be used when you run your tests on your CI server.﻿ ﻿While this initial version just supports Cucumber there is no reason why it cannot be expanded to other test tools such as Rspec. I&rsquo;m already using this for my own projects and I have a special version working at <a href="http://www.songkick.com/">Songkick.com</a> HQ.</p>
+
+<h2>Wanna Play?</h2>
+
+<p>﻿You can browser around an example of the web interface at CukeMax - ﻿<a href="http://www.cukemax.com">www.cukemax.com</a></p>
+
+<p>Want to be one of the first ﻿Guinea pigs to try out CukeMax? Let me know.</p>
+
+<p>The client tool will be leaked slowly into the world to ensure we can balance server load.</p>
+
+<h2>Whats next?</h2>
+
+<p>All I can say is there is a lot of activity around this project with some exciting tools in the pipeline</p>
+
+<p>Also <a href="http://blog.mattwynne.net/">Matt Wynne</a> has been working on some similar ideas and we are discussing if we can combine our thoughts.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cucumber/cucumber-patterns.html">Cucumber Patterns</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-08T18:13:37+01:00" pubdate data-updated="true">Aug 8<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>At <a href="http://www.songkick.com/">Songkick.com</a> we have developed a number of patterns to make it easier to write Cucumber features. I thought I would start sharing some of those patterns here. So here is the first one:</p>
+
+<h2>Implicit Reference Pattern</h2>
+
+<p>Make use of implicit references to previously discussed topics to produce scenarios which are easier to read and write. Achieving this while avoiding highly coupled steps.</p>
+
+<h3>Problem</h3>
+
+<p>Storing and relying on state in a step definition can make it hard to reuse. So often state is avoided. This can lead to scenarios like the following:</p>
+
+<pre><code>Given there is a Artist named "XXs"
+ And I visit the page for the Artist named "The XXs"
+</code></pre>
+
+<p>This leaves us with:</p>
+
+<ul>
+<li>Verbose steps which are not natural to read.</li>
+<li>Extra noise information purely for identity (referencing the name)</li>
+</ul>
+
+
+<h3>Solution</h3>
+
+<p>Map implicit references in the language to the objects being discussed.</p>
+
+<p>Accept that we have to store state but do so in an encapsulated way where the feature language is the only thing needed within the step definition to provide a direct mapping to the relevant object from the state.</p>
+
+<p>What we are aiming for is a scenario like this:</p>
+
+<pre><code>Given there is an Artist named "XXs"
+ When I visit the page for the Artist
+</code></pre>
+
+<h3>Requirements</h3>
+
+<p>This pattern is described in the context of <a href="http://ar.rubyonrails.org/">ActiveRecord</a> and <a href="http://github.com/thoughtbot/factory_girl">Factory Girl</a>.</p>
+
+<h4>Identification through a single meaningful name</h4>
+
+<p>Key to this pattern is mapping a single identifier (that we would happily talk about in our Features) to a model.</p>
+
+<p>We have a method that provides all the mappings of the models to the field that uniquely identifies them.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">map_to_id_attribute</span><span class="p">(</span><span class="n">type_of_thing</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="ss">:user</span> <span class="o">=&gt;</span> <span class="ss">:username</span><span class="p">,</span>
+</span><span class='line'>    <span class="ss">:concert</span> <span class="o">=&gt;</span> <span class="ss">:title</span><span class="p">,</span>
+</span><span class='line'>  <span class="p">}</span><span class="o">[</span><span class="n">type_of_thing</span><span class="o">]</span> <span class="o">||</span> <span class="ss">:name</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Domain model class names are meaningful to everyone</h4>
+
+<p>In our features when we talk about something in our domain we refer to its class name and we use the correct capitalization.</p>
+
+<p>Non-technical people still understand what the references mean while allowing us to simplify identifying the model in a snippet of feature text.</p>
+
+<p>This leads to steps such as:</p>
+
+<pre><code>Given the Artist
+ Given the AdminUser
+</code></pre>
+
+<h3>Implementation</h3>
+
+<h4>Somewhere to store stuff</h4>
+
+<p>We store all the state in a specialised hash. This has a special find_things method which performs some validation and gives us nice error messages if we try and access incorrect types or non-existent objects.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">StuffContainer</span> <span class="o">&lt;</span> <span class="no">Hash</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">find_thing</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">expected_type</span> <span class="o">=</span> <span class="n">opts</span><span class="o">[</span><span class="ss">:type</span><span class="o">]</span>
+</span><span class='line'>    <span class="nb">name</span> <span class="o">=</span> <span class="n">opts</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span>
+</span><span class='line'>    <span class="n">thing</span> <span class="o">=</span> <span class="nb">self</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">raise</span><span class="p">(</span><span class="s2">&quot;Unable to find any object in stuff[] with the name &#39;</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">&#39; that you asked for, boss. I could however offer you one of the following: </span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">to_s</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">unless</span> <span class="n">thing</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">raise</span><span class="p">(</span><span class="s2">&quot;That thing you asked for, it appears to be a </span><span class="si">#{</span><span class="n">thing</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> when you asked for a </span><span class="si">#{</span><span class="n">expected_type</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">unless</span> <span class="n">thing</span><span class="o">.</span><span class="n">is_a?</span><span class="p">(</span><span class="n">expected_type</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">thing</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">to_s</span>
+</span><span class='line'>    <span class="n">result</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;</span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">length</span><span class="si">}</span><span class="s2"> items in total:&quot;</span><span class="o">]</span>
+</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">thing</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">result</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;the </span><span class="si">#{</span><span class="n">thing</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> </span><span class="se">\&quot;</span><span class="si">#{</span><span class="n">key</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">result</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Recording the subjects under discussion</h4>
+
+<p>In order to record references to created Models we extend <a href="http://github.com/thoughtbot/factory_girl">Factory Girl&rsquo;s</a> &lsquo;Factory&rsquo; method which is used for all our model creations.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">Factory</span><span class="p">(</span><span class="n">type_of_thing</span><span class="p">,</span> <span class="n">attributes</span> <span class="o">=</span> <span class="p">{})</span>
+</span><span class='line'>  <span class="n">test_id</span> <span class="o">=</span> <span class="n">attributes</span><span class="o">[</span><span class="n">map_to_id_attribute</span><span class="p">(</span><span class="n">type_of_thing</span><span class="p">)</span><span class="o">]</span>
+</span><span class='line'>  <span class="n">new_thing</span> <span class="o">=</span> <span class="k">super</span><span class="p">(</span><span class="n">type_of_thing</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">stuff</span><span class="o">[</span><span class="n">test_id</span><span class="o">]</span> <span class="o">=</span> <span class="n">new_thing</span> <span class="k">if</span> <span class="n">test_id</span>
+</span><span class='line'>  <span class="n">new_thing</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We will record created models in steps like these:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Given</span> <span class="sr">/^there is (?:one|an|a|another) ([^ ]+) named &quot;([^&quot;]+)&quot;$/</span> <span class="k">do</span> <span class="o">|</span><span class="n">entity_type</span><span class="p">,</span> <span class="nb">name</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">attributes</span> <span class="o">=</span> <span class="p">{</span><span class="ss">:name</span> <span class="o">=&gt;</span> <span class="nb">name</span><span class="p">}</span>
+</span><span class='line'>  <span class="n">entity</span> <span class="o">=</span> <span class="no">Factory</span><span class="p">(</span><span class="n">entity_type</span><span class="o">.</span><span class="n">underscore</span><span class="o">.</span><span class="n">to_sym</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Resolving Implicit references</h4>
+
+<p>Starting with the step definition:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">When</span> <span class="sr">/I (?:view|visit|go to) the page for (</span><span class="si">#{</span><span class="no">IDRE</span><span class="si">}</span><span class="sr">)$/</span> <span class="k">do</span> <span class="o">|</span><span class="n">entity</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">visit</span> <span class="n">model_path</span><span class="p">(</span><span class="n">identified_model</span><span class="p">(</span><span class="n">entity</span><span class="p">))</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>IDRE represents the ID regexp which provides a way of identifying a model and is reused in many steps.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">IDRE</span> <span class="o">=</span> <span class="sr">/(?:the(?: first | last | )(?:[^ ]+)|the (?:[^ ]+) &quot;(?:[^&quot;]+)&quot;|&quot;(?:[^&quot;]+)&quot;)/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The identified_model method turns an English string into a Model. It provides a number of ways of referencing a model.</p>
+
+<pre><code>the Artist
+ the first Artist
+ the last Artist
+ the Artist "Jude"
+</code></pre>
+
+<p>The identified_model method:
+(The key case we are focusing on in this example is where we have no identify just the type of the model &ndash; line 11 and 12)</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">identified_model</span><span class="p">(</span><span class="n">str</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">case</span> <span class="n">str</span>
+</span><span class='line'>  <span class="k">when</span> <span class="sr">/^the (first|last) ([^ ]+)$/</span>
+</span><span class='line'>    <span class="n">klass</span> <span class="o">=</span> <span class="n">safe_constantize</span><span class="p">(</span><span class="vg">$2</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">klass</span><span class="o">.</span><span class="n">__send__</span><span class="p">(</span><span class="vg">$1</span><span class="o">.</span><span class="n">to_sym</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">when</span> <span class="sr">/^the ([^ ]+) &quot;(.+)&quot;$/</span>
+</span><span class='line'>    <span class="n">klass</span> <span class="o">=</span> <span class="n">safe_constantize</span><span class="p">(</span><span class="vg">$1</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">instance</span> <span class="o">=</span> <span class="n">stuff</span><span class="o">.</span><span class="n">find_thing</span><span class="p">(</span><span class="ss">:type</span> <span class="o">=&gt;</span> <span class="n">klass</span><span class="p">,</span> <span class="ss">:name</span> <span class="o">=&gt;</span> <span class="vg">$2</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">instance</span><span class="o">.</span><span class="n">reload</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">instance</span>
+</span><span class='line'>  <span class="k">when</span> <span class="sr">/^the ([^ ]+)$/</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">implicit_model</span><span class="p">(</span><span class="vg">$1</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">when</span> <span class="sr">/^&quot;(.+)&quot;$/</span>
+</span><span class='line'>    <span class="n">instance</span> <span class="o">=</span> <span class="n">stuff</span><span class="o">[</span><span class="vg">$1</span><span class="o">]</span>
+</span><span class='line'>    <span class="n">instance</span><span class="o">.</span><span class="n">reload</span> <span class="k">if</span> <span class="n">instance</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">instance</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="k">raise</span> <span class="s2">&quot;No such instance: &#39;</span><span class="si">#{</span><span class="n">str</span><span class="si">}</span><span class="s2">&#39;.</span><span class="se">\n</span><span class="s2"> Current stuff: </span><span class="si">#{</span><span class="n">stuff</span><span class="o">.</span><span class="n">to_s</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The implicit_model method</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">implicit_model</span><span class="p">(</span><span class="n">str</span><span class="p">)</span>
+</span><span class='line'>   <span class="n">klass</span> <span class="o">=</span> <span class="n">safe_constantize</span><span class="p">(</span><span class="n">str</span><span class="p">)</span>
+</span><span class='line'>   <span class="k">raise</span> <span class="s2">&quot;expected only one </span><span class="si">#{</span><span class="n">klass</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">klass</span><span class="o">.</span><span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span>
+</span><span class='line'>   <span class="k">raise</span> <span class="s2">&quot;expected one </span><span class="si">#{</span><span class="n">klass</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> to exist&quot;</span> <span class="k">if</span> <span class="n">klass</span><span class="o">.</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span>
+</span><span class='line'>   <span class="n">klass</span><span class="o">.</span><span class="n">first</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Notice to avoid ambiguity we restrict that only one model of the specified type must exist.</p>
+
+<h2>Full source</h2>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">StuffManagment</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">map_to_id_attribute</span><span class="p">(</span><span class="n">type_of_thing</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>      <span class="ss">:user</span>   <span class="o">=&gt;</span> <span class="ss">:username</span><span class="p">,</span>
+</span><span class='line'>      <span class="ss">:concert</span> <span class="o">=&gt;</span> <span class="ss">:title</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">}</span><span class="o">[</span><span class="n">type_of_thing</span><span class="o">]</span> <span class="o">||</span> <span class="ss">:name</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">class</span> <span class="nc">StuffContainer</span> <span class="o">&lt;</span> <span class="no">Hash</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">find_thing</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">expected_type</span> <span class="o">=</span> <span class="n">opts</span><span class="o">[</span><span class="ss">:type</span><span class="o">]</span>
+</span><span class='line'>      <span class="nb">name</span> <span class="o">=</span> <span class="n">opts</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span>
+</span><span class='line'>      <span class="n">thing</span> <span class="o">=</span> <span class="nb">self</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span>
+</span><span class='line'>      <span class="k">raise</span><span class="p">(</span><span class="s2">&quot;Unable to find any object in stuff[] with the name &#39;</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">&#39; that you asked for, boss. I could however offer you one of the following: </span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">to_s</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">unless</span> <span class="n">thing</span>
+</span><span class='line'>      <span class="k">raise</span><span class="p">(</span><span class="s2">&quot;That thing you asked for, it appears to be a </span><span class="si">#{</span><span class="n">thing</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> when you asked for a </span><span class="si">#{</span><span class="n">expected_type</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">unless</span> <span class="n">thing</span><span class="o">.</span><span class="n">is_a?</span><span class="p">(</span><span class="n">expected_type</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">thing</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">to_s</span>
+</span><span class='line'>      <span class="n">result</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;</span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">length</span><span class="si">}</span><span class="s2"> items in total:&quot;</span><span class="o">]</span>
+</span><span class='line'>      <span class="nb">self</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">thing</span><span class="o">|</span>
+</span><span class='line'>        <span class="n">result</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;the </span><span class="si">#{</span><span class="n">thing</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> </span><span class="se">\&quot;</span><span class="si">#{</span><span class="n">key</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>      <span class="n">result</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">clear_stuff</span>
+</span><span class='line'>    <span class="vi">@stuff</span> <span class="o">=</span> <span class="no">StuffContainer</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">stuff</span>
+</span><span class='line'>    <span class="k">return</span> <span class="vi">@stuff</span> <span class="k">if</span> <span class="vi">@stuff</span>
+</span><span class='line'>    <span class="n">clear_stuff</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="no">SEARCH_MODULES</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;&#39;</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">identified_model</span><span class="p">(</span><span class="n">str</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">case</span> <span class="n">str</span>
+</span><span class='line'>    <span class="k">when</span> <span class="sr">/^the (first|last) ([^ ]+)$/</span>
+</span><span class='line'>      <span class="n">klass</span> <span class="o">=</span> <span class="n">safe_constantize</span><span class="p">(</span><span class="vg">$2</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">return</span> <span class="n">klass</span><span class="o">.</span><span class="n">__send__</span><span class="p">(</span><span class="vg">$1</span><span class="o">.</span><span class="n">to_sym</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">when</span> <span class="sr">/^the ([^ ]+) &quot;(.+)&quot;$/</span>
+</span><span class='line'>      <span class="n">klass</span> <span class="o">=</span> <span class="n">safe_constantize</span><span class="p">(</span><span class="vg">$1</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">instance</span> <span class="o">=</span> <span class="n">stuff</span><span class="o">.</span><span class="n">find_thing</span><span class="p">(</span><span class="ss">:type</span> <span class="o">=&gt;</span> <span class="n">klass</span><span class="p">,</span> <span class="ss">:name</span> <span class="o">=&gt;</span> <span class="vg">$2</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">instance</span><span class="o">.</span><span class="n">reload</span>
+</span><span class='line'>      <span class="k">return</span> <span class="n">instance</span>
+</span><span class='line'>    <span class="k">when</span> <span class="sr">/^the ([^ ]+)$/</span>
+</span><span class='line'>      <span class="k">return</span> <span class="n">implicit_model</span><span class="p">(</span><span class="vg">$1</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">when</span> <span class="sr">/^&quot;(.+)&quot;$/</span>
+</span><span class='line'>      <span class="n">instance</span> <span class="o">=</span> <span class="n">stuff</span><span class="o">[</span><span class="vg">$1</span><span class="o">]</span>
+</span><span class='line'>      <span class="n">instance</span><span class="o">.</span><span class="n">reload</span> <span class="k">if</span> <span class="n">instance</span>
+</span><span class='line'>      <span class="k">return</span> <span class="n">instance</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="k">raise</span> <span class="s2">&quot;No such instance: &#39;</span><span class="si">#{</span><span class="n">str</span><span class="si">}</span><span class="s2">&#39;.</span><span class="se">\n</span><span class="s2"> Current stuff: </span><span class="si">#{</span><span class="n">stuff</span><span class="o">.</span><span class="n">to_s</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">implicit_model</span><span class="p">(</span><span class="n">str</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">klass</span> <span class="o">=</span> <span class="n">safe_constantize</span><span class="p">(</span><span class="n">str</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">raise</span> <span class="s2">&quot;expected only one </span><span class="si">#{</span><span class="n">klass</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">klass</span><span class="o">.</span><span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span>
+</span><span class='line'>    <span class="k">raise</span> <span class="s2">&quot;expected one </span><span class="si">#{</span><span class="n">klass</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> to exist&quot;</span> <span class="k">if</span> <span class="n">klass</span><span class="o">.</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span>
+</span><span class='line'>    <span class="n">klass</span><span class="o">.</span><span class="n">first</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">safe_constantize</span><span class="p">(</span><span class="n">str</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">begin</span>
+</span><span class='line'>      <span class="n">recorded_exception</span> <span class="o">=</span> <span class="kp">nil</span>
+</span><span class='line'>      <span class="no">SEARCH_MODULES</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">mod</span><span class="o">|</span>
+</span><span class='line'>        <span class="k">begin</span>
+</span><span class='line'>          <span class="k">return</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">mod</span><span class="si">}</span><span class="s2">::</span><span class="si">#{</span><span class="n">str</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">constantize</span>
+</span><span class='line'>        <span class="k">rescue</span> <span class="no">NameError</span> <span class="o">=&gt;</span> <span class="n">e</span>
+</span><span class='line'>          <span class="n">recorded_exception</span> <span class="o">=</span> <span class="n">e</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>      <span class="n">error_message</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="si">#{</span><span class="n">str</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2"> does not appear to be a valid object in the domain. Did you mean </span><span class="se">\&quot;</span><span class="si">#{</span><span class="n">str</span><span class="o">.</span><span class="n">classify</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2">?&quot;</span><span class="p">\</span>
+</span><span class='line'>                <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Detailed error message:</span><span class="se">\n</span><span class="si">#{</span><span class="n">recorded_exception</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>      <span class="k">raise</span> <span class="no">NameError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">World</span><span class="p">(</span><span class="no">StuffManagment</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/ruby/rocket-fuelled-cucumbers.html">Rocket Fuelled Cucumbers</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-06T22:03:43+01:00" pubdate data-updated="true">Jun 6<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Here are the slides from my talk at <a href="http://en.oreilly.com/rails2010/public/schedule/detail/14404">Railsconf 2010 on Rocket Fuelled Cucumbers</a>.</p>
+
+<script async class="speakerdeck-embed" data-id="4e7b470857252f003f000e61" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+
+
+<p>This talk looked at a number of issues in scaling Cucumber tests. I&rsquo;ve also been speaking about this at <a href="http://frozenrails.eu/">Frozen Rails</a> and The <a href="http://scottishrubyconference.com">Scottish Ruby conference</a>.</p>
+
+<p>And heres what people have been saying about the talk.</p>
+
+<p><img src="/images/blog/2010/06/one_feedback.png" alt="" /></p>
+
+<p><img src="/images/blog/2010/06/two_feedback.png" alt="" /></p>
+
+<p><img src="/images/blog/2010/06/frozenrails_feedback.png" alt="" /></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/ruby/testing-javascript-with-cucumber-in-javascript.html">Testing Javascript With Cucumber in Javascript</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-22T09:55:42+01:00" pubdate data-updated="true">May 22<span>nd</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I recently created an adapter in Cucumber which provides support for writing step definitions in Javascript. So as a Javascript programmer you can test your code with Cucumber without having to write any Ruby.</p>
+
+<p>It does this through TheRubyRacer (<a href="http://github.com/cowboyd/therubyracer">http://github.com/cowboyd/therubyracer</a> written by Charles Lowell) which provides Ruby bindings to V8 (<a href="http://code.google.com/p/v8/">http://code.google.com/p/v8/</a>).</p>
+
+<p>Lets look at an example:</p>
+
+<h3>The Feature</h3>
+
+<pre><code>Feature: Fibonacci
+  In order to calculate super fast fibonacci series
+  As a Javascriptist
+  I want to use Javascript for that
+
+  @fibonacci
+  Scenario Outline: Series
+    When I ask Javascript to calculate fibonacci up to &lt;n&gt;
+    Then it should give me &lt;series&gt;
+
+    Examples:
+      | n   | series                                 |
+      | 1   | []                                     |
+      | 2   | [1, 1]                                 |
+      | 3   | [1, 1, 2]                              |
+      | 4   | [1, 1, 2, 3]                           |
+      | 6   | [1, 1, 2, 3, 5]                        |
+      | 9   | [1, 1, 2, 3, 5, 8]                     |
+      | 100 | [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89] |
+</code></pre>
+
+<h3>The Step Definitions</h3>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Before</span><span class="p">(</span><span class="o">[</span><span class="s1">&#39;@fibonacci&#39;</span><span class="o">]</span><span class="p">,</span> <span class="n">function</span><span class="p">(){</span>
+</span><span class='line'>  <span class="n">fibResult</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">When</span><span class="p">(</span><span class="sr">/^I ask Javascript to calculate fibonacci up to (\d+)$/</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">n</span><span class="p">){</span>
+</span><span class='line'>  <span class="n">assertEqual</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">fibResult</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">fibResult</span> <span class="o">=</span> <span class="n">fibonacciSeries</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Then</span><span class="p">(</span><span class="sr">/^it should give me (\[.*\])$/</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">expectedResult</span><span class="p">){</span>
+</span><span class='line'>  <span class="n">assertEqual</span><span class="p">(</span><span class="n">expectedResult</span><span class="p">,</span> <span class="n">fibResult</span><span class="p">)</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>The Cucumber Javascript API</h3>
+
+<p>The best reference for the Javascript Api is the examples within the Cucumber source:
+<a href="http://github.com/aslakhellesoy/cucumber/tree/master/examples/javascript/features/">http://github.com/aslakhellesoy/cucumber/tree/master/examples/javascript/features/</a></p>
+
+<p>I have tried to make the Javascript Api as close to the Cucumber Ruby Api as possible. However it currently does not support a couple of things the Ruby version is capable of: Calling step definitions from within step definitions with multiline arguments and giving line reporting on step definitions.</p>
+
+<h4>Loading your Javascript code into the World</h4>
+
+<p>The most important difference to take note of in the Javascript Api compared with the Ruby one is how we load code into the World so it is in scope within the step definitions.</p>
+
+<p>Given the following folder structure:</p>
+
+<pre><code>my_js_project/lib/code_lives_here.js
+my_js_project/features/support/env.js
+my_js_project/features/my_feature.feature
+</code></pre>
+
+<p>Within our features/support/env.js setup file we would have:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">//</span><span class="no">Cucumber</span> <span class="n">resolves</span> <span class="n">the</span> <span class="n">files</span> <span class="n">relative</span> <span class="n">to</span> <span class="n">the</span> <span class="n">folder</span> <span class="n">that</span> <span class="n">contains</span> <span class="n">the</span> <span class="n">features</span> <span class="n">folder</span><span class="o">.</span>
+</span><span class='line'><span class="no">World</span><span class="p">(</span><span class="o">[</span><span class="s1">&#39;lib/code_lives_here.js&#39;</span><span class="o">]</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The code within code_lives_here.js would be availabe in the step definitions.</p>
+
+<h3>Full Javascript Example</h3>
+
+<p>You can see the full example in the Cucumber project:</p>
+
+<p><a href="http://github.com/aslakhellesoy/cucumber/tree/master/examples/javascript/features/">http://github.com/aslakhellesoy/cucumber/tree/master/examples/javascript/features/</a></p>
+
+<h3>Feedback</h3>
+
+<p>This Javascript Cucumber adapter represents an experiment to see how well we can use Cucumber through Javascript and V8. I would love to hear ideas and feedback on the Javascript Api.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/ruby/specing-cucumber-step-definitions.html">Specing Cucumber Step Definitions</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-03-04T23:40:25+00:00" pubdate data-updated="true">Mar 4<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Testing your tests is kind of crazy. However when writing a library of Cucumber step definitions which will be used in many projects it started to make sense to test my tests.</p>
+
+<ul>
+<li><p>The step definitions are the code.</p></li>
+<li><p>It helps reduce fear of breaking lots of projects which use the steps.</p></li>
+<li><p>The tests/specs show examples of how to use the step definitions.</p></li>
+</ul>
+
+
+<p>It is important to note that I&rsquo;m not imply TDD/BDDing these step definitions. My use-case is adding tests afterwards when it comes time to extract them to a library.</p>
+
+<h2>How to test step definitions</h2>
+
+<h3>Exercise the full step (with Rspec)</h3>
+
+<p>The common way of testing complex steps is to extract all the ruby from the step definitions and then just test that. But this way of testing does not exercise the step definitions from the outside, getting as close as possible to how they will be used. It also does not provide examples of how to use the step definitions.</p>
+
+<p>So I sat down with <a href="http://blog.mattwynne.net/">Matt Wynne</a>, who started this discussion and we thrashed out some <a href="http://github.com/mattwynne/cucumber-step_definitions/blob/master/spec/spec_helper.rb">Rspec macros for testing whole step definitions</a>.</p>
+
+<p>If we were testing this step definition (icalendar_steps.rb):</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;icalendar&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">module</span> <span class="nn">Cucumber</span>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">Stepdefs</span>
+</span><span class='line'>    <span class="k">module</span> <span class="nn">Icalendar</span>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">response_calendars</span>
+</span><span class='line'>        <span class="o">::</span><span class="no">Icalendar</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">response_events</span>
+</span><span class='line'>        <span class="n">response_calendars</span><span class="o">.</span><span class="n">length</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="mi">1</span>
+</span><span class='line'>        <span class="n">response_calendars</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">events</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Before</span><span class="p">(</span><span class="s1">&#39;@ical&#39;</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>  <span class="kp">extend</span> <span class="ss">Cucumber</span><span class="p">:</span><span class="ss">:Stepdefs</span><span class="o">::</span><span class="no">Icalendar</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Then</span> <span class="sr">/^the iCalendar should have exactly (\d+) events?$/</span> <span class="k">do</span> <span class="o">|</span><span class="n">number_of_events</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">response_events</span><span class="o">.</span><span class="n">length</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="n">number_of_events</span><span class="o">.</span><span class="n">to_i</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Our spec would look like this (Note: we test the Before hook as well as the step definition):</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="s1">&#39;icalendar_steps&#39;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">step_file</span> <span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">__FILE__</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;/../../../lib/cucumber/stepdefs/icalendar_steps&#39;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># Test that the Before hook is not called when there is no tag</span>
+</span><span class='line'>  <span class="n">without_tags</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">it</span> <span class="s2">&quot;should not mix in any calendar related methods&quot;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">world_methods</span><span class="o">.</span><span class="n">should_not</span> <span class="kp">include</span><span class="p">(</span><span class="s1">&#39;response_calendars&#39;</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">world_methods</span><span class="o">.</span><span class="n">should_not</span> <span class="kp">include</span><span class="p">(</span><span class="s1">&#39;response_events&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># Test the Before hook mixes in the right methods when tagged with @ical</span>
+</span><span class='line'>  <span class="n">with_tag</span> <span class="s1">&#39;@ical&#39;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="o">[</span><span class="s1">&#39;response_calendars&#39;</span><span class="p">,</span> <span class="s1">&#39;response_events&#39;</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">method</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">it</span> <span class="s2">&quot;should add the </span><span class="si">#{</span><span class="nb">method</span><span class="si">}</span><span class="s2"> to world&quot;</span> <span class="k">do</span>
+</span><span class='line'>        <span class="n">world_methods</span><span class="o">.</span><span class="n">should</span> <span class="kp">include</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">the_step</span> <span class="s2">&quot;the iCalendar should have exactly 1 event&quot;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">describe</span> <span class="s2">&quot;when 1 calendar with 0 events is in the response body&quot;</span> <span class="k">do</span>
+</span><span class='line'>        <span class="n">before</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>          <span class="n">world</span><span class="o">.</span><span class="n">stub!</span><span class="p">(</span><span class="ss">:response</span><span class="p">)</span><span class="o">.</span><span class="n">and_return</span><span class="p">(</span><span class="n">mock_response_with_0_events</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">it_should_fail_with</span><span class="p">(</span><span class="ss">Spec</span><span class="p">:</span><span class="ss">:Expectations</span><span class="o">::</span><span class="no">ExpectationNotMetError</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="n">describe</span> <span class="s2">&quot;when 1 calendar with 1 event is in the response body&quot;</span> <span class="k">do</span>
+</span><span class='line'>        <span class="n">before</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>          <span class="n">world</span><span class="o">.</span><span class="n">stub!</span><span class="p">(</span><span class="ss">:response</span><span class="p">)</span><span class="o">.</span><span class="n">and_return</span><span class="p">(</span><span class="n">mock_response_with_1_event</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">it_should_pass</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Experiment&rsquo;s Source code</h4>
+
+<p>You can see the source on Github:</p>
+
+<pre><code>git clone git://github.com/mattwynne/cucumber-step_definitions.git
+</code></pre>
+
+<p>If this experiment proves successful these macros will make their way to a nice gem.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/ruby/pairwise-testing-with-cucumber.html">Pairwise Testing With Cucumber</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-01-09T17:59:21+00:00" pubdate data-updated="true">Jan 9<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Combinatorial testing is a difficult problem. Having to test a small number of inputs  can result in a combinatorial explosion of possible permutations. In <a href="http://cukes.info/">Cucumber</a> we see this problem in <a href="http://wiki.github.com/aslakhellesoy/cucumber/scenario-outlines">Scenario Outlines</a> where we can have a large number of rows for the Examples table.</p>
+
+<p>We want to reduce the combinations to a more manageable size while still providing effective fault detection.</p>
+
+<p>Pairwise testing provides one method of achieving this. However providing effective fault detection is dependent on the suitability of Pairwise to the data/system, it is not guaranteed.</p>
+
+<h2>What is Pairwise testing?</h2>
+
+<p>Pairwise testing (also called All-pairs testing or 2-way testing) is a way of generating a test suite which covers all input combinations of two and is therefore much smaller than exhaustive suites.</p>
+
+<p>To put this in perspective a system of 72 binary inputs with Pairwise testing would require 28 combinations. Exhaustive testing would require 37,778,931,862,957,161,709,568 combinations!</p>
+
+<p><strong>Sounds great, but how does the method preserve good defect detection?</strong></p>
+
+<p>Pairwise relies on a simple principle:</p>
+
+<blockquote><p><em>&ldquo;most faults are caused by interactions of at most two factors”</em>
+&ndash; <a href="http://www.argreenhouse.com/papers/gcp/AETGissre96.shtml">The Combinatorial Design Approach to Automatic Test Generation</a></p></blockquote>
+
+<p>Pairwise focuses on the minimal set of inputs (1 or 2 interactions) that cover the most likely causes of faults.</p>
+
+<p><strong>So whats the catch?</strong></p>
+
+<p>Pairwise does not guarantee coverage of all faults of at most two factors. It only provides coverage of faults reachable from the inputs and values you select when generating the Pairwise set. Also the general principle that faults are caused by at most two factors does not guarantee that your data sets faults will follow that distribution. And hence Pairwise testing might miss a proportion of faults.</p>
+
+<h2>Pairwise Cucumber example</h2>
+
+<p>Here is a scenario taken from a web based system which deals with sports events.</p>
+
+<pre><code>Scenario Outline: Visiting events with another events media
+  Given I have a &lt;event without media&gt;
+  And I have a &lt;media item&gt; attached to &lt;event with media&gt;
+  When I go to the &lt;media item&gt; page for the &lt;event without media&gt;
+  Then I should be redirected
+  And I should see the &lt;media item&gt; in the &lt;event with media&gt;
+  Examples:
+    |media item|event without media|event with an media|
+    ...
+</code></pre>
+
+<p>The permutations for the Examples table cells are:</p>
+
+<pre><code>media item: [Image, Video, Music]
+event with media: [Football, Basketball, Soccer]
+event without media: [Football, Basketball, Soccer]
+</code></pre>
+
+<p>There are a total of 27 possible permutations. So lets see what permutations Pairwise testing would suggest.</p>
+
+<p>To generate the combinations I used a Ruby based tool I&rsquo;ve written called <a href="http://wiki.github.com/josephwilk/pairwise">Pairwise</a> which uses the in-parameter-order Pairwise generation strategy (<a href="http://ranger.uta.edu/~ylei/paper/ipo-tse.pdf">http://ranger.uta.edu/~ylei/paper/ipo-tse.pd</a>).</p>
+
+<p>This tool outputs a table ready to be used in a Cucumber feature:</p>
+
+<pre><code> | media item | event without media | event with media |
+ | Image      | Football            | Football         |
+ | Image      | Basketball          | Basketball       |
+ | Image      | Soccer              | Soccer           |
+ | Video      | Football            | Soccer           |
+ | Video      | Basketball          | Football         |
+ | Video      | Soccer              | Basketball       |
+ | Music      | Football            | Basketball       |
+ | Music      | Basketball          | Soccer           |
+ | Music      | Soccer              | Football         |
+</code></pre>
+
+<p>That&rsquo;s 11 permutations covering all possible input pairs.</p>
+
+<p>Giving the final Scenario:</p>
+
+<pre><code>Scenario Outline: Visiting events with another events media
+  Given I have a &lt;event without media&gt;
+  And I have a &lt;media item&gt; attached to &lt;event with media&gt;
+  When I go to the &lt;media item&gt; page for the &lt;event without media&gt;
+  Then I should be redirected
+  And I should see the &lt;media item&gt; in the &lt;event with media&gt;
+Examples:
+  | media item | event without media | event with media |
+  | Image      | Football            | Football         |
+  | Image      | Basketball          | Basketball       |
+  | Image      | Soccer              | Soccer           |
+  | Video      | Football            | Soccer           |
+  | Video      | Basketball          | Football         |
+  | Video      | Soccer              | Basketball       |
+  | Music      | Football            | Basketball       |
+  | Music      | Basketball          | Soccer           |
+  | Music      | Soccer              | Football         |
+</code></pre>
+
+<h2>Selecting the right values to test with</h2>
+
+<p>In Cucumber we encounter plain text steps which use high level language to hide low level details that are not important for the scenario. For example:</p>
+
+<pre><code>Given a default configuration
+</code></pre>
+
+<p>By abstracting and pushing the data out of the plain text we are also hiding the values from any Pairwise generation. It is therefore important to realise there will be sets of uncovered pairs and hence potential faults missed.</p>
+
+<p>In deciding what is exposed in the Scenario Outline (as columns in the Examples table) you are selecting what inputs your want to focus the Pairwise generation around. And in turn the input space you want to limit the search for faults to.</p>
+
+<h2>When Pairwise testing fails</h2>
+
+<p>Pairwise testing is not suitable for all data sets. With any technique that throws away data examples based on a pattern you loose some degree of resolution and you may misfit your data missing important faults.</p>
+
+<p>Here are some cases where Pairwise testing may not be effective.</p>
+
+<h3>You have probable combinations which you want to focus on.</h3>
+
+<p>If you have certain combinations of inputs that have far more commonality or importance you would want to focus your testing data around these. Pairwise testing ignores any probable importance.</p>
+
+<h3>You don’t know how the input variables interact</h3>
+
+<p>Pairwise testing assumes each input value carries the same significance on the outcome. If certain inputs have greater influence over the outcome you would want to focus your test data around these.</p>
+
+<h3>Your data requires higher order test combinations</h3>
+
+<p>Not all data sets follow the distribution of most faults being caused by at most 2 factors. You may have a larger number of faults outside the 2 parameter range. Using higher order test data combinations (Such as 3-wise, 4-wise etc) or completely different test methods may be required to reduce the risk of missing faults.</p>
+
+<p>The real difficulty here is knowing beforehand the distribution of faults.</p>
+
+<h3>You want a best practice</h3>
+
+<p>There are no testing &ldquo;best practices&rdquo; that you can simply &ldquo;follow&rdquo; in order to achieve success.</p>
+
+<p>To quote James Marcus Bach:</p>
+
+<p><em>&ldquo;blindly applying Pairwise testing to combinatorial testing problems may increase the risk of delivering faulty software.&rdquo;</em>
+&ndash; <a href="http://www.testingeducation.org/wtst5/PairwisePNSQC2004.pdf">http://www.testingeducation.org/wtst5/PairwisePNSQC2004.pdf</a></p>
+
+<h3>Your faults mean people are going to die</h3>
+
+<p>In realtime or safety critical systems any faults irrelevant of the number of interacting parameters wants to be detected.</p>
+
+<h2>Final words on Pairwise</h2>
+
+<p>Shortcuts to Combinatorial problems in testing carry their pitfalls. No matter how you reduce the input permutations you should spend time understanding your combinatorial data set. This is especially the case with Pairwise testing which does not consider the relationships the inputs have on the outputs. Its up to you to examine any interactions or strong influences in order to evaluate Pairwise&rsquo;s suitability. If Pairwise testing is used thoughtfully with due considerations to its limitations and pitfalls it can provide a powerful tool to testers and Cucumberists alike.</p>
+
+<h2>Pairwise tools</h2>
+
+<ul>
+<li><p>Ruby based tool which supports usage through Ruby or on the command line:
+<a href="http://wiki.github.com/josephwilk/pairwise">http://wiki.github.com/josephwilk/pairwise</a></p></li>
+<li><p>A free web-based tool from Testers Desk that provides generation of Pairwise data sets:
+<a href="http://www.testersdesk.com/TestersDesk/">http://www.testersdesk.com/TestersDesk/</a></p></li>
+</ul>
+
+
+<h2>Further Reading</h2>
+
+<ul>
+<li><p>Pairwise &ndash; <a href="http://www.pairwise.org/">http://www.pairwise.org/</a></p></li>
+<li><p>Combinatorial Testing &ndash; <a href="http://www.combinatorialtesting.com">http://www.combinatorialtesting.com/</a></p></li>
+<li><p>Pairwise Testing: A Best Practice That Isn’t &ndash; <a href="http://www.testingeducation.org/wtst5/PairwisePNSQC2004.pdf">http://www.testingeducation.org/wtst5/PairwisePNSQC2004.pdf</a></p></li>
+<li><p>A Test Generation Strategy for Pairwise Testing &ndash; [<a href="http://ranger.uta.edu/~ylei/paper/ipo-tse.pdf">http://ranger.uta.edu/~ylei/paper/ipo-tse.pdf</a>]</p></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/ruby/metrics-for-plain-text-acceptance-tests.html">Metrics for Plain Text Acceptance Tests</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-11-10T20:37:19+00:00" pubdate data-updated="true">Nov 10<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>There has been lots of activity around the value of metrics for source code and tests. In the Ruby world tools like <a href="http://metric-fu.rubyforge.org/">metric_fu</a> provide a wealth of analysis.</p>
+
+<p>While working on my Cucumber talk for Rails Underground I started investigating how we could apply metrics to the customer focused plain text of Cucumber. For those not familiar with <a href="http://cukes.info/">Cucumber</a> it&rsquo;s an acceptance testing framework which allows non-technical people to write plain-text describing the behaviors of their system. The developers/testers map the plain-text to tests.</p>
+
+<p>Having spent time teaching people about the plain-text side of Cucumber I often found myself recommending the same guidelines and plain-text anti-patterns. This lead me to think about providing metrics scoring the customers plain-text.</p>
+
+<p><strong>Why would we want plain-text acceptance test metrics?</strong></p>
+
+<ul>
+<li><p>Help plain-text beginners avoid bad practices early on.</p></li>
+<li><p>Help improve the quality of plain-text</p></li>
+<li><p>Help quality review with a large frequency of incoming features</p></li>
+</ul>
+
+
+<p><strong>Why does the quality of the plain-text matter?</strong></p>
+
+<p>Why focus on quality, the plain-texts primarily goal is to be easy for customer to use?</p>
+
+<ul>
+<li><p>The developer builds the Domain specific language via mapping plain text to ruby. Higher quality plain-text could make it easier to manage these mappings without any major impact to readability.</p></li>
+<li><p>Higher quality text is easier to read, edit and understand.</p></li>
+</ul>
+
+
+<p><strong>Who would find it useful?</strong></p>
+
+<p>Initially Developers.<strong>
+</strong></p>
+
+<ul>
+<li><p>In some scenarios the developers write the features from discussions and give to the customer to review.</p></li>
+<li><p>Developers may tweak/review customer written changes/features.</p></li>
+<li><p>Developers often edit/tweak plain-text from the customer to enable reuse of existing test code .</p></li>
+<li><p>In open source projects often developers write Cucumber features. Metrics are something they are comfortable with.</p></li>
+</ul>
+
+
+<p><strong>Can you measure quality in plain-text?</strong></p>
+
+<p>First its important to distinguish acceptance tests from pure plain-text. Within acceptance tests we have some degree of structure, for example using Given/When/Then to describe scenarios.</p>
+
+<p>Cucumber Example:</p>
+
+<pre><code>Scenario: Eating all cucumbers
+  Given there are 5 cucumbers
+  When I eat 5 cucumbers
+  Then I should have 0 cucumbers
+</code></pre>
+
+<p>This structure reduces the complexity of analysing the quality of the text. It provides us with different structural elements which have different rules/guidelines on what their content should be.</p>
+
+<p>The problem with measuring the quality of text is that it is far more subjective in than in code. So while we cannot be absolute in our assessment of quality we can try and codify smells that <em>could</em> indicate areas in the text that <em>could</em> be improved. This is pretty much true for all metrics, they are guidelines not absolutes (Dan Norths highlights the dangers of absolute metrics in the <a href="http://dannorth.net/2009/11/the-lady-in-the-taxi-a-parable-of-metrics">Parable of Metrics</a>)</p>
+
+<p>So what useful metrics could we look at?</p>
+
+<h2>Plain text Metrics</h2>
+
+<p>From my experience with Cucumber I would suggest examining:</p>
+
+<ul>
+<li><p>Lack of Feature/Story Narrative</p>
+
+<ul>
+<li>We don&rsquo;t know why this feature is useful and who it&rsquo;s useful to!</li>
+</ul>
+</li>
+<li><p>Scenario length</p>
+
+<ul>
+<li>Very long scenarios may reflect more abstraction should be used to help make the scenarios easier to read (See declarative vs imperative scenarios: <a href="http://www.benmabey.com/2008/05/19/imperative-vs-declarative-scenarios-in-user-stories/">http://www.benmabey.com/2008/05/19/imperative-vs-declarative-scenarios-in-user-stories/</a>)</li>
+</ul>
+</li>
+<li><p>Size of Background (like  a before/setup)</p>
+
+<ul>
+<li>Increases conceptual overhead for each scenario. More reasons here: <a href="http://wiki.github.com/aslakhellesoy/cucumber/background">http://wiki.github.com/aslakhellesoy/cucumber/background</a></li>
+</ul>
+</li>
+<li><p>Semantically close words across features</p>
+
+<ul>
+<li>Can indicate ambiguity around domain terminology</li>
+</ul>
+</li>
+<li><p>Frequency of noise words (&lsquo;basically&rsquo;, &lsquo;be able to&rsquo;, etc)</p>
+
+<ul>
+<li>Adds no value and drives me crazy.</li>
+</ul>
+</li>
+</ul>
+
+
+<h2>Feedback</h2>
+
+<p>What do you think of the idea?</p>
+
+<p>Can you think of any other useful plain-text metrics?</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/ruby/ruby-metric-fu-hudson-plugin.html">Ruby Metric-fu Hudson Plugin</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-10-04T21:36:02+01:00" pubdate data-updated="true">Oct 4<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have written a plugin for the continuous integration server <a href="https://hudson.dev.java.net/">Hudson</a> which uses a <a href="http://metric-fu.rubyforge.org/">metric-fu</a> rake task at its core to build and present graphs representing different metrics over successful builds.
+It currently supports:</p>
+
+<ul>
+<li><a href="http://ruby.sadi.st/Flog.html">Flog</a> (Complexity)</li>
+<li><a href="http://ruby.sadi.st/Flay.html">Flay</a> (Duplication)</li>
+<li><a href="http://eigenclass.org/hiki.rb?rcov">Rcov</a> (Code coverage)</li>
+</ul>
+
+
+<p><img src="/images/blog/2009/10/Screen-shot-2009-10-01-at-19.59.28.png" alt="Hudson with RubyMetricFu graphs" /></p>
+
+<p>The source is available on Github:</p>
+
+<p><a href="http://github.com/josephwilk/rubymetricfu">http://github.com/josephwilk/rubymetricfu</a></p>
+
+<h2>Installing</h2>
+
+<p>Currently all Hudson’s plugins are stored in something called SVN. Being more of a GIT myself you have to manually install the plugin rather than using the automatic Hudon GUI install method.</p>
+
+<h3>Install steps:</h3>
+
+<ol>
+<li><p> Ensure you have the <a href="http://wiki.hudson-ci.org/display/HUDSON/Ruby+Plugin">Ruby</a> and <a href="http://wiki.hudson-ci.org/display/HUDSON/Rake+plugin">Rake</a> Hudson plugins installed.</p></li>
+<li><p> Follow the metric-fu installation guide (<a href="http://metric-fu.rubyforge.org/">http://metric-fu.rubyforge.org/</a>)</p></li>
+<li><p> Ensure project code has a metrics:all rake task (auto added when you require metric-fu)</p></li>
+<li><p> Download the <a href="http://cloud.github.com/downloads/josephwilk/rubymetricfu/rubymetricfu.hpi">rubymetricfu.hpi</a> plugin file</p></li>
+<li><p> Copy the file into your plugins folder within you Hudson install. Hudson&rsquo;s default is  ~/.hudson/plugins</p></li>
+<li><p> Restart hudson</p></li>
+<li><p> Go to the &lsquo;configure&rsquo; link for a project and select the Ruby Metric-fu report option (see below)</p></li>
+<li><p> (Optionally) Pick which Rake version you want to use.</p></li>
+</ol>
+
+
+<p><img src="/images/blog/2009/10/Screen-shot-2009-10-04-at-21.15.31.png" alt="Setup Metric-fu" /></p>
+
+<h2>Future</h2>
+
+<ul>
+<li><p>Futher metrics to graph:</p>
+
+<ul>
+<li><p><a href="http://roodi.rubyforge.org/">Roodi</a> (design issues)</p></li>
+<li><p><a href="http://github.com/kevinrutherford/reek">Reek</a> (Code smells)</p></li>
+<li><p><a href="http://saikuro.rubyforge.org/">Saikuro</a> (cyclomatic complexity)</p></li>
+</ul>
+</li>
+<li><p>Configure which metrics you want on your project page.</p></li>
+<li><p>Create a Crap4R meter using Rcov and Flog (Similar to <a href="http://www.crap4j.org/">Crap4J</a>).</p></li>
+<li><p>Better integration with the html reports generated by metric-fu.</p></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/ruby/jvm-call-to-arms-with-cucumbers.html">JVM Call to Arms With Cucumbers</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-07-29T20:29:32+01:00" pubdate data-updated="true">Jul 29<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="/images/blog/2009/07/foaming_cuke_thumb.jpg" alt="foaming_cuke_thumb" />
+<em>&ldquo;Cucumber needs you to experiment with your favourite Java Virtual Machine based language and connect to Cucumber via JRuby.&rdquo;</em></p>
+
+<p>What&rsquo;s this Cucumber you speak of?  Checkout: <a href="http://cukes.info/">http://cukes.info/</a></p>
+
+<p>Wait that&rsquo;s Ruby, how do I use a JVM based language to play with it?</p>
+
+<p>Cuke4Duke (<a href="http://wiki.github.com/aslakhellesoy/cuke4duke">http://wiki.github.com/aslakhellesoy/cuke4duke</a>) allows writing Cucumber step definitions in Java. This means Java developers can use the Cucumber tool without having to write any Ruby.</p>
+
+<h2>Ruby step definitions</h2>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Given</span> <span class="sr">/I have (\d+) cukes in my belly/</span> <span class="k">do</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span>
+</span><span class='line'>  <span class="vi">@belly</span> <span class="o">||=</span> <span class="o">[]</span>
+</span><span class='line'>  <span class="n">n</span><span class="o">.</span><span class="n">to_i</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span><span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="vi">@belly</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;cuke&quot;</span><span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Equivalent Java step definitions</h2>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">cukes</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">cuke4duke.Given</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">cuke4duke.Steps</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Steps</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BellySteps</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">List</span> <span class="n">belly</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Given</span><span class="o">(</span><span class="s">&quot;I have (\\d+) cukes in my belly&quot;</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">bellyCukes</span><span class="o">(</span><span class="kt">int</span> <span class="n">cukes</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">cukes</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">belly</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">&quot;cukes&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This works by connecting Java to Cucumber via JRuby (<a href="http://jruby.codehaus.org/">http://jruby.codehaus.org/</a>).</p>
+
+<p>So in theory if your language runs on the JVM you can use JRuby, and hence use Cucumber and its wonderful <a href="http://wiki.github.com/aslakhellesoy/cucumber/gherkin">Gherkin</a> language.</p>
+
+<h4>So what are you waiting for! Pick up your favourite JVM language and arm yourself with Cucumber!</h4>
+
+<p>Some Example JVM languages:</p>
+
+<ul>
+<li><p><a href="http://groovy.codehaus.org/">Groovy</a></p></li>
+<li><p><a href="http://clojure.org/">Clojure</a></p></li>
+<li><p><a href="http://www.scala-lang.org/">Scala</a></p></li>
+<li><p><a href="http://ioke.org/">Ioke</a></p></li>
+</ul>
+
+
+<h4>Good luck and safe Cuking</h4>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/page/5/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/page/3/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/clojure/overtone-driving-minecraft.html">Clojure and Overtone driving Minecraft</a>
+      </li>
+    
+      <li class="post">
+        <a href="/art/live-coding-repl-electric.html">Live Coding - Repl Electric</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/creative_machines.html">Creative Machines</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/sounds-of-the-human-brain.html">Sounds of the human brain</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/building-clojure-services-at-scale.html">Building Clojure services at scale</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/creating-instruments-with-overtone.html">Creating sampled instruments with Overtone</a>
+      </li>
+    
+      <li class="post">
+        <a href="/elixir/sets-in-elixir.html">Sets in Elixir</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/isolating-external-dependencies-in-clojure.html">Isolating external dependencies in Clojure</a>
+      </li>
+    
+      <li class="post">
+        <a href="/presentations/a-developers-guide-to-creating-presentations.html">A developers guide to creating presentations</a>
+      </li>
+    
+      <li class="post">
+        <a href="/software-craftmanship/the-aesthetics-of-density.html">The Aesthetics of Density</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/josephwilk">@josephwilk</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'josephwilk',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Joseph Wilk -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'josephwilk';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

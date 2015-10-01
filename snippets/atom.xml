@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: snippets | Joseph Wilk]]></title>
+  <link href="http://josephwilk.github.io//snippets/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io/"/>
+  <updated>2015-10-01T13:01:28+01:00</updated>
+  <id>http://josephwilk.github.io/</id>
+  <author>
+    <name><![CDATA[Joseph Wilk]]></name>
+    <email><![CDATA[joe@josephwilk.net]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Rspec-rails mock_model helper for the RR test double framework]]></title>
+    <link href="http://josephwilk.github.io/snippets/rspec-rails-mock_model-helper-for-the-rr-test-double-framework.html"/>
+    <updated>2008-07-09T17:07:30+01:00</updated>
+    <id>http://josephwilk.github.io/snippets/rspec-rails-mock_model-helper-for-the-rr-test-double-framework</id>
+    <content type="html"><![CDATA[<p><a href="http://rspec.info/">Rspec-rails</a> is a rails plugin which brings the Rspec Ruby Behaviour Driven Development framework to rails along with some rails specific helpers. One of these hugely useful helper functions is:</p>
+
+<pre><code>mock_model(model_class, options_and_stubs = {})
+</code></pre>
+
+<p>This creates a mock object with the common methods stubbed out. It also allows you to specify other methods you want to stub.</p>
+
+<p>You can use Rspec with a number of mocking frameworks (Rspec 1.1.5: <a href="http://mocha.rubyforge.org/">mocha</a>, <a href="http://flexmock.rubyforge.org/">flexmock</a> &amp; <a href="http://github.com/btakita/rr/tree/master">RR</a>). Unfortunately the Rspec-rails mock_model helper is not compatible with the RR test double framework.
+It throws this error message:</p>
+
+<pre><code>undefined method `to_sym' for {:count=&gt;0}:Hash
+</code></pre>
+
+<p>as it uses a stub function:</p>
+
+<pre><code>:errors =&gt; stub("errors", :count =&gt; 0)
+</code></pre>
+
+<p>which does not match RR&rsquo;s stub method.</p>
+
+<p>I&rsquo;ve written a patch which will allow mock_model to work with RR. Note: It&rsquo;s still a work in progress but I am using it successfully in a number of projects.</p>
+
+<p>You can get the latest code from <a href="http://github.com/">GitHub</a>:
+<code>git clone git://github.com/josephwilk/rspec-rr.git</code></p>
+
+<p>[viewcode] src=../projects/ruby/rr/mocks_rr_extensions.rb geshi=ruby showsyntax=display[/viewcode]</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Rspec Stories - Keeping Steps Dry]]></title>
+    <link href="http://josephwilk.github.io/snippets/rspec-stories-keeping-steps-dry.html"/>
+    <updated>2008-04-30T19:00:36+01:00</updated>
+    <id>http://josephwilk.github.io/snippets/rspec-stories-keeping-steps-dry</id>
+    <content type="html"><![CDATA[<p>When using <a href="http://rspec.info/">Rspec stories</a> you have plain text stories which we call the <strong>&lsquo;story&rsquo;</strong> file and the <strong>&lsquo;story steps&rsquo;</strong> file that maps the plain text story to programmatic code. Generally you end up with your <strong>story files not being DRY</strong>. This is not a worry, your stories are the domain specific languages detailing your acceptance/integration tests. Its like saying that your Rails Models are not DRY because they repeat lots of <code>'has_one'</code>!</p>
+
+<p>However within a single story file you can DRY things up a bit by reusing scenarios.</p>
+
+<h4>GivenScenario</h4>
+
+<p>We can use &lsquo;<code>GivenScenario: SCENARIO</code>&rsquo; within a scenario  to call another scenario. Pretty much like a method call, it will run the called scenario and then return to continue with the original scenario.</p>
+
+<p>[viewcode] src=../projects/ruby/stories/given_scenario_story.rb geshi=ruby showsyntax=display[/viewcode]</p>
+
+<h4>Drying The Story Steps&hellip;</h4>
+
+<p>More so than stories we should try and <strong>keep our story steps DRY</strong>. Duplicating ourself in steps makes it harder to maintain the tests and all the other horrors of breaking DRY. So here are some simple steps to help ensure that your step files stay nice and DRY.</p>
+
+<h3>Regular Expression Steps</h3>
+
+<p>To make your steps a little more flexible you can use relative expressions. Within your Given/When/Then functions rather than using a string parameter you use a regular expression:</p>
+
+<p>[viewcode] src=../projects/ruby/stories/regular_expression_steps.rb geshi=ruby showsyntax=display[/viewcode]</p>
+
+<h3>Common Step files</h3>
+
+<p>Creating common step files which contain frequently reused Given/Then/Whens. I generally end up with a <a href="http://selenium.openqa.org/">Selenium</a> and a <a href="http://agilewebdevelopment.com/plugins/webrat">Webrat</a> common step files since they are both core to driving my stories.</p>
+
+<p>The common steps reside with the other step files:</p>
+
+<ul>
+<li><p>steps/common_webrat_steps.rb</p></li>
+<li><p>steps/common_selenium_steps.rb</p></li>
+</ul>
+
+
+<p>Create the steps file as you would with any other rspec step file.
+[viewcode] src=../projects/ruby/stories/common_webrat_steps.rb geshi=ruby showsyntax=display[/viewcode]</p>
+
+<p>Then reference the common step file when you are creating the runner for your story:
+[viewcode] src=../projects/ruby/stories/example_story.rb geshi=ruby showsyntax=display[/viewcode]</p>
+
+<h3>Helpers</h3>
+
+<p>Within your stories folder generated by rspec you have your lovely helper file:</p>
+
+<p><em>stories/helper.rb</em></p>
+
+<p>Within here you can create functions that are accessible within all steps.</p>
+
+<p>You may start to find that your helper becomes a gigantic list of helper methods. Hence I tend to organize helpers into modules.</p>
+
+<p>You can mix these helpers into Rspec stories so all steps can access them:</p>
+
+<p>[viewcode] src=../projects/ruby/stories/helper.rb geshi=ruby showsyntax=display[/viewcode]</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Curl and Certificates with Windows PHP]]></title>
+    <link href="http://josephwilk.github.io/snippets/curl-and-certificates-with-windows-php.html"/>
+    <updated>2007-11-06T08:11:30+00:00</updated>
+    <id>http://josephwilk.github.io/snippets/curl-and-certificates-with-windows-php</id>
+    <content type="html"><![CDATA[<p>Curl on a Windows PHP installation does not know where to look for certificates. Hence when you try and curl a https url it fails. The default value for CURLOPT_SSL_VERIFYPEER is true which means curl will always try and validate ssl by default. I discovered this while working with an OpenID library (v1.2.3):
+<a href="http://openidenabled.com/php-openid/">http://openidenabled.com/php-openid/</a></p>
+
+<p>There is the option of disabling the verfication.</p>
+
+<p><code>
+$ch=curl_init;
+// set URL and other appropriate options
+curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false);
+</code></p>
+
+<p>But thats ignoring the problem and opening a security hole! Instead download a reputable Certificate bundle file, for example:
+<a href="http://curl.haxx.se/docs/caextract.html">http://curl.haxx.se/docs/caextract.html</a></p>
+
+<p>Then set CURLOPT_CAINFO with the location of your certificate bundle.</p>
+
+<p><code>
+if( strtoupper (substr(PHP_OS, 0,3)) == 'WIN' ) {
+curl_setopt($c, CURLOPT_CAINFO, 'C:/certificates/cacert.pem');
+}
+</code></p>
+]]></content>
+  </entry>
+  
+</feed>

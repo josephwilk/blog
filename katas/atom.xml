@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: katas | Joseph Wilk]]></title>
+  <link href="http://josephwilk.github.io//katas/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io/"/>
+  <updated>2015-10-01T13:01:28+01:00</updated>
+  <id>http://josephwilk.github.io/</id>
+  <author>
+    <name><![CDATA[Joseph Wilk]]></name>
+    <email><![CDATA[joe@josephwilk.net]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Awari Kata]]></title>
+    <link href="http://josephwilk.github.io/katas/awari-kata.html"/>
+    <updated>2011-03-01T14:00:32+00:00</updated>
+    <id>http://josephwilk.github.io/katas/awari-kata</id>
+    <content type="html"><![CDATA[<h2>The Game</h2>
+
+<p><a href="http://en.wikipedia.org/wiki/Oware">Awari</a> is an ancient game originating from Africa which consists of 12 holes in the ground (called houses) split up into 2 rows of 6. Designed for two players, each player selects a row as their territory. Each house starts with 4 seeds in it.</p>
+
+<p><img src="/images/blog/2009/09/image002.jpg" alt="Awari" /></p>
+
+<h3>A round in the game goes as follows:</h3>
+
+<p>The player picks a number of seeds from one of their houses. They sow the seeds one by one in an anti-clockwise direction around the board.</p>
+
+<p>The number of seeds in the last sown house dictates what happens next:</p>
+
+<ul>
+<li>If there are not 2 or 3 seeds then the go finishes and its the opponents turn.</li>
+<li>If the last hole is one of your opponents and the number of beads is 2 or 3 you win those beads
+
+<ul>
+<li>If you collect, then you may look at the next-to-last, and if that satisfies the same criteria, you collect those also</li>
+</ul>
+</li>
+<li>If you play so many beads that they wrap around the board (more than 11) you do not &lsquo;sow&rsquo; a bead in the house from which you picked up</li>
+</ul>
+
+
+<p>If an opponent&rsquo;s houses are all empty, the current player must make a move that gives the opponent seeds. If no such move is possible, the current player captures all seeds in his/her own territory, ending the game.</p>
+
+<h3>Winning</h3>
+
+<p>The game is over when:</p>
+
+<ul>
+<li>one player has captured 25 or more seeds</li>
+<li>each player has taken 24 seeds (draw).</li>
+<li>If both players agree that the game has been reduced to an endless cycle, each player captures the seeds on their side of the board.</li>
+</ul>
+
+
+<h2>The Challenge</h2>
+
+<p>Attempt to write an AI to play Awari against.</p>
+
+<p>Good luck.</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: testing | Joseph Wilk]]></title>
+  <link href="http://josephwilk.github.io//testing/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io/"/>
+  <updated>2015-10-01T13:01:28+01:00</updated>
+  <id>http://josephwilk.github.io/</id>
+  <author>
+    <name><![CDATA[Joseph Wilk]]></name>
+    <email><![CDATA[joe@josephwilk.net]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Co-chair of the Agile Alliance Functional Testing Tools group]]></title>
+    <link href="http://josephwilk.github.io/testing/co-chair-of-the-agile-alliance-functional-testing-tools-group.html"/>
+    <updated>2012-02-13T18:40:27+00:00</updated>
+    <id>http://josephwilk.github.io/testing/co-chair-of-the-agile-alliance-functional-testing-tools-group</id>
+    <content type="html"><![CDATA[<p>I&rsquo;m happy to announce that I have joined <a href="http://testobsessed.com">Elizabeth Hendrickson</a> as Co-Chair of the Agile Alliance Functional Testing Tools group (AAFTT, yes the name is a bit of a mouthful).</p>
+
+<p>I came across the AAFTT group when they organised a pattern writing workshop in London 2010, facilitated by <a href="http://www.lindarising.org/">Linda Rising</a>. It was an opportunity to bringing together some of the thought leaders in testing and share experiences. Somehow I managed to sneak in and proceded to steal all these experts knowledge. The AAFTT also runs an open space pria to the Agile conference. Last year I was surprised to find people who had travelled to the conference just for the AAFTT open space!</p>
+
+<p>As a developer who loves messing around with testing tools, I’ll happily admit I know little about testing as a profession. The scope and breath of ideas that the AAFTT exposed me to has left me excited and hungry to play with new tools, ideas and patterns to make testing as fun as it should be. I hope as a developer who is obsessed about testing I can help blur the lines between developers and testers. I’m both.</p>
+
+<p>Want to know more about the Agile Alliance Functional Testing Tools group?</p>
+
+<ul>
+<li><p>Mailing list: <a href="http://tech.groups.yahoo.com/group/aa-ftt/">http://tech.groups.yahoo.com/group/aa-ftt/</a></p></li>
+<li><p>AAFTT workshop 2009, Chicago <a href="http://cds43.wordpress.com/2009/10/06/aaftt-workshop-2009-chicago/">http://cds43.wordpress.com/2009/10/06/aaftt-workshop-2009-chicago/</a></p></li>
+<li><p>Records from previous AAFTT workshops: <a href="http://www.managing-expectations.com">http://www.managing-expectations.com</a></p></li>
+</ul>
+
+
+<p>And keep your ears open for any events!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Testing Outside of the Ruby World]]></title>
+    <link href="http://josephwilk.github.io/testing/testing-outside-of-the-ruby-world.html"/>
+    <updated>2011-04-11T13:48:29+01:00</updated>
+    <id>http://josephwilk.github.io/testing/testing-outside-of-the-ruby-world</id>
+    <content type="html"><![CDATA[<p>I recently spoke at the Scotland Ruby Conference about interesting testing tools and ideas outside of the Ruby community. The goal was to inspire the Ruby community to push the state of the art in testing.</p>
+
+<h2>Slides</h2>
+
+<script async class="speakerdeck-embed" data-id="4e7b46a413614c003f000dc9" data-ratio="1.33333333333333" src="http://josephwilk.github.io//speakerdeck.com/assets/embed.js"></script>
+
+
+<h2>Further Resources</h2>
+
+<ul>
+<li><p><a href="http://www.haskell.org/haskellwiki/Introduction_to_QuickCheck">QuickCheck</a> &ndash; Haskell</p></li>
+<li><p><a href="https://babel.ls.fi.upm.es/trac/McErlang/">McErlang</a> &ndash; Erlang</p></li>
+<li><p><a href="https://github.com/marick/Midje/wiki">Midje</a> &ndash; Clojure</p></li>
+<li><p><a href="http://ioke.org/">Ioke</a></p></li>
+<li><p><a href="http://zombie.labnotes.org/">Zombie.js</a> &ndash; Javascript</p></li>
+<li><p><a href="http://vowsjs.org/">Vows</a> &ndash; Javascript</p></li>
+<li><p><a href="http://swarm.jquery.org/">TestSwarm</a> &ndash; Javascript</p></li>
+<li><p><a href="http://www.threeriversinstitute.org/junitmax/subscribe.html">JUnitMax</a> &ndash; Java</p></li>
+<li><p><a href="http://www.industriallogic.com/">Industrial Logic</a> &ndash; Java</p></li>
+<li><p><a href="http://video.google.com/videoplay?docid=8755259214603465036#">Swim Lanes</a> &ndash; Ward Cunningham</p></li>
+<li><p><a href="http://www.exampler.com/blog/2007/06/14/graphical-tests-again/">Graphical Tests</a> &ndash; Brian Marick</p></li>
+<li><p><a href="http://www.quality-testing.com/wp-content/uploads/2009/06/testheuristicscheatsheetv1.pdf">Test Heuristics Cheat Sheet</a> &ndash; Elisabeth Hendrickson</p></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

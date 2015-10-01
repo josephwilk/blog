@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: databases | Joseph Wilk]]></title>
+  <link href="http://josephwilk.github.io//databases/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io/"/>
+  <updated>2015-10-01T13:01:28+01:00</updated>
+  <id>http://josephwilk.github.io/</id>
+  <author>
+    <name><![CDATA[Joseph Wilk]]></name>
+    <email><![CDATA[joe@josephwilk.net]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[PDO & Zend Framework Playing nicely with MSSQL]]></title>
+    <link href="http://josephwilk.github.io/databases/pdo-zend-framework-playing-nicely-with-mssql.html"/>
+    <updated>2007-11-15T10:04:34+00:00</updated>
+    <id>http://josephwilk.github.io/databases/pdo-zend-framework-playing-nicely-with-mssql</id>
+    <content type="html"><![CDATA[<p>The task was to use the MSSQL database adapter (Zend_Db_Adapter_Pdo_Mssql) from the Zend-Framework and ensure it worked on both windows and Unix
+platforms.</p>
+
+<p>The PDO drivers were a little tricky. The main problem we found was that different drivers require the date to be inserted with different formats and the date that comes back from the db is in different formats.</p>
+
+<p>Aside from having to deal with dates (which we handled as suggested by Bill Karwin) where we use Zend_Date and at the last point we convert it to a string date
+<a href="http://framework.zend.com/issues/browse/ZF-181"> http://framework.zend.com/issues/browse/ZF-181</a></p>
+
+<p>And Limit function not working:
+<a href="http://framework.zend.com/issues/browse/ZF-1037"> http://framework.zend.com/issues/browse/ZF-1037</a></p>
+
+<p>We have had no other problems connecting to MSSQL 2005 and MSSQL 2002 SQL Server.</p>
+
+<p>The drivers we use are:
+Windows
+DB-LIB (MS SQL, Sybase) 5.1.6.6
+<a href="http://pecl4win.php.net/"> http://pecl4win.php.net/</a></p>
+
+<p>Unix
+<a href="http://pecl.php.net/package/PDO_DBLIB"> http://pecl.php.net/package/PDO_DBLIB</a></p>
+
+<p>Under Unix we use our own Zend_Db_Adapter_Pdo_Dblib which just extends Zend_Db_Adapter_Pdo_Mssql. We do this just to change the date format for insertion (we store the format required for a PDO adapter in each Zend_Db_Adapter_Pdo_* and use that when converting the date from a Zend_Date to a string).</p>
+
+<p>As far as PHP/PDO is concerned &ndash;
+Under Windows PHP runs pdo (mssql)
+Under Unix PHP runs pdo (dblib)</p>
+
+<p>I would be interested to hear what the performance is like using ODBC to talk to MSSQL Server. Looking at all the problems we had with dates and inconsistent drivers going the OBDC route does seem appealing just to get some consistency.</p>
+]]></content>
+  </entry>
+  
+</feed>

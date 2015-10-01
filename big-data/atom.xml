@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: big-data | Joseph Wilk]]></title>
+  <link href="http://josephwilk.github.io//big-data/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io/"/>
+  <updated>2015-10-01T13:01:28+01:00</updated>
+  <id>http://josephwilk.github.io/</id>
+  <author>
+    <name><![CDATA[Joseph Wilk]]></name>
+    <email><![CDATA[joe@josephwilk.net]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[A little bit of Pig]]></title>
+    <link href="http://josephwilk.github.io/big-data/a-little-bit-of-pig.html"/>
+    <updated>2012-06-11T17:35:41+01:00</updated>
+    <id>http://josephwilk.github.io/big-data/a-little-bit-of-pig</id>
+    <content type="html"><![CDATA[<p>Currently in the Science team at Songkick I&rsquo;ve been working with Apache Pig to generate lots of interesting metrics for our business intelligence. We use Amazon&rsquo;s MapReduce and Pig to avoid having to run complex, long running and intensive queries on our live db, we can run them on Amazon in a timely fashion instead. So lets dive into Pig and how we use it at Songkick.com.</p>
+
+<h2>Pig (whats with all these silly names)</h2>
+
+<p>The Apache project Pig is a data flow language designed for analysing large datasets. It provides a high-level platform for creating MapReduce programs used with <em>Hadoop. </em>A little bit like SQL but Pig&rsquo;s programs by their structure are suitable for <strong>parallelization</strong>, which is why they are great at  handling very large data sets.</p>
+
+<p><img src="/images/blog/2012/05/pig-300x284.gif" alt="" /></p>
+
+<p>Heres how we use Pig and ElasticMapReduce at Songkick in our Science team.</p>
+
+<h2>Data (Pig food)</h2>
+
+<p><img src="/images/blog/2012/06/pig_eating.png" alt="" /></p>
+
+<p>Lets start by uploading some huge and interesting data about Songkicks artists onto S3. We start by dumping a table from mysql (along with a lot of other tables) and then query that data with Pig on Hadoop. While we could extract all the artist data by querying the live table its actually faster to use mysqldump and dump the table as a TSV file.</p>
+
+<p>For example it took 35 minutes to dump our artist table with a sql query &lsquo;select * from artists&rsquo;. It takes 10 minutes to dump the entire table with mysqldump.</p>
+
+<p>We format the table dump as a TSV which we push to S3 as that makes it super easy to use Amazons ElasticMapReduce with Pig.</p>
+
+<pre><code>shell&gt; mysqldump --user=joe --password  --fields-optionally-enclosed-by='"'
+                  --fields-terminated-by='\t' --tab /tmp/path_to_dump/ songkick artist_trackings
+</code></pre>
+
+<p>Unfortunately this has to be run on the db machine since mysqldump needs access to the file system to save the data. If this is a problem for you there is a Ruby script for dumping tables to TSV: <a href="http://github.com/apeckham/mysqltsvdump/blob/master/mysqltsvdump.rb">http://github.com/apeckham/mysqltsvdump/blob/master/mysqltsvdump.rb</a></p>
+
+<h2>Launching (Pig catapult)</h2>
+
+<p><img src="/images/blog/2012/06/flying_pig.png" alt="" /></p>
+
+<p>We will be using Amazons Elastic MapReduce to run our Pig scripts. We can start our job in interactive Pig mode which allows us to ssh to the box and run the pig script line by line.</p>
+
+<p><img src="/images/blog/2012/05/aws_pig.png" alt="" /></p>
+
+<h2>Examples (Dancing Pigs)</h2>
+
+<p><img src="/images/blog/2012/06/dancing_pigs1.jpg" alt="" /></p>
+
+<p>An important thing to note when running pig scripts interactively is that they defer execution until they have to expose a result. This means you can get nice schema checks and validations helping ensure your PIG script is valid without actually executing it over your large dataset.</p>
+
+<p>We are going to try and calculate the average number of users tracking an artist based on the condition that we only count users who logged in, in the last 30 days.</p>
+
+<p>This is what our Pig script is doing:</p>
+
+<p><img src="/images/blog/2012/06/query6.png" alt="" /></p>
+
+<p>The Pig script:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&mdash; Define some useful dates we will use later
+</span><span class='line'>%default TODAYS_DATE &lt;code>date  +%Y/%m/%d&lt;/code>
+</span><span class='line'>%default 30_DAYS_AGO &lt;code>date -d "$TODAYS_DATE - 30 day" +%Y-%m-%d&lt;/code>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>&mdash; Pig is smart enough when given a folder to go and find files, decompress them if necessarily and load them.
+</span><span class='line'>&mdash; Note we have to specify the schema as PIG does not know know this from our TSV file.
+</span><span class='line'>trackings = LOAD &lsquo;s3://songkick/db/trackings/$TODAYS_DATE/&rsquo; AS (id:int, artist_id:int,  user_id:int); 
+</span><span class='line'>users = LOAD &lsquo;s3://songkick/db/users/$TODAYS_DATE/&rsquo; AS (id:int, username:chararray, last_logged_in_at:chararray);</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<pre><code>trackings
+&lt;1, 1, 1&gt;
+&lt;2, 1, 2&gt;
+
+users
+&lt;1,'josephwilk', '11/06/2012'&gt;
+&lt;2,'elisehuard', '11/06/2012'&gt;
+&lt;3,'tycho', '11/06/2010'&gt;
+</code></pre>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>-- Filter users to only those who logged in, in the last 30 days
+</span><span class='line'>-- Pig does not understand dates, so just treat them as strings
+</span><span class='line'>active_users = FILTER users by last_logged_in_at gte '$30_DAYS_AGO'
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<pre><code>Users
+&lt;1,'josephwilk', '11/06/2012'&gt;
+&lt;2,'elisehuard', '11/06/2012'&gt;
+</code></pre>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>active_users_and_trackings = JOIN active_users BY id, trackings BY user_id
+</span><span class='line'>
+</span><span class='line'>-- group all the users tracking an artists so we can count them.
+</span><span class='line'>active_users_and_trackings_grouped = GROUP active_users_and_trackings BY active_users::user_id;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<pre><code>&lt;1, 1, /\{&lt;1,'josephwilk', '11/06/2012'&gt;, &lt;2,'elisehuard', '11/06/2012'&gt;\/}&gt;`
+</code></pre>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>trackings_per_artist = FOREACH active_users_and_trackings_grouped GENERATE group, COUNT($2) as number_of_trackings;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<pre><code>`&lt;\/{&lt;1,'josephwilk', '11/06/2012'&gt;, &lt;2,'elisehuard', '11/06/2012'&gt;\/}, 2&gt;`
+</code></pre>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>-- group all the counts so we can calculate the average
+</span><span class='line'>all_trackings_per_artist = GROUP trackings_per_artist ALL;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<pre><code>&lt;\/{\/{&lt;1,'josephwilk', '11/06/2012'&gt;, &lt;2,'elisehuard', '11/06/2012'&gt;\/}, 2\/}&gt;
+</code></pre>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>-- Calculate the average
+</span><span class='line'>average_artist_trackings_per_active_user = FOREACH all_trackings_per_artist
+</span><span class='line'>  GENERATE '$DATE' as dt, AVG(trackings_per_artist.number_of_trackings);
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<pre><code>&lt;{&lt;'11/062012', 2&gt;}&gt;
+</code></pre>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>--Now we have done the work store the result in S3.
+</span><span class='line'>STORE average_artist_trackings_per_active_user INTO
+</span><span class='line'>  's3://songkick/stats/average_artist_trackings_per_active_user/$TODAYS_DATE'
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>Debugging Pigs (Pig autopsy)</h2>
+
+<p><img src="/images/blog/2012/06/pig_insides.png" alt="" />
+In an interactive pig session there are two useful commands for debugging:
+<strong>DESCRIBE</strong> to see the schema.
+<strong>ILLUSTRATE</strong> to see the schema with sample data:</p>
+
+<pre><code>DESCRIBE users;
+users: {id:int, username:chararray, created_at:chararray, trackings:int}
+
+ILLUSTRATE users;
+----------------------------------------------------------------------
+| users   | id: int | username:chararray | created_at | trackings:int |
+----------------------------------------------------------------------
+|         | 18      | Joe                | 10/10/13   | 1000          |
+|         | 20      | Elise              | 10/10/14   | 2300          |
+----------------------------------------------------------------------
+</code></pre>
+
+<h2>Automating Elastic MapReduce (Pig robots)</h2>
+
+<p><img src="/images/blog/2012/06/pig_robot.png" alt="" /></p>
+
+<p>Once you are happy with your script you&rsquo;ll want to automate all of this. I currently do this by having a cron task which at regular intervals uses the  elastic-mapreduce-ruby lib to fire up a elastic map reduce job and run it with the pig script to execute.</p>
+
+<p>Its important to note that I <em>store the pig scripts on S3</em> so its easy for elastic-mapreduce to find the scripts.</p>
+
+<p>Follow the instructions to install elastic-mapreduce-ruby: <a href="https://github.com/tc/elastic-mapreduce-ruby">https://github.com/tc/elastic-mapreduce-ruby</a></p>
+
+<p>To avoid having to call elastic-mapreduce with 100s of arguments a colleague has written a little python wrapper to make it quick and easy to use: <a href="https://gist.github.com/2911006">https://gist.github.com/2911006</a></p>
+
+<p>You&rsquo;ll need to configure where you&rsquo;re elastic-mapreduce tool is installed AND where you want elastic map-reduce to log to on S3 (this means you can debug your elastic map reduce job if things go wrong!).</p>
+
+<p>Now all we need to do is pass the script the path to the pig script on S3.</p>
+
+<pre><code>./emrjob s3://songkick/lib/stats/pig/average_artist_trackings_per_active_user.pig
+</code></pre>
+
+<h2>Testing with PigUnit (Simulating Pigs)</h2>
+
+<p><img src="/images/blog/2012/06/virtual_pig.png" alt="" /></p>
+
+<p>Pig scripts can still take a long time to run even with all that Hadoop magic. Thankfully there is a testing framework PigUnit.</p>
+
+<p><a href="http://pig.apache.org/docs/r0.8.1/pigunit.html#Overview">http://pig.apache.org/docs/r0.8.1/pigunit.html#Overview</a></p>
+
+<p>Unfortunately this is where you have to step into writing Java. So I skipped it. Sshhh.</p>
+
+<h2>References</h2>
+
+<ol>
+<li><p> Apache Pig official site: <a href="http://pig.apache.org/">http://pig.apache.org</a></p></li>
+<li><p> Nearest Neighbours with Apache Pig and JRuby: <a href="http://thedatachef.blogspot.co.uk/2011/10/nearest-neighbors-with-apache-pig-and.html">http://thedatachef.blogspot.co.uk/2011/10/nearest-neighbors-with-apache-pig-and.html </a></p></li>
+<li><p> Helpers for messing with Elastic MapReduce in Ruby <a href="https://github.com/tc/elastic-mapreduce-ruby">https://github.com/tc/elastic-mapreduce-ruby</a></p></li>
+<li><p> mysqltsvdump <a href="http://github.com/apeckham/mysqltsvdump/blob/master/mysqltsvdump.rb">http://github.com/apeckham/mysqltsvdump/blob/master/mysqltsvdump.rb</a></p></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+</feed>

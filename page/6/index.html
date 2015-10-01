@@ -1,0 +1,1475 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Joseph Wilk</title>
+  <meta name="author" content="Joseph Wilk">
+
+  
+  <meta name="description" content="Rspec-rails is a rails plugin which brings the Rspec Ruby Behaviour Driven Development framework to rails along with some rails specific helpers. One &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://josephwilk.github.io/page/6/index.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Joseph Wilk" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<script src="http://disqus.com/forums/josephwilk/embed.js"></script>
+<link href="http://fonts.googleapis.com/css?family=Bevan" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-3020740-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <img src="/images/joe_small.jpg" style="position:relative;border-radius: 8px;margin-right: 5px;border-style: solid;border-width: 1px;border-color: #DDD;" height="60" alt="Joseph Wilk">
+  <span style="display:inline-block">
+    <h1><a href="/">Joseph Wilk</a></h1>
+    <h2>Programming bits and bobs</h2>
+  </span>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:josephwilk.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+ <li><a href="/">Home</a></li>
+ <li><a href="/about">About</a></li>
+ <li><a href="/speaking">Speaking</a></li>
+ <li><a href="/contact">Contact</a></li>
+ <li><a href="/archives">Archives</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/snippets/rspec-rails-mock_model-helper-for-the-rr-test-double-framework.html">Rspec-rails Mock_model Helper for the RR Test Double Framework</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-07-09T17:07:30+01:00" pubdate data-updated="true">Jul 9<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://rspec.info/">Rspec-rails</a> is a rails plugin which brings the Rspec Ruby Behaviour Driven Development framework to rails along with some rails specific helpers. One of these hugely useful helper functions is:</p>
+
+<pre><code>mock_model(model_class, options_and_stubs = {})
+</code></pre>
+
+<p>This creates a mock object with the common methods stubbed out. It also allows you to specify other methods you want to stub.</p>
+
+<p>You can use Rspec with a number of mocking frameworks (Rspec 1.1.5: <a href="http://mocha.rubyforge.org/">mocha</a>, <a href="http://flexmock.rubyforge.org/">flexmock</a> &amp; <a href="http://github.com/btakita/rr/tree/master">RR</a>). Unfortunately the Rspec-rails mock_model helper is not compatible with the RR test double framework.
+It throws this error message:</p>
+
+<pre><code>undefined method `to_sym' for {:count=&gt;0}:Hash
+</code></pre>
+
+<p>as it uses a stub function:</p>
+
+<pre><code>:errors =&gt; stub("errors", :count =&gt; 0)
+</code></pre>
+
+<p>which does not match RR&rsquo;s stub method.</p>
+
+<p>I&rsquo;ve written a patch which will allow mock_model to work with RR. Note: It&rsquo;s still a work in progress but I am using it successfully in a number of projects.</p>
+
+<p>You can get the latest code from <a href="http://github.com/">GitHub</a>:
+<code>git clone git://github.com/josephwilk/rspec-rr.git</code></p>
+
+<p>[viewcode] src=../projects/ruby/rr/mocks_rr_extensions.rb geshi=ruby showsyntax=display[/viewcode]</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/utilities/textmate-bundle-for-rr-test-double-framework.html">Textmate Bundle for RR Test Double Framework</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-07-07T18:37:32+01:00" pubdate data-updated="true">Jul 7<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>A simple Textmate bundle for  RR the Ruby test double framework.  You can read about RR at <a href="http://github.com/btakita/rr/tree/master">http://github.com/btakita/rr/tree/master</a> and look through the latest rdocs at <a href="http://rubypub.com/search/results?q=RR">Rubypub</a></p>
+
+<p><img src="/images/blog/2008/07/gwget.png" alt="" /></p>
+
+<h2>Install with Git</h2>
+
+<p><a href="http://git.or.cz/">(what on earth is Git…)</a></p>
+
+<ol>
+<li><p> Run this:</p>
+
+<p>mkdir -p ~/Library/Application\ Support/TextMate/Bundles/
+cd ~/Library/Application\ Support/TextMate/Bundles/
+git clone git://github.com/josephwilk/rr-tmbundle.git  rr.tmbundle</p></li>
+<li><p> Reload bundles in Textmate</p></li>
+<li><p> Enjoy!</p></li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/snippets/rspec-stories-keeping-steps-dry.html">Rspec Stories - Keeping Steps Dry</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-04-30T19:00:36+01:00" pubdate data-updated="true">Apr 30<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When using <a href="http://rspec.info/">Rspec stories</a> you have plain text stories which we call the <strong>&lsquo;story&rsquo;</strong> file and the <strong>&lsquo;story steps&rsquo;</strong> file that maps the plain text story to programmatic code. Generally you end up with your <strong>story files not being DRY</strong>. This is not a worry, your stories are the domain specific languages detailing your acceptance/integration tests. Its like saying that your Rails Models are not DRY because they repeat lots of <code>'has_one'</code>!</p>
+
+<p>However within a single story file you can DRY things up a bit by reusing scenarios.</p>
+
+<h4>GivenScenario</h4>
+
+<p>We can use &lsquo;<code>GivenScenario: SCENARIO</code>&rsquo; within a scenario  to call another scenario. Pretty much like a method call, it will run the called scenario and then return to continue with the original scenario.</p>
+
+<p>[viewcode] src=../projects/ruby/stories/given_scenario_story.rb geshi=ruby showsyntax=display[/viewcode]</p>
+
+<h4>Drying The Story Steps&hellip;</h4>
+
+<p>More so than stories we should try and <strong>keep our story steps DRY</strong>. Duplicating ourself in steps makes it harder to maintain the tests and all the other horrors of breaking DRY. So here are some simple steps to help ensure that your step files stay nice and DRY.</p>
+
+<h3>Regular Expression Steps</h3>
+
+<p>To make your steps a little more flexible you can use relative expressions. Within your Given/When/Then functions rather than using a string parameter you use a regular expression:</p>
+
+<p>[viewcode] src=../projects/ruby/stories/regular_expression_steps.rb geshi=ruby showsyntax=display[/viewcode]</p>
+
+<h3>Common Step files</h3>
+
+<p>Creating common step files which contain frequently reused Given/Then/Whens. I generally end up with a <a href="http://selenium.openqa.org/">Selenium</a> and a <a href="http://agilewebdevelopment.com/plugins/webrat">Webrat</a> common step files since they are both core to driving my stories.</p>
+
+<p>The common steps reside with the other step files:</p>
+
+<ul>
+<li><p>steps/common_webrat_steps.rb</p></li>
+<li><p>steps/common_selenium_steps.rb</p></li>
+</ul>
+
+
+<p>Create the steps file as you would with any other rspec step file.
+[viewcode] src=../projects/ruby/stories/common_webrat_steps.rb geshi=ruby showsyntax=display[/viewcode]</p>
+
+<p>Then reference the common step file when you are creating the runner for your story:
+[viewcode] src=../projects/ruby/stories/example_story.rb geshi=ruby showsyntax=display[/viewcode]</p>
+
+<h3>Helpers</h3>
+
+<p>Within your stories folder generated by rspec you have your lovely helper file:</p>
+
+<p><em>stories/helper.rb</em></p>
+
+<p>Within here you can create functions that are accessible within all steps.</p>
+
+<p>You may start to find that your helper becomes a gigantic list of helper methods. Hence I tend to organize helpers into modules.</p>
+
+<p>You can mix these helpers into Rspec stories so all steps can access them:</p>
+
+<p>[viewcode] src=../projects/ruby/stories/helper.rb geshi=ruby showsyntax=display[/viewcode]</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/projects/javascript-acting-as-a-robotic-agent.html">JavaScript Acting as a Robotic Agent</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-02-23T17:06:18+00:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>We can think of JavaScript running within a clients browser as a robotic agent. It has an environment in which it can sense things. The ability to look at the environment and make decisions based on plans.</p>
+
+<p><img src="/images/blog/2007/12/clientagent.JPG" alt="clientagent.JPG" /></p>
+
+<p>So whys that useful, well why is a robot useful? You can produce many different complex plans and give them to the robot and forget about it while it does the work potentially over and over again. If we are really lucky the robot can demonstrate some intelligence and deal with uncertainty.</p>
+
+<p>Well I tried out a small part of this idea to build a server side service which delivered plans in JavaScript to the client. The JavaScript planning agent followed the plans. Its not a  intelligent robot but this is just a prototype. The plans where focused on validation conditions that a user needed to get through to post a form.</p>
+
+<p>Example:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">planCollection</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">();</span>
+</span><span class='line'><span class="nx">planCollection</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span> <span class="nb">Array</span><span class="p">();</span>
+</span><span class='line'><span class="nx">planCollection</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">forms</span><span class="p">[</span><span class="s1">&#39;iwfmsForm&#39;</span><span class="p">].</span><span class="nx">elements</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">].</span><span class="nx">value</span><span class="o">&gt;</span><span class="mi">18</span><span class="p">;</span>
+</span><span class='line'><span class="nx">planCollection</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">forms</span><span class="p">[</span><span class="s1">&#39;iwfmsForm&#39;</span><span class="p">].</span><span class="nx">elements</span><span class="p">[</span><span class="s1">&#39;ward&#39;</span><span class="p">].</span><span class="nx">value</span><span class="o">==</span><span class="err">&#39;</span><span class="nx">adult</span><span class="err">’</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Timings where implied by ordering of plans in an array. i.e. for plan 0 &ndash;  value > 18 must happen before ward == adult.</p>
+
+<p>Array dimensions imply different plans or forks in the plan.</p>
+
+<p>Its a rather crude plan referencing form names and lots of low level javascript  but it helps simplify the boring bits!</p>
+
+<h3>The Environment</h3>
+
+<p>The environment represents the different states the form elements and the user can be in.</p>
+
+<h3>The See process</h3>
+
+<p>This function maps the form elements to their associated values.</p>
+
+<h3>The Message Store</h3>
+
+<p>The message store is used to represent events generated by the user. Events could be the result of clicking on a form element or clicking away from a form element. Such events generate messages which the plan executor responds to. These events are the points where the planner is activated.</p>
+
+<h3>The Plans</h3>
+
+<p>The plans represent a sequence of constraints within the JavaScript syntax on form elements. This type of action is not executed but used to help decided upon which plan path to follow.</p>
+
+<h3>The Action process</h3>
+
+<p>This process deals with selecting actions based on the see process which provides information about the form element’s values. There may only be a single plan and thus no decision to make. If there are multiple plans the decision to follow an action is only made for the first action of a plan. Which initial action to decide upon is decided by testing each of the first actions of the plans until one holds from the information provided by the see process. This plan is then used to further test the next constraint of the plan and so on. If multiple first actions hold each of the plans is tested to see if any of them reach the goal.</p>
+
+<h3>The Goals</h3>
+
+<p>The goals of the plans can be regarded as ensuring that all the conditions in the plan hold based on the data in the HTML form.</p>
+
+<h3>The Execution of Actions</h3>
+
+<p>Within the planner the actions are not executed. Since we are constraining the user all we need to do is find a valid plan path. The planner affects the environment by alerting the user if it cannot find any valid plan path.</p>
+
+<p>The plan executor needs to be able to handle two different situations:</p>
+
+<ul>
+<li><p>Form submission
+When the user inputs information into a form and then submits the form the planner will have to ensure that a valid plan path is reflected by the values that are held in the form. The form submission should be prevented if such a plan cannot be found.</p></li>
+<li><p>Real time user input</p>
+
+<ul>
+<li><ol type="a">
+<li><p>Guidance through a plan
+As the user inputs information the planner needs to be aware of the current position in multiple plans and what effect this has on the current form element being filled in. Alerting the user if they have failed to achieve any plan as a result of the data they entered into the form.</p></li>
+<li><ol type="a">
+<li>Temporal ordering restrictions
+The planner needs to be able to handle temporal restrictions on the form elements. Indicating in which order form elements have to be completed. Therefore we have to look at the impact that a real time input action will have on the rest of the form. For example one form element being completed may have the effect that another disabled form element can be activated for input.</li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>JavaScript Planning agent Code</h3>
+
+<p><a href="https://github.com/josephwilk/iwfms/blob/master/javaScript/javaScriptPlanner.js">https://github.com/josephwilk/iwfms/blob/master/javaScript/javaScriptPlanner.js</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/critique/rails-admins-plugins-review.html">Rails Admins Plugins Review</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-02-14T12:04:10+00:00" pubdate data-updated="true">Feb 14<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>A brief examination of some of the major Admin plugins for rails.</p>
+
+<ul>
+<li><p>Lipsiaadmin</p></li>
+<li><p>AutoAdmin</p></li>
+<li><p>ActiveScaffold</p></li>
+<li><p>Hobo</p></li>
+<li><p>Streamlined</p></li>
+</ul>
+
+
+<h3>Lipsiadmin</h3>
+
+<p><a href="http://rails.lipsiasoft.com/wiki/lipsiadmin">http://rails.lipsiasoft.com/wiki/lipsiadmin</a></p>
+
+<p><strong>Google group Members</strong><strong>: </strong>No group</p>
+
+<p><strong>Live Demo:</strong> <a href="http://demoadmin.lipsiasoft.org/admin/">http://demoadmin.lipsiasoft.org/admin/</a></p>
+
+<p><strong>Sample Projects: </strong>None</p>
+
+<p>This admin framework mixes Ajax/JavaScript (library <a href="http://extjs.com/">Ext 2.0</a> views) and old school HTML. The interface is presented in an application style reminiscent of Microsoft Outlook.</p>
+
+<p><img src="/wp-content/uploads/2008/02/lipsiaadmin2.png" alt="Lipsia Admin" /></p>
+
+<p><strong>Feature set</strong></p>
+
+<ul>
+<li><p><a href="http://extjs.com/">http://extjs.com/</a> JavaScript library.</p></li>
+<li><p>Generator Admin code.</p></li>
+<li><p>Permissions support</p></li>
+<li><p>Live search</p></li>
+<li><p>Creation of menus within migrations.</p></li>
+</ul>
+
+
+<p><strong>Weaknesses</strong></p>
+
+<ul>
+<li><p>Community seems non-existent</p></li>
+<li><p>Sparse documentation</p></li>
+</ul>
+
+
+<hr />
+
+<h3>AutoAdmin</h3>
+
+<p><a href="http://rails.lipsiasoft.com/wiki/lipsiadmin">http://code.trebex.net/auto-admin</a></p>
+
+<p><strong>Google group Members</strong><strong> (</strong><a href="http://groups.google.com/group/rails-autoadmin">http://groups.google.com/group/rails-autoadmin</a><strong>):</strong>  <strong>37</strong></p>
+
+<p><strong>Live Demo:</strong> None</p>
+
+<p><strong>Sample Projects: </strong>None</p>
+
+<p>Heavily influenced by Djangos admin system in both theme and with the definition of admin display configuration within in models. Sub-projects within Django have already started to move away from this approach (<a href="http://code.djangoproject.com/wiki/NewformsAdminBranch">newforms-admin</a>).</p>
+
+<p>Its goal is to generate views you otherwise wouldn&rsquo;t bother to create.</p>
+
+<h3><img src="/wp-content/uploads/2008/02/autoadmin.png" alt="AutoAdmin" /></h3>
+
+<p><strong>Feature set</strong></p>
+
+<ul>
+<li><p>Themes</p></li>
+<li><p>Basic Access Control &ndash; All or Nothing</p></li>
+</ul>
+
+
+<p><strong>Weaknesses</strong></p>
+
+<ul>
+<li><p>Lacks reliable set of Tests</p></li>
+<li><p>Admin display configuration is stored within Models (Django branches <a href="http://code.djangoproject.com/wiki/NewformsAdminBranch">newforms-admin</a> have already moved aways from this)</p></li>
+<li><p>Problems with editable sublists</p></li>
+<li><p>Access control does not support more complex use cases.</p></li>
+</ul>
+
+
+<hr />
+
+<h3>ActiveScaffold (Version <strong>1.1.1</strong>)</h3>
+
+<p><a href="http://www.activescaffold.com">http://www.activescaffold.com</a></p>
+
+<p><strong>Google group Members</strong><strong> (</strong><a href="http://groups.google.com/group/activescaffold">http://groups.google.com/group/activescaffold</a><strong>):</strong> 1075</p>
+
+<p><strong>Live Demo</strong>: <a href="http://demo.activescaffold.com/">http://demo.activescaffold.com/</a></p>
+
+<p><strong>Sample Projects: (SVN)</strong><a href="http://activescaffold.googlecode.com/svn/applications/demo/"> http://activescaffold.googlecode.com/svn/applications/demo/</a></p>
+
+<p>A Ajax driven admin system which promotes itself on being both configurable and customizable.</p>
+
+<p>Configuration: <em>&ldquo;throwing flags and setting options and manipulating the setup.&rdquo;</em></p>
+
+<p>Customizing: <em>&ldquo;defining conventional methods or .rhtml overrides that it will intelligently use when available.&rdquo;</em></p>
+
+<p><img src="/wp-content/uploads/2008/02/activescaffold.png" alt="ActiveScaffold" /></p>
+
+<p>Admin customisation is performed in the controller.</p>
+
+<p><strong>Feature Set </strong></p>
+
+<ul>
+<li><p>Installed through plugin</p></li>
+<li><p>Ajax driven interface</p></li>
+<li><p>Embed ActiveScaffold like a widget in your web page.</p></li>
+<li><p>High quality Documentation</p></li>
+<li><p>Supports Third Party plugins within active scaffold : <a href="http://wiki.activescaffold.com/wiki/published/ThirdPartyPlugins">http://wiki.activescaffold.com/wiki/published/ThirdPartyPlugins</a></p></li>
+<li><p>Graceful JavaScript degradation</p></li>
+<li><p>Hugely Customizable</p>
+
+<ul>
+<li><p>Admin interface</p>
+
+<ul>
+<li><p>Grouping form inputs</p></li>
+<li><p>Layout</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Guaranteed to work on Firefox 1+, IE 6+ and Safari 2+</p></li>
+</ul>
+
+
+<p><strong>Weaknesses</strong></p>
+
+<ul>
+<li><p>No concept of semantic markup for models so configuration takes over when a little magic could  help reduce  the work in some usages.</p></li>
+<li><p>Ajax interface is not amazingly usable.</p></li>
+</ul>
+
+
+<hr />
+
+<h3>Hobo (version 0.7.2)</h3>
+
+<p><a href="http://hobocentral.net/">http://hobocentral.net/</a></p>
+
+<p><strong>Google group Members</strong><strong>:</strong> No Group</p>
+
+<p><strong>Live Demo:</strong> None</p>
+
+<p><strong>Sample Projects:</strong> <a href="http://hobocentral.net/blog/demos/">http://hobocentral.net/blog/demos/</a></p>
+
+<p>The Web App Builder for Rails. Focuses on the models providing magic to make the admin appear.</p>
+
+<p><img src="/wp-content/uploads/2008/02/hoboadmin.png" alt="Hobo Admin" /></p>
+
+<p><strong>Feature Set</strong></p>
+
+<ul>
+<li><p>Installable through <em>gem</em></p></li>
+<li><p>DRYML &ndash; XML based markup language</p></li>
+<li><p>Migration generation from Models</p>
+
+<ul>
+<li><p>Define the table fields in the model</p></li>
+<li><p>High level semantic definitions for model fields (eg. email address)</p></li>
+</ul>
+</li>
+<li><p>Permission System</p></li>
+<li><p>Themes_
+_</p></li>
+<li><p>ActiveRecord extensions</p></li>
+</ul>
+
+
+<p><strong>Weaknesses</strong></p>
+
+<ul>
+<li><p>Documentation is a little incomplete.</p></li>
+<li><p>Screencasts are out of date</p></li>
+</ul>
+
+
+<hr />
+
+<h3>Streamlined (version 0.9)</h3>
+
+<p><a href="http://streamlinedframework.org/">http://streamlinedframework.org/</a></p>
+
+<p><strong>Google group Members</strong><strong> (</strong><a href="http://groups.google.com/group/streamlined">http://groups.google.com/group/streamlined</a> <strong>):</strong> 474</p>
+
+<p><strong>Live Demo:</strong> None</p>
+
+<p><strong>Sample Projects</strong>: <a href="http://trac.streamlinedframework.org/wiki/SampleProject">http://trac.streamlinedframework.org/wiki/SampleProject</a></p>
+
+<p>Streamlined provides an instant, production-ready UI for your ActiveRecord model. It aims to bring the declarative goodness of ActiveRecord to the view tie. It has a nice balance of ajax functionality with traditional page loads.</p>
+
+<p><img src="/wp-content/uploads/2008/02/streamlined-admin.png" alt="Streamlined admin" /></p>
+
+<p><strong>Feature Set</strong> <code>
+</code></p>
+
+<ul>
+<li><p>Separates Admin declarations and Model</p></li>
+<li><p>In place editing (edit content in listing)</p></li>
+<li><p>Export content to XML, CSV, and JSON</p></li>
+<li><p>Pluggable CSS styling</p></li>
+<li><p>Live data filtering</p></li>
+<li><p>Advanced Filtering</p></li>
+<li><p>Ajax-powered widgets and transitions</p></li>
+<li><p>Views are can be overwritten Globally and per model</p></li>
+<li><p>Good documentation + screencasts</p></li>
+<li><p>IBM guides &ndash; <a href="http://www.ibm.com/developerworks/java/library/j-cb09056/">http://www.ibm.com/developerworks/java/library/j-cb09056/</a></p></li>
+</ul>
+
+
+<p><strong>Weaknesses</strong></p>
+
+<ul>
+<li><p>No attaching of semantic markup to model fields.</p></li>
+<li><p>The documentation (while improving) is a little patchy in places.</p></li>
+</ul>
+
+
+<h2>Conclusions (winners)</h2>
+
+<p><strong>ActiveScaffold </strong></p>
+
+<p>If your goal is to have as much <strong>flexibility</strong> as possible within your admin then ActiveScaffold is you best candidate.  It is incredibly versatile and the  <strong>documentation</strong> is a pleasure to work through. With developers <strong>contributing plugins</strong> its future growth looks promising.</p>
+
+<p><strong>Hobo </strong></p>
+
+<p>If your looking for an admin system and a <strong>framework </strong> and are less concerned about the configuration  of the admin then Hobo is your is candidate. The power to attach <strong>semantic data</strong> <strong>to models</strong> has great potential for complex forms elements being generated automatically. Currently only the &lsquo;email&rsquo; type is provided so this feature is yet to take off.  Be prepared to deal with <strong>incomplete documentation</strong>. The Mirc #hobo group and the <a href="http://hobocentral.net/forum/">hobo forums</a> are happy to help if you get stuck.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/critique/automatic-admin-systems-semantics-with-rails-and-django.html">Automatic Admin Systems - Semantics With Rails & Django</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-01-18T11:52:59+00:00" pubdate data-updated="true">Jan 18<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>The Magically Appearing Admin</h3>
+
+<p>Web developers using an MVC framework produce their websites playing with their models, views and controllers. Then by adding a few lines of magic an admin system appears which allows users to add/edit/delete/view/search their models.</p>
+
+<p>Examples:
+<a href="http://www.djangoproject.com/">Django&rsquo;s</a> Magic Admin (Also <a href="http://code.djangoproject.com/wiki/NewformsAdminBranch">NewFormsAdmin</a> &ndash; a branch of Django focused on making it easier to customise auto-admin)
+<a href="http://www.rubyonrails.org/"> Ruby on rails</a> Plugins:</p>
+
+<ul>
+<li><p>Streamlined framework &ndash; <a href="http://streamlinedframework.org/">http://streamlinedframework.org/</a></p>
+
+<ul>
+<li>Admin magic/config  &ndash; outside of the models</li>
+</ul>
+</li>
+<li><p>Auto-Admin &ndash; <a href="http://code.trebex.net/auto-admin">http://code.trebex.net/auto-admin</a></p>
+
+<ul>
+<li>Admin magic/config &ndash; inside the models</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>Limitations of Database types and Semantics</h3>
+
+<p>While we could have an admin that displayed all a models attributes as text inputs, it would be nice if it was a bit more intelligent. We need the magic admin to infer what type of form input should be used from database types.</p>
+
+<p>If within our database (and hence in the model) we have a</p>
+
+<p><code>partyDate -&gt; Datetime</code></p>
+
+<p>Then we would like the admin to display a date styled input.</p>
+
+<p><img src="http://www.joesniff.co.uk/wp-content/uploads/2008/01/datetime-form.png" alt="Django Datetime Input In Auto Admin" /></p>
+
+<p>We have a limited set of database types:</p>
+
+<ul>
+<li>varchar</li>
+<li>text</li>
+<li>integer</li>
+<li>blob</li>
+<li>datetime</li>
+<li>timestamp</li>
+<li>&hellip;</li>
+</ul>
+
+
+<p>For very simple magic admins these database types are good enough.</p>
+
+<p>But we find in more complex instances the database types are not expressive enough. Within our models we have an implicit idea about the meaning of the attributes (generally derived from our naming of variables) not just the type.</p>
+
+<p>For example we may have the concept of <em>IPAddress</em> within our model. We have a clear idea of the semantic meaning of <em>IPAddress</em> and that it should be presented as a form input in a specific way. e.g.</p>
+
+<p><img src="http://www.joesniff.co.uk/wp-content/uploads/2008/01/ipaddress-small.jpg" alt="IP Address Form" /></p>
+
+<p>The database type is just char(12), so  the database types are not enough for our magic admin to build a more complex admin.</p>
+
+<h3>Django Approach &ndash; Explicit &amp; High level</h3>
+
+<p>Within Django we explicitly define all our Model fields in Python. We can introduce high level concepts like model attributes of type &lsquo;<em>IPAddressField</em>&rsquo; and not worry about the way this maps to the db (Django deals with the transformation between <em>IPAddressField</em> and  the database types).</p>
+
+<p>[viewcode] src=../projects/python/examples/model.py geshi=python [/viewcode]</p>
+
+<h3>Ruby on Rails Approach &ndash; Implicit &amp; Low Level</h3>
+
+<p>In rails our models define relationships between themselves but we generally do not list all model fields explicitly. That&rsquo;s one of the beauty&rsquo;s of rails compared to heavy <a href="http://en.wikipedia.org/wiki/Object-relational_mapping">ORM</a> layers.</p>
+
+<p>[viewcode] src=../projects/ruby/examples/Post.rb geshi=ruby [/viewcode]</p>
+
+<p>To quote the <a href="http://ar.rubyonrails.com/classes/ActiveRecord/Base.html">Rails Active Record API</a></p>
+
+<p><em>&ldquo;Adding, removing, and changing attributes and their type is done directly in the database&rdquo;</em></p>
+
+<p>Hence we cannot easily attach metadata to attributes which are only defined in the database. We can overcome this by listing these fields in the model and attaching some metadata to describe the semantic meaning of the fields (rather than using special types for the fields in the model, keeping ActiveRecord happy).</p>
+
+<p>But does this remove the idea of having lean and simple models?</p>
+
+<h3>Thoughts</h3>
+
+<p>Django&rsquo;s high level model provides a very natural way to attach semantic meaning to model attributes which  the  admin can use. Its also all located in a single place, the model.</p>
+
+<p>Rail has lower level models embracing the database, and attaching semantic meaning requires us to add more detail to the model, which feels like its breaking the <a href="http://en.wikipedia.org/wiki/Don't_repeat_yourself">DRY</a> principle. Since Ruby embraces the idea of the only place certain model attributes are defined is in the database it feels like having the atributes mentioned in the model as-well is duplication.</p>
+
+<p>Streamlined&rsquo;s attempt (which is defined in a separate file to the model):</p>
+
+<p>[viewcode] src=../projects/ruby/examples/streamlined.rb geshi=ruby [/viewcode]</p>
+
+<p>There are potentially other ways of handling Rails representation of semantic information:</p>
+
+<ul>
+<li><p>Storing the semantics in the database.</p></li>
+<li><p>Imply semantic meaning from naming of database columns (&lsquo;myZipCode&rsquo;  should use zipcode input type in the admin).</p></li>
+<li><p>Customize Migrations to map semantic types to db types.</p></li>
+</ul>
+
+
+<p><strong>Rails has the flexibility to mirror Django, so can we find a good way for Rails to represent semantic meaning for models?</strong></p>
+
+<h3>Interesting Further Projects</h3>
+
+<p>SemanticAttributes &ndash;  <a href="http://code.google.com/p/semanticattributes/">http://code.google.com/p/semanticattributes/</a></p>
+
+<p>Semantic Web, meet Ruby on Rails &ndash; <a href="http://www.jroller.com/obie/entry/more_about_ontologies">http://www.jroller.com/obie/entry/more_about_ontologies</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/projects/latent-semantic-analysis-in-python.html">Latent Semantic Analysis in Python</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-19T11:14:42+00:00" pubdate data-updated="true">Dec 19<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Latent Semantic Analysis (LSA) is a mathematical method that tries to bring out latent relationships within a collection of documents. Rather than looking at each document isolated from the others it looks at all the documents as a whole and the terms within them to identify relationships.</p>
+
+<p>An example of LSA:
+Using a search engine search for &ldquo;<em>sand</em>&rdquo;.</p>
+
+<p>Documents are returned which do not contain the search term &ldquo;sand&rdquo; but contains terms like &ldquo;beach&rdquo;.</p>
+
+<p>LSA has identified a latent relationship, &ldquo;<em>sand</em>&rdquo; is semantically close to &ldquo;beach&rdquo;.</p>
+
+<p>There are some very good papers which describing LSA in detail:</p>
+
+<ul>
+<li><p>An introduction to LSA: <a href="http://lsa.colorado.edu/papers/dp1.LSAintro.pdf">http://lsa.colorado.edu/papers/dp1.LSAintro.pdf</a></p></li>
+<li><p>Creating your own LSA space: <a href="http://www.andrew.cmu.edu/user/jquesada/pdf/bookSpacesRev1.pdf">http://www.andrew.cmu.edu/user/jquesada/pdf/bookSpacesRev1.pdf</a></p></li>
+<li><p>Latent Semantic analysis: <a href="http://en.wikipedia.org/wiki/Latent_semantic_indexing">http://en.wikipedia.org/wiki/Latent_semantic_indexing</a></p></li>
+</ul>
+
+
+<p>This is an implementation of LSA in Python (2.4+). Thanks to scipy its rather simple!</p>
+
+<h3>1 Create the term-document matrix</h3>
+
+<p>We use the previous work in <a href="/projects/building-a-vector-space-search-engine-in-python.html">Vector Space Search</a> to build this matrix.</p>
+
+<h3>2 tf-idf Transform</h3>
+
+<p>Apply the tf-idf transform to the term-document matrix. This generally tends to help improve results with LSA.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">tfidfTransform</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+</span><span class='line'>        <span class="sd">&quot;&quot;&quot; Apply TermFrequency(tf)*inverseDocumentFrequency(idf) for each matrix element.</span>
+</span><span class='line'><span class="sd">            This evaluates how important a word is to a document in a corpus</span>
+</span><span class='line'>
+</span><span class='line'><span class="sd">            With a document-term matrix: matrix[x][y]</span>
+</span><span class='line'><span class="sd">                tf[x][y] = frequency of term y in document x / frequency of all terms in document x</span>
+</span><span class='line'><span class="sd">                idf[x][y] = log( abs(total number of documents in corpus) / abs(number of documents with term y)  )</span>
+</span><span class='line'><span class="sd">            Note: This is not the only way to calculate tf*idf</span>
+</span><span class='line'><span class="sd">        &quot;&quot;&quot;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">documentTotal</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">rows</span><span class="p">,</span><span class="n">cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="o">.</span><span class="n">shape</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rows</span><span class="p">):</span> <span class="c">#For each document</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="n">wordTotal</span><span class="o">=</span> <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">cols</span><span class="p">):</span> <span class="c">#For each term</span>
+</span><span class='line'>
+</span><span class='line'>                        <span class="c">#For consistency ensure all self.matrix values are floats</span>
+</span><span class='line'>                        <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">])</span>
+</span><span class='line'>
+</span><span class='line'>                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span><span class="o">!=</span><span class="mi">0</span><span class="p">:</span>
+</span><span class='line'>
+</span><span class='line'>                                <span class="n">termDocumentOccurences</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__getTermDocumentOccurences</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>                                <span class="n">termFrequency</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">wordTotal</span><span class="p">)</span>
+</span><span class='line'>                                <span class="n">inverseDocumentFrequency</span> <span class="o">=</span> <span class="n">log</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">documentTotal</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">termDocumentOccurences</span><span class="p">)))</span>
+</span><span class='line'>                                <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span><span class="o">=</span><span class="n">termFrequency</span><span class="o">*</span><span class="n">inverseDocumentFrequency</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>3 Singular Value Decomposition</h3>
+
+<p>SVD: <a href="http://en.wikipedia.org/wiki/Singular_value_decomposition">http://en.wikipedia.org/wiki/Singular_value_decomposition</a></p>
+
+<p>Determine U, Sigma, VT from our MATRIX from previous steps.</p>
+
+<pre><code> U . SIGMA . VT = MATRIX
+</code></pre>
+
+<p>We use the <a href="http://www.scipy.org/">scipy</a> svd implementation here. Note that numpy (version: <strong>1.0.4 </strong>) also has an implementation of svd but I had lots of problems with it. I found it  did not work with anything larger than a 2 dimensional matrix.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#Sigma comes out as a list rather than a matrix</span>
+</span><span class='line'> <span class="n">u</span><span class="p">,</span><span class="n">sigma</span><span class="p">,</span><span class="n">vt</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">)</span>
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>4 Reduce the dimensions of Sigma</h3>
+
+<p>We generally delete the smallest coefficients in the diagonal matrix Sigma to produce Sigma&#8217;. The reduction of the dimensions of Sigma combines some dimensions such that they are on more than one term. The number of coefficients deleted can depend of the corpus used. It should be large enough to fit the real structure in the data, but small enough such that noise or unimportant details are not modelled.</p>
+
+<p>The <strong>real difficulty and weakness of  LSA</strong> is knowing <strong>how many dimensions to remove</strong>. There is no exact method of finding the right dimensions. Generally <a href="http://mathworld.wolfram.com/L2-Norm.html">L2-norm</a> or <a href="http://en.wikipedia.org/wiki/Frobenius_norm#Frobenius_norm">Frobenius norm</a> are used.</p>
+
+<h3>5 Calculate the Product with New Sigma&#8217;</h3>
+
+<p>Finally we calculate:</p>
+
+<pre><code>U . SIGMA' . VT = MATRIX'
+</code></pre>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#Reconstruct MATRIX&#39;</span>
+</span><span class='line'><span class="n">reconstructedMatrix</span><span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">linalg</span><span class="o">.</span><span class="n">diagsvd</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">vt</span><span class="p">))),</span><span class="n">vt</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Giving use our final LSA matrix. We can now apply the same functionality used in Vector space search: searching and finding related scores for documents.</p>
+
+<h2>LSA In Action &ndash; Matrices</h2>
+
+<p>We start with out Model-Term frequency matrix with is generated from creating a <a href="/projects/building-a-vector-space-search-engine-in-python.html">Vector Space Search</a> with four documents (D1-D4):
+D1:&ldquo;<em>The cat in the hat disabled</em>&rdquo;
+D2:&ldquo;<em>A cat is a fine pet ponies.</em>&rdquo;
+D3:&ldquo;<em>Dogs and cats make good pets</em>&rdquo;
+D4:&ldquo;<em>I haven&rsquo;t got a hat.</em>&rdquo;</p>
+
+<pre><code>    &lt;strong&gt;good  pet   hat   make  dog   cat   poni  fine  disabl&lt;/strong&gt;
+D1 [+0.00 +0.00 +1.00 +0.00 +0.00 +1.00 +0.00 +0.00 +1.00 ]
+D2 [+0.00 +1.00 +0.00 +0.00 +0.00 +1.00 +1.00 +1.00 +0.00 ]
+D3 [+1.00 +1.00 +0.00 +1.00 +1.00 +1.00 +0.00 +0.00 +0.00 ]
+D4 [+0.00 +0.00 +1.00 +0.00 +0.00 +0.00 +0.00 +0.00 +0.00 ]
+</code></pre>
+
+<p>Apply tf-idf transform:</p>
+
+<pre><code>D1 [+0.00 +0.00 +0.23 +0.00 +0.00 +0.10 +0.00 +0.00 +0.46 ]
+D2 [+0.00 +0.17 +0.00 +0.00 +0.00 +0.07 +0.35 +0.35 +0.00 ]
+D3 [+0.28 +0.14 +0.00 +0.28 +0.28 +0.06 +0.00 +0.00 +0.00 ]
+D4 [+0.00 +0.00 +0.69 +0.00 +0.00 +0.00 +0.00 +0.00 &lt;span style="color: #ff0000;"&gt;&lt;strong&gt;+0.00&lt;/strong&gt;&lt;/span&gt; ]
+</code></pre>
+
+<p>Perform SVD &ndash; Reduce Sigmas dimensions(removing the 2 smallest coefficients)</p>
+
+<pre><code>D1 [+0.01 +0.01 +0.34 +0.01 +0.01 +0.03 +0.02 +0.02 +0.11 ]
+D2 [-0.00 +0.17 -0.01 -0.00 -0.00 +0.08 +0.35 +0.35 +0.02 ]
+D3 [+0.28 +0.14 -0.01 +0.28 +0.28 +0.06 -0.00 -0.00 +0.02 ]
+D4 [-0.01 -0.01 +0.63 -0.01 -0.01 +0.04 -0.01 -0.01 &lt;strong&gt;&lt;span style="color: #ff0000;"&gt;+0.19&lt;/span&gt;&lt;/strong&gt; ]
+</code></pre>
+
+<p>Note the Word &lsquo;disabl&rsquo; despite not being in D4 now has a weighting in that document.</p>
+
+<h3>Dependencies</h3>
+
+<p><a href="http://www.scipy.org/">http://www.scipy.org/</a></p>
+
+<h3>Problems</h3>
+
+<p>LSA assumes the <a href="http://en.wikipedia.org/wiki/Normal_distribution">Normal distribution</a> where the <a href="http://en.wikipedia.org/wiki/Poisson_distribution">Poisson distribution</a> has actually been observed.</p>
+
+<h3>Source Code</h3>
+
+<p>Available at github:</p>
+
+<pre><code>git clone git://github.com/josephwilk/semanticpy.git
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/projects/building-a-vector-space-search-engine-in-python.html">Building a Vector Space Search Engine in Python</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-11-27T08:08:49+00:00" pubdate data-updated="true">Nov 27<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>A vector space search involves converting documents into vectors. Each dimension within the vectors represents a term. If a document contains that term then the value within the vector is greater than zero.</p>
+
+<p>Here is an implementation of Vector space searching using python (2.4+).</p>
+
+<h3>1 Stemming &amp; Stop words</h3>
+
+<p>Fetch all terms within documents and clean &ndash; use a stemmer to reduce. A stemmer takes words and tries to reduce them to there base or root. Words which have a common stem often have similar meanings.
+Example:
+<em>CONNECTED
+CONNECTING
+CONNECTION
+CONNECTIONS</em></p>
+
+<p>all map to <em>CONNECT</em></p>
+
+<p>We also remove any stopwords from the documents. [a,am,an,also,any,and] are all examples of stopwords in English.  Stop words have little value in search so we strip them. The stoplist used was taken from: <a href="ftp://ftp.cs.cornell.edu/pub/smart/english.stop">ftp://ftp.cs.cornell.edu/pub/smart/english.stop</a></p>
+
+<pre><code> self.stemmer = PorterStemmer()
+</code></pre>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'>     <span class="k">def</span> <span class="nf">removeStopWords</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">list</span><span class="p">):</span>
+</span><span class='line'>             <span class="sd">&quot;&quot;&quot; Remove common words which have no search value &quot;&quot;&quot;</span>
+</span><span class='line'>             <span class="k">return</span> <span class="p">[</span><span class="n">word</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">list</span> <span class="k">if</span> <span class="n">word</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopwords</span> <span class="p">]</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>     <span class="k">def</span> <span class="nf">tokenise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
+</span><span class='line'>             <span class="sd">&quot;&quot;&quot; break string up into tokens and stem words &quot;&quot;&quot;</span>
+</span><span class='line'>             <span class="n">string</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clean</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+</span><span class='line'>             <span class="n">words</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>             <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stemmer</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">word</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>2 Map Keywords to Vector Dimensions</h3>
+
+<p>Map the vector dimensions to keywords using a dictionary: keyword=>position</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">getVectorKeywordIndex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">documentList</span><span class="p">):</span>
+</span><span class='line'>        <span class="sd">&quot;&quot;&quot; create the keyword associated to the position of the elements within the document vectors &quot;&quot;&quot;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c">#Mapped documents into a single word string</span>
+</span><span class='line'>        <span class="n">vocabularyString</span> <span class="o">=</span> <span class="s">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">documentList</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">vocabularyList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">tokenise</span><span class="p">(</span><span class="n">vocabularyString</span><span class="p">)</span>
+</span><span class='line'>        <span class="c">#Remove common words which have no search value</span>
+</span><span class='line'>        <span class="n">vocabularyList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">removeStopWords</span><span class="p">(</span><span class="n">vocabularyList</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">uniqueVocabularyList</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">removeDuplicates</span><span class="p">(</span><span class="n">vocabularyList</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">vectorIndex</span><span class="o">=</span><span class="p">{}</span>
+</span><span class='line'>        <span class="n">offset</span><span class="o">=</span><span class="mi">0</span>
+</span><span class='line'>        <span class="c">#Associate a position with the keywords which maps to the dimension on the vector used to represent this word</span>
+</span><span class='line'>        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">uniqueVocabularyList</span><span class="p">:</span>
+</span><span class='line'>                <span class="n">vectorIndex</span><span class="p">[</span><span class="n">word</span><span class="p">]</span><span class="o">=</span><span class="n">offset</span>
+</span><span class='line'>                <span class="n">offset</span><span class="o">+=</span><span class="mi">1</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">vectorIndex</span>  <span class="c">#(keyword:position)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>3 Map Document Strings to Vectors.</h3>
+
+<p>We use the simple Term Count Model. A more accurate model would be to use <a href="http://en.wikipedia.org/wiki/Tf-idf">tf-idf</a> (termFrequency-inverseDocumentFrequnecy).</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">makeVector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wordString</span><span class="p">):</span>
+</span><span class='line'>        <span class="sd">&quot;&quot;&quot; @pre: unique(vectorIndex) &quot;&quot;&quot;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c">#Initialise vector with 0&#39;s</span>
+</span><span class='line'>        <span class="n">vector</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vectorKeywordIndex</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">wordList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">tokenise</span><span class="p">(</span><span class="n">wordString</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">wordList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">removeStopWords</span><span class="p">(</span><span class="n">wordList</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">wordList</span><span class="p">:</span>
+</span><span class='line'>                <span class="n">vector</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">vectorKeywordIndex</span><span class="p">[</span><span class="n">word</span><span class="p">]]</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span> <span class="c">#Use simple Term Count Model</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">vector</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>4 Find Related Documents</h3>
+
+<p>We now have the ability to find related documents. We can test if two documents are in the concept space by looking at the the cosine of the angle between the document vectors.  We use the cosine of the angle as a metric for comparison. If the cosine is 1 then the angle is 0° and hence the vectors are parallel (and the document terms are related).  If the cosine is 0 then the angle is 90° and the vectors are perpendicular (and the document terms are not related).</p>
+
+<p>We calculate the cosine between the document vectors in python using scipy.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">cosine</span><span class="p">(</span><span class="n">vector1</span><span class="p">,</span> <span class="n">vector2</span><span class="p">):</span>
+</span><span class='line'>        <span class="sd">&quot;&quot;&quot; related documents j and q are in the concept space by comparing the vectors :</span>
+</span><span class='line'><span class="sd">                cosine  = ( V1 * V2 ) / ||V1|| x ||V2|| &quot;&quot;&quot;</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">vector1</span><span class="p">,</span><span class="n">vector2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">vector1</span><span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="p">(</span><span class="n">vector2</span><span class="p">)))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>5 Search the Vector Space!</h3>
+
+<p>In order to perform a search across keywords we need to map the keywords to the vector space. We create a temporary document which represents the search terms and then we compare it against the document vectors using the same cosine measurement mentioned for relatedness.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">searchList</span><span class="p">):</span>
+</span><span class='line'>        <span class="sd">&quot;&quot;&quot; search for documents that match based on a list of terms &quot;&quot;&quot;</span>
+</span><span class='line'>        <span class="n">queryVector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buildQueryVector</span><span class="p">(</span><span class="n">searchList</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">ratings</span> <span class="o">=</span> <span class="p">[</span><span class="n">util</span><span class="o">.</span><span class="n">cosine</span><span class="p">(</span><span class="n">queryVector</span><span class="p">,</span> <span class="n">documentVector</span><span class="p">)</span> <span class="k">for</span> <span class="n">documentVector</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">documentVectors</span><span class="p">]</span>
+</span><span class='line'>        <span class="n">ratings</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">ratings</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Further Extensions</h3>
+
+<ol>
+<li><p> Use tf-idf rather than the Term count model for term weightings</p></li>
+<li><p> Instead of linear processing of all document vectors when searching for related content use:  <a href="http://en.wikipedia.org/wiki/Lanczos_method">Lanczos methods</a> OR a <a href="http://en.wikipedia.org/wiki/Neural_network">neural network</a>-like approach.</p></li>
+<li><p> Moving towards <a href="http://en.wikipedia.org/wiki/Latent_semantic_indexing">Latent Semantic analysis</a>, <a href="http://en.wikipedia.org/wiki/Probabilistic_latent_semantic_analysis">Probabilistic latent semantic analysis</a> or <a href="http://en.wikipedia.org/wiki/Latent_Dirichlet_allocation">Latent Dirichlet allocation</a>.</p></li>
+</ol>
+
+
+<h3>Third Party tools</h3>
+
+<p>The stemmer used comes from:
+<a href="http://tartarus.org/~martin/PorterStemmer/python.txt">http://tartarus.org/~martin/PorterStemmer/python.txt</a></p>
+
+<p>And the library for performing cosine calculations comes from NumPy:
+<a href="http://www.scipy.org/">http://www.scipy.org/</a></p>
+
+<h3>Source</h3>
+
+<p><a href="https://github.com/josephwilk/semanticpy.git">https://github.com/josephwilk/semanticpy.git</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/projects/prolog-asldicn-event-calculus-planner.html">Prolog ASLDICN Event Calculus Planner</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-11-23T07:31:27+00:00" pubdate data-updated="true">Nov 23<span>rd</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The event calculus planner used within my thesis was based on Dr. Murray Shanahan&rsquo;s ASLDICN (Abductive SLD with Integrity constraints and proof by Negation) planner with compound action support. This planner is an adaptation from one published in one of Dr. Shanahan&rsquo;s research papers</p>
+
+<p><a href="http://casbah.ee.ic.ac.uk/~mpsha/planners.html">http://casbah.ee.ic.ac.uk/%7Empsha/planners.html</a></p>
+
+<p>The original planner only supports the generation of a single plan. I needed to support conditional planning. I wanted the planner to generate multiple plans representing the different ways of reaching the goal. The problem was how to convert the planner to generate all possible plans. Importantly ensuring that this does not cause infinite looping and no redundant plan solutions are generated.</p>
+
+<p>My version of the planner add the following features:</p>
+
+<ul>
+<li><p>Conditional Planning</p></li>
+<li><p>Impossible Predicate</p></li>
+<li><p>Occured And NotOccured predicates</p></li>
+</ul>
+
+
+<h3>Prolog Event Calculus Planner</h3>
+
+<p><a href="/workspace/prolog/eventCalculusPlanner.pl">Download eventCalculusPlanner.pl</a></p>
+
+<p>[viewcode] src=../projects/prolog/eventCalculusPlanner.pl geshi=fortran[/viewcode]</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/projects/running-prolog-as-cgi.html">Running Prolog as CGI</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-11-23T07:27:25+00:00" pubdate data-updated="true">Nov 23<span>rd</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Prolog can be run as CGI by using a PHP wrapper script which invokes the Prolog engine from within PHP. Prolog can be invoked indicating Prolog files to load and goals to initially achieve once loaded.</p>
+
+<p>Executing the following in PHP can spawn a process which runs Prolog.</p>
+
+<pre><code>$cgiOutput = `sicstus --goal $goal. -l "$cgiPrologScriptToLoad"`;
+</code></pre>
+
+<p>This specific example is for Sicstus but most Prolog command lines have a similar format. Another possiblity is to setup Prolog as CGI, since any langauge can be CGI. I was running my code on a windows box and found it impossible for Prolog to direct the content to the command line and capture it for returning. If you&rsquo;re going the unix route you may want to look at <a href="http://clip.dia.fi.upm.es/Software/pillow/pillow.html">PiLLoWs</a> guide.</p>
+
+<p>For form postings you can catch the post in PHP or a scripting language and create a prolog formated file which is passed to the prolog script when invoked.</p>
+
+<p>You may want to have Prolog maintain state. This can be achieved through using a database. The database that I have used is <a href="http://www.sleepycat.com/">Berkeley DB</a> which SICStus has built in support for.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/page/7/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/page/5/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/clojure/overtone-driving-minecraft.html">Clojure and Overtone driving Minecraft</a>
+      </li>
+    
+      <li class="post">
+        <a href="/art/live-coding-repl-electric.html">Live Coding - Repl Electric</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/creative_machines.html">Creative Machines</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/sounds-of-the-human-brain.html">Sounds of the human brain</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/building-clojure-services-at-scale.html">Building Clojure services at scale</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/creating-instruments-with-overtone.html">Creating sampled instruments with Overtone</a>
+      </li>
+    
+      <li class="post">
+        <a href="/elixir/sets-in-elixir.html">Sets in Elixir</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/isolating-external-dependencies-in-clojure.html">Isolating external dependencies in Clojure</a>
+      </li>
+    
+      <li class="post">
+        <a href="/presentations/a-developers-guide-to-creating-presentations.html">A developers guide to creating presentations</a>
+      </li>
+    
+      <li class="post">
+        <a href="/software-craftmanship/the-aesthetics-of-density.html">The Aesthetics of Density</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/josephwilk">@josephwilk</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'josephwilk',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Joseph Wilk -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'josephwilk';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

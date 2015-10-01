@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: conferences | Joseph Wilk]]></title>
+  <link href="http://josephwilk.github.io//conferences/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io/"/>
+  <updated>2015-10-01T13:01:28+01:00</updated>
+  <id>http://josephwilk.github.io/</id>
+  <author>
+    <name><![CDATA[Joseph Wilk]]></name>
+    <email><![CDATA[joe@josephwilk.net]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Conferences and the Cult of Celebrity]]></title>
+    <link href="http://josephwilk.github.io/conferences/conferences-and-the-cult-of-celebrity.html"/>
+    <updated>2012-06-19T13:58:56+01:00</updated>
+    <id>http://josephwilk.github.io/conferences/conferences-and-the-cult-of-celebrity</id>
+    <content type="html"><![CDATA[<p>How much should character be a factor for a conference talk being selected?  Big names sell conference tickets. Yet I believe that we can do a lot more to help promote conferences where content takes greater weight than character and in the process help people who have never spoken before start speaking at conferences.</p>
+
+<h2>Risk.</h2>
+
+<p>Conference organisers take a big risk running a conference.</p>
+
+<p>Will they cover their venue cost?</p>
+
+<p>Which ultimately leads on to will they sell enough tickets?</p>
+
+<p>Once they have enough tickets, will it be a good conference?</p>
+
+<p>Other successful conferences define a pattern of how a conference is laid out. One obviously way of dealing with Risk is to follow an example of a success.</p>
+
+<p>I really respect people who organise conferences, they are putting a lot of effort and their own time to make a successful event.</p>
+
+<p>But I wondering if maybe we could be focusing more on content and less on character.</p>
+
+<h2>Selling a presentation</h2>
+
+<p>When you submit a talk an aspect of convincing the organisers to allow you to talk is who you are. Persuasion by character (Ethos if you like your ancient Greek).</p>
+
+<p>Most submissions forms give you plenty of space to sell yourself.</p>
+
+<p><img src="/images/blog/2012/06/example_submission.png" alt="" /></p>
+
+<h2>Content not character.</h2>
+
+<p><img src="/images/blog/2012/06/nordicruby1.png" alt="" /></p>
+
+<p>For NordicRuby 2012 the organisers took a step pushing for interesting content over character. They recognised that conscious and subconscious persuasion by character is a powerful means of convincing.</p>
+
+<p>During most of their reviewing process <strong>they removed all the names from the proposals</strong>.</p>
+
+<blockquote><p><em>&ldquo;Another thing we’re doing differently this year is that we’re starting out with anonymous proposals. Each card in Trello just shows the proposal’s title and description. No information about the speaker. We do this to avoid bias in the first stages.&rdquo;</em></p></blockquote>
+
+<p>Talks where selected based on the content. Only later once the talks had been whittled down did they introduce the speaker names. Character was considered, it was just delayed to the late selection stage.</p>
+
+<p>This tweet caught my attention as it highlighted that for Jsconf.com.au proposals are selected without names attached. Content is king, character does not matter!</p>
+
+<p><img src="/images/blog/2012/06/tweet.png" alt="" /></p>
+
+<p>Lonestar Ruby conference submissions, your name, your email, no big bio to sell how great you are. Content rules.</p>
+
+<p><img src="/images/blog/2012/06/logo-adjusted-7293a1d3bfb1dac006dd14619c2efe07.png" alt="" /></p>
+
+<p><img src="/images/blog/2012/06/Screen-Shot-2012-06-18-at-13.53.08.png" alt="" /></p>
+
+<h2>Keynotes: where character is King</h2>
+
+<p>The keynote of a conference is the stable diet of most conferences. Its where the big names are rolled out, luminaries of our industry share their wise thoughts with us.</p>
+
+<p>Akin to live music, they are the headline act we pay for, the others are the  support acts. We might skip them, or give them half of our attention.</p>
+
+<p><strong>What effect does having two tiers of talks at a conference have?</strong></p>
+
+<p>The keynote talk is more important irrelevant of content because of the <strong>character of the speaker</strong>. Often we don&rsquo;t even know what they will be talking about, just that they are keynoting.</p>
+
+<p>Some examples (I&rsquo;m not focusing any blame on these examples, I respect the conferences and the organisers involved. They just help illustrate my point)</p>
+
+<p><img src="/images/blog/2012/06/Screen-Shot-2012-06-19-at-13.11.59.png" alt="" /></p>
+
+<p><a href="/images/blog/2012/06/Screen-Shot-2012-06-18-at-14.23.55.png"><img src="/images/blog/2012/06/Screen-Shot-2012-06-18-at-14.23.55.png" alt="" /></a></p>
+
+<p>We assume (based on authority) that important people will have important things to tell us (and sometimes they do have important ideas to share with us).</p>
+
+<p>Are the other, non-keynote talks of the conference of lesser importance? This is where content starts to win because all these speakers are non-keynoters, we don&rsquo;t have as many leading assumptions about their authority or character. <strong>We go to the talks where the content interests us.</strong></p>
+
+<p>Maybe all talks should be driven by the <strong>content</strong> and less by <strong>character</strong>. Maybe all talks are as important as each other.</p>
+
+<p>Conferences are already starting to kill of this idea of having to have a Keynote to sell your conference. FutureRuby and NordicRuby are two examples of conferences that have no Keynote yet produced conferences that are highly regarded by those who attended.</p>
+
+<p><strong>Will a keynote really make your conference better?</strong></p>
+
+<h2>The Content Conference</h2>
+
+<p>Lets see if we can take this a step further and define the content conference.</p>
+
+<ol>
+<li><p>Talks authors are not revealed during review/selection. (There is <strong>no bias by character</strong>)</p></li>
+<li><p>Only publish the talk titles and content on the conference website. (Sell the conference on its <strong>content not its characters</strong>.)</p></li>
+<li><p>No keynotes. <strong>All talks are equal</strong>.</p></li>
+</ol>
+
+
+<h2>Conference Mentors</h2>
+
+<p>If we want to focus on content and remove character (as much as possible) we have to deal with people with little experience but with great ideas. We need to help make it easier to give feedback and help mentor those people so they can best express their ideas.</p>
+
+<p><strong>Being accepted to speak is not the end of contact its the start</strong>.</p>
+
+<p>A group of experience speakers acting as mentors who give feedback and help people give the best presentations they can.</p>
+
+<h2>Final Words</h2>
+
+<p>There is a place in the conference world for events which focus on bringing big names to an audience. Looking back at the 30 conferences I&rsquo;ve spoken at so far I&rsquo;ve come to the conclusion that the conferences I really valued where those that pushed for content over character. Conferences are popping up all the time that follow the content conference ideas and <strong>understand the concious and subconsious bias of character</strong>.</p>
+
+<p>I feel if we try and push for content over character and improve the proposal/speaker setup we can help find new people with great, interesting, crazy ideas and encourage them to submit proposals and speak.</p>
+
+<p>I hope these ideas about the content conference might help conference organisers think about how they structure their conference and proposal system.</p>
+
+<p><strong>I am offering my time to mentor anyone who wants help writing their first conference proposal</strong>.</p>
+
+<p>I am also happy to join any conference that wants a set of experienced speakers to help new speakers get the best out of their presentations.</p>
+
+<p>Crazy, huh?</p>
+
+<p>So what do you think?</p>
+]]></content>
+  </entry>
+  
+</feed>

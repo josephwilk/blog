@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: elixir | Joseph Wilk]]></title>
+  <link href="http://josephwilk.github.io//elixir/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io/"/>
+  <updated>2015-10-01T13:01:28+01:00</updated>
+  <id>http://josephwilk.github.io/</id>
+  <author>
+    <name><![CDATA[Joseph Wilk]]></name>
+    <email><![CDATA[joe@josephwilk.net]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Sets in Elixir]]></title>
+    <link href="http://josephwilk.github.io/elixir/sets-in-elixir.html"/>
+    <updated>2013-07-02T14:43:00+01:00</updated>
+    <id>http://josephwilk.github.io/elixir/sets-in-elixir</id>
+    <content type="html"><![CDATA[<p>I recently contributed the <code>Set</code> data structure to the <a href="http://elixir-lang.org/">Elixir</a> programming language.
+The <code>Set</code> is implemented through a HashSet.</p>
+
+<p>```elixir
+s1 = HashSet.new([1, 2, 3, 4])
+s2 = HashSet.new([3, 4])</p>
+
+<p>Set.difference(s1, s2) # => HashSet&lt;[1, 2]>
+```</p>
+
+<p>Elixir&rsquo;s Set implementation is often faster than Erlangs own <a href="http://www.erlang.org/doc/man/sets.html">sets</a>. Which is pretty impressive since Elixir runs on the same Erlang VM. It does this by adapting the internal data structure based on the size of the sets.</p>
+
+<p>Lets explore how Elixir does this while also explaining a little about Elixir:</p>
+
+<h2>Growing Data structures</h2>
+
+<p>For small sets the internal representation uses an ordered set (which really is just a list).</p>
+
+<p>We refer to this as a Bucket.</p>
+
+<p><code>elixir
+[1, 2, 3, 4]
+</code></p>
+
+<p>Being ordered allows us to perform faster access and modification.</p>
+
+<p>For example finding a member of a set:</p>
+
+<p>```elixir</p>
+
+<h1>Only needs a single comparison to know if 1 is in the Set.</h1>
+
+<h1>Since the first element is greater than 1 we know its not in the Set.</h1>
+
+<p>Set.member?(HashSet.new [2, 3, 4, 5], 1)
+```</p>
+
+<p>Order in the list is not maintained in the data structure but in the insertion/put:</p>
+
+<h3>Putting elements into a Bucket</h3>
+
+<p>Before we jump into some Elixir code its important to understand that the order of functions in Elixir is important. We start from the top function and if this function matches a criteria we call it otherwise we try the function below and so on. If we find no function that matches that&rsquo;s a error and execution aborts.</p>
+
+<p>Here is the Elixir code for inserting a member into a bucket.</p>
+
+<p>```elixir</p>
+
+<h1>We have found the place to insert the new member.</h1>
+
+<p>defp bucket_put([m|_]=bucket, member) when m > member do
+  { [member|bucket], 1 }
+end</p>
+
+<h1>Member is already in the set, we don&rsquo;t added it. (notice how member is being used to pattern match here).</h1>
+
+<h1>Its the same as writing: `defp bucket_put([m|bucket], member) when m == member do</h1>
+
+<p>defp bucket_put([member|bucket], member) do
+  { [member|bucket], 0 }
+end</p>
+
+<h1>Recursive case, keep calling bucket_put as this is not the point to insert.</h1>
+
+<p>defp bucket_put([e|bucket], member) do
+  { rest, count } = bucket_put(bucket, member)
+  { [e|rest], count }
+end</p>
+
+<h1>Empty set, insert the number</h1>
+
+<p>defp bucket_put([], member) do
+  { [member], 1 }
+end
+```</p>
+
+<h2>Expanding into a Trie</h2>
+
+<p>Upon reaching a threshold the Set changes the internal representation into a Trie (What the hell is a <a href="http://en.wikipedia.org/wiki/Trie">trie</a>).</p>
+
+<p>Why a Trie?</p>
+
+<blockquote><p>For a Trie the time required for insert, delete and find operations is almost identical.
+As a result, for situations where code is inserting, deleting and finding in equal measure, tries can handily beat binary search trees.</p></blockquote>
+
+<p>In a Trie we don&rsquo;t store any keys or hashes, instead a elements position in the tree defines the key with which it is associated.</p>
+
+<p>Hence we can take advantage of Erlangs fast <a href="http://www.erlang.org/doc/reference_manual/data_types.html#id65673">tuples</a> to model the trie. A multi-depth trie is just tuples inside tuples.</p>
+
+<h3>Buckets growing into Tries</h3>
+
+<p>Lets work through an example. For simplicity we will assume the expansion happens at the very small size of 5 elements:</p>
+
+<p>```elixir
+set = Set.new [0, 1, 2, 3]</p>
+
+<h1>Apply an operation that forces the internal structure to change</h1>
+
+<p>set = Set.put(set, 4)
+```</p>
+
+<h4>Create a new Erlang Tuple</h4>
+
+<p><img alt="bucket to trie" src="http://josephwilk.github.io/images/trie_step1.png"/></p>
+
+<p><code>elixir
+  :erlang.make_tuple(node_size = 4, [])
+</code></p>
+
+<h4>Redistribute the bucket elements into the Tuple</h4>
+
+<p><img alt="bucket to trie" src="http://josephwilk.github.io/images/trie_step2.png"/></p>
+
+<p>```elixir</p>
+
+<h1>This returns the index that a set value should have in the tuple.</h1>
+
+<p>defp bucket_nth_index(set_value, trie_depth) do
+  node_shift = 2
+  node_bitmap = 0b0011</p>
+
+<p>  (:erlang.phash2(set_value) >>> (node_shift * trie_depth)) &amp;&amp;&amp; node_bitmap
+end</p>
+
+<h1>Create a new node or add to an existing node.</h1>
+
+<h1>Based on the bucket_nth_index of the set member put it into a bucket at that index in the tuple.</h1>
+
+<p>defp node_relocate(node // :erlang.make_tuple(node_size = 4, []), bucket, depth) do
+  :lists.foldl fn member, new_node &ndash;></p>
+
+<pre><code>position_in_tuple = bucket_nth_index(member, depth)
+set_elem(new_node, position_in_tuple, bucket_put(elem(new_node, position_in_tuple), member))
+</code></pre>
+
+<p>  end, new_node, bucket
+end
+```</p>
+
+<h4>Finally add the new set member into the Trie</h4>
+
+<p><img alt="bucket to trie" src="http://josephwilk.github.io/images/trie_step3.png"/></p>
+
+<p>```elixir</p>
+
+<h1>Base case. We have found the right bucket, just insert the new member into it.</h1>
+
+<p>defp node_put(node, 0, member) do
+  position = bucket_index(member)
+  { new, count } = bucket_put(elem(node, position), member)
+  { set_elem(node, position, new), count }
+end</p>
+
+<h1>Recursive case. Keeping trying to find the right bucket.</h1>
+
+<p>defp node_put(node, depth, member) do
+  position = bucket_index(member)
+  { new, count } = node_put(elem(node, position), depth &ndash; 1, bucket_next(hash), member)
+  { set_elem(node, position, new), count }
+end</p>
+
+<h1>The bucket index of this member</h1>
+
+<p>defp bucket_index(member) do
+  node_bitmap = 0b0011
+  hash = :erlang.phash2(member)
+  hash &amp;&amp;&amp; node_bitmap
+end</p>
+
+<h1>The bucket index of this element with depth + 1.</h1>
+
+<p>defp bucket_next(member) do
+  node_shift = 2
+  hash = :erlang.phash2(member)
+  hash >>> node_shift
+end
+```</p>
+
+<p>Notice while we have a more complicated data structure with a trie the leaves are always plain old buckets. Hence insertion with a trie is a case of finding the right bucket and then just reusing our <code>bucket_put</code> function. Beautiful and fast :)</p>
+
+<h4>Tries expanding into deeper Tries</h4>
+
+<p>Things get a little more complicated with multi depth tries. If you are interested digging more into the implementation you can see all the <a href="https://github.com/elixir-lang/elixir/blob/master/lib/elixir/lib/hash_set.ex">source code of HashSet</a> on Github.</p>
+
+<h2>Contraction</h2>
+
+<p>We can also remove elements from a set so in much the same as we expanded we have to contract the internal representation of the set.</p>
+
+<h1>Performance Benchmarks</h1>
+
+<p>Here is some sample data comparing Erlang sets to Elixir Sets. Smaller is better.</p>
+
+<p><img alt="HashSet vs :sets" src="http://josephwilk.github.io/images/sets_vs_hashset.png"/></p>
+
+<p>The benchmark scripts are on github (<a href="https://gist.github.com/josephwilk/5808525">https://gist.github.com/josephwilk/5808525</a>) if you are interested in running them yourself.</p>
+]]></content>
+  </entry>
+  
+</feed>

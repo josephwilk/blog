@@ -1,0 +1,570 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Sets in Elixir - Joseph Wilk</title>
+  <meta name="author" content="Joseph Wilk">
+
+  
+  <meta name="description" content="I recently contributed the Set data structure to the Elixir programming language.
+The Set is implemented through a HashSet. 1
+2
+3
+4
+s1 = HashSet.new &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://josephwilk.github.io/elixir/sets-in-elixir.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Joseph Wilk" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<script src="http://disqus.com/forums/josephwilk/embed.js"></script>
+<link href="http://fonts.googleapis.com/css?family=Bevan" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-3020740-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <img src="/images/joe_small.jpg" style="position:relative;border-radius: 8px;margin-right: 5px;border-style: solid;border-width: 1px;border-color: #DDD;" height="60" alt="Joseph Wilk">
+  <span style="display:inline-block">
+    <h1><a href="/">Joseph Wilk</a></h1>
+    <h2>Programming bits and bobs</h2>
+  </span>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:josephwilk.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+ <li><a href="/">Home</a></li>
+ <li><a href="/about">About</a></li>
+ <li><a href="/speaking">Speaking</a></li>
+ <li><a href="/contact">Contact</a></li>
+ <li><a href="/archives">Archives</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Sets in Elixir</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-02T14:43:00+01:00" pubdate data-updated="true">Jul 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I recently contributed the <code>Set</code> data structure to the <a href="http://elixir-lang.org/">Elixir</a> programming language.
+The <code>Set</code> is implemented through a HashSet.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='elixir'><span class='line'><span class="n">s1</span> <span class="o">=</span> <span class="no">HashSet</span><span class="o">.</span><span class="n">new</span><span class="p">([</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">])</span>
+</span><span class='line'><span class="n">s2</span> <span class="o">=</span> <span class="no">HashSet</span><span class="o">.</span><span class="n">new</span><span class="p">([</span><span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">])</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Set</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span> <span class="c1"># =&gt; HashSet&lt;[1, 2]&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Elixir&rsquo;s Set implementation is often faster than Erlangs own <a href="http://www.erlang.org/doc/man/sets.html">sets</a>. Which is pretty impressive since Elixir runs on the same Erlang VM. It does this by adapting the internal data structure based on the size of the sets.</p>
+
+<p>Lets explore how Elixir does this while also explaining a little about Elixir:</p>
+
+<h2>Growing Data structures</h2>
+
+<p>For small sets the internal representation uses an ordered set (which really is just a list).</p>
+
+<p>We refer to this as a Bucket.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='elixir'><span class='line'><span class="p">[</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Being ordered allows us to perform faster access and modification.</p>
+
+<p>For example finding a member of a set:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='elixir'><span class='line'><span class="c1"># Only needs a single comparison to know if 1 is in the Set.</span>
+</span><span class='line'><span class="c1"># Since the first element is greater than 1 we know its not in the Set.</span>
+</span><span class='line'><span class="no">Set</span><span class="o">.</span><span class="n">member?</span><span class="p">(</span><span class="no">HashSet</span><span class="o">.</span><span class="n">new</span> <span class="p">[</span><span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">,</span> <span class="m">5</span><span class="p">],</span> <span class="m">1</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Order in the list is not maintained in the data structure but in the insertion/put:</p>
+
+<h3>Putting elements into a Bucket</h3>
+
+<p>Before we jump into some Elixir code its important to understand that the order of functions in Elixir is important. We start from the top function and if this function matches a criteria we call it otherwise we try the function below and so on. If we find no function that matches that&rsquo;s a error and execution aborts.</p>
+
+<p>Here is the Elixir code for inserting a member into a bucket.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='elixir'><span class='line'><span class="c1"># We have found the place to insert the new member.</span>
+</span><span class='line'><span class="k">defp</span> <span class="n">bucket_put</span><span class="p">([</span><span class="n">m</span><span class="o">|</span><span class="n">_</span><span class="p">]</span><span class="o">=</span><span class="n">bucket</span><span class="p">,</span> <span class="n">member</span><span class="p">)</span> <span class="ow">when</span> <span class="n">m</span> <span class="o">&gt;</span> <span class="n">member</span> <span class="k">do </span>
+</span><span class='line'><span class="k">  </span><span class="p">{</span> <span class="p">[</span><span class="n">member</span><span class="o">|</span><span class="n">bucket</span><span class="p">],</span> <span class="m">1</span> <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Member is already in the set, we don&#39;t added it. (notice how member is being used to pattern match here).</span>
+</span><span class='line'><span class="c1"># Its the same as writing: `defp bucket_put([m|bucket], member) when m == member do</span>
+</span><span class='line'><span class="k">defp</span> <span class="n">bucket_put</span><span class="p">([</span><span class="n">member</span><span class="o">|</span><span class="n">bucket</span><span class="p">],</span> <span class="n">member</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'><span class="k">  </span><span class="p">{</span> <span class="p">[</span><span class="n">member</span><span class="o">|</span><span class="n">bucket</span><span class="p">],</span> <span class="m">0</span> <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Recursive case, keep calling bucket_put as this is not the point to insert.</span>
+</span><span class='line'><span class="k">defp</span> <span class="n">bucket_put</span><span class="p">([</span><span class="n">e</span><span class="o">|</span><span class="n">bucket</span><span class="p">],</span> <span class="n">member</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'><span class="k">  </span><span class="p">{</span> <span class="n">rest</span><span class="p">,</span> <span class="n">count</span> <span class="p">}</span> <span class="o">=</span> <span class="n">bucket_put</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="n">member</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span> <span class="p">[</span><span class="n">e</span><span class="o">|</span><span class="n">rest</span><span class="p">],</span> <span class="n">count</span> <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Empty set, insert the number</span>
+</span><span class='line'><span class="k">defp</span> <span class="n">bucket_put</span><span class="p">([],</span> <span class="n">member</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'><span class="k">  </span><span class="p">{</span> <span class="p">[</span><span class="n">member</span><span class="p">],</span> <span class="m">1</span> <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Expanding into a Trie</h2>
+
+<p>Upon reaching a threshold the Set changes the internal representation into a Trie (What the hell is a <a href="http://en.wikipedia.org/wiki/Trie">trie</a>).</p>
+
+<p>Why a Trie?</p>
+
+<blockquote><p>For a Trie the time required for insert, delete and find operations is almost identical.
+As a result, for situations where code is inserting, deleting and finding in equal measure, tries can handily beat binary search trees.</p></blockquote>
+
+<p>In a Trie we don&rsquo;t store any keys or hashes, instead a elements position in the tree defines the key with which it is associated.</p>
+
+<p>Hence we can take advantage of Erlangs fast <a href="http://www.erlang.org/doc/reference_manual/data_types.html#id65673">tuples</a> to model the trie. A multi-depth trie is just tuples inside tuples.</p>
+
+<h3>Buckets growing into Tries</h3>
+
+<p>Lets work through an example. For simplicity we will assume the expansion happens at the very small size of 5 elements:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='elixir'><span class='line'><span class="n">set</span> <span class="o">=</span> <span class="no">Set</span><span class="o">.</span><span class="n">new</span> <span class="p">[</span><span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Apply an operation that forces the internal structure to change</span>
+</span><span class='line'><span class="n">set</span> <span class="o">=</span> <span class="no">Set</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">set</span><span class="p">,</span> <span class="m">4</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Create a new Erlang Tuple</h4>
+
+<p><img alt="bucket to trie" src="/images/trie_step1.png"/></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='elixir'><span class='line'>  <span class="ss">:erlang</span><span class="o">.</span><span class="n">make_tuple</span><span class="p">(</span><span class="n">node_size</span> <span class="o">=</span> <span class="m">4</span><span class="p">,</span> <span class="p">[])</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Redistribute the bucket elements into the Tuple</h4>
+
+<p><img alt="bucket to trie" src="/images/trie_step2.png"/></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='elixir'><span class='line'><span class="c1"># This returns the index that a set value should have in the tuple.</span>
+</span><span class='line'><span class="k">defp</span> <span class="n">bucket_nth_index</span><span class="p">(</span><span class="n">set_value</span><span class="p">,</span> <span class="n">trie_depth</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'><span class="k">  </span><span class="n">node_shift</span> <span class="o">=</span> <span class="m">2</span>
+</span><span class='line'>  <span class="n">node_bitmap</span> <span class="o">=</span> <span class="m">0b0011</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="p">(</span><span class="ss">:erlang</span><span class="o">.</span><span class="n">phash2</span><span class="p">(</span><span class="n">set_value</span><span class="p">)</span> <span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="n">node_shift</span> <span class="o">*</span> <span class="n">trie_depth</span><span class="p">))</span> <span class="o">&amp;&amp;</span><span class="err">&amp;</span> <span class="n">node_bitmap</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Create a new node or add to an existing node.</span>
+</span><span class='line'><span class="c1"># Based on the bucket_nth_index of the set member put it into a bucket at that index in the tuple.</span>
+</span><span class='line'><span class="k">defp</span> <span class="n">node_relocate</span><span class="p">(</span><span class="n">node</span> <span class="o">//</span> <span class="ss">:erlang</span><span class="o">.</span><span class="n">make_tuple</span><span class="p">(</span><span class="n">node_size</span> <span class="o">=</span> <span class="m">4</span><span class="p">,</span> <span class="p">[]),</span> <span class="n">bucket</span><span class="p">,</span> <span class="n">depth</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'><span class="k">  </span><span class="ss">:lists</span><span class="o">.</span><span class="n">foldl</span> <span class="k">fn</span> <span class="n">member</span><span class="p">,</span> <span class="n">new_node</span> <span class="o">-&gt;</span>
+</span><span class='line'>    <span class="n">position_in_tuple</span> <span class="o">=</span> <span class="n">bucket_nth_index</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="n">depth</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">set_elem</span><span class="p">(</span><span class="n">new_node</span><span class="p">,</span> <span class="n">position_in_tuple</span><span class="p">,</span> <span class="n">bucket_put</span><span class="p">(</span><span class="n">elem</span><span class="p">(</span><span class="n">new_node</span><span class="p">,</span> <span class="n">position_in_tuple</span><span class="p">),</span> <span class="n">member</span><span class="p">))</span>
+</span><span class='line'>  <span class="k">end</span><span class="p">,</span> <span class="n">new_node</span><span class="p">,</span> <span class="n">bucket</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Finally add the new set member into the Trie</h4>
+
+<p><img alt="bucket to trie" src="/images/trie_step3.png"/></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='elixir'><span class='line'><span class="c1"># Base case. We have found the right bucket, just insert the new member into it.</span>
+</span><span class='line'><span class="k">defp</span> <span class="n">node_put</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">member</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'><span class="k">  </span><span class="n">position</span> <span class="o">=</span> <span class="n">bucket_index</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span> <span class="n">new</span><span class="p">,</span> <span class="n">count</span> <span class="p">}</span> <span class="o">=</span> <span class="n">bucket_put</span><span class="p">(</span><span class="n">elem</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">position</span><span class="p">),</span> <span class="n">member</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span> <span class="n">set_elem</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">new</span><span class="p">),</span> <span class="n">count</span> <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Recursive case. Keeping trying to find the right bucket.</span>
+</span><span class='line'><span class="k">defp</span> <span class="n">node_put</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">member</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'><span class="k">  </span><span class="n">position</span> <span class="o">=</span> <span class="n">bucket_index</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span> <span class="n">new</span><span class="p">,</span> <span class="n">count</span> <span class="p">}</span> <span class="o">=</span> <span class="n">node_put</span><span class="p">(</span><span class="n">elem</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">position</span><span class="p">),</span> <span class="n">depth</span> <span class="o">-</span> <span class="m">1</span><span class="p">,</span> <span class="n">bucket_next</span><span class="p">(</span><span class="n">hash</span><span class="p">),</span> <span class="n">member</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span> <span class="n">set_elem</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">new</span><span class="p">),</span> <span class="n">count</span> <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># The bucket index of this member</span>
+</span><span class='line'><span class="k">defp</span> <span class="n">bucket_index</span><span class="p">(</span><span class="n">member</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'><span class="k">  </span><span class="n">node_bitmap</span> <span class="o">=</span> <span class="m">0b0011</span>
+</span><span class='line'>  <span class="n">hash</span> <span class="o">=</span> <span class="ss">:erlang</span><span class="o">.</span><span class="n">phash2</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">hash</span> <span class="o">&amp;&amp;</span><span class="err">&amp;</span> <span class="n">node_bitmap</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># The bucket index of this element with depth + 1.</span>
+</span><span class='line'><span class="k">defp</span> <span class="n">bucket_next</span><span class="p">(</span><span class="n">member</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'><span class="k">  </span><span class="n">node_shift</span> <span class="o">=</span> <span class="m">2</span>
+</span><span class='line'>  <span class="n">hash</span> <span class="o">=</span> <span class="ss">:erlang</span><span class="o">.</span><span class="n">phash2</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">hash</span> <span class="o">&gt;&gt;&gt;</span> <span class="n">node_shift</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Notice while we have a more complicated data structure with a trie the leaves are always plain old buckets. Hence insertion with a trie is a case of finding the right bucket and then just reusing our <code>bucket_put</code> function. Beautiful and fast :)</p>
+
+<h4>Tries expanding into deeper Tries</h4>
+
+<p>Things get a little more complicated with multi depth tries. If you are interested digging more into the implementation you can see all the <a href="https://github.com/elixir-lang/elixir/blob/master/lib/elixir/lib/hash_set.ex">source code of HashSet</a> on Github.</p>
+
+<h2>Contraction</h2>
+
+<p>We can also remove elements from a set so in much the same as we expanded we have to contract the internal representation of the set.</p>
+
+<h1>Performance Benchmarks</h1>
+
+<p>Here is some sample data comparing Erlang sets to Elixir Sets. Smaller is better.</p>
+
+<p><img alt="HashSet vs :sets" src="/images/sets_vs_hashset.png"/></p>
+
+<p>The benchmark scripts are on github (<a href="https://gist.github.com/josephwilk/5808525">https://gist.github.com/josephwilk/5808525</a>) if you are interested in running them yourself.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Joseph Wilk</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-02T14:43:00+01:00" pubdate data-updated="true">Jul 2<span>nd</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/elixir'>elixir</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://josephwilk.github.io/elixir/sets-in-elixir.html" data-via="josephwilk" data-counturl="http://josephwilk.github.io/elixir/sets-in-elixir.html" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="small"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/clojure/isolating-external-dependencies-in-clojure.html" title="Previous Post: Isolating external dependencies in Clojure">&laquo; Isolating external dependencies in Clojure</a>
+      
+      
+        <a class="basic-alignment right" href="/clojure/creating-instruments-with-overtone.html" title="Next Post: Creating sampled instruments with Overtone">Creating sampled instruments with Overtone &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/clojure/overtone-driving-minecraft.html">Clojure and Overtone driving Minecraft</a>
+      </li>
+    
+      <li class="post">
+        <a href="/art/live-coding-repl-electric.html">Live Coding - Repl Electric</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/creative_machines.html">Creative Machines</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/sounds-of-the-human-brain.html">Sounds of the human brain</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/building-clojure-services-at-scale.html">Building Clojure services at scale</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/creating-instruments-with-overtone.html">Creating sampled instruments with Overtone</a>
+      </li>
+    
+      <li class="post">
+        <a href="/elixir/sets-in-elixir.html">Sets in Elixir</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/isolating-external-dependencies-in-clojure.html">Isolating external dependencies in Clojure</a>
+      </li>
+    
+      <li class="post">
+        <a href="/presentations/a-developers-guide-to-creating-presentations.html">A developers guide to creating presentations</a>
+      </li>
+    
+      <li class="post">
+        <a href="/software-craftmanship/the-aesthetics-of-density.html">The Aesthetics of Density</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/josephwilk">@josephwilk</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'josephwilk',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Joseph Wilk -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'josephwilk';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://josephwilk.github.io/elixir/sets-in-elixir.html';
+        var disqus_url = 'http://josephwilk.github.io/elixir/sets-in-elixir.html';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

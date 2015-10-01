@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: ruby | Joseph Wilk]]></title>
+  <link href="http://josephwilk.github.io//ruby/atom.xml" rel="self"/>
+  <link href="http://josephwilk.github.io/"/>
+  <updated>2015-10-01T13:01:28+01:00</updated>
+  <id>http://josephwilk.github.io/</id>
+  <author>
+    <name><![CDATA[Joseph Wilk]]></name>
+    <email><![CDATA[joe@josephwilk.net]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Recurrent neural networks in Ruby]]></title>
+    <link href="http://josephwilk.github.io/ruby/recurrent-neural-networks-in-ruby.html"/>
+    <updated>2012-10-29T14:00:30+00:00</updated>
+    <id>http://josephwilk.github.io/ruby/recurrent-neural-networks-in-ruby</id>
+    <content type="html"><![CDATA[<p>We look at how neural networks work, what is different about a recurrent networks and a library which allows us to use recurrent networks in Ruby (<a href="https://github.com/josephwilk/tlearn-rb">tlearn-rb</a>).</p>
+
+<h2>What the heck is a Recurrent Network?</h2>
+
+<p>First lets look briefly at how a neural network works:</p>
+
+<h2>Neural Networks</h2>
+
+<p>Neural networks use the model of neurones in the human brain. Put very simply the artifical neuron given some inputs (the dendrites) sums them to produce an output (the neuron&rsquo;s axon) which is usually passed through some non-linear function. The sum of the nodes is usually weighted.</p>
+
+<p><img src="/images/blog/2012/10/image1.jpg" alt="" /></p>
+
+<p>By taking a set of training data we can teach a neural network such that it can be applied to new data outside of the training set. For example we could have as inputs the states of a chess board and the output as a rank for how good the position is for white. We could after training, input an unseen board state and as output get a rank for how effective the position is for white.</p>
+
+<p>As a neural network is trained it builds up the set of weights for the connections between nodes. Through many training iterations comparing expected outputs and the inputs these weights are built up.</p>
+
+<h4>Feedforward Neural Network</h4>
+
+<p><img src="/images/blog/2012/10/neural_network1.png" alt="" /></p>
+
+<p>In some problems the order in which the inputs arrive at the network is important. A normal network fails at this as there is no explicit sense of the relationships between sets of inputs.</p>
+
+<p>Lets consider an example. A network that is trained to detect how satisfying a word sounds to children.</p>
+
+<p>We feed our network all the syllables of a word and get an output:</p>
+
+<pre><code>["mon", "key"]
+["o", "key", "do", "key"]
+</code></pre>
+
+<p>When we feed the syllable <em>&ldquo;key&rdquo; </em>into the neural network it will always return the same output irrelevant of what came before it. This misses a relationship between the syllables of the word.</p>
+
+<p>A recurrent network aims to solve this problem by using both the input layer and the output layer to devise weights of the hidden layer.</p>
+
+<h4>Recurrent Network</h4>
+
+<p><img src="/images/blog/2012/10/recurrent_neural_network1.png" alt="" /></p>
+
+<p>Going back to our example:</p>
+
+<pre><code>["mon", "key"]
+["o", "key", "do", "key"]
+</code></pre>
+
+<p>When we feed <em>&ldquo;key&rdquo;</em> into the neural network the weight returned will be effected by what the previous input was, [&ldquo;mon&rdquo;] or [&ldquo;o&rdquo;, &ldquo;key&rdquo;, &ldquo;do&rdquo;].</p>
+
+<p>So our recurrent neural network would detect that &ldquo;o-key-do-key&rdquo; has a rhythm between the syllables that is appealing to children.</p>
+
+<p>A recurrent network allows us to decided when to wipe the previous output and start again. So in our example we would reset the output layer after we have fed in all the syllables of the word. We are interested in the relationships between syllables of a word, not syllables of different words.</p>
+
+<p><strong>So all this is a complicated way of saying Recurrent networks have state. Yes.</strong></p>
+
+<h2>Recurrent Networks in Ruby</h2>
+
+<p>There was no Ruby library that support Recurrent Networks. There was an <a href="http://leenissen.dk/fann/forum/viewtopic.php?t=47">attempt to add Recurrent networks</a> to <a href="http://leenissen.dk/fann/wp">FANN</a> (which has a <a href="http://ruby-fann.rubyforge.org/">ruby-fann gem</a> with bindings) but it was never merged in.</p>
+
+<p>So I adapted the <a href="http://crl.ucsd.edu/innate/tlearn.html">TLearn C library</a> which supports Recurrent Neural Networks and wrapped it in Ruby Love.</p>
+
+<p>It&rsquo;s having some trouble coming to terms with its new found rubyness, so there is a big alpha warning hanging on the door.</p>
+
+<h3>Installing TLearn</h3>
+
+<pre><code>gem install tlearn
+</code></pre>
+
+<h3>Using TLearn</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">tlearn</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;tlearn = TLearn::Run.new(:number_of_nodes =&gt; 10,&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>                <span class="ss">:&#39;output_nodes&#39;</span>    <span class="o">=&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="mi">5</span><span class="o">.</span><span class="n">.</span><span class="mi">6</span><span class="p">,</span>
+</span><span class='line'>                <span class="ss">:linear</span>          <span class="o">=&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="mi">7</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="p">,</span>
+</span><span class='line'>                <span class="ss">:weight_limit</span>    <span class="o">=&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="mi">1</span><span class="o">.</span><span class="mo">00</span><span class="p">,</span>
+</span><span class='line'>                <span class="ss">:connections</span>     <span class="o">=&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="o">[</span><span class="p">{</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">6</span>   <span class="o">=&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="mi">0</span><span class="p">},</span>
+</span><span class='line'>                                     <span class="p">{</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">4</span>   <span class="o">=&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="ss">:i1</span><span class="o">.</span><span class="n">.</span><span class="ss">:i3</span><span class="p">},</span>
+</span><span class='line'>                                     <span class="p">{</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">4</span>  <span class="o">=&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="mi">7</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span><span class="p">},</span>
+</span><span class='line'>                                     <span class="p">{</span><span class="mi">5</span><span class="o">.</span><span class="n">.</span><span class="mi">6</span>   <span class="o">=&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">4</span><span class="p">},</span>
+</span><span class='line'>                                     <span class="p">{</span><span class="mi">7</span><span class="o">.</span><span class="n">.</span><span class="mi">10</span>  <span class="o">=&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="o">[</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">4</span><span class="p">,</span> <span class="p">{</span><span class="ss">:min</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="ss">:max</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">},</span> <span class="ss">:fixed</span><span class="p">,</span> <span class="ss">:&#39;one_to_one&#39;</span><span class="p">}</span><span class="o">]</span>
+</span><span class='line'><span class="o">&lt;</span><span class="sr">/code&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span><span class="n">training_data</span> <span class="o">=</span> <span class="o">[</span><span class="p">{</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">]</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">}</span><span class="o">]</span><span class="p">,</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;             [{[1, 1, 1]  =&amp;gt; [1, 0]}]</span>
+</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;tlearn.train(training_data, sweeps = 200)&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span><span class="n">tlearn</span><span class="o">.</span><span class="n">fitness</span><span class="p">(</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="n">sweeps</span> <span class="o">=</span> <span class="mi">200</span><span class="p">)</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;h1&gt;=&gt; [0.2, 0.9]&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Wait! What does that output mean?</h3>
+
+<p>In our example we had 2 outputs. The result we get from running the fitness test are the final weights:</p>
+
+<pre><code>[0.2, 0.9]
+</code></pre>
+
+<p>In this example we can think of the first output as rank 1, and the second output as rank 2. We look at which has the highest weighting in the fitness test, In this case it shows us that the input &ldquo;000&rdquo; has rank 2. So really we can map the output to many different classifications.</p>
+
+<h3>How is state reset?</h3>
+
+<p>Tlearn resets the state for each list of elements</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">[</span><span class="p">{</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">]</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">},</span> <span class="p">{</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">]</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span><span class="p">}</span><span class="o">]</span><span class="p">,</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;h1&gt;State will be reset here&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;[</span><span class="p">{</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span>  <span class="o">=&gt;</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="o">]</span><span class="p">}</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Wait! What the heck does all that config mean?</h3>
+
+<p>Part of the work of using Neural networks is finding the right configuration settings. TLearn supports a lot of different options. Lets look at what all that  configuration options means. (Checkout the <a href="https://github.com/josephwilk/tlearn-rb#configuring-tlearn-what-the-heck-does-all-that-config-mean">TLearn Github Readme</a> for full details of the config options):</p>
+
+<pre><code>:number_of_nodes =&gt; 10
+</code></pre>
+
+<p>The total number of nodes in this network (not including input nodes)</p>
+
+<pre><code>:'output_nodes'    =&gt; 5..6
+</code></pre>
+
+<p>Which nodes are used for output.</p>
+
+<pre><code>:linear          =&gt; 7..10
+</code></pre>
+
+<p>Nodes 7 to 10 are linear. This defines the activation function of the nodes. The activation function is how all the weights and input are combined for a node to create an output. Linear nodes output the inner-product of the input and weight vectors.</p>
+
+<pre><code>:weight_limit    =&gt; 1.00
+</code></pre>
+
+<p>Limit of 1.0 must not be exceeded in the random initialization of weights.</p>
+
+<h4>Connections</h4>
+
+<p>Connections specify how all the nodes of the neural network connect. This is the architecture of the neural network. Lets look at the connection settings:</p>
+
+<pre><code>{1..6   =&gt; 0}
+</code></pre>
+
+<p>Node 0 feeds into node 1 to 6. Node 0 is the bias node that is always 1.</p>
+
+<p><img src="/images/blog/2012/10/bias_node.png" alt="" /></p>
+
+<pre><code> {1..4   =&gt; :i1..:i3}
+</code></pre>
+
+<p>The input nodes 1-3 feed into each node from 1 to 4.
+<img src="/images/blog/2012/10/inputs1.png" alt="" /></p>
+
+<pre><code>{1..4  =&gt; 7..10},
+</code></pre>
+
+<p>Nodes nodes 7-10 feed into each node from 1 to 4
+<img src="/images/blog/2012/10/outout.png" alt="" /></p>
+
+<pre><code>{5..6   =&gt; 1..4},
+</code></pre>
+
+<p>Nodes nodes 1..4 feed into each node from 5 to 6
+<img src="/images/blog/2012/10/outes.png" alt="" /></p>
+
+<pre><code> {7..10  =&gt; [1..4, {:min =&gt; 1.0, :max =&gt; 1.0}, :fixed, :'one_to_one'}]
+</code></pre>
+
+<p>This connection contains a couple of special options. Rather than node 1-4 being fed into node 7, node 1 only connects with node 7, node 2 only with node 8, node 3 only with node 9, node 4 only with node 10. The <em>:&lsquo;one_to_one&rsquo;</em> option causes this.
+The weights of the connections between these nodes is <em>fixed</em> at 1.0 and never changes throughout training</p>
+
+<p><img src="/images/blog/2012/10/ins.png" alt="" /></p>
+
+<p>So put all these together our full neural network is:</p>
+
+<p><img src="/images/blog/2012/10/network-out1.png" alt="" /></p>
+
+<h3>Urmm&hellip; So how do I know what connection settings to use?</h3>
+
+<p>When it comes to deciding how many hidden nodes to have in your network there is a general rule:</p>
+
+<blockquote><p>The optimal number of hidden nodes is usually between the size of the input and size of the output layers</p></blockquote>
+
+<p>When deciding what connections to specify in your neural network you can start with everything connected to everything and slowly experiment with pruning connections/nodes which will increase the performance of your network without radically affecting the output efficiency.</p>
+
+<p>Its important to have the bias node connect to all the nodes in the hidden layer and output. This is required so a zero input to the neural network can generate outputs other than 0.</p>
+
+<p>With recurrent networks it is important to build connections and nodes in your network to maintain state. It is quite possible with TLearn to build a plain old neural network with no state.  It can be helpful like the example given above to draw out your state, hidden layer and output layer nodes and use this to decided how the network connects.</p>
+
+<p>How do you decide what activation functions to use? Linear, bipolar, etc.
+Checkout this great paper on the effectiveness of different functions: <a href="http://www.cscjournals.org/csc/manuscript/Journals/IJAE/volume1/Issue4/IJAE-26.pdf">http://www.cscjournals.org/csc/manuscript/Journals/IJAE/volume1/Issue4/IJAE-26.pdf</a></p>
+
+<p>One neat (crazy) experimental (crazy) path to explore is neural network toplogies generated from using a genetic algorithm to assess the effectiveness of the network: <a href="http://www.cs.ucf.edu/~kstanley/neat.html">http://www.cs.ucf.edu/~kstanley/neat.html</a>.</p>
+
+<h3>TLearn&rsquo;s Source</h3>
+
+<p>If you want to peer into the heart of TLearn the source code is on Github:</p>
+
+<pre><code>git clone git://github.com/josephwilk/tlearn-rb.git
+</code></pre>
+
+<h3>Further reading</h3>
+
+<ul>
+<li><a href="http://www.amazon.co.uk/gp/product/B00845UQL6/ref=as_li_ss_tl?ie=UTF8&amp;camp=1634&amp;creative=19450&amp;creativeASIN=B00845UQL6&amp;linkCode=as2&amp;tag=joswilblo-21">Introduction to the Math of Neural Networks</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=joswilblo-21&amp;l=as2&amp;o=2&amp;a=B00845UQL6" alt="" /></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Fake Execution]]></title>
+    <link href="http://josephwilk.github.io/ruby/fake-execution.html"/>
+    <updated>2012-08-30T17:51:07+01:00</updated>
+    <id>http://josephwilk.github.io/ruby/fake-execution</id>
+    <content type="html"><![CDATA[<p>A little RubyGem for faking out execution in your tests and inspecting afterwards what was run.</p>
+
+<h2>Why FakeExecution?</h2>
+
+<p>I&rsquo;ve been creating internal tools for developers to help improve productivity. These tools written in Ruby, ended up doing lots of shell scripting. These scripts started becoming fairly complicated so I wanted some test feedback. How could I easily test execution?</p>
+
+<p>Enter FakeExecution.</p>
+
+<h2>Installing</h2>
+
+<pre><code>gem install fake_execution
+</code></pre>
+
+<h2>How do I use it?</h2>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">fake_execution</span><span class="o">/</span><span class="n">safe</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;FakeExecution.activate!&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">echo</span> <span class="o">*&lt;</span><span class="sr">/code&gt; # This is not executed&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">git</span> <span class="n">checkout</span> <span class="ss">git</span><span class="p">:</span><span class="sr">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">josephwilk</span><span class="o">/</span><span class="n">fake</span><span class="o">-</span><span class="n">execution</span><span class="o">.</span><span class="n">git</span><span class="o">&lt;</span><span class="sr">/code&gt;</span>
+</span><span class='line'><span class="sr">&lt;code&gt;touch monkeys&lt;/</span><span class="n">code</span><span class="o">&gt;</span>
+</span><span class='line'><span class="nb">system</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">git</span> <span class="n">add</span> <span class="n">monkeys</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;)</span>
+</span><span class='line'><span class="nb">system</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">needs</span> <span class="n">more</span> <span class="n">monkeys</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;)</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">git</span> <span class="n">push</span><span class="o">&lt;</span><span class="sr">/code&gt;&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span><span class="no">FakeExecution</span><span class="o">.</span><span class="n">deactivate!</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;cmds[0].should =~ /e</span><span class="n">cho</span><span class="o">/</span>
+</span><span class='line'><span class="n">cmds</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="n">should</span> <span class="o">=~</span> <span class="sr">/git checkout/</span>
+</span><span class='line'><span class="n">cmds</span><span class="o">[</span><span class="mi">2</span><span class="o">].</span><span class="n">should</span> <span class="o">==</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">touch</span> <span class="n">monkeys</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;&lt;code&gt;echo *&lt;/</span><span class="n">code</span><span class="o">&gt;</span> <span class="c1"># outputs: echo *</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>But I use Rspec</h2>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'> <span class="nb">require</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">fake_execution</span><span class="o">/</span><span class="n">spec_helper</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt; describe &amp;ldquo;monkeys&amp;rdquo; do</span>
+</span><span class='line'><span class="sr">   include FakeExecution::SpecHelpers&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span>   <span class="n">it</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">should</span> <span class="n">touch</span> <span class="n">the</span> <span class="n">monkey</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span> <span class="k">do</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt; `touch monkey`</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr"> cmds[0].should == &#39;touch monkey&#39;</span>
+</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;   end</span>
+</span><span class='line'><span class="sr"> end</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>Source code</h2>
+
+<p><a href="http://github.com/josephwilk/fake_execution">http://github.com/josephwilk/fake_execution</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Limiting Red: Smarter Test Builds Through Metrics]]></title>
+    <link href="http://josephwilk.github.io/ruby/limiting-red-smarter-test-builds-through-metrics.html"/>
+    <updated>2010-08-15T03:28:31+01:00</updated>
+    <id>http://josephwilk.github.io/ruby/limiting-red-smarter-test-builds-through-metrics</id>
+    <content type="html"><![CDATA[<h2>The Current State of the Art</h2>
+
+<p>In the Ruby world there is a wealth of metrics which can provide insight into our code. Looking at such things as:</p>
+
+<ul>
+<li><p>Structural similar code (<a href="http://ruby.sadi.st/Flay.html">Flay</a>)</p></li>
+<li><p>Complexity (<a href="http://ruby.sadi.st/Flog.html">Flog</a>)</p></li>
+<li><p><a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity">Cyclic complexity</a> (<a href="http://saikuro.rubyforge.org/">Saikuro</a>)</p></li>
+<li><p>Code smells (<a href="http://wiki.github.com/kevinrutherford/reek/">Reek</a>)</p></li>
+<li><p>Design issues (<a href="http://github.com/martinjandrews/roodi/tree">Roodi</a>)</p></li>
+<li><p>File change frequencies (<a href="http://github.com/danmayer/churn">Churn</a>)</p></li>
+</ul>
+
+
+<p><a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"></a></p>
+
+<p>When it comes to metrics involving our tests we have:</p>
+
+<ul>
+<li><p>Code coverage (<a href="http://eigenclass.org/hiki.rb?rcov">Rcov</a>)</p></li>
+<li><p>Tools to help identify missed edge cases (<a href="http://ruby.sadi.st/Heckle.html">Heckle</a>).</p></li>
+<li><p>Random Testing tools (<a href="http://rushcheck.rubyforge.org/">RushCheck</a>)</p></li>
+</ul>
+
+
+<p>Is that it? I think we can do better than that!</p>
+
+<p>What useful metrics are we missing that our tests could provide and what should we be recording?</p>
+
+<h2>Recording Test Builds</h2>
+
+<p>Your using a <a href="http://en.wikipedia.org/wiki/Continuous_integration">Continuous Integration</a> server right? Running all your tests at every checkin in your source control repository. The CI environment represents our pipeline in which all code needs to flow through. It tends to be the place where all of the tests are run before the code flows into the outside world. Hence this is a perfect environment to start capturing detailed metrics about all of our tests. It&rsquo;s also not the end of the world if we add a little extra time to the test build in-order to capture these metrics.</p>
+
+<h2>Mining Metrics from Test Builds</h2>
+
+<p>What interesting things can we discover? Here are some suggestions:</p>
+
+<ul>
+<li><p><strong>Failure rates</strong></p>
+
+<ul>
+<li>Areas of your product which are prone to failure/bugs and tests which might be fragile. Perhaps highlighting area QA&rsquo;s should focus extra attention to.</li>
+</ul>
+</li>
+<li><p><strong>Flickering tests</strong></p>
+
+<ul>
+<li>If a test keeps failing and passing frequently.</li>
+</ul>
+</li>
+<li><p><strong>Fragile Tests</strong></p>
+
+<ul>
+<li>An all or nothing feature where all the tests fail or none fail.</li>
+</ul>
+</li>
+<li><p><strong>Never failing tests</strong></p>
+
+<ul>
+<li>Tests which have never failed, do we need to run them all the time, are they now redundant?</li>
+</ul>
+</li>
+<li><p><strong>Average build failures a day</strong></p>
+
+<ul>
+<li><strong>How often is the build broken.</strong></li>
+</ul>
+</li>
+<li><p><strong>Discover <a href="http://en.wikipedia.org/wiki/Shotgun_surgery">Shotgun Surgery</a><br/>
+</strong></p>
+
+<ul>
+<li>Small code changes broke all the tests!</li>
+</ul>
+</li>
+</ul>
+
+
+<p>What other metrics do you think would be useful?</p>
+
+<h2>Kent Beck is Smart</h2>
+
+<p><a href="http://www.threeriversinstitute.org/">Kent Beck</a> has some additional ideas, lets copy him and pretend to look smart.</p>
+
+<h3>Intelligent Selection of the Tests to Run</h3>
+
+<p>Kent Beck﻿ wrote a tool called <a href="http://www.threeriversinstitute.org/junitmax/subscribe.html">JUnit Max</a> which is a plugin for <a href="http://www.eclipse.org/">Eclipse</a> and <a href="http://www.junit.org/">JUnit</a> which helps programmers stay focused on coding by running tests intelligently.</p>
+
+<p>&ldquo;<em>Max fails fast, running the tests most likely to fail first.</em>&rdquo;</p>
+
+<p>One of the key principles behind this tool is that:</p>
+
+<p><em>&ldquo;Tests that failed recently are more likely to fail than tests which have never failed.&rdquo;</em></p>
+
+<h3>Super Fast Feedback</h3>
+
+<p>If we prioritise the tests that failed recently and those which have been recorded as being likely to fail we increase the chance that a failure occurs early on in the test build. The closer the distance between pushing the code and knowing there is a fail the better.</p>
+
+<p>One problem this helps alleviate is when a test fails 99% of the way through the build. To know you&rsquo;re fix worked you have to sit and wait for the entire build to run.</p>
+
+<h2>CukeMax (alpha-1)</h2>
+
+<p>CukeMax is a project that aims to:</p>
+
+<ul>
+<li><p>Provide a web service to record Cucumber test builds</p></li>
+<li><p>Provide﻿ a web based interface to uncover juicy metrics about your tests.</p></li>
+<li><p>Feed recorded metrics back into the running of tests prioritising those most likely to fail.</p></li>
+<li><p>Cool stuff</p></li>
+</ul>
+
+
+<p><a href="http://www.cukemax.com">CukeMax</a> is intended to be used when you run your tests on your CI server.﻿ ﻿While this initial version just supports Cucumber there is no reason why it cannot be expanded to other test tools such as Rspec. I&rsquo;m already using this for my own projects and I have a special version working at <a href="http://www.songkick.com/">Songkick.com</a> HQ.</p>
+
+<h2>Wanna Play?</h2>
+
+<p>﻿You can browser around an example of the web interface at CukeMax - ﻿<a href="http://www.cukemax.com">www.cukemax.com</a></p>
+
+<p>Want to be one of the first ﻿Guinea pigs to try out CukeMax? Let me know.</p>
+
+<p>The client tool will be leaked slowly into the world to ensure we can balance server load.</p>
+
+<h2>Whats next?</h2>
+
+<p>All I can say is there is a lot of activity around this project with some exciting tools in the pipeline</p>
+
+<p>Also <a href="http://blog.mattwynne.net/">Matt Wynne</a> has been working on some similar ideas and we are discussing if we can combine our thoughts.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Rocket Fuelled Cucumbers]]></title>
+    <link href="http://josephwilk.github.io/ruby/rocket-fuelled-cucumbers.html"/>
+    <updated>2010-06-06T22:03:43+01:00</updated>
+    <id>http://josephwilk.github.io/ruby/rocket-fuelled-cucumbers</id>
+    <content type="html"><![CDATA[<p>Here are the slides from my talk at <a href="http://en.oreilly.com/rails2010/public/schedule/detail/14404">Railsconf 2010 on Rocket Fuelled Cucumbers</a>.</p>
+
+<script async class="speakerdeck-embed" data-id="4e7b470857252f003f000e61" data-ratio="1.33333333333333" src="http://josephwilk.github.io//speakerdeck.com/assets/embed.js"></script>
+
+
+<p>This talk looked at a number of issues in scaling Cucumber tests. I&rsquo;ve also been speaking about this at <a href="http://frozenrails.eu/">Frozen Rails</a> and The <a href="http://scottishrubyconference.com">Scottish Ruby conference</a>.</p>
+
+<p>And heres what people have been saying about the talk.</p>
+
+<p><img src="/images/blog/2010/06/one_feedback.png" alt="" /></p>
+
+<p><img src="/images/blog/2010/06/two_feedback.png" alt="" /></p>
+
+<p><img src="/images/blog/2010/06/frozenrails_feedback.png" alt="" /></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Testing Javascript with Cucumber in Javascript]]></title>
+    <link href="http://josephwilk.github.io/ruby/testing-javascript-with-cucumber-in-javascript.html"/>
+    <updated>2010-05-22T09:55:42+01:00</updated>
+    <id>http://josephwilk.github.io/ruby/testing-javascript-with-cucumber-in-javascript</id>
+    <content type="html"><![CDATA[<p>I recently created an adapter in Cucumber which provides support for writing step definitions in Javascript. So as a Javascript programmer you can test your code with Cucumber without having to write any Ruby.</p>
+
+<p>It does this through TheRubyRacer (<a href="http://github.com/cowboyd/therubyracer">http://github.com/cowboyd/therubyracer</a> written by Charles Lowell) which provides Ruby bindings to V8 (<a href="http://code.google.com/p/v8/">http://code.google.com/p/v8/</a>).</p>
+
+<p>Lets look at an example:</p>
+
+<h3>The Feature</h3>
+
+<pre><code>Feature: Fibonacci
+  In order to calculate super fast fibonacci series
+  As a Javascriptist
+  I want to use Javascript for that
+
+  @fibonacci
+  Scenario Outline: Series
+    When I ask Javascript to calculate fibonacci up to &lt;n&gt;
+    Then it should give me &lt;series&gt;
+
+    Examples:
+      | n   | series                                 |
+      | 1   | []                                     |
+      | 2   | [1, 1]                                 |
+      | 3   | [1, 1, 2]                              |
+      | 4   | [1, 1, 2, 3]                           |
+      | 6   | [1, 1, 2, 3, 5]                        |
+      | 9   | [1, 1, 2, 3, 5, 8]                     |
+      | 100 | [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89] |
+</code></pre>
+
+<h3>The Step Definitions</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Before</span><span class="p">(</span><span class="o">[&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="vi">@fibonacci</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span><span class="o">]</span><span class="p">,</span> <span class="n">function</span><span class="p">(){</span>
+</span><span class='line'>  <span class="n">fibResult</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">});</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;When(/</span><span class="o">^</span><span class="n">I</span> <span class="n">ask</span> <span class="no">Javascript</span> <span class="n">to</span> <span class="n">calculate</span> <span class="n">fibonacci</span> <span class="n">up</span> <span class="n">to</span> <span class="p">(\</span><span class="n">d</span><span class="o">+</span><span class="p">)</span><span class="vg">$/</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">n</span><span class="p">){</span>
+</span><span class='line'>  <span class="n">assertEqual</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">fibResult</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">fibResult</span> <span class="o">=</span> <span class="n">fibonacciSeries</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;Then(/</span><span class="o">^</span><span class="n">it</span> <span class="n">should</span> <span class="n">give</span> <span class="n">me</span> <span class="p">(</span><span class="o">[.</span><span class="n">*</span><span class="o">]</span><span class="p">)</span><span class="vg">$/</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">expectedResult</span><span class="p">){</span>
+</span><span class='line'>  <span class="n">assertEqual</span><span class="p">(</span><span class="n">expectedResult</span><span class="p">,</span> <span class="n">fibResult</span><span class="p">)</span>
+</span><span class='line'><span class="p">});</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>The Cucumber Javascript API</h3>
+
+<p>The best reference for the Javascript Api is the examples within the Cucumber source:
+<a href="http://github.com/aslakhellesoy/cucumber/tree/master/examples/javascript/features/">http://github.com/aslakhellesoy/cucumber/tree/master/examples/javascript/features/</a></p>
+
+<p>I have tried to make the Javascript Api as close to the Cucumber Ruby Api as possible. However it currently does not support a couple of things the Ruby version is capable of: Calling step definitions from within step definitions with multiline arguments and giving line reporting on step definitions.</p>
+
+<h4>Loading your Javascript code into the World</h4>
+
+<p>The most important difference to take note of in the Javascript Api compared with the Ruby one is how we load code into the World so it is in scope within the step definitions.</p>
+
+<p>Given the following folder structure:</p>
+
+<pre><code>my_js_project/lib/code_lives_here.js
+my_js_project/features/support/env.js
+my_js_project/features/my_feature.feature
+</code></pre>
+
+<p>Within our features/support/env.js setup file we would have:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="sr">//</span><span class="no">Cucumber</span> <span class="n">resolves</span> <span class="n">the</span> <span class="n">files</span> <span class="n">relative</span> <span class="n">to</span> <span class="n">the</span> <span class="n">folder</span> <span class="n">that</span> <span class="n">contains</span> <span class="n">the</span> <span class="n">features</span> <span class="n">folder</span><span class="o">.</span>
+</span><span class='line'><span class="no">World</span><span class="p">(</span><span class="o">[&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">lib</span><span class="o">/</span><span class="n">code_lives_here</span><span class="o">.</span><span class="n">js</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span><span class="o">]</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>The code within code_lives_here.js would be availabe in the step definitions.</p>
+
+<h3>Full Javascript Example</h3>
+
+<p>You can see the full example in the Cucumber project:</p>
+
+<p><a href="http://github.com/aslakhellesoy/cucumber/tree/master/examples/javascript/features/">http://github.com/aslakhellesoy/cucumber/tree/master/examples/javascript/features/</a></p>
+
+<h3>Feedback</h3>
+
+<p>This Javascript Cucumber adapter represents an experiment to see how well we can use Cucumber through Javascript and V8. I would love to hear ideas and feedback on the Javascript Api.</p>
+]]></content>
+  </entry>
+  
+</feed>

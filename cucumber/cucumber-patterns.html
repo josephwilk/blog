@@ -1,0 +1,735 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cucumber Patterns - Joseph Wilk</title>
+  <meta name="author" content="Joseph Wilk">
+
+  
+  <meta name="description" content="At Songkick.com we have developed a number of patterns to make it easier to write Cucumber features. I thought I would start sharing some of those &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://josephwilk.github.io/cucumber/cucumber-patterns.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Joseph Wilk" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<script src="http://disqus.com/forums/josephwilk/embed.js"></script>
+<link href="http://fonts.googleapis.com/css?family=Bevan" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-3020740-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <img src="/images/joe_small.jpg" style="position:relative;border-radius: 8px;margin-right: 5px;border-style: solid;border-width: 1px;border-color: #DDD;" height="60" alt="Joseph Wilk">
+  <span style="display:inline-block">
+    <h1><a href="/">Joseph Wilk</a></h1>
+    <h2>Programming bits and bobs</h2>
+  </span>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:josephwilk.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+ <li><a href="/">Home</a></li>
+ <li><a href="/about">About</a></li>
+ <li><a href="/speaking">Speaking</a></li>
+ <li><a href="/contact">Contact</a></li>
+ <li><a href="/archives">Archives</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Cucumber Patterns</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-08T18:13:37+01:00" pubdate data-updated="true">Aug 8<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>At <a href="http://www.songkick.com/">Songkick.com</a> we have developed a number of patterns to make it easier to write Cucumber features. I thought I would start sharing some of those patterns here. So here is the first one:</p>
+
+<h2>Implicit Reference Pattern</h2>
+
+<p>Make use of implicit references to previously discussed topics to produce scenarios which are easier to read and write. Achieving this while avoiding highly coupled steps.</p>
+
+<h3>Problem</h3>
+
+<p>Storing and relying on state in a step definition can make it hard to reuse. So often state is avoided. This can lead to scenarios like the following:</p>
+
+<pre><code>Given there is a Artist named "XXs"
+ And I visit the page for the Artist named "The XXs"
+</code></pre>
+
+<p>This leaves us with:</p>
+
+<ul>
+<li>Verbose steps which are not natural to read.</li>
+<li>Extra noise information purely for identity (referencing the name)</li>
+</ul>
+
+
+<h3>Solution</h3>
+
+<p>Map implicit references in the language to the objects being discussed.</p>
+
+<p>Accept that we have to store state but do so in an encapsulated way where the feature language is the only thing needed within the step definition to provide a direct mapping to the relevant object from the state.</p>
+
+<p>What we are aiming for is a scenario like this:</p>
+
+<pre><code>Given there is an Artist named "XXs"
+ When I visit the page for the Artist
+</code></pre>
+
+<h3>Requirements</h3>
+
+<p>This pattern is described in the context of <a href="http://ar.rubyonrails.org/">ActiveRecord</a> and <a href="http://github.com/thoughtbot/factory_girl">Factory Girl</a>.</p>
+
+<h4>Identification through a single meaningful name</h4>
+
+<p>Key to this pattern is mapping a single identifier (that we would happily talk about in our Features) to a model.</p>
+
+<p>We have a method that provides all the mappings of the models to the field that uniquely identifies them.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">map_to_id_attribute</span><span class="p">(</span><span class="n">type_of_thing</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="ss">:user</span> <span class="o">=&gt;</span> <span class="ss">:username</span><span class="p">,</span>
+</span><span class='line'>    <span class="ss">:concert</span> <span class="o">=&gt;</span> <span class="ss">:title</span><span class="p">,</span>
+</span><span class='line'>  <span class="p">}</span><span class="o">[</span><span class="n">type_of_thing</span><span class="o">]</span> <span class="o">||</span> <span class="ss">:name</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Domain model class names are meaningful to everyone</h4>
+
+<p>In our features when we talk about something in our domain we refer to its class name and we use the correct capitalization.</p>
+
+<p>Non-technical people still understand what the references mean while allowing us to simplify identifying the model in a snippet of feature text.</p>
+
+<p>This leads to steps such as:</p>
+
+<pre><code>Given the Artist
+ Given the AdminUser
+</code></pre>
+
+<h3>Implementation</h3>
+
+<h4>Somewhere to store stuff</h4>
+
+<p>We store all the state in a specialised hash. This has a special find_things method which performs some validation and gives us nice error messages if we try and access incorrect types or non-existent objects.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">StuffContainer</span> <span class="o">&lt;</span> <span class="no">Hash</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">find_thing</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">expected_type</span> <span class="o">=</span> <span class="n">opts</span><span class="o">[</span><span class="ss">:type</span><span class="o">]</span>
+</span><span class='line'>    <span class="nb">name</span> <span class="o">=</span> <span class="n">opts</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span>
+</span><span class='line'>    <span class="n">thing</span> <span class="o">=</span> <span class="nb">self</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">raise</span><span class="p">(</span><span class="s2">&quot;Unable to find any object in stuff[] with the name &#39;</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">&#39; that you asked for, boss. I could however offer you one of the following: </span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">to_s</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">unless</span> <span class="n">thing</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">raise</span><span class="p">(</span><span class="s2">&quot;That thing you asked for, it appears to be a </span><span class="si">#{</span><span class="n">thing</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> when you asked for a </span><span class="si">#{</span><span class="n">expected_type</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">unless</span> <span class="n">thing</span><span class="o">.</span><span class="n">is_a?</span><span class="p">(</span><span class="n">expected_type</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">thing</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">to_s</span>
+</span><span class='line'>    <span class="n">result</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;</span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">length</span><span class="si">}</span><span class="s2"> items in total:&quot;</span><span class="o">]</span>
+</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">thing</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">result</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;the </span><span class="si">#{</span><span class="n">thing</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> </span><span class="se">\&quot;</span><span class="si">#{</span><span class="n">key</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">result</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Recording the subjects under discussion</h4>
+
+<p>In order to record references to created Models we extend <a href="http://github.com/thoughtbot/factory_girl">Factory Girl&rsquo;s</a> &lsquo;Factory&rsquo; method which is used for all our model creations.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">Factory</span><span class="p">(</span><span class="n">type_of_thing</span><span class="p">,</span> <span class="n">attributes</span> <span class="o">=</span> <span class="p">{})</span>
+</span><span class='line'>  <span class="n">test_id</span> <span class="o">=</span> <span class="n">attributes</span><span class="o">[</span><span class="n">map_to_id_attribute</span><span class="p">(</span><span class="n">type_of_thing</span><span class="p">)</span><span class="o">]</span>
+</span><span class='line'>  <span class="n">new_thing</span> <span class="o">=</span> <span class="k">super</span><span class="p">(</span><span class="n">type_of_thing</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">stuff</span><span class="o">[</span><span class="n">test_id</span><span class="o">]</span> <span class="o">=</span> <span class="n">new_thing</span> <span class="k">if</span> <span class="n">test_id</span>
+</span><span class='line'>  <span class="n">new_thing</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We will record created models in steps like these:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Given</span> <span class="sr">/^there is (?:one|an|a|another) ([^ ]+) named &quot;([^&quot;]+)&quot;$/</span> <span class="k">do</span> <span class="o">|</span><span class="n">entity_type</span><span class="p">,</span> <span class="nb">name</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">attributes</span> <span class="o">=</span> <span class="p">{</span><span class="ss">:name</span> <span class="o">=&gt;</span> <span class="nb">name</span><span class="p">}</span>
+</span><span class='line'>  <span class="n">entity</span> <span class="o">=</span> <span class="no">Factory</span><span class="p">(</span><span class="n">entity_type</span><span class="o">.</span><span class="n">underscore</span><span class="o">.</span><span class="n">to_sym</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Resolving Implicit references</h4>
+
+<p>Starting with the step definition:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">When</span> <span class="sr">/I (?:view|visit|go to) the page for (</span><span class="si">#{</span><span class="no">IDRE</span><span class="si">}</span><span class="sr">)$/</span> <span class="k">do</span> <span class="o">|</span><span class="n">entity</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">visit</span> <span class="n">model_path</span><span class="p">(</span><span class="n">identified_model</span><span class="p">(</span><span class="n">entity</span><span class="p">))</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>IDRE represents the ID regexp which provides a way of identifying a model and is reused in many steps.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">IDRE</span> <span class="o">=</span> <span class="sr">/(?:the(?: first | last | )(?:[^ ]+)|the (?:[^ ]+) &quot;(?:[^&quot;]+)&quot;|&quot;(?:[^&quot;]+)&quot;)/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The identified_model method turns an English string into a Model. It provides a number of ways of referencing a model.</p>
+
+<pre><code>the Artist
+ the first Artist
+ the last Artist
+ the Artist "Jude"
+</code></pre>
+
+<p>The identified_model method:
+(The key case we are focusing on in this example is where we have no identify just the type of the model &ndash; line 11 and 12)</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">identified_model</span><span class="p">(</span><span class="n">str</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">case</span> <span class="n">str</span>
+</span><span class='line'>  <span class="k">when</span> <span class="sr">/^the (first|last) ([^ ]+)$/</span>
+</span><span class='line'>    <span class="n">klass</span> <span class="o">=</span> <span class="n">safe_constantize</span><span class="p">(</span><span class="vg">$2</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">klass</span><span class="o">.</span><span class="n">__send__</span><span class="p">(</span><span class="vg">$1</span><span class="o">.</span><span class="n">to_sym</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">when</span> <span class="sr">/^the ([^ ]+) &quot;(.+)&quot;$/</span>
+</span><span class='line'>    <span class="n">klass</span> <span class="o">=</span> <span class="n">safe_constantize</span><span class="p">(</span><span class="vg">$1</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">instance</span> <span class="o">=</span> <span class="n">stuff</span><span class="o">.</span><span class="n">find_thing</span><span class="p">(</span><span class="ss">:type</span> <span class="o">=&gt;</span> <span class="n">klass</span><span class="p">,</span> <span class="ss">:name</span> <span class="o">=&gt;</span> <span class="vg">$2</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">instance</span><span class="o">.</span><span class="n">reload</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">instance</span>
+</span><span class='line'>  <span class="k">when</span> <span class="sr">/^the ([^ ]+)$/</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">implicit_model</span><span class="p">(</span><span class="vg">$1</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">when</span> <span class="sr">/^&quot;(.+)&quot;$/</span>
+</span><span class='line'>    <span class="n">instance</span> <span class="o">=</span> <span class="n">stuff</span><span class="o">[</span><span class="vg">$1</span><span class="o">]</span>
+</span><span class='line'>    <span class="n">instance</span><span class="o">.</span><span class="n">reload</span> <span class="k">if</span> <span class="n">instance</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">instance</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="k">raise</span> <span class="s2">&quot;No such instance: &#39;</span><span class="si">#{</span><span class="n">str</span><span class="si">}</span><span class="s2">&#39;.</span><span class="se">\n</span><span class="s2"> Current stuff: </span><span class="si">#{</span><span class="n">stuff</span><span class="o">.</span><span class="n">to_s</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The implicit_model method</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">implicit_model</span><span class="p">(</span><span class="n">str</span><span class="p">)</span>
+</span><span class='line'>   <span class="n">klass</span> <span class="o">=</span> <span class="n">safe_constantize</span><span class="p">(</span><span class="n">str</span><span class="p">)</span>
+</span><span class='line'>   <span class="k">raise</span> <span class="s2">&quot;expected only one </span><span class="si">#{</span><span class="n">klass</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">klass</span><span class="o">.</span><span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span>
+</span><span class='line'>   <span class="k">raise</span> <span class="s2">&quot;expected one </span><span class="si">#{</span><span class="n">klass</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> to exist&quot;</span> <span class="k">if</span> <span class="n">klass</span><span class="o">.</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span>
+</span><span class='line'>   <span class="n">klass</span><span class="o">.</span><span class="n">first</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Notice to avoid ambiguity we restrict that only one model of the specified type must exist.</p>
+
+<h2>Full source</h2>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">StuffManagment</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">map_to_id_attribute</span><span class="p">(</span><span class="n">type_of_thing</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>      <span class="ss">:user</span>   <span class="o">=&gt;</span> <span class="ss">:username</span><span class="p">,</span>
+</span><span class='line'>      <span class="ss">:concert</span> <span class="o">=&gt;</span> <span class="ss">:title</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">}</span><span class="o">[</span><span class="n">type_of_thing</span><span class="o">]</span> <span class="o">||</span> <span class="ss">:name</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">class</span> <span class="nc">StuffContainer</span> <span class="o">&lt;</span> <span class="no">Hash</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">find_thing</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">expected_type</span> <span class="o">=</span> <span class="n">opts</span><span class="o">[</span><span class="ss">:type</span><span class="o">]</span>
+</span><span class='line'>      <span class="nb">name</span> <span class="o">=</span> <span class="n">opts</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span>
+</span><span class='line'>      <span class="n">thing</span> <span class="o">=</span> <span class="nb">self</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span>
+</span><span class='line'>      <span class="k">raise</span><span class="p">(</span><span class="s2">&quot;Unable to find any object in stuff[] with the name &#39;</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">&#39; that you asked for, boss. I could however offer you one of the following: </span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">to_s</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">unless</span> <span class="n">thing</span>
+</span><span class='line'>      <span class="k">raise</span><span class="p">(</span><span class="s2">&quot;That thing you asked for, it appears to be a </span><span class="si">#{</span><span class="n">thing</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> when you asked for a </span><span class="si">#{</span><span class="n">expected_type</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">unless</span> <span class="n">thing</span><span class="o">.</span><span class="n">is_a?</span><span class="p">(</span><span class="n">expected_type</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">thing</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">to_s</span>
+</span><span class='line'>      <span class="n">result</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;</span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">length</span><span class="si">}</span><span class="s2"> items in total:&quot;</span><span class="o">]</span>
+</span><span class='line'>      <span class="nb">self</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">thing</span><span class="o">|</span>
+</span><span class='line'>        <span class="n">result</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;the </span><span class="si">#{</span><span class="n">thing</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> </span><span class="se">\&quot;</span><span class="si">#{</span><span class="n">key</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>      <span class="n">result</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">clear_stuff</span>
+</span><span class='line'>    <span class="vi">@stuff</span> <span class="o">=</span> <span class="no">StuffContainer</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">stuff</span>
+</span><span class='line'>    <span class="k">return</span> <span class="vi">@stuff</span> <span class="k">if</span> <span class="vi">@stuff</span>
+</span><span class='line'>    <span class="n">clear_stuff</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="no">SEARCH_MODULES</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;&#39;</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">identified_model</span><span class="p">(</span><span class="n">str</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">case</span> <span class="n">str</span>
+</span><span class='line'>    <span class="k">when</span> <span class="sr">/^the (first|last) ([^ ]+)$/</span>
+</span><span class='line'>      <span class="n">klass</span> <span class="o">=</span> <span class="n">safe_constantize</span><span class="p">(</span><span class="vg">$2</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">return</span> <span class="n">klass</span><span class="o">.</span><span class="n">__send__</span><span class="p">(</span><span class="vg">$1</span><span class="o">.</span><span class="n">to_sym</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">when</span> <span class="sr">/^the ([^ ]+) &quot;(.+)&quot;$/</span>
+</span><span class='line'>      <span class="n">klass</span> <span class="o">=</span> <span class="n">safe_constantize</span><span class="p">(</span><span class="vg">$1</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">instance</span> <span class="o">=</span> <span class="n">stuff</span><span class="o">.</span><span class="n">find_thing</span><span class="p">(</span><span class="ss">:type</span> <span class="o">=&gt;</span> <span class="n">klass</span><span class="p">,</span> <span class="ss">:name</span> <span class="o">=&gt;</span> <span class="vg">$2</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">instance</span><span class="o">.</span><span class="n">reload</span>
+</span><span class='line'>      <span class="k">return</span> <span class="n">instance</span>
+</span><span class='line'>    <span class="k">when</span> <span class="sr">/^the ([^ ]+)$/</span>
+</span><span class='line'>      <span class="k">return</span> <span class="n">implicit_model</span><span class="p">(</span><span class="vg">$1</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">when</span> <span class="sr">/^&quot;(.+)&quot;$/</span>
+</span><span class='line'>      <span class="n">instance</span> <span class="o">=</span> <span class="n">stuff</span><span class="o">[</span><span class="vg">$1</span><span class="o">]</span>
+</span><span class='line'>      <span class="n">instance</span><span class="o">.</span><span class="n">reload</span> <span class="k">if</span> <span class="n">instance</span>
+</span><span class='line'>      <span class="k">return</span> <span class="n">instance</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="k">raise</span> <span class="s2">&quot;No such instance: &#39;</span><span class="si">#{</span><span class="n">str</span><span class="si">}</span><span class="s2">&#39;.</span><span class="se">\n</span><span class="s2"> Current stuff: </span><span class="si">#{</span><span class="n">stuff</span><span class="o">.</span><span class="n">to_s</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">implicit_model</span><span class="p">(</span><span class="n">str</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">klass</span> <span class="o">=</span> <span class="n">safe_constantize</span><span class="p">(</span><span class="n">str</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">raise</span> <span class="s2">&quot;expected only one </span><span class="si">#{</span><span class="n">klass</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">klass</span><span class="o">.</span><span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span>
+</span><span class='line'>    <span class="k">raise</span> <span class="s2">&quot;expected one </span><span class="si">#{</span><span class="n">klass</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> to exist&quot;</span> <span class="k">if</span> <span class="n">klass</span><span class="o">.</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span>
+</span><span class='line'>    <span class="n">klass</span><span class="o">.</span><span class="n">first</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">safe_constantize</span><span class="p">(</span><span class="n">str</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">begin</span>
+</span><span class='line'>      <span class="n">recorded_exception</span> <span class="o">=</span> <span class="kp">nil</span>
+</span><span class='line'>      <span class="no">SEARCH_MODULES</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">mod</span><span class="o">|</span>
+</span><span class='line'>        <span class="k">begin</span>
+</span><span class='line'>          <span class="k">return</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">mod</span><span class="si">}</span><span class="s2">::</span><span class="si">#{</span><span class="n">str</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">constantize</span>
+</span><span class='line'>        <span class="k">rescue</span> <span class="no">NameError</span> <span class="o">=&gt;</span> <span class="n">e</span>
+</span><span class='line'>          <span class="n">recorded_exception</span> <span class="o">=</span> <span class="n">e</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>      <span class="n">error_message</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="si">#{</span><span class="n">str</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2"> does not appear to be a valid object in the domain. Did you mean </span><span class="se">\&quot;</span><span class="si">#{</span><span class="n">str</span><span class="o">.</span><span class="n">classify</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2">?&quot;</span><span class="p">\</span>
+</span><span class='line'>                <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Detailed error message:</span><span class="se">\n</span><span class="si">#{</span><span class="n">recorded_exception</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>      <span class="k">raise</span> <span class="no">NameError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">World</span><span class="p">(</span><span class="no">StuffManagment</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">admin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-08T18:13:37+01:00" pubdate data-updated="true">Aug 8<span>th</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/cucumber'>cucumber</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://josephwilk.github.io/cucumber/cucumber-patterns.html" data-via="josephwilk" data-counturl="http://josephwilk.github.io/cucumber/cucumber-patterns.html" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="small"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/ruby/rocket-fuelled-cucumbers.html" title="Previous Post: Rocket Fuelled Cucumbers">&laquo; Rocket Fuelled Cucumbers</a>
+      
+      
+        <a class="basic-alignment right" href="/ruby/limiting-red-smarter-test-builds-through-metrics.html" title="Next Post: Limiting Red: Smarter Test Builds Through Metrics">Limiting Red: Smarter Test Builds Through Metrics &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/clojure/overtone-driving-minecraft.html">Clojure and Overtone driving Minecraft</a>
+      </li>
+    
+      <li class="post">
+        <a href="/art/live-coding-repl-electric.html">Live Coding - Repl Electric</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/creative_machines.html">Creative Machines</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/sounds-of-the-human-brain.html">Sounds of the human brain</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/building-clojure-services-at-scale.html">Building Clojure services at scale</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/creating-instruments-with-overtone.html">Creating sampled instruments with Overtone</a>
+      </li>
+    
+      <li class="post">
+        <a href="/elixir/sets-in-elixir.html">Sets in Elixir</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/isolating-external-dependencies-in-clojure.html">Isolating external dependencies in Clojure</a>
+      </li>
+    
+      <li class="post">
+        <a href="/presentations/a-developers-guide-to-creating-presentations.html">A developers guide to creating presentations</a>
+      </li>
+    
+      <li class="post">
+        <a href="/software-craftmanship/the-aesthetics-of-density.html">The Aesthetics of Density</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/josephwilk">@josephwilk</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'josephwilk',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Joseph Wilk -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'josephwilk';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://josephwilk.github.io/cucumber/cucumber-patterns.html';
+        var disqus_url = 'http://josephwilk.github.io/cucumber/cucumber-patterns.html';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
