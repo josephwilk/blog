@@ -9,7 +9,7 @@
   <meta name="author" content="Joseph Wilk">
 
   
-  <meta name="description" content="Download PDF Thesis http://www.doc.ic.ac.uk/teaching/projects/Distinguished04/JosephWilk.pdf This project took the HTML form systems as a model and &hellip;">
+  <meta name="description" content="The event calculus planner used within my thesis was based on Dr. Murray Shanahan&rsquo;s ASLDICN (Abductive SLD with Integrity constraints and proof &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +82,108 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/projects/prolog-asldicn-event-calculus-planner.html">Prolog ASLDICN Event Calculus Planner</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-11-23T07:31:27+00:00" pubdate data-updated="true">Nov 23<span>rd</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The event calculus planner used within my thesis was based on Dr. Murray Shanahan&rsquo;s ASLDICN (Abductive SLD with Integrity constraints and proof by Negation) planner with compound action support. This planner is an adaptation from one published in one of Dr. Shanahan&rsquo;s research papers</p>
+
+<p><a href="http://casbah.ee.ic.ac.uk/~mpsha/planners.html">http://casbah.ee.ic.ac.uk/%7Empsha/planners.html</a></p>
+
+<p>The original planner only supports the generation of a single plan. I needed to support conditional planning. I wanted the planner to generate multiple plans representing the different ways of reaching the goal. The problem was how to convert the planner to generate all possible plans. Importantly ensuring that this does not cause infinite looping and no redundant plan solutions are generated.</p>
+
+<p>My version of the planner add the following features:</p>
+
+<ul>
+<li><p>Conditional Planning</p></li>
+<li><p>Impossible Predicate</p></li>
+<li><p>Occured And NotOccured predicates</p></li>
+</ul>
+
+
+<h3>Prolog Event Calculus Planner</h3>
+
+<p><a href="/workspace/prolog/eventCalculusPlanner.pl">Download eventCalculusPlanner.pl</a></p>
+
+<p>[viewcode] src=../projects/prolog/eventCalculusPlanner.pl geshi=fortran[/viewcode]</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/projects/running-prolog-as-cgi.html">Running Prolog as CGI</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-11-23T07:27:25+00:00" pubdate data-updated="true">Nov 23<span>rd</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Prolog can be run as CGI by using a PHP wrapper script which invokes the Prolog engine from within PHP. Prolog can be invoked indicating Prolog files to load and goals to initially achieve once loaded.</p>
+
+<p>Executing the following in PHP can spawn a process which runs Prolog.</p>
+
+<pre><code>$cgiOutput = `sicstus --goal $goal. -l "$cgiPrologScriptToLoad"`;
+</code></pre>
+
+<p>This specific example is for Sicstus but most Prolog command lines have a similar format. Another possiblity is to setup Prolog as CGI, since any langauge can be CGI. I was running my code on a windows box and found it impossible for Prolog to direct the content to the command line and capture it for returning. If you&rsquo;re going the unix route you may want to look at <a href="http://clip.dia.fi.upm.es/Software/pillow/pillow.html">PiLLoWs</a> guide.</p>
+
+<p>For form postings you can catch the post in PHP or a scripting language and create a prolog formated file which is passed to the prolog script when invoked.</p>
+
+<p>You may want to have Prolog maintain state. This can be achieved through using a database. The database that I have used is <a href="http://www.sleepycat.com/">Berkeley DB</a> which SICStus has built in support for.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -886,6 +988,14 @@ service:
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/art/emacs-animation.html">Animations with Emacs</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/clojure-and-kinesis-at-scale.html">Clojure and Kinesis at scale</a>
+      </li>
+    
+      <li class="post">
         <a href="/clojure/overtone-driving-minecraft.html">Clojure and Overtone driving Minecraft</a>
       </li>
     
@@ -915,14 +1025,6 @@ service:
     
       <li class="post">
         <a href="/clojure/isolating-external-dependencies-in-clojure.html">Isolating external dependencies in Clojure</a>
-      </li>
-    
-      <li class="post">
-        <a href="/presentations/a-developers-guide-to-creating-presentations.html">A developers guide to creating presentations</a>
-      </li>
-    
-      <li class="post">
-        <a href="/software-craftmanship/the-aesthetics-of-density.html">The Aesthetics of Density</a>
       </li>
     
   </ul>

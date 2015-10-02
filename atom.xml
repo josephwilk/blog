@@ -4,7 +4,7 @@
   <title><![CDATA[Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2015-10-01T13:01:28+01:00</updated>
+  <updated>2015-10-02T14:31:09+01:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -12,6 +12,802 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Animations with Emacs]]></title>
+    <link href="http://josephwilk.github.io/art/emacs-animation.html"/>
+    <updated>2015-10-02T15:58:12+01:00</updated>
+    <id>http://josephwilk.github.io/art/emacs-animation</id>
+    <content type="html"><![CDATA[<p>Emacs is designed for fast, highly customisable manipulation of text.
+ASCII animation requires manipulating text at a sufficient speed that it appears animated. Emacs is also used by a number of performers to live code musical &amp; visual performances (and many other things). Where the audience can see the code in emacs and hear it.</p>
+
+<p><img src="http://josephwilk.github.io/octopress/images/live-coding-emacs.png" alt="Live Coding with Emacs" /></p>
+
+<p>In my live coding performances as <a href="http://www.repl-electric.com">Repl Electric</a> I&rsquo;ve used emacs animations to  augment emacs with more feedback for the performer and a chance to destroy the order and structure the programmer has spent the entire performance building. Reminding us that we are looking at thoughts expressed through code that seem magical but are ultimately nothing more than text.</p>
+
+<p>Maybe something akin to the creation and destruction of Sand Mandalas.</p>
+
+<p><img src="http://josephwilk.github.io/octopress/images/sandmandala.jpg" alt="Sand Mandala" /></p>
+
+<h2>Framework for Emacs Animation</h2>
+
+<p>Zone Mode is an Emacs plugin which provides a framework for screensaver like animations.</p>
+
+<p><a href="http://www.emacswiki.org/emacs/ZoneMode">http://www.emacswiki.org/emacs/ZoneMode</a></p>
+
+<p>Importantly it allows us to turn on an animation using our current code buffer as input and to terminate the animation, returning to the original code on a key press. So we can safely mangle the text knowing we can also return to safety. Well so far I&rsquo;ve always found it to be safe but there is a small risk as mentioned in the zoning warning:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='lisp'><span class='line'><span class="p">(</span><span class="nv">message</span> <span class="s">&quot;...here&#39;s hoping we didn&#39;t hose your buffer!&quot;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>A nice property of taking our buffer as input is we are never quite sure what text will be there and hence the properties of the animation.</p>
+
+<h3>Example: Uppercase all letters</h3>
+
+<p>A simple function that finds non-whitespace in the buffer and tries to uppercase the char. It knows nothing about the zoning framework, its just a plain old function that operates on the active buffer.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='lisp'><span class='line'><span class="p">(</span><span class="nb">defun</span> <span class="nv">zone-upper-case-text</span> <span class="p">()</span>
+</span><span class='line'>  <span class="p">(</span><span class="nv">zone-fill-out-screen</span> <span class="p">(</span><span class="nv">window-width</span><span class="p">)</span> <span class="p">(</span><span class="nv">window-height</span><span class="p">))</span>
+</span><span class='line'>  <span class="p">(</span><span class="nb">random</span> <span class="no">t</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">(</span><span class="nv">goto-char</span> <span class="p">(</span><span class="nv">point-min</span><span class="p">))</span>
+</span><span class='line'>  <span class="p">(</span><span class="nv">while</span> <span class="p">(</span><span class="nb">not</span> <span class="p">(</span><span class="nv">input-pending-p</span><span class="p">))</span>
+</span><span class='line'>    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">wbeg</span> <span class="p">(</span><span class="nv">window-start</span><span class="p">))</span>
+</span><span class='line'>          <span class="p">(</span><span class="nv">wend</span> <span class="p">(</span><span class="nv">window-end</span><span class="p">)))</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="c1">;;Keep moving the char cursor until its not whitespace</span>
+</span><span class='line'>      <span class="p">(</span><span class="nv">while</span> <span class="p">(</span><span class="nv">looking-at</span> <span class="s">&quot;[ \n\f]&quot;</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">(</span><span class="nv">goto-char</span> <span class="p">(</span><span class="nb">+</span> <span class="nv">wbeg</span> <span class="p">(</span><span class="nb">random</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">wend</span> <span class="nv">wbeg</span><span class="p">))))))</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">;;If we are at the end of the buffer go to the last char</span>
+</span><span class='line'>    <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nv">eobp</span><span class="p">)</span> <span class="p">(</span><span class="nv">goto-char</span> <span class="p">(</span><span class="nv">point-min</span><span class="p">)))</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">;;Read the char at the cursor</span>
+</span><span class='line'>    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">c</span> <span class="p">(</span><span class="nv">point</span><span class="p">)))</span>
+</span><span class='line'>      <span class="p">(</span><span class="nv">delete-char</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1">;; Remove the char</span>
+</span><span class='line'>      <span class="p">(</span><span class="nv">insert-char</span> <span class="p">(</span><span class="nv">capitalize</span> <span class="nv">c</span><span class="p">)))</span> <span class="c1">;; Reinsert with caps</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">;;Sleep</span>
+</span><span class='line'>    <span class="p">(</span><span class="nv">zone-park/sit-for</span> <span class="p">(</span><span class="nv">point-min</span><span class="p">)</span> <span class="mf">0.1</span><span class="p">)))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The animation in all its glory:</p>
+
+<p><img src="http://josephwilk.github.io/octopress/images/emacs-zone-uppercase.png" alt="Emacs zoning uppercase" /></p>
+
+<h3>Zoning Setup</h3>
+
+<p>We can override all other zoning programs and just specify our zone-fn. When we activate zoning our animation will be run.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='lisp'><span class='line'><span class="p">(</span><span class="nv">eval-after-load</span> <span class="s">&quot;zone&quot;</span>
+</span><span class='line'>  <span class="o">&#39;</span><span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">memq</span> <span class="ss">&#39;zone-upper-case-text</span> <span class="p">(</span><span class="nb">append</span> <span class="nv">zone-programs</span> <span class="no">nil</span><span class="p">))</span>
+</span><span class='line'>         <span class="p">(</span><span class="k">setq</span> <span class="nv">zone-programs</span> <span class="nv">[zone-upper-case-text]</span><span class="p">)))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Zoning Examples:</h3>
+
+<p>Zoning mode comes with lots of example animations that are good starting points:</p>
+
+<p><a href="http://www.opensource.apple.com/source/emacs/emacs-51/emacs/lisp/play/zone.el">http://www.opensource.apple.com/source/emacs/emacs-51/emacs/lisp/play/zone.el</a></p>
+
+<ul>
+<li>zone-pgm-jitter</li>
+<li>zone-pgm-putz-with-case</li>
+<li>zone-pgm-dissolve</li>
+<li>zone-pgm-whack-chars</li>
+<li>zone-pgm-rotate</li>
+<li>zone-pgm-rotate-LR-lockstep</li>
+<li>zone-pgm-rotate-RL-lockstep</li>
+<li>zone-pgm-rotate-LR-variable</li>
+<li>zone-pgm-rotate-RL-variable</li>
+<li>zone-pgm-drip</li>
+<li>zone-pgm-drip-fretfully</li>
+<li>zone-pgm-five-oclock-swan-dive</li>
+<li>zone-pgm-martini-swan-dive</li>
+<li>zone-pgm-paragraph-spaz</li>
+<li>zone-pgm-stress</li>
+</ul>
+
+
+<h2>Open Sound Control Protocol Based animation</h2>
+
+<p>OSC is a handy protocol for sending data between networked devices using url like endpoints.
+Emacs has a plugin to run an OSC server (<a href="http://delysid.org/emacs/osc.html">http://delysid.org/emacs/osc.html</a>).
+Hence if we have some kind of beat signal we could send a message to Emacs and in turn it could render changes based on our musics timing.</p>
+
+<p>With my Overtone setup for Repl-Electric I have the following flow of OSC messages:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='lisp'><span class='line'><span class="nv">[Supercollider]</span> <span class="nv">-&gt;</span> <span class="nv">OSC</span> <span class="nv">-&gt;</span> <span class="nv">[Clojure]</span> <span class="nv">-&gt;</span> <span class="nv">OSC</span> <span class="nv">-&gt;</span> <span class="nv">[Emacs]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Within Emacs setup an OSC server and define two call backs which change the color of the window face number</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+</pre></td><td class='code'><pre><code class='emacs-lisp'><span class='line'><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;osc</span><span class="p">)</span>
+</span><span class='line'><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;cl</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="nb">defvar</span> <span class="nv">osc-server</span> <span class="no">nil</span> <span class="s">&quot;Connection to receive msgs&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="p">(</span><span class="nb">defvar</span> <span class="nv">flip-state</span> <span class="no">t</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="nb">defun</span> <span class="nv">osc-connect</span> <span class="p">()</span>
+</span><span class='line'>  <span class="s">&quot;Create an OSC server and bind our fallback functions&quot;</span>
+</span><span class='line'>  <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nb">not</span> <span class="nv">osc-server</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">(</span><span class="k">setq</span> <span class="nv">osc-server</span>
+</span><span class='line'>          <span class="p">(</span><span class="nv">osc-make-server</span>
+</span><span class='line'>           <span class="s">&quot;localhost&quot;</span> <span class="mi">4558</span>
+</span><span class='line'>           <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">path</span> <span class="k">&amp;rest</span> <span class="nv">args</span><span class="p">)</span>
+</span><span class='line'>             <span class="p">(</span><span class="nb">cond</span>
+</span><span class='line'>              <span class="p">((</span><span class="nv">string-match</span> <span class="s">&quot;/beat&quot;</span> <span class="nv">path</span><span class="p">)</span>
+</span><span class='line'>               <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="k">if</span> <span class="nv">flip-state</span> <span class="p">(</span><span class="nv">on-beat</span><span class="p">)</span> <span class="p">(</span><span class="nv">off-beat</span><span class="p">))</span>
+</span><span class='line'>                      <span class="p">(</span><span class="k">setq</span> <span class="nv">flip-state</span> <span class="p">(</span><span class="nb">not</span> <span class="nv">flip-state</span><span class="p">))))))))))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="nb">defun</span> <span class="nv">osc-make-server</span> <span class="p">(</span><span class="nv">host</span> <span class="nv">port</span> <span class="nv">default-handler</span><span class="p">)</span>
+</span><span class='line'>  <span class="s">&quot;Settings for OSC server&quot;</span>
+</span><span class='line'>  <span class="p">(</span><span class="nv">make-network-process</span>
+</span><span class='line'>   <span class="ss">:name</span> <span class="s">&quot;emacs OSC server&quot;</span>
+</span><span class='line'>   <span class="ss">:host</span> <span class="nv">host</span>
+</span><span class='line'>   <span class="ss">:server</span> <span class="no">t</span>
+</span><span class='line'>   <span class="ss">:service</span> <span class="nv">port</span>
+</span><span class='line'>   <span class="ss">:filter</span> <span class="nf">#&#39;</span><span class="nv">osc-filter</span>
+</span><span class='line'>   <span class="ss">:type</span> <span class="ss">&#39;datagram</span>
+</span><span class='line'>   <span class="ss">:family</span> <span class="ss">&#39;ipv4</span>
+</span><span class='line'>   <span class="ss">:plist</span> <span class="p">(</span><span class="nb">list</span> <span class="ss">:generic</span> <span class="nv">default-handler</span><span class="p">)))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="nb">defun</span> <span class="nv">on-beat</span> <span class="p">()</span>
+</span><span class='line'>  <span class="p">(</span><span class="nv">custom-set-faces</span>
+</span><span class='line'>   <span class="o">&#39;</span><span class="p">(</span><span class="nv">window-number-face</span> <span class="p">((</span><span class="no">t</span> <span class="p">(</span><span class="ss">:foreground</span> <span class="s">&quot;deeppink&quot;</span><span class="p">))))))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="nb">defun</span> <span class="nv">off-beat</span> <span class="p">()</span>
+</span><span class='line'>  <span class="p">(</span><span class="nv">custom-set-faces</span>
+</span><span class='line'>   <span class="o">&#39;</span><span class="p">(</span><span class="nv">window-number-face</span> <span class="p">((</span><span class="no">t</span> <span class="p">(</span><span class="ss">:foreground</span> <span class="s">&quot;#FDDD0C&quot;</span><span class="p">))))))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="nv">osc-connect</span><span class="p">)</span>
+</span><span class='line'><span class="p">(</span><span class="nb">provide</span> <span class="ss">&#39;osc-server</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In Overtone/Clojure the sending signal:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">defonce </span><span class="nv">emacs-client</span> <span class="p">(</span><span class="nf">osc-client</span> <span class="s">&quot;localhost&quot;</span> <span class="mi">4558</span><span class="p">))</span>
+</span><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">emacs-trigger</span>    <span class="p">(</span><span class="nf">on-beat-trigger</span> <span class="mi">8</span> <span class="o">#</span><span class="p">(</span><span class="k">do </span><span class="p">(</span><span class="nf">osc-send</span> <span class="nv">emacs-client</span> <span class="s">&quot;/beat&quot;</span><span class="p">))))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Heres a little demo with the brackets and window number changing colour based on the Overtone beat.</p>
+
+<p><img src="http://josephwilk.github.io/octopress/images/brackets.gif" alt="Emacs rendering to the beat" /></p>
+
+<h3>Synchronisation</h3>
+
+<p>Given some small local lag we now have a timing signal which is threaded through all our tools. <a href="http://supercollider.github.io/">Supercollider</a>, <a href="http://overtone.github.io/">Overtone</a> and Emacs.</p>
+
+<p>Which means our emacs animations can start to change to the beat of the music&hellip;</p>
+
+<h2>Sound in ASCII</h2>
+
+<p>Now that we have ways to animate and to connect audio data with emacs we can go a little further (way too far) and start to visualise the data about our sound in ASCII.</p>
+
+<p>From Overtone or SuperCollider we can create a synth which tracks the peak and power of an audio signal. It sends us messages back with the data which we then forward on as OSC messages to Emacs.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='c++'><span class='line'><span class="cp">#Triggers a Sin Wave Oscillator and sends signals about power/peak</span>
+</span><span class='line'><span class="n">SynthDef</span><span class="p">(</span><span class="err">\</span><span class="n">pulse</span><span class="p">,{</span>
+</span><span class='line'>  <span class="n">var</span> <span class="n">sig</span><span class="p">,</span> <span class="n">chain</span><span class="p">,</span> <span class="n">onsets</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">sig</span> <span class="o">=</span> <span class="n">SinOsc</span><span class="p">.</span><span class="n">ar</span><span class="p">(</span><span class="n">Rand</span><span class="p">(</span><span class="mf">220.0</span><span class="p">,</span><span class="mf">440.0</span><span class="p">))</span>
+</span><span class='line'>  <span class="o">*</span><span class="n">EnvGen</span><span class="p">.</span><span class="n">ar</span><span class="p">(</span><span class="n">Env</span><span class="p">.</span><span class="n">perc</span><span class="p">(</span><span class="nl">releaseTime</span><span class="p">:</span><span class="mf">0.5</span><span class="p">),</span><span class="n">Dust</span><span class="p">.</span><span class="n">ar</span><span class="p">(</span><span class="mf">0.5</span><span class="p">))</span><span class="o">*</span><span class="mf">0.7</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">Out</span><span class="p">.</span><span class="n">ar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">sig</span> <span class="o">!</span><span class="mi">2</span><span class="p">);</span>
+</span><span class='line'>  <span class="c1">//</span>
+</span><span class='line'>  <span class="n">chain</span> <span class="o">=</span> <span class="n">FFT</span><span class="p">({</span><span class="n">LocalBuf</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">1</span><span class="p">)},</span> <span class="n">sig</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">onsets</span> <span class="o">=</span> <span class="n">Onsets</span><span class="p">.</span><span class="n">kr</span><span class="p">(</span><span class="n">chain</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="err">\</span><span class="n">power</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">SendTrig</span><span class="p">.</span><span class="n">kr</span><span class="p">(</span><span class="n">onsets</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">SendPeakRMS</span><span class="p">.</span><span class="n">kr</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s">&quot;/replyAddress&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}).</span><span class="n">add</span><span class="p">;</span>
+</span><span class='line'><span class="cp">#Run the crazy synth above</span>
+</span><span class='line'><span class="n">Synth</span><span class="p">(</span><span class="err">\</span><span class="n">pulse</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#Forward the data on as an OSC message</span>
+</span><span class='line'><span class="cp">#to emacs</span>
+</span><span class='line'><span class="o">~</span><span class="n">host</span> <span class="o">=</span> <span class="n">NetAddr</span><span class="p">(</span><span class="s">&quot;localhost&quot;</span><span class="p">,</span> <span class="mi">4859</span><span class="p">);</span>
+</span><span class='line'><span class="n">p</span> <span class="o">=</span> <span class="n">OSCFunc</span><span class="p">({</span> <span class="o">|</span><span class="n">msg</span><span class="o">|</span>
+</span><span class='line'>  <span class="o">~</span><span class="n">host</span><span class="p">.</span><span class="n">sendMsg</span><span class="p">(</span><span class="s">&quot;/peakpower&quot;</span><span class="p">,</span><span class="n">msg</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">msg</span><span class="p">[</span><span class="mi">4</span><span class="p">]);</span>
+</span><span class='line'>  <span class="s">&quot;peak: %, rms: %&quot;</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">msg</span><span class="p">[</span><span class="mi">4</span><span class="p">]).</span><span class="n">postln</span>
+</span><span class='line'><span class="p">},</span> <span class="err">&#39;</span><span class="o">/</span><span class="n">replyAddress</span><span class="err">&#39;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And in our emacs OSC server:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='emacs-lisp'><span class='line'><span class="p">((</span><span class="nv">string-match</span> <span class="s">&quot;/peakpower&quot;</span> <span class="nv">path</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">progn</span>
+</span><span class='line'>    <span class="p">(</span><span class="nv">with-current-buffer</span> <span class="s">&quot;flatiron.clj&quot;</span>
+</span><span class='line'>      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">sig</span> <span class="p">(</span><span class="nb">round</span> <span class="p">(</span><span class="nb">*</span> <span class="mf">100.0</span> <span class="p">(</span><span class="nb">first</span> <span class="nv">args</span><span class="p">)))))</span>
+</span><span class='line'>        <span class="p">(</span><span class="nv">message</span> <span class="p">(</span><span class="nb">format</span> <span class="s">&quot;%f&quot;</span> <span class="p">(</span><span class="nb">first</span> <span class="nv">args</span><span class="p">)))</span>
+</span><span class='line'>        <span class="p">(</span><span class="nb">dotimes</span> <span class="p">(</span><span class="nv">n</span> <span class="nv">sig</span><span class="p">)</span>
+</span><span class='line'>          <span class="p">(</span><span class="nv">insert</span> <span class="s">&quot;▓&quot;</span><span class="p">))</span>
+</span><span class='line'>        <span class="p">(</span><span class="nv">insert</span> <span class="s">&quot;▒░&quot;</span><span class="p">))</span>
+</span><span class='line'>      <span class="p">(</span><span class="nv">insert</span> <span class="s">&quot;\n&quot;</span><span class="p">))))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<iframe src="https://player.vimeo.com/video/141159277" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+
+
+<h2>Repl Electric Emacs animations</h2>
+
+<p>All my Emacs animations are used to conclude the performance.
+Heres lies the source code, some screenshots and tricks &amp; tips that made the animations possible.</p>
+
+<h3>End of Buffer</h3>
+
+<p><a href="https://github.com/repl-electric/view-pane/blob/master/animations/end-of-buffer.el">https://github.com/repl-electric/view-pane/blob/master/animations/end-of-buffer.el</a></p>
+
+<p><img src="http://josephwilk.github.io/octopress/images/endofbuffer01.png"/ alt="end-of-buffer-01"><img src="http://josephwilk.github.io/octopress/images/endofbuffer02.png" alt="end-of-buffer-02"/><img src="http://josephwilk.github.io/octopress/images/endofbuffer03.png" alt="end-of-buffer-03"/></p>
+
+<p>In this animations the text gets slowly broken up with white spaces and then like the wind, blows the characters away. Sometimes words are ripped apart as they blow in the wind (if we get lucky).</p>
+
+<p>Two main phases:</p>
+
+<ul>
+<li><p>Injection of spaces.
+This starts to distort the text while keeping it readable. It provides a way to increase the effect of expanding whitespace in the next stage.</p></li>
+<li><p>Transforming whitespace into lots of whitespace.
+A Regex matches whitespace and replaces it with a randomly increasing amount of whitespace. Which leads to the effect of the characters of the code blowing away. I spent a while trying to improve the speed of this phase and Regexs proved to be the fastest way.</p></li>
+</ul>
+
+
+<p>If we move the text fast enough soft word wrapping means the text appears to re-enter from the left side of the screen and eventually disappear out of the buffer. Without soft wrapping we get a horrible jitter as emacs moves back and forth between left and right side of the buffer.</p>
+
+<p>A couple of other tricks/tactics used:</p>
+
+<ul>
+<li>Continually incrementing integer. Useful for injecting movement or using sin/cos fn with a continuous value.</li>
+<li>Perserving the syntax highlighting of the original code in an attempt to maintain some of the meaning of the code.</li>
+</ul>
+
+
+<h3>The Stars</h3>
+
+<p><a href="https://github.com/repl-electric/view-pane/blob/master/animations/the-stars.el">https://github.com/repl-electric/view-pane/blob/master/animations/the-stars.el</a></p>
+
+<p><img src="http://josephwilk.github.io/octopress/images/thestars01.png"/></p>
+
+<p>This was my first animation and was based heavily on <code>zone-pgm-drip-fretfully</code>.</p>
+
+<p>It randomly picks a single character and moves it down the screen until it hits another letter or exits the screen.</p>
+
+<p>When running Emacs + Overtone + OpenGL, Emacs starts to slow down so part of the challenge was ensuring the animation ran as fast as possible.</p>
+
+<p>A nice property of this is that as the OpenGL shaders shutdown, the speed of the animation increases and the code destroys itself more quickly.</p>
+
+<h3>Waves</h3>
+
+<p><a href="https://github.com/repl-electric/view-pane/blob/master/animations/waves.el">https://github.com/repl-electric/view-pane/blob/master/animations/waves.el</a></p>
+
+<p><img src="http://josephwilk.github.io/octopress/images/waves01.png"/><img src="http://josephwilk.github.io/octopress/images/waves02.png"/></p>
+
+<p>This animations attempts to simulate the effect of waves using line wrapping and mixing deletions with insertions of different sizes to create lines that seem to move at different speeds.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Clojure and Kinesis at scale]]></title>
+    <link href="http://josephwilk.github.io/clojure/clojure-and-kinesis-at-scale.html"/>
+    <updated>2015-09-30T15:58:12+01:00</updated>
+    <id>http://josephwilk.github.io/clojure/clojure-and-kinesis-at-scale</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been working over the last year in the data team at SoundCloud building a realtime data pipeline using Clojure and Amazon&rsquo;s Kinesis. Kinesis is Amazons equivalent to Kafka, &ldquo;Real-Time data processing on the Cloud&rdquo;. This is a summary of what was built, some lessons learnt and all the details in-between.</p>
+
+<figure>
+<img src="http://josephwilk.github.io/images/kinesis_pipeline.png" alt="Kinesis pipeline"/>
+<figcaption>Fig1: Overall System flow</figcaption>
+</figure>
+
+
+<h2>Tapping Real traffic</h2>
+
+<p>The first step was to tee the traffic from a live system to a test system without comprising its function.
+The main function of the live system is logging JSON events to file (which eventually end up somewhere like HDFS).
+Tailing the logs of the live system gives us access to the raw data we want to forward on to our test system.
+A little Go watches the logs, parses out the data and then forwards them in batch to test instances that will push to kinesis. Hence we had live data flowing through the system and after launch a test setup to experiment with. <a href="https://twitter.com/brapse">Sean Braithwaite</a> was the mastermind behind this little bit of magic.</p>
+
+<figure>
+<img src="http://josephwilk.github.io/images/canary.png" alt="Canary Kinesis pipeline"/>
+<figcaption>Tapping Traffic</figcaption>
+</figure>
+
+
+<h2>Sending to Kinesis</h2>
+
+<p>All kinesis sending happens in an application called the EventGateway (also written in Clojure). This endpoint is one of the heaviestly loaded services in SoundCloud (at points it has more traffic than the rest of SoundCloud combined). The Eventgateway does a couple of things but at its core it validates and broadcasts JSON messages. Hence this is where our Kinesis client slots in.</p>
+
+<h5>Squeezing Clojure Reflection</h5>
+
+<p>Its worth mentioning that in order for the Eventgateway service to be performant we had to remove all reflection in tight loops through type hints. It simply could not keep up without this. It became a common pattern to turn reflection warnings on while working in Clojure.</p>
+
+<p>Project.clj</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="ss">:profiles</span> <span class="p">{</span><span class="ss">:dev</span> <span class="p">{</span><span class="ss">:global-vars</span> <span class="p">{</span><span class="nv">*warn-on-reflection*</span> <span class="nv">true</span> <span class="nv">*assert*</span> <span class="nv">false</span><span class="p">}}}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Kinesis</h4>
+
+<p>The Eventgateway posts to Kinesis in batch using a <a href="http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/ConcurrentLinkedQueue.html">ConcurrentLinkedQueue</a> and separate producers and consumers. Messages are pushed into a <code>ConcurrentLinkedQueue</code>. We rolled our own Clojure kinesis client using Amazons Java library rather than using <a href="https://github.com/mcohen01/amazonica">Amazonica</a>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="c1">;; Java Amazon libraries used</span>
+</span><span class='line'><span class="p">[</span><span class="nv">com.amazonaws/aws-java-sdk</span> <span class="s">&quot;1.9.33&quot;</span>         <span class="ss">:exclusions</span> <span class="p">[</span><span class="nv">joda-time</span><span class="p">]]</span>
+</span><span class='line'><span class="p">[</span><span class="nv">com.amazonaws/amazon-kinesis-client</span> <span class="s">&quot;1.1.0&quot;</span> <span class="ss">:exclusions</span> <span class="p">[</span><span class="nv">joda-time</span><span class="p">]]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Amazonica was good to get started quickly in the initial phase but there are a couple of reasons we switched to our own unique snowflake (which still looked a little like Amazonica):</p>
+
+<ul>
+<li>Amazonica did not support batch mode for Kinesis. Under initial tests it was impossible to scale this without batch.</li>
+<li>Injecting our own telemetry at low levels to learn more about Kinesis running.</li>
+<li>Some of its sensible defaults where not so sensible (for example default encoding the data using nippy).</li>
+<li>Ultimately most of any Kinesis client/server is configuration and tuning.</li>
+<li>Amazonica&rsquo;s source is hard to read with a little too much <code>alter-var-root</code> going on.</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="c1">;;Ugh. Its not just me right?</span>
+</span><span class='line'><span class="p">(</span><span class="nf">alter-var-root</span>
+</span><span class='line'>  <span class="o">#</span><span class="ss">&#39;amazonica.aws.kinesis/get-shard-iterator</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">f</span><span class="p">]</span>
+</span><span class='line'>    <span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="o">&amp;</span> <span class="nv">args</span><span class="p">]</span>
+</span><span class='line'>      <span class="p">(</span><span class="ss">:shard-iterator</span> <span class="p">(</span><span class="nb">apply </span><span class="nv">f</span> <span class="nv">args</span><span class="p">)))))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Pushing Messages in a Queue</h4>
+
+<p>Very simple, just adding a message to the <code>ConcurrentLinkedQueue</code>. A environment variable allows us to gradually scale up or down the percentage of traffic that is added to the queue.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="nf">require</span> <span class="o">&#39;</span><span class="p">[</span><span class="nv">environ.core</span> <span class="ss">:refer</span> <span class="ss">:all</span><span class="p">])</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">kinesis-message-queue</span> <span class="p">(</span><span class="nf">ConcurrentLinkedQueue.</span><span class="p">))</span>
+</span><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">hard-limit-queue-size</span> <span class="mi">1000</span><span class="p">)</span>
+</span><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">queue-size</span> <span class="p">(</span><span class="nf">atom</span> <span class="mi">0</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="kd">defn </span><span class="nb">send </span><span class="p">[</span><span class="nv">message</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">(</span><span class="nb">when-let </span><span class="p">[</span><span class="nv">threshold</span> <span class="p">(</span><span class="nf">env</span> <span class="ss">:kinesis-traffic</span><span class="p">)]</span>
+</span><span class='line'>    <span class="p">(</span><span class="nb">when </span><span class="p">(</span><span class="nb">&gt; </span><span class="p">(</span><span class="nb">rand-int </span><span class="mi">100</span><span class="p">)</span> <span class="p">(</span><span class="nb">- </span><span class="mi">100</span> <span class="p">(</span><span class="nb">or </span><span class="p">(</span><span class="nf">Integer/valueOf</span> <span class="o">^</span><span class="nv">String</span> <span class="nv">threshold</span><span class="p">)</span> <span class="mi">0</span><span class="p">)))</span>
+</span><span class='line'>    <span class="p">(</span><span class="nb">when </span><span class="p">(</span><span class="nb">&lt;= </span><span class="o">@</span><span class="nv">queue-size</span> <span class="nv">hard-limit-queue-size</span><span class="p">)</span>
+</span><span class='line'>      <span class="p">(</span><span class="nf">.add</span> <span class="nv">kinesis-message-queue</span> <span class="nv">message</span><span class="p">)</span>
+</span><span class='line'>      <span class="p">(</span><span class="nf">swap!</span> <span class="nv">queue-size</span> <span class="nv">inc</span><span class="p">)))))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>Failure</h5>
+
+<p>The queue pusher operates within a wider system and any failures due to Amazon being unreachable should not impede the function of the system. For the client this means:</p>
+
+<ul>
+<li>Not exceeding memory limits with a hard queue size (since ConcurrentLinkedQueue is unbound in size).</li>
+<li>Backing off workers if the queue is full to prevent cpu throttling.</li>
+</ul>
+
+
+<p>When we cannot send messages to kinesis we instead log them to disk, and into our normal logging pipeline (usually ending up in HDFS). Hence we coule replay at a later date if required.</p>
+
+<h4>Sending batches to Kinesis</h4>
+
+<p>The workers, operating in separate threads consuming messages from the <code>ConcurrentLinkedQueue</code> collecting them into a batch:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="k">loop </span><span class="p">[</span><span class="nv">batch</span> <span class="p">[]</span>
+</span><span class='line'>       <span class="nv">batch-start-time</span> <span class="p">(</span><span class="nf">time/now</span><span class="p">)</span>
+</span><span class='line'>       <span class="nv">poll-misses</span> <span class="mi">0</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nf">batch-ready-to-send?</span> <span class="nv">batch</span> <span class="nv">batch-start-time</span><span class="p">)</span>
+</span><span class='line'>    <span class="nv">batch</span>
+</span><span class='line'>    <span class="p">(</span><span class="nb">if-let </span><span class="p">[</span><span class="nv">event</span> <span class="p">(</span><span class="nf">.poll</span> <span class="nv">kinesis-message-queue</span><span class="p">)]</span>
+</span><span class='line'>      <span class="p">(</span><span class="nf">do</span>
+</span><span class='line'>        <span class="p">(</span><span class="nf">swap!</span> <span class="nv">queue-size</span> <span class="nv">dec</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">(</span><span class="nf">recur</span> <span class="p">(</span><span class="nb">conj </span><span class="nv">batch</span> <span class="nv">event</span><span class="p">)</span> <span class="nv">batch-start-time</span> <span class="mi">0</span><span class="p">))</span>
+</span><span class='line'>      <span class="p">(</span><span class="nf">do</span>
+</span><span class='line'>        <span class="p">(</span><span class="nf">Thread/sleep</span> <span class="p">(</span><span class="nf">exponential-backoff-sleep</span> <span class="nv">poll-misses</span><span class="p">))</span>
+</span><span class='line'>        <span class="p">(</span><span class="nf">recur</span> <span class="nv">batch</span> <span class="nv">batch-start-time</span> <span class="p">(</span><span class="nb">inc </span><span class="nv">poll-misses</span><span class="p">))))))))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When polling from the queue an exponential back-off if no messages are on the queue.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">defn </span><span class="nv">exponential-backoff-sleep</span>
+</span><span class='line'>  <span class="s">&quot;Exponential backoff with jitter and a max &quot;</span>
+</span><span class='line'>  <span class="p">[</span><span class="nv">misses</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">max-timeout</span> <span class="mi">1000</span>
+</span><span class='line'>        <span class="nv">jitter-order</span> <span class="mi">10</span><span class="p">]</span>
+</span><span class='line'>    <span class="p">(</span><span class="nf">Math/min</span>
+</span><span class='line'>     <span class="nv">max-timeout</span>
+</span><span class='line'>     <span class="p">(</span><span class="nf">Math/round</span> <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nf">Math/exp</span> <span class="nv">misses</span><span class="p">)</span>
+</span><span class='line'>                    <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nf">Math/random</span><span class="p">)</span>
+</span><span class='line'>                       <span class="nv">jitter-order</span><span class="p">))))))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Once the batch is ready (in terms of age or size) its sent to Kinesis.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">defn- </span><span class="nv">send-events</span>
+</span><span class='line'>  <span class="s">&quot;Perform putRecords request to send the batch to kinesis</span>
+</span><span class='line'><span class="s">   returns a list of events that failed.&quot;</span>
+</span><span class='line'>  <span class="p">[</span><span class="o">^</span><span class="nv">AmazonKinesisClient</span> <span class="nv">client</span> <span class="nv">stream-name</span> <span class="nv">events</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">try+</span>
+</span><span class='line'>   <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">result</span> <span class="p">(</span><span class="nf">.putRecords</span> <span class="nv">client</span> <span class="p">(</span><span class="nf">events-&gt;put-records-request</span> <span class="nv">events</span> <span class="nv">stream-name</span> <span class="nv">telemetry</span><span class="p">))]</span>
+</span><span class='line'>     <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">pos? </span><span class="p">(</span><span class="nf">.getFailedRecordCount</span> <span class="nv">result</span><span class="p">))</span>
+</span><span class='line'>       <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">failed-events</span> <span class="p">(</span><span class="nf">failures-&gt;events</span> <span class="nv">result</span> <span class="nv">events</span><span class="p">)]</span>
+</span><span class='line'>         <span class="p">(</span><span class="nf">count-failures</span> <span class="nv">telemetry</span> <span class="p">(</span><span class="nf">failures-&gt;error-codes</span> <span class="nv">result</span><span class="p">))</span>
+</span><span class='line'>         <span class="nv">failed-events</span><span class="p">)</span>
+</span><span class='line'>       <span class="p">[]))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note this is where we also decided the partition key. In our case its important for the same user to be located on the same partition.
+For example when consuming from Kinesis a worker is allocated a partition to work from and would miss events if they where across multiple partitions.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">defn- </span><span class="nv">events-&gt;put-records-request</span>
+</span><span class='line'>  <span class="s">&quot;Take client and a vector of JsonNodes and produce a PutRecord&quot;</span>
+</span><span class='line'>  <span class="p">[</span><span class="nv">batch</span> <span class="nv">event-stream</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">batch-list</span>  <span class="p">(</span><span class="nf">java.util.ArrayList.</span><span class="p">)</span>
+</span><span class='line'>        <span class="nv">put-request</span> <span class="p">(</span><span class="nf">PutRecordsRequest.</span><span class="p">)]</span>
+</span><span class='line'>    <span class="p">(</span><span class="nf">.setStreamName</span> <span class="nv">put-request</span> <span class="nv">event-stream</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">(</span><span class="nb">doseq </span><span class="p">[</span><span class="o">^</span><span class="nv">ObjectNode</span> <span class="nv">event</span> <span class="nv">batch</span><span class="p">]</span>
+</span><span class='line'>      <span class="p">(</span><span class="nf">.remove</span> <span class="nv">event</span> <span class="o">^</span><span class="nv">String</span> <span class="nv">failure-metadata</span><span class="p">)</span>
+</span><span class='line'>      <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">request-entry</span> <span class="p">(</span><span class="nf">PutRecordsRequestEntry.</span><span class="p">)</span>
+</span><span class='line'>            <span class="nv">request-data</span>  <span class="p">(</span><span class="nf">.getBytes</span> <span class="p">(</span><span class="nb">str </span><span class="nv">event</span><span class="p">))</span>
+</span><span class='line'>            <span class="nv">request-buf</span>   <span class="p">(</span><span class="nf">ByteBuffer/wrap</span> <span class="nv">request-data</span> <span class="mi">0</span> <span class="p">(</span><span class="nb">alength </span><span class="nv">request-data</span><span class="p">))</span>
+</span><span class='line'>            <span class="nv">partition-key</span> <span class="p">(</span><span class="ss">:user-id</span> <span class="nv">event</span><span class="p">)]</span>
+</span><span class='line'>        <span class="p">(</span><span class="nb">doto </span><span class="nv">request-entry</span>
+</span><span class='line'>          <span class="p">(</span><span class="nf">.setData</span>         <span class="nv">request-buf</span><span class="p">)</span>
+</span><span class='line'>          <span class="p">(</span><span class="nf">.setPartitionKey</span> <span class="nv">partition-key</span><span class="p">))</span>
+</span><span class='line'>        <span class="p">(</span><span class="nf">.add</span> <span class="nv">batch-list</span> <span class="nv">request-entry</span><span class="p">)))</span>
+</span><span class='line'>    <span class="p">(</span><span class="nf">.setRecords</span> <span class="nv">put-request</span> <span class="nv">batch-list</span><span class="p">)</span>
+</span><span class='line'>    <span class="nv">put-request</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>Failure</h5>
+
+<p>Failure can occur on individual records within a batch or in the batch as a whole.</p>
+
+<h6>Individual failures</h6>
+
+<ol>
+<li>These messages are re-added to the queue so we can try again. If the messages fail for some nth time they are considered invalid and rejected from kinesis and logged as an error.</li>
+</ol>
+
+
+<h6>Batch level</h6>
+
+<ol>
+<li><p>Amazon had an Internal Failure. We don&rsquo;t know what went wrong. (We see this regularly in normal function).</p></li>
+<li><p>Amazon Kinesis is not resolvable (AmazonClientException/AmazonServiceException).</p></li>
+<li><p>Exceeding the read/write limits of Kinesis (ProvisionedThroughputExceededException).</p></li>
+</ol>
+
+
+<p>This is our backpressure signal, in which case at worst we need to log to disk for replay later</p>
+
+<h2>Consuming Messages from Kinesis</h2>
+
+<p>With the consumption of events we have a different application stream for every worker. All workers have their own streams, and own checkpoints so they operate independently of each other. Some example of the workers we gave running:</p>
+
+<ul>
+<li>Logging Events to s3</li>
+<li>Calculating listening time</li>
+<li>Forwarding certain messages on to various other systems (like RabbitMQ).</li>
+</ul>
+
+
+<p>Launching a worker is pretty simple with the Amazon Java Kinesis library.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="ss">:import</span> <span class="p">[</span><span class="nv">com.amazonaws.services.kinesis.clientlibrary.lib.worker</span> <span class="nv">Worker</span><span class="p">])</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="kd">defn </span><span class="nv">-main</span> <span class="p">[</span><span class="o">&amp;</span> <span class="nv">args</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">worker-fn</span> <span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">events</span><span class="p">]</span> <span class="p">(</span><span class="nb">print </span><span class="nv">events</span><span class="p">))</span>
+</span><span class='line'>        <span class="nv">config</span> <span class="p">(</span><span class="nf">KinesisClientLibConfiguration.</span>   <span class="nv">worker-fn</span>  <span class="p">)</span>   <span class="c1">;;I&#39;m airbrushing over the Java classes</span>
+</span><span class='line'>        <span class="nv">processor</span> <span class="p">(</span><span class="nf">reify</span> <span class="nv">IRecordProcessorFactory</span> <span class="nv">worker-fn</span><span class="p">)</span>   <span class="c1">;;Ultimately this is a lot of config wrapped in Java fun</span>
+</span><span class='line'>        <span class="p">[</span><span class="o">^</span><span class="nv">Worker</span> <span class="nv">worker</span> <span class="nv">uuid</span><span class="p">]</span> <span class="p">(</span><span class="nf">Worker.</span> <span class="nv">processor</span> <span class="nv">config</span><span class="p">)]</span>
+</span><span class='line'>          <span class="p">(</span><span class="nf">future</span> <span class="p">(</span><span class="nf">.run</span> <span class="nv">worker</span><span class="p">))))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>One of the hardest parts of setting up the a worker is getting the configuration right to ensure that the consumers are getting through the events fast enough. Events are held in Amazon for 24 hours after entry, and hence there is a minimum consumption rate.</p>
+
+<p>Counting events in and events out with <a href="http://prometheus.io/">Prometheus</a> made it easier to get the correct consumption rates.
+<img src="http://josephwilk.github.io/images/kinesis_entry_exit_rates.png" alt="Entry/exit rates"/></p>
+
+<p>Via the Amazon console you also get access to various graphs around read/write rates and limits:</p>
+
+<p><img src="http://josephwilk.github.io/images/amazon_kinesis_graphs.png"/></p>
+
+<p>Finally you can also look at Amazon&rsquo;s Dynamodb instance for the Kinesis stream providing insight into metrics around leases, how many where revoked, stolen, never finished, etc.</p>
+
+<p>Here is an example of one of our Kinesis workers configuration covered in scribblings of me trying to work out the right settings.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'>  <span class="p">{</span>
+</span><span class='line'>   <span class="c1">;;default 1 sec, cannot be lower than 200ms</span>
+</span><span class='line'>   <span class="c1">;;If we are not reading fast enough this is a good value to tweak</span>
+</span><span class='line'>   <span class="ss">:idle-time-between-reads-in-millis</span> <span class="mi">500</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">;;Clean up leases for shards that we&#39;ve finished processing (don&#39;t wait</span>
+</span><span class='line'>   <span class="c1">;;until they expire)</span>
+</span><span class='line'>   <span class="ss">:cleanup-leases-upon-shard-completion</span> <span class="nv">true</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">;;If the heartbeat count does not increase within the configurable timeout period,</span>
+</span><span class='line'>   <span class="c1">;;other workers take over processing of that shard.</span>
+</span><span class='line'>   <span class="c1">;;*IMPORTANT* If this time is shorter than time for a worker to checkpoint all nodes</span>
+</span><span class='line'>   <span class="c1">;;will keep stealing each others leases producing a lot of contention.</span>
+</span><span class='line'>   <span class="ss">:failover-time-millis</span> <span class="nv">...</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">;;Max records in a single returned in a `GetRecords`. Cannot exceed 10,000</span>
+</span><span class='line'>   <span class="ss">:max-records</span> <span class="mi">4500</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">;;Process records even if GetRecords returned an empty record list.</span>
+</span><span class='line'>   <span class="ss">:call-process-records-even-for-empty-record-list</span> <span class="nv">false</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">;;Sleep for this duration if the parent shards have not completed processing,</span>
+</span><span class='line'>   <span class="c1">;;or we encounter an exception.</span>
+</span><span class='line'>   <span class="ss">:parent-shard-poll-interval-millis</span> <span class="mi">10000</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">;;By default, the KCL begins withs the most recently added record.</span>
+</span><span class='line'>   <span class="c1">;;Instead always reads data from the beginning of the stream.</span>
+</span><span class='line'>   <span class="ss">:initial-position-in-stream</span>  <span class="ss">:TRIM_HORIZON</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Monitoring</h2>
+
+<p>Prometheus (<a href="http://prometheus.io/">http://prometheus.io/</a>) a monitoring tool built at SoundCloud was <em>core</em> to developing, scaling and monitoring all of this pipeline. Amazon does provide some useful graphs within the AWS console but more detailed feedback was very helpful even if it was removed later.</p>
+
+<h4>Exception Logging pattern</h4>
+
+<p>All Exceptions are counted and sent to log. This was a very useful pattern for driving out errors and spotting leaks in the interactions with Kinesis and consumption:</p>
+
+<p>(Using a Clojure wrapper around Prometheus: <a href="https://github.com/josephwilk/prometheus-clj">https://github.com/josephwilk/prometheus-clj</a>)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="nf">try+</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">worker-fn</span> <span class="nv">raw-events</span><span class="p">)</span>
+</span><span class='line'><span class="p">(</span><span class="nf">catch</span> <span class="nv">Exception</span> <span class="nv">e</span>
+</span><span class='line'>  <span class="c1">;;Count based on exception class</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">inc-counter</span> <span class="ss">:failed-batches</span> <span class="p">{</span><span class="ss">:type</span> <span class="nv">worker-type</span> <span class="ss">:error-code</span> <span class="p">(</span><span class="nb">str </span><span class="p">(</span><span class="nf">.getClass</span> <span class="nv">e</span><span class="p">))})</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">log/error</span> <span class="nv">e</span><span class="p">)))]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note Kinesis regularly spits out &ldquo;InternalFailure&rdquo; Exceptions. Thats all you get&hellip;</p>
+
+<p><img src="http://josephwilk.github.io/images/kinesis_failures.png" alt="Kinesis Internal failures"/></p>
+
+<h2>A Cloud Pipeline in Pictures</h2>
+
+<p>In my previous post about <a href="http://blog.josephwilk.net/clojure/building-clojure-services-at-scale.html">Building Clojure services at scale</a> I converted the system metrics to sound. With so many machines processing so many events its easy to loose track of the amount of work being done in the cloud.
+To make this feel more real I captured metrics across all the machines involved and created 3d renderings using <a href="http://openframeworks.cc">OpenFrameworks</a> and meshes of the systems function:</p>
+
+<p><img src="http://josephwilk.github.io/octopress/images/soundcloud_kinesis.png" alt="" />
+<img src="http://josephwilk.github.io/octopress/images/soundcloud_kinesis2.png" alt="" /></p>
+
+<h2>Thanks</h2>
+
+<p>This work constitues a team effort by the Data team at SoundCloud. A lot of advice, collaboration and hard work. Kudos to everyone.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Clojure and Overtone driving Minecraft]]></title>
@@ -4406,173 +5202,6 @@ end
 
 
 <p>And keep your ears open for any events!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Mining Cucumber Features]]></title>
-    <link href="http://josephwilk.github.io/cucumber/mining-cucumber-features.html"/>
-    <updated>2011-07-26T18:00:23+01:00</updated>
-    <id>http://josephwilk.github.io/cucumber/mining-cucumber-features</id>
-    <content type="html"><![CDATA[<h2>Failure Rates vs Change Rates</h2>
-
-<p>I&rsquo;ve been spending a lot of  time recently data mining our test suite at Songkick.com. I&rsquo;ve been using our own internal version of <a href="http://www.limited-red.com">www.limited-red.com</a> which records all our test fails for every build on our continuous integration server.</p>
-
-<p>With the Cucumber features I decided to plot the number of times a feature file has been significantly changed vs the number of times the feature has failed in the build. The theory being that a change to a feature file(the plain text specification of behaviour) most often represents a chance in functionality.</p>
-
-<p>So I wrote a simple script checking the number of commits to each feature file.</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">features_folder</span> <span class="o">=</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
-</span><span class='line'><span class="n">feature_files</span> <span class="o">=</span> <span class="no">Dir</span><span class="o">[</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">features_folder</span><span class="si">}</span><span class="s2">/**/*.feature&quot;</span><span class="o">]</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">feature_files</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">feature_file</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">change_logs</span> <span class="o">=</span> <span class="sb">`git log --oneline </span><span class="si">#{</span><span class="n">feature_file</span><span class="si">}</span><span class="sb"> 2&gt;/dev/null`</span>
-</span><span class='line'>  <span class="n">change_count</span> <span class="o">=</span> <span class="n">change_logs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">feature_file</span><span class="si">}</span><span class="s2">,</span><span class="si">#{</span><span class="n">change_count</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Feature changes compared with feature failures</h2>
-
-<p>Throwing that into a pretty graph, here is a snapshot of some of the features (I&rsquo;ve changed the name of the features to hide top secret Songkick business).</p>
-
-<p><img src="http://josephwilk.github.io/images/blog/2011/07/feature_change_vs_failure1.png" alt="" /></p>
-
-<h3>Insights</h3>
-
-<p>Based on this I identified two possible groups of features:</p>
-
-<ul>
-<li><p>Features failing more often than the code around them is changing</p></li>
-<li><p>Features which are robust and are not breaking when the code around them is changing.</p></li>
-</ul>
-
-
-<p>Further investigation into the suspect features highlighted 3 causes:</p>
-
-<ul>
-<li><p>Brittle step definitions</p></li>
-<li><p>Brittle features coupled to the UI</p></li>
-<li><p>Tests with a high dependency on asynchronous behaviour</p></li>
-</ul>
-
-
-<h2>Holes in the data &ndash; step definitions</h2>
-
-<p>We only recorded the change rate of features files in Git. Features could be broken without ever changing the feature file, for example if a common step definition is broken. Next steps are to identify all the step definitions used by a feature and examine how often the step definitions have changed.</p>
-
-<p>First find the change count for all the step definitions.</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">step_files</span> <span class="o">=</span> <span class="no">Dir</span><span class="o">[</span><span class="s2">&quot;features/**/*_steps.rb&quot;</span><span class="o">]</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">step_files</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">step_file</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">change_logs</span> <span class="o">=</span> <span class="sb">`git log --oneline </span><span class="si">#{</span><span class="n">step_file</span><span class="si">}</span><span class="sb"> 2&gt;/dev/null`</span>
-</span><span class='line'>  <span class="n">change_count</span> <span class="o">=</span> <span class="n">change_logs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span>
-</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">step_file</span><span class="si">}</span><span class="s2">,</span><span class="si">#{</span><span class="n">change_count</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Then working out what step definitions a feature uses.  We can do this by running cucumber with the json formatter and match up step definitions (and hence step definition files) to feature files:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;json&#39;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sb">`cucumber features --dry-run --format json --out .json.out`</span>
-</span><span class='line'><span class="n">features_json</span> <span class="o">=</span> <span class="no">JSON</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;.json.out&#39;</span><span class="p">))</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">stats</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">{</span><span class="o">|</span><span class="n">h</span><span class="p">,</span><span class="n">k</span><span class="o">|</span> <span class="n">h</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="o">[]</span><span class="p">}</span>
-</span><span class='line'><span class="n">features_json</span><span class="o">[</span><span class="s1">&#39;features&#39;</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">feature</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">feature_name</span> <span class="o">=</span> <span class="n">feature</span><span class="o">[</span><span class="s1">&#39;name&#39;</span><span class="o">]</span>
-</span><span class='line'>  <span class="c1">#The JSON does not have the feature file. Find the file via the feature name. Messy</span>
-</span><span class='line'>  <span class="n">feature_file</span> <span class="o">=</span> <span class="sb">`egrep -riE &quot;feature:? *</span><span class="si">#{</span><span class="n">feature_name</span><span class="si">}</span><span class="sb">&quot; features/`</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
-</span><span class='line'>  <span class="n">feature</span><span class="o">[</span><span class="s2">&quot;elements&quot;</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">element</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">element</span><span class="o">[</span><span class="s2">&quot;steps&quot;</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">step</span><span class="o">|</span>
-</span><span class='line'>      <span class="n">file_location</span> <span class="o">=</span> <span class="n">step</span><span class="o">[</span><span class="s1">&#39;match&#39;</span><span class="o">][</span><span class="s1">&#39;location&#39;</span><span class="o">]</span>
-</span><span class='line'>      <span class="n">file</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">file_location</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
-</span><span class='line'>      <span class="k">if</span> <span class="n">file</span> <span class="o">=~</span> <span class="sr">/_steps\.rb$/</span>
-</span><span class='line'>        <span class="n">stats</span><span class="o">[</span><span class="n">feature_file</span><span class="o">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">stats</span><span class="o">[</span><span class="n">feature_file</span><span class="o">]</span> <span class="o">+</span> <span class="o">[</span><span class="n">file</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">uniq</span>
-</span><span class='line'>      <span class="k">end</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'><span class="n">pp</span> <span class="n">stats</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Change rate vs Failure rate with step definition changes</h2>
-
-<p>Combining those two bits of data we can now add to our original graph the step definition change rates for a feature.
-<img src="http://josephwilk.github.io/images/blog/2011/07/with_steps.png" alt="" /></p>
-
-<p>We also can examine an individual break down of the step definition change rates for a feature:</p>
-
-<p><img src="http://josephwilk.github.io/images/blog/2011/07/step_def.png" alt="" /></p>
-
-<h2>Holes in using the step definition change rate</h2>
-
-<p>The step definition changes from git are at the file level (the *_step.rb file) so a change in git may not touch a step definition used by a feature. Hence we may be counting changes which are not relevant for a feature. Further work would be to examine the git diffs and check if a change touched a step definition used by a feature.</p>
-
-<h2>Conclusions</h2>
-
-<p>Our tests hide lots of interesting information that can provide evidence of areas we can make improvements. It&rsquo;s important to realise that like anything in statistics our data mining does not yield facts, just suggestions. At Songkick we are already mining this information with Cucumber and using it to help improve and learn about our tests.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Conferences and Accessibility: Please Try Harder]]></title>
-    <link href="http://josephwilk.github.io/personal/conferences-and-accessibility-please-try-harder.html"/>
-    <updated>2011-06-27T13:25:23+01:00</updated>
-    <id>http://josephwilk.github.io/personal/conferences-and-accessibility-please-try-harder</id>
-    <content type="html"><![CDATA[<p>I speak at a lot of conferences around the world and I&rsquo;ve been happy to hear a lot of healthy debate around the diversity of the programming community. I really enjoyed and felt inspired by the talk from <a href="http://blogs.thewehners.net/josh">Joshua Wehner</a> on &ldquo;Must It Always Be About Sex&rdquo; at <a href="http://nordicruby.org/">Nordic Ruby</a> and <a href="http://rulu.eu/">Ruby Lugdunum.</a></p>
-
-<p>It got me thinking about the issue of accessibility at conferences. I use a wheelchair and happily throw myself at any conference irrelevant of the obstacles. But not everyone is as crazy or as flexible as I am. Once at the conference the organisers are always willing to help but I wonder if we are not excluding disabled people who may dimiss the chance to talk or attend as unfeasible due to lack of information about access. Even if thats only a few people, those people are valuable members of our communities and deserve the chance to participate if they want to.</p>
-
-<p>How would we ever know if we were discriminating, if no-one turns up in a wheelchair we are none the wiser.</p>
-
-<p>I understand conferences are expensive and complicated events to organise. I would ask two small things of every conference organiser:</p>
-
-<p><strong>1. Try and select an accessible venue if possible. For both speakers and attendees.</strong></p>
-
-<p><strong>2. Make it clear on the conference website if the venue, party, hack sessions are accessible or not.</strong></p>
-
-<p>My life was profoundly changed through speaking and attending conferences, in many ways beyond programming. I hope we can make sure anyone who wants that opportunity won&rsquo;t be put off.</p>
 ]]></content>
   </entry>
   

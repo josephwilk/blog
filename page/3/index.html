@@ -9,7 +9,7 @@
   <meta name="author" content="Joseph Wilk">
 
   
-  <meta name="description" content="I&rsquo;m very excited to be talking at this years Agile2011 conference. Its a goal I&rsquo;ve been working towards for a long time. I&rsquo;ve been &hellip;">
+  <meta name="description" content="Failure Rates vs Change Rates I&rsquo;ve been spending a lot of  time recently data mining our test suite at Songkick.com. I&rsquo;ve been using our &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +82,227 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cucumber/mining-cucumber-features.html">Mining Cucumber Features</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-26T18:00:23+01:00" pubdate data-updated="true">Jul 26<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Failure Rates vs Change Rates</h2>
+
+<p>I&rsquo;ve been spending a lot of  time recently data mining our test suite at Songkick.com. I&rsquo;ve been using our own internal version of <a href="http://www.limited-red.com">www.limited-red.com</a> which records all our test fails for every build on our continuous integration server.</p>
+
+<p>With the Cucumber features I decided to plot the number of times a feature file has been significantly changed vs the number of times the feature has failed in the build. The theory being that a change to a feature file(the plain text specification of behaviour) most often represents a chance in functionality.</p>
+
+<p>So I wrote a simple script checking the number of commits to each feature file.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">features_folder</span> <span class="o">=</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+</span><span class='line'><span class="n">feature_files</span> <span class="o">=</span> <span class="no">Dir</span><span class="o">[</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">features_folder</span><span class="si">}</span><span class="s2">/**/*.feature&quot;</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">feature_files</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">feature_file</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">change_logs</span> <span class="o">=</span> <span class="sb">`git log --oneline </span><span class="si">#{</span><span class="n">feature_file</span><span class="si">}</span><span class="sb"> 2&gt;/dev/null`</span>
+</span><span class='line'>  <span class="n">change_count</span> <span class="o">=</span> <span class="n">change_logs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">feature_file</span><span class="si">}</span><span class="s2">,</span><span class="si">#{</span><span class="n">change_count</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Feature changes compared with feature failures</h2>
+
+<p>Throwing that into a pretty graph, here is a snapshot of some of the features (I&rsquo;ve changed the name of the features to hide top secret Songkick business).</p>
+
+<p><img src="/images/blog/2011/07/feature_change_vs_failure1.png" alt="" /></p>
+
+<h3>Insights</h3>
+
+<p>Based on this I identified two possible groups of features:</p>
+
+<ul>
+<li><p>Features failing more often than the code around them is changing</p></li>
+<li><p>Features which are robust and are not breaking when the code around them is changing.</p></li>
+</ul>
+
+
+<p>Further investigation into the suspect features highlighted 3 causes:</p>
+
+<ul>
+<li><p>Brittle step definitions</p></li>
+<li><p>Brittle features coupled to the UI</p></li>
+<li><p>Tests with a high dependency on asynchronous behaviour</p></li>
+</ul>
+
+
+<h2>Holes in the data &ndash; step definitions</h2>
+
+<p>We only recorded the change rate of features files in Git. Features could be broken without ever changing the feature file, for example if a common step definition is broken. Next steps are to identify all the step definitions used by a feature and examine how often the step definitions have changed.</p>
+
+<p>First find the change count for all the step definitions.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">step_files</span> <span class="o">=</span> <span class="no">Dir</span><span class="o">[</span><span class="s2">&quot;features/**/*_steps.rb&quot;</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">step_files</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">step_file</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">change_logs</span> <span class="o">=</span> <span class="sb">`git log --oneline </span><span class="si">#{</span><span class="n">step_file</span><span class="si">}</span><span class="sb"> 2&gt;/dev/null`</span>
+</span><span class='line'>  <span class="n">change_count</span> <span class="o">=</span> <span class="n">change_logs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">step_file</span><span class="si">}</span><span class="s2">,</span><span class="si">#{</span><span class="n">change_count</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then working out what step definitions a feature uses.  We can do this by running cucumber with the json formatter and match up step definitions (and hence step definition files) to feature files:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;json&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sb">`cucumber features --dry-run --format json --out .json.out`</span>
+</span><span class='line'><span class="n">features_json</span> <span class="o">=</span> <span class="no">JSON</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;.json.out&#39;</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">stats</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">{</span><span class="o">|</span><span class="n">h</span><span class="p">,</span><span class="n">k</span><span class="o">|</span> <span class="n">h</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="o">[]</span><span class="p">}</span>
+</span><span class='line'><span class="n">features_json</span><span class="o">[</span><span class="s1">&#39;features&#39;</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">feature</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">feature_name</span> <span class="o">=</span> <span class="n">feature</span><span class="o">[</span><span class="s1">&#39;name&#39;</span><span class="o">]</span>
+</span><span class='line'>  <span class="c1">#The JSON does not have the feature file. Find the file via the feature name. Messy</span>
+</span><span class='line'>  <span class="n">feature_file</span> <span class="o">=</span> <span class="sb">`egrep -riE &quot;feature:? *</span><span class="si">#{</span><span class="n">feature_name</span><span class="si">}</span><span class="sb">&quot; features/`</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+</span><span class='line'>  <span class="n">feature</span><span class="o">[</span><span class="s2">&quot;elements&quot;</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">element</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">element</span><span class="o">[</span><span class="s2">&quot;steps&quot;</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">step</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">file_location</span> <span class="o">=</span> <span class="n">step</span><span class="o">[</span><span class="s1">&#39;match&#39;</span><span class="o">][</span><span class="s1">&#39;location&#39;</span><span class="o">]</span>
+</span><span class='line'>      <span class="n">file</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">file_location</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">if</span> <span class="n">file</span> <span class="o">=~</span> <span class="sr">/_steps\.rb$/</span>
+</span><span class='line'>        <span class="n">stats</span><span class="o">[</span><span class="n">feature_file</span><span class="o">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">stats</span><span class="o">[</span><span class="n">feature_file</span><span class="o">]</span> <span class="o">+</span> <span class="o">[</span><span class="n">file</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">uniq</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="n">pp</span> <span class="n">stats</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Change rate vs Failure rate with step definition changes</h2>
+
+<p>Combining those two bits of data we can now add to our original graph the step definition change rates for a feature.
+<img src="/images/blog/2011/07/with_steps.png" alt="" /></p>
+
+<p>We also can examine an individual break down of the step definition change rates for a feature:</p>
+
+<p><img src="/images/blog/2011/07/step_def.png" alt="" /></p>
+
+<h2>Holes in using the step definition change rate</h2>
+
+<p>The step definition changes from git are at the file level (the *_step.rb file) so a change in git may not touch a step definition used by a feature. Hence we may be counting changes which are not relevant for a feature. Further work would be to examine the git diffs and check if a change touched a step definition used by a feature.</p>
+
+<h2>Conclusions</h2>
+
+<p>Our tests hide lots of interesting information that can provide evidence of areas we can make improvements. It&rsquo;s important to realise that like anything in statistics our data mining does not yield facts, just suggestions. At Songkick we are already mining this information with Cucumber and using it to help improve and learn about our tests.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/personal/conferences-and-accessibility-please-try-harder.html">Conferences and Accessibility: Please Try Harder</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-06-27T13:25:23+01:00" pubdate data-updated="true">Jun 27<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I speak at a lot of conferences around the world and I&rsquo;ve been happy to hear a lot of healthy debate around the diversity of the programming community. I really enjoyed and felt inspired by the talk from <a href="http://blogs.thewehners.net/josh">Joshua Wehner</a> on &ldquo;Must It Always Be About Sex&rdquo; at <a href="http://nordicruby.org/">Nordic Ruby</a> and <a href="http://rulu.eu/">Ruby Lugdunum.</a></p>
+
+<p>It got me thinking about the issue of accessibility at conferences. I use a wheelchair and happily throw myself at any conference irrelevant of the obstacles. But not everyone is as crazy or as flexible as I am. Once at the conference the organisers are always willing to help but I wonder if we are not excluding disabled people who may dimiss the chance to talk or attend as unfeasible due to lack of information about access. Even if thats only a few people, those people are valuable members of our communities and deserve the chance to participate if they want to.</p>
+
+<p>How would we ever know if we were discriminating, if no-one turns up in a wheelchair we are none the wiser.</p>
+
+<p>I understand conferences are expensive and complicated events to organise. I would ask two small things of every conference organiser:</p>
+
+<p><strong>1. Try and select an accessible venue if possible. For both speakers and attendees.</strong></p>
+
+<p><strong>2. Make it clear on the conference website if the venue, party, hack sessions are accessible or not.</strong></p>
+
+<p>My life was profoundly changed through speaking and attending conferences, in many ways beyond programming. I hope we can make sure anyone who wants that opportunity won&rsquo;t be put off.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -707,174 +928,6 @@ relish push --project air --organization breathe
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/acceptance-testing/acceptance-testing-lifecycle.html">Acceptance Testing Lifecycle</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-11-12T23:29:57+00:00" pubdate data-updated="true">Nov 12<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Through various meetings at Agile2010 and London agile testing meetings <a href="http://gojko.net/">Gojko Adzic</a> and others have been converging on a common language to talk about Acceptance testing and the different phases. In doing so we have fleshed out a lifecycle for Acceptance testing.</p>
-
-<p><img src="/images/blog/2010/10/Acceptance-test-lifecycle5.png" alt="" /></p>
-
-<p>Seeing a wider picture of the lifecycle helped me gain a better scope of how Cucumber Features are born. I thought I would share a real example demonstrating how the acceptance testing lifecycle (can) flow at Songkick.com.</p>
-
-<h2>Example</h2>
-
-<h3>Business goal</h3>
-
-<pre><code>Increase the ratio of people signing up
-</code></pre>
-
-<p>This gives us something to <em>measure</em> and <em>learn</em> from to assess the success of the features <em>built</em>.</p>
-
-<h3>User stories &ndash; MMFs</h3>
-
-<p>Generating ideas through discussion and brainstorming that achieve this business goal. These are captured as Minimal Marketable Features and have our business goal as their value:</p>
-
-<pre><code>In order to increase signups
-I want visitors to signup through their facebook accounts
-</code></pre>
-
-<p>We break the minimal marketable features into user stories. We try and break the stories into as small as possible units.</p>
-
-<pre><code>Successful signup through Facebook
-In order to sign up with as little effort as possible
-As a non-member
-I want to signup through my facebook account
-
-
-
-
-Failed signup up through Facebook
-In order to sign with as little effort as possible
-As a non-member
-I want to know what I can do to correct errors preventing signup
-</code></pre>
-
-<h3>Key examples</h3>
-
-<p>We have a card with the story narrative representing a token for conversation. We use this card to start discussions with QAs, developers and UX exploring the requirements through concrete examples. Playing the what-if game.</p>
-
-<p>Through this we generate a list of scenarios:</p>
-
-<pre><code>Scenario: Successful signup through facebook
-
-Scenario: Failing due to already having a facebook account connected
-
-Scenario: Facebook is unavailable
-</code></pre>
-
-<p>Note that while we express these as scenarios its not implied that all are going to be tested at the acceptance test level. The developer for scaling/performance issues may push a scenario down to lower level tests.</p>
-
-<h3>Specification with examples</h3>
-
-<p>Pairing with a QA we take the cards and our exploration notes and codify them into Cucumber features.</p>
-
-<pre><code>Feature: Visitor signups up through Facebook ﻿
-  In order to reduce friction in signing up
-  As a non-member
-  I want to signup through my facebook account ﻿
-
-Scenario: Successful signup through facebook
-    Given ...
-    When ...
-    Then ...
-
-Scenario:﻿Failing due to already having a facebook account connected
-    Given ...
-    When ...
-    Then ...
-
-Scenario: ﻿Failed due to Facebook being unavailable
-    Given ...
-    When ...
-    Then ...
-</code></pre>
-
-<p>Note that there is not a 1-1 mapping between a Feature and a User Story.</p>
-
-<h3>Literal automation: Mapping Feature down to step definitions</h3>
-
-<p>The developer turns the feature into an executable test at the same time as writing the feature. When using Cucumber this consists of writing the step definitions.</p>
-
-<h3>Continuous validation</h3>
-
-<p>The feature is continuously run upon every commit (Using a Continuous integration server)</p>
-
-<h3>Living documentation</h3>
-
-<p>Exposing features for all to read. Using a web based system such as <a href="http://relishapp.com/">Relish</a> the features are easily browserable by everyone yet they live in the codebase.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/cucumber/cucumber-interview-for-software-development-times.html">Cucumber Interview for the Software Development Times</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-09-13T23:26:01+01:00" pubdate data-updated="true">Sep 13<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I was recently interviewed about Cucumber and whether it solves the problem of getting business people writing specifications.
-You can read the article on SDTimes:
-<a href="http://www.sdtimes.com/link/34631">Cucumber puts plain English on requirements</a></p>
-
-<p>I got a little bit carried away in answering some of the questions posed and Alex Handy was kind enough to post all my responses in detail:
-<a href="http://www.sdtimes.com/blog/1687">Peeling Cucumber</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/4/">&larr; Older</a>
@@ -890,6 +943,14 @@ You can read the article on SDTimes:
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/art/emacs-animation.html">Animations with Emacs</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/clojure-and-kinesis-at-scale.html">Clojure and Kinesis at scale</a>
+      </li>
     
       <li class="post">
         <a href="/clojure/overtone-driving-minecraft.html">Clojure and Overtone driving Minecraft</a>
@@ -921,14 +982,6 @@ You can read the article on SDTimes:
     
       <li class="post">
         <a href="/clojure/isolating-external-dependencies-in-clojure.html">Isolating external dependencies in Clojure</a>
-      </li>
-    
-      <li class="post">
-        <a href="/presentations/a-developers-guide-to-creating-presentations.html">A developers guide to creating presentations</a>
-      </li>
-    
-      <li class="post">
-        <a href="/software-craftmanship/the-aesthetics-of-density.html">The Aesthetics of Density</a>
       </li>
     
   </ul>

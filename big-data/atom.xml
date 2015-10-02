@@ -4,7 +4,7 @@
   <title><![CDATA[Category: big-data | Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io//big-data/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2015-10-01T13:01:28+01:00</updated>
+  <updated>2015-10-02T14:31:19+01:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -66,22 +66,16 @@
 
 <p>The Pig script:</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&mdash; Define some useful dates we will use later
-</span><span class='line'>%default TODAYS_DATE &lt;code>date  +%Y/%m/%d&lt;/code>
-</span><span class='line'>%default 30_DAYS_AGO &lt;code>date -d "$TODAYS_DATE - 30 day" +%Y-%m-%d&lt;/code>&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>&mdash; Pig is smart enough when given a folder to go and find files, decompress them if necessarily and load them.
-</span><span class='line'>&mdash; Note we have to specify the schema as PIG does not know know this from our TSV file.
-</span><span class='line'>trackings = LOAD &lsquo;s3://songkick/db/trackings/$TODAYS_DATE/&rsquo; AS (id:int, artist_id:int,  user_id:int); 
-</span><span class='line'>users = LOAD &lsquo;s3://songkick/db/users/$TODAYS_DATE/&rsquo; AS (id:int, username:chararray, last_logged_in_at:chararray);</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock %}
+&mdash; Define some useful dates we will use later
+%default TODAYS_DATE <code>date  +%Y/%m/%d</code>
+%default 30_DAYS_AGO <code>date -d "$TODAYS_DATE - 30 day" +%Y-%m-%d</code></p>
+
+<p>&mdash; Pig is smart enough when given a folder to go and find files, decompress them if necessarily and load them.
+&mdash; Note we have to specify the schema as PIG does not know know this from our TSV file.
+trackings = LOAD &lsquo;s3://songkick/db/trackings/$TODAYS_DATE/&rsquo; AS (id:int, artist_id:int,  user_id:int); 
+users = LOAD &lsquo;s3://songkick/db/users/$TODAYS_DATE/&rsquo; AS (id:int, username:chararray, last_logged_in_at:chararray);
+{% endcodeblock %}</p>
 
 <pre><code>trackings
 &lt;1, 1, 1&gt;
@@ -93,120 +87,74 @@ users
 &lt;3,'tycho', '11/06/2010'&gt;
 </code></pre>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>-- Filter users to only those who logged in, in the last 30 days
-</span><span class='line'>-- Pig does not understand dates, so just treat them as strings
-</span><span class='line'>active_users = FILTER users by last_logged_in_at gte '$30_DAYS_AGO'
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock %}</p>
+
+<pre><code>-- Filter users to only those who logged in, in the last 30 days
+-- Pig does not understand dates, so just treat them as strings
+active_users = FILTER users by last_logged_in_at gte '$30_DAYS_AGO'
+</code></pre>
+
+<p>{% endcodeblock %}</p>
 
 <pre><code>Users
 &lt;1,'josephwilk', '11/06/2012'&gt;
 &lt;2,'elisehuard', '11/06/2012'&gt;
 </code></pre>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>active_users_and_trackings = JOIN active_users BY id, trackings BY user_id
-</span><span class='line'>
-</span><span class='line'>-- group all the users tracking an artists so we can count them.
-</span><span class='line'>active_users_and_trackings_grouped = GROUP active_users_and_trackings BY active_users::user_id;
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock %}</p>
+
+<pre><code>active_users_and_trackings = JOIN active_users BY id, trackings BY user_id
+
+-- group all the users tracking an artists so we can count them.
+active_users_and_trackings_grouped = GROUP active_users_and_trackings BY active_users::user_id;
+</code></pre>
+
+<p>{% endcodeblock %}</p>
 
 <pre><code>&lt;1, 1, /\{&lt;1,'josephwilk', '11/06/2012'&gt;, &lt;2,'elisehuard', '11/06/2012'&gt;\/}&gt;`
 </code></pre>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>trackings_per_artist = FOREACH active_users_and_trackings_grouped GENERATE group, COUNT($2) as number_of_trackings;
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock %}</p>
+
+<pre><code>trackings_per_artist = FOREACH active_users_and_trackings_grouped GENERATE group, COUNT($2) as number_of_trackings;
+</code></pre>
+
+<p>{% endcodeblock %}</p>
 
 <pre><code>`&lt;\/{&lt;1,'josephwilk', '11/06/2012'&gt;, &lt;2,'elisehuard', '11/06/2012'&gt;\/}, 2&gt;`
 </code></pre>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>-- group all the counts so we can calculate the average
-</span><span class='line'>all_trackings_per_artist = GROUP trackings_per_artist ALL;
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock %}</p>
+
+<pre><code>-- group all the counts so we can calculate the average
+all_trackings_per_artist = GROUP trackings_per_artist ALL;
+</code></pre>
+
+<p>{% endcodeblock %}</p>
 
 <pre><code>&lt;\/{\/{&lt;1,'josephwilk', '11/06/2012'&gt;, &lt;2,'elisehuard', '11/06/2012'&gt;\/}, 2\/}&gt;
 </code></pre>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>-- Calculate the average
-</span><span class='line'>average_artist_trackings_per_active_user = FOREACH all_trackings_per_artist
-</span><span class='line'>  GENERATE '$DATE' as dt, AVG(trackings_per_artist.number_of_trackings);
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock %}</p>
+
+<pre><code>-- Calculate the average
+average_artist_trackings_per_active_user = FOREACH all_trackings_per_artist
+  GENERATE '$DATE' as dt, AVG(trackings_per_artist.number_of_trackings);
+</code></pre>
+
+<p>{% endcodeblock %}</p>
 
 <pre><code>&lt;{&lt;'11/062012', 2&gt;}&gt;
 </code></pre>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>--Now we have done the work store the result in S3.
-</span><span class='line'>STORE average_artist_trackings_per_active_user INTO
-</span><span class='line'>  's3://songkick/stats/average_artist_trackings_per_active_user/$TODAYS_DATE'
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock %}</p>
+
+<pre><code>--Now we have done the work store the result in S3.
+STORE average_artist_trackings_per_active_user INTO
+  's3://songkick/stats/average_artist_trackings_per_active_user/$TODAYS_DATE'
+</code></pre>
+
+<p>{% endcodeblock %}</p>
 
 <h2>Debugging Pigs (Pig autopsy)</h2>
 
