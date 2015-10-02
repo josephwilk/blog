@@ -4,7 +4,7 @@
   <title><![CDATA[Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2015-10-02T14:33:57+01:00</updated>
+  <updated>2015-10-02T15:07:41+01:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -389,6 +389,10 @@ A Regex matches whitespace and replaces it with a randomly increasing amount of 
 <p><img src="http://josephwilk.github.io/images/waves01.png"/><img src="http://josephwilk.github.io/images/waves02.png"/></p>
 
 <p>This animations attempts to simulate the effect of waves using line wrapping and mixing deletions with insertions of different sizes to create lines that seem to move at different speeds.</p>
+
+<h2>Breaking Tools</h2>
+
+<p>While it may seem silly to bend Emacs to do things it was never intended to do, it&rsquo;s an important part of discovering for yourself how you want your tools to work. Not just doing what you are expected but breaking them apart and discovering for yourself how you want to use them.</p>
 ]]></content>
   </entry>
   

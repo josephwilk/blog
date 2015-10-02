@@ -4,7 +4,7 @@
   <title><![CDATA[Category: projects | Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io//projects/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2015-10-02T14:34:17+01:00</updated>
+  <updated>2015-10-02T15:07:41+01:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -131,40 +131,73 @@ Using a search engine search for &ldquo;<em>sand</em>&rdquo;.</p>
 
 <p>Apply the tf-idf transform to the term-document matrix. This generally tends to help improve results with LSA.</p>
 
-<p>{% codeblock lang:python %}
-def tfidfTransform(self,):</p>
-
-<pre><code>    """ Apply TermFrequency(tf)*inverseDocumentFrequency(idf) for each matrix element.
-        This evaluates how important a word is to a document in a corpus
-
-        With a document-term matrix: matrix[x][y]
-            tf[x][y] = frequency of term y in document x / frequency of all terms in document x
-            idf[x][y] = log( abs(total number of documents in corpus) / abs(number of documents with term y)  )
-        Note: This is not the only way to calculate tf*idf
-    """
-
-    documentTotal = len(self.matrix)
-    rows,cols = self.matrix.shape
-
-    for row in xrange(0, rows): #For each document
-
-            wordTotal= reduce(lambda x, y: x+y, self.matrix[row] )
-
-            for col in xrange(0,cols): #For each term
-
-                    #For consistency ensure all self.matrix values are floats
-                    self.matrix[row][col] = float(self.matrix[row][col])
-
-                    if self.matrix[row][col]!=0:
-
-                            termDocumentOccurences = self.__getTermDocumentOccurences(col)
-
-                            termFrequency = self.matrix[row][col] / float(wordTotal)
-                            inverseDocumentFrequency = log(abs(documentTotal / float(termDocumentOccurences)))
-                            self.matrix[row][col]=termFrequency*inverseDocumentFrequency
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">tfidfTransform</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>    <span class="s">&quot;&quot;&quot; Apply TermFrequency(tf)*inverseDocumentFrequency(idf) for each matrix element.</span>
+</span><span class='line'><span class="s">        This evaluates how important a word is to a document in a corpus</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">        With a document-term matrix: matrix[x][y]</span>
+</span><span class='line'><span class="s">            tf[x][y] = frequency of term y in document x / frequency of all terms in document x</span>
+</span><span class='line'><span class="s">            idf[x][y] = log( abs(total number of documents in corpus) / abs(number of documents with term y)  )</span>
+</span><span class='line'><span class="s">        Note: This is not the only way to calculate tf*idf</span>
+</span><span class='line'><span class="s">    &quot;&quot;&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">documentTotal</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">rows</span><span class="p">,</span><span class="n">cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="o">.</span><span class="n">shape</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rows</span><span class="p">):</span> <span class="c">#For each document</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="n">wordTotal</span><span class="o">=</span> <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">cols</span><span class="p">):</span> <span class="c">#For each term</span>
+</span><span class='line'>
+</span><span class='line'>                    <span class="c">#For consistency ensure all self.matrix values are floats</span>
+</span><span class='line'>                    <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">])</span>
+</span><span class='line'>
+</span><span class='line'>                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span><span class="o">!=</span><span class="mi">0</span><span class="p">:</span>
+</span><span class='line'>
+</span><span class='line'>                            <span class="n">termDocumentOccurences</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__getTermDocumentOccurences</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>                            <span class="n">termFrequency</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">wordTotal</span><span class="p">)</span>
+</span><span class='line'>                            <span class="n">inverseDocumentFrequency</span> <span class="o">=</span> <span class="n">log</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">documentTotal</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">termDocumentOccurences</span><span class="p">)))</span>
+</span><span class='line'>                            <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span><span class="o">=</span><span class="n">termFrequency</span><span class="o">*</span><span class="n">inverseDocumentFrequency</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h3>3 Singular Value Decomposition</h3>
 
@@ -177,12 +210,19 @@ def tfidfTransform(self,):</p>
 
 <p>We use the <a href="http://www.scipy.org/">scipy</a> svd implementation here. Note that numpy (version: <strong>1.0.4 </strong>) also has an implementation of svd but I had lots of problems with it. I found it  did not work with anything larger than a 2 dimensional matrix.</p>
 
-<p>{% codeblock lang:python %}</p>
-
-<h1>Sigma comes out as a list rather than a matrix</h1>
-
-<p> u,sigma,vt = linalg.svd(self.matrix)
- {% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">Sigma</span> <span class="n">comes</span> <span class="n">out</span> <span class="k">as</span> <span class="n">a</span> <span class="nb">list</span> <span class="n">rather</span> <span class="n">than</span> <span class="n">a</span> <span class="n">matrix</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span> <span class="n">u</span><span class="p">,</span><span class="n">sigma</span><span class="p">,</span><span class="n">vt</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">)</span>
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h3>4 Reduce the dimensions of Sigma</h3>
 
@@ -197,12 +237,17 @@ def tfidfTransform(self,):</p>
 <pre><code>U . SIGMA' . VT = MATRIX'
 </code></pre>
 
-<p>{% codeblock lang:python %}</p>
-
-<h1>Reconstruct MATRIX'</h1>
-
-<p>reconstructedMatrix= dot(dot(u,linalg.diagsvd(sigma,len(self.matrix),len(vt))),vt)
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">Reconstruct</span> <span class="n">MATRIX</span><span class="s">&#39;&lt;/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">reconstructedMatrix</span><span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">linalg</span><span class="o">.</span><span class="n">diagsvd</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">vt</span><span class="p">))),</span><span class="n">vt</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>Giving use our final LSA matrix. We can now apply the same functionality used in Vector space search: searching and finding related scores for documents.</p>
 
@@ -281,70 +326,123 @@ CONNECTIONS</em></p>
 <pre><code> self.stemmer = PorterStemmer()
 </code></pre>
 
-<p>{% codeblock lang:python %}</p>
-
-<pre><code> def removeStopWords(self,list):
-         """ Remove common words which have no search value """
-         return [word for word in list if word not in self.stopwords ]
-
-
- def tokenise(self, string):
-         """ break string up into tokens and stem words """
-         string = self.clean(string)
-         words = string.split(" ")
-
-         return [self.stemmer.stem(word,0,len(word)-1) for word in words]
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span> <span class="k">def</span> <span class="nf">removeStopWords</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">list</span><span class="p">):</span>
+</span><span class='line'>         <span class="sd">&quot;&quot;&quot; Remove common words which have no search value &quot;&quot;&quot;</span>
+</span><span class='line'>         <span class="k">return</span> <span class="p">[</span><span class="n">word</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">list</span> <span class="k">if</span> <span class="n">word</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopwords</span> <span class="p">]</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'> <span class="k">def</span> <span class="nf">tokenise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
+</span><span class='line'>         <span class="sd">&quot;&quot;&quot; break string up into tokens and stem words &quot;&quot;&quot;</span>
+</span><span class='line'>         <span class="n">string</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clean</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+</span><span class='line'>         <span class="n">words</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stemmer</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">word</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">]</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h3>2 Map Keywords to Vector Dimensions</h3>
 
 <p>Map the vector dimensions to keywords using a dictionary: keyword=>position</p>
 
-<p>{% codeblock lang:python %}
-def getVectorKeywordIndex(self, documentList):</p>
-
-<pre><code>    """ create the keyword associated to the position of the elements within the document vectors """
-
-    #Mapped documents into a single word string
-    vocabularyString = " ".join(documentList)
-
-    vocabularyList = self.parser.tokenise(vocabularyString)
-    #Remove common words which have no search value
-    vocabularyList = self.parser.removeStopWords(vocabularyList)
-    uniqueVocabularyList = util.removeDuplicates(vocabularyList)
-
-    vectorIndex={}
-    offset=0
-    #Associate a position with the keywords which maps to the dimension on the vector used to represent this word
-    for word in uniqueVocabularyList:
-            vectorIndex[word]=offset
-            offset+=1
-    return vectorIndex  #(keyword:position)
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">getVectorKeywordIndex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">documentList</span><span class="p">):</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>    <span class="s">&quot;&quot;&quot; create the keyword associated to the position of the elements within the document vectors &quot;&quot;&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c">#Mapped documents into a single word string</span>
+</span><span class='line'>    <span class="n">vocabularyString</span> <span class="o">=</span> <span class="s">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">documentList</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">vocabularyList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">tokenise</span><span class="p">(</span><span class="n">vocabularyString</span><span class="p">)</span>
+</span><span class='line'>    <span class="c">#Remove common words which have no search value</span>
+</span><span class='line'>    <span class="n">vocabularyList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">removeStopWords</span><span class="p">(</span><span class="n">vocabularyList</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">uniqueVocabularyList</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">removeDuplicates</span><span class="p">(</span><span class="n">vocabularyList</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">vectorIndex</span><span class="o">=</span><span class="p">{}</span>
+</span><span class='line'>    <span class="n">offset</span><span class="o">=</span><span class="mi">0</span>
+</span><span class='line'>    <span class="c">#Associate a position with the keywords which maps to the dimension on the vector used to represent this word</span>
+</span><span class='line'>    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">uniqueVocabularyList</span><span class="p">:</span>
+</span><span class='line'>            <span class="n">vectorIndex</span><span class="p">[</span><span class="n">word</span><span class="p">]</span><span class="o">=</span><span class="n">offset</span>
+</span><span class='line'>            <span class="n">offset</span><span class="o">+=</span><span class="mi">1</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">vectorIndex</span>  <span class="c">#(keyword:position)</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h3>3 Map Document Strings to Vectors.</h3>
 
 <p>We use the simple Term Count Model. A more accurate model would be to use <a href="http://en.wikipedia.org/wiki/Tf-idf">tf-idf</a> (termFrequency-inverseDocumentFrequnecy).</p>
 
-<p>{% codeblock lang:python %}
-def makeVector(self, wordString):</p>
-
-<pre><code>    """ @pre: unique(vectorIndex) """
-
-    #Initialise vector with 0's
-    vector = [0] * len(self.vectorKeywordIndex)
-    wordList = self.parser.tokenise(wordString)
-    wordList = self.parser.removeStopWords(wordList)
-    for word in wordList:
-            vector[self.vectorKeywordIndex[word]] += 1; #Use simple Term Count Model
-    return vector
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">makeVector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wordString</span><span class="p">):</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>    <span class="s">&quot;&quot;&quot; @pre: unique(vectorIndex) &quot;&quot;&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c">#Initialise vector with 0&#39;s</span>
+</span><span class='line'>    <span class="n">vector</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vectorKeywordIndex</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">wordList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">tokenise</span><span class="p">(</span><span class="n">wordString</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">wordList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">removeStopWords</span><span class="p">(</span><span class="n">wordList</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">wordList</span><span class="p">:</span>
+</span><span class='line'>            <span class="n">vector</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">vectorKeywordIndex</span><span class="p">[</span><span class="n">word</span><span class="p">]]</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span> <span class="c">#Use simple Term Count Model</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">vector</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h3>4 Find Related Documents</h3>
 
@@ -352,32 +450,51 @@ def makeVector(self, wordString):</p>
 
 <p>We calculate the cosine between the document vectors in python using scipy.</p>
 
-<p>{% codeblock lang:python %}
-def cosine(vector1, vector2):</p>
-
-<pre><code>    """ related documents j and q are in the concept space by comparing the vectors :
-            cosine  = ( V1 * V2 ) / ||V1|| x ||V2|| """
-    return float(dot(vector1,vector2) / (norm(vector1) * norm(vector2)))
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">cosine</span><span class="p">(</span><span class="n">vector1</span><span class="p">,</span> <span class="n">vector2</span><span class="p">):</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>    <span class="s">&quot;&quot;&quot; related documents j and q are in the concept space by comparing the vectors :</span>
+</span><span class='line'><span class="s">            cosine  = ( V1 * V2 ) / ||V1|| x ||V2|| &quot;&quot;&quot;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">vector1</span><span class="p">,</span><span class="n">vector2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">vector1</span><span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="p">(</span><span class="n">vector2</span><span class="p">)))</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h3>5 Search the Vector Space!</h3>
 
 <p>In order to perform a search across keywords we need to map the keywords to the vector space. We create a temporary document which represents the search terms and then we compare it against the document vectors using the same cosine measurement mentioned for relatedness.</p>
 
-<p>{% codeblock lang:python %}
-def search(self,searchList):</p>
-
-<pre><code>    """ search for documents that match based on a list of terms """
-    queryVector = self.buildQueryVector(searchList)
-
-    ratings = [util.cosine(queryVector, documentVector) for documentVector in self.documentVectors]
-    ratings.sort(reverse=True)
-    return ratings
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">searchList</span><span class="p">):</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>    <span class="s">&quot;&quot;&quot; search for documents that match based on a list of terms &quot;&quot;&quot;</span>
+</span><span class='line'>    <span class="n">queryVector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buildQueryVector</span><span class="p">(</span><span class="n">searchList</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">ratings</span> <span class="o">=</span> <span class="p">[</span><span class="n">util</span><span class="o">.</span><span class="n">cosine</span><span class="p">(</span><span class="n">queryVector</span><span class="p">,</span> <span class="n">documentVector</span><span class="p">)</span> <span class="k">for</span> <span class="n">documentVector</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">documentVectors</span><span class="p">]</span>
+</span><span class='line'>    <span class="n">ratings</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">ratings</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h3>Further Extensions</h3>
 
