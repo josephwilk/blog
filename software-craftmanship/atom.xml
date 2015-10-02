@@ -4,7 +4,7 @@
   <title><![CDATA[Category: software-craftmanship | Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io//software-craftmanship/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2015-10-02T14:31:19+01:00</updated>
+  <updated>2015-10-02T14:33:57+01:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -38,21 +38,32 @@ The syntax is very dense/compact.</p></blockquote>
 
 <p>A simple &ldquo;for&rdquo; loop in Assembly</p>
 
-<p>{% codeblock %}
-mov cx, 3
-startloop:
-   cmp cx, 0
-   jz endofloop
-   push cx
-loopy:
-   Call ClrScr
-   pop cx
-   dec cx
-   jmp startloop
-endofloop:
-   ; Loop ended
-   ; Do what ever you have to do here
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mov cx, 3
+</span><span class='line'>startloop:
+</span><span class='line'>   cmp cx, 0
+</span><span class='line'>   jz endofloop
+</span><span class='line'>   push cx
+</span><span class='line'>loopy:
+</span><span class='line'>   Call ClrScr
+</span><span class='line'>   pop cx
+</span><span class='line'>   dec cx
+</span><span class='line'>   jmp startloop
+</span><span class='line'>endofloop:
+</span><span class='line'>   ; Loop ended
+</span><span class='line'>   ; Do what ever you have to do here</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <blockquote><p><strong>Density of expression</strong>
 The means of expressing simple concepts or solutions is very compact.</p></blockquote>
@@ -63,34 +74,55 @@ The means of expressing simple concepts or solutions is very compact.</p></block
 
 <p>The towers of hanoi in Prolog:</p>
 
-<p>{% codeblock lang:prolog %}
-move(1,X,Y,_) :&ndash;</p>
-
-<pre><code>write('Move top disk from '),
-write(X),
-write(' to '),
-write(Y),
-nl.
-</code></pre>
-
-<p>move(N,X,Y,Z) :&ndash;</p>
-
-<pre><code>N&gt;1,
-M is N-1,
-move(M,X,Z,Y),
-move(1,X,Y,_),
-move(M,Z,Y,X).
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='prolog'><span class='line'><span class="nf">move</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="nv">X</span><span class="p">,</span><span class="nv">Y</span><span class="p">,</span><span class="k">_</span><span class="p">)</span> <span class="s-Atom">:&amp;ndash</span><span class="p">;</span><span class="s-Atom">&lt;/p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="s-Atom">pre&gt;&lt;code</span><span class="o">&gt;</span><span class="nf">write</span><span class="p">(</span><span class="s-Atom">&#39;Move top disk from &#39;</span><span class="p">),</span>
+</span><span class='line'><span class="nf">write</span><span class="p">(</span><span class="nv">X</span><span class="p">),</span>
+</span><span class='line'><span class="nf">write</span><span class="p">(</span><span class="s-Atom">&#39; to &#39;</span><span class="p">),</span>
+</span><span class='line'><span class="nf">write</span><span class="p">(</span><span class="nv">Y</span><span class="p">),</span>
+</span><span class='line'><span class="s-Atom">nl</span><span class="p">.</span>
+</span><span class='line'><span class="s-Atom">&lt;/code&gt;&lt;/pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="s-Atom">p</span><span class="o">&gt;</span><span class="nf">move</span><span class="p">(</span><span class="nv">N</span><span class="p">,</span><span class="nv">X</span><span class="p">,</span><span class="nv">Y</span><span class="p">,</span><span class="nv">Z</span><span class="p">)</span> <span class="s-Atom">:&amp;ndash</span><span class="p">;</span><span class="s-Atom">&lt;/p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="s-Atom">pre&gt;&lt;code</span><span class="o">&gt;</span><span class="nv">N</span><span class="s-Atom">&amp;gt</span><span class="p">;</span><span class="m">1</span><span class="p">,</span>
+</span><span class='line'><span class="nv">M</span> <span class="o">is</span> <span class="nv">N</span><span class="o">-</span><span class="m">1</span><span class="p">,</span>
+</span><span class='line'><span class="nf">move</span><span class="p">(</span><span class="nv">M</span><span class="p">,</span><span class="nv">X</span><span class="p">,</span><span class="nv">Z</span><span class="p">,</span><span class="nv">Y</span><span class="p">),</span>
+</span><span class='line'><span class="nf">move</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="nv">X</span><span class="p">,</span><span class="nv">Y</span><span class="p">,</span><span class="k">_</span><span class="p">),</span>
+</span><span class='line'><span class="nf">move</span><span class="p">(</span><span class="nv">M</span><span class="p">,</span><span class="nv">Z</span><span class="p">,</span><span class="nv">Y</span><span class="p">,</span><span class="nv">X</span><span class="p">).</span>
+</span><span class='line'><span class="s-Atom">&lt;/code&gt;&lt;/pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="s-Atom">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>Programming languages fit along a spectrum within these forms of density. Ruby provides the means to express concepts very syntactically densely. Just look at <a href="http://rubysource.com/ruby-golf">Ruby Golf</a> (solving a problem with the smallest possible number of characters) for example:</p>
 
-<p>{% codeblock lang:ruby %}
-def fizzbuzz(n)
-n%3&lt;1&amp;&amp;f=&ldquo;Fizz&rdquo;;n%5&lt;1?&ldquo;#{f}Buzz&rdquo;:f||n.to_s
-end
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">fizzbuzz</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</span><span class='line'><span class="n">n</span><span class="o">%</span><span class="mi">3</span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="mi">1</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">f</span><span class="o">=&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="no">Fizz</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;;</span><span class="n">n</span><span class="o">%</span><span class="mi">5</span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="mi">1</span><span class="o">?&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="c1">#{f}Buzz&amp;rdquo;:f||n.to_s</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>It is also always posible to build a DSL within a programming language to maximise density.</p>
 
@@ -120,20 +152,27 @@ end
 
 <p>If your a Clojure programmer you might have a good understanding of this code as documentation:</p>
 
-<p>{% codeblock lang:clojure %}
-(def ^{:dynamic true</p>
-
-<pre><code>   :doc "some doc here"}
- *allow-default-prerequisites* false)
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="k">def </span><span class="o">^</span><span class="p">{</span><span class="ss">:dynamic</span> <span class="nv">true&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;pre&gt;&lt;code&gt;</span>   <span class="ss">:doc</span> <span class="s">&quot;some doc here&quot;</span><span class="p">}</span>
+</span><span class='line'> <span class="nv">*allow-default-prerequisites*</span> <span class="nv">false</span><span class="p">)</span>
+</span><span class='line'><span class="nv">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>And if you&rsquo;re a Ruby or Perl programming you might read this with ease:</p>
 
-<p>{% codeblock lang:ruby %}
-$!.is_a?(MonkeyError)
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vg">$!</span><span class="o">.</span><span class="n">is_a?</span><span class="p">(</span><span class="no">MonkeyError</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>Can dense languages be a good idea?</h2>
 
@@ -158,17 +197,17 @@ $!.is_a?(MonkeyError)
 
 <p>Do you understand this pattern?</p>
 
-<p>{% codeblock lang:perl %}
-/^[\w]$/
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='perl'><span class='line'><span class="sr">/^[\w]$/</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>How about we push the complexity level and try some of the more esoteric symbols in regular expressions:</p>
 
 <p>Do you know what this does?</p>
 
-<p>{% codeblock lang:perl %}
-/\b[A-Z0-9._%+&ndash;]+@[A-Z0-9.&ndash;]+.[A-Z]{2,4}\b/i
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='perl'><span class='line'><span class="sr">/\b[A-Z0-9._%+&amp;ndash;]+@[A-Z0-9.&amp;ndash;]+.[A-Z]{2,4}\b/i</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>How about this?</p>
 
@@ -182,63 +221,105 @@ $!.is_a?(MonkeyError)
 
 <p>In fact its considered bad practice to write a regular expression of the form above. Its understood that its hard to read and hence programmers have to add to the dense language to increase readability:</p>
 
-<p>{% codeblock lang:perl %}/
-^                                             # start of string
-(                                             # first group start
-  (?:</p>
-
-<pre><code>(?:[^?+*{}()[\]\\|]+                      # literals and ^, $
- | \\.                                    # escaped characters
- | \[ (?: \^?\\. | \^[^\\] | [^\\^] )     # character classes
-      (?: [^\]\\]+ | \\. )* \]
- | \( (?:\?[:=!]|\?&lt;[=!]|\?&gt;)? (?1)?? \)  # parenthesis, with recursive content
- | \(\? (?:R|[+-]?\d+) \)                 # recursive matching
- )
-(?: (?:[?+*]|\{\d+(?:,\d*)?\}) [?+]? )?   # quantifiers
-</code></pre>
-
-<p>  | \|                                        # alternative
-  )*                                          # repeat content
-)                                             # end first group
-$                                             # end of string
-/
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='perl'><span class='line'><span class="o">/</span>
+</span><span class='line'><span class="o">^</span>                                             <span class="c1"># start of string</span>
+</span><span class='line'><span class="p">(</span>                                             <span class="c1"># first group start</span>
+</span><span class='line'>  <span class="p">(?:</span><span class="sr">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;</span><span class="p">(?:[</span><span class="o">^</span><span class="p">?</span><span class="o">+*</span><span class="p">{}()[</span><span class="o">\</span><span class="p">]</span><span class="o">\\|</span><span class="p">]</span><span class="o">+</span>                      <span class="c1"># literals and ^, $</span>
+</span><span class='line'> <span class="o">|</span> <span class="o">\\.</span>                                    <span class="c1"># escaped characters</span>
+</span><span class='line'> <span class="o">|</span> <span class="o">\</span><span class="p">[</span> <span class="p">(?:</span> <span class="o">\^</span><span class="p">?</span><span class="o">\\.</span> <span class="o">|</span> <span class="o">\^</span><span class="p">[</span><span class="o">^\\</span><span class="p">]</span> <span class="o">|</span> <span class="p">[</span><span class="o">^\\^</span><span class="p">]</span> <span class="p">)</span>     <span class="c1"># character classes</span>
+</span><span class='line'>      <span class="p">(?:</span> <span class="p">[</span><span class="o">^\</span><span class="p">]</span><span class="o">\\</span><span class="p">]</span><span class="o">+</span> <span class="o">|</span> <span class="o">\\.</span> <span class="p">)</span><span class="o">*</span> <span class="o">\</span><span class="p">]</span>
+</span><span class='line'> <span class="o">|</span> <span class="o">\</span><span class="p">(</span> <span class="p">(?:</span><span class="o">\</span><span class="p">?[:</span><span class="o">=!</span><span class="p">]</span><span class="o">|\</span><span class="p">?</span><span class="o">&amp;</span><span class="ow">lt</span><span class="p">;[</span><span class="o">=!</span><span class="p">]</span><span class="o">|\</span><span class="p">?</span><span class="o">&amp;</span><span class="ow">gt</span><span class="p">;)?</span> <span class="p">(?</span><span class="mi">1</span><span class="p">)??</span> <span class="o">\</span><span class="p">)</span>  <span class="c1"># parenthesis, with recursive content</span>
+</span><span class='line'> <span class="o">|</span> <span class="o">\</span><span class="p">(</span><span class="o">\</span><span class="p">?</span> <span class="p">(?:</span><span class="n">R</span><span class="o">|</span><span class="p">[</span><span class="o">+-</span><span class="p">]?</span><span class="o">\</span><span class="n">d</span><span class="o">+</span><span class="p">)</span> <span class="o">\</span><span class="p">)</span>                 <span class="c1"># recursive matching</span>
+</span><span class='line'> <span class="p">)</span>
+</span><span class='line'><span class="p">(?:</span> <span class="p">(?:[?</span><span class="o">+*</span><span class="p">]</span><span class="o">|\</span><span class="p">{</span><span class="o">\</span><span class="n">d</span><span class="o">+</span><span class="p">(?:,</span><span class="o">\</span><span class="n">d</span><span class="o">*</span><span class="p">)?</span><span class="o">\</span><span class="p">})</span> <span class="p">[?</span><span class="o">+</span><span class="p">]?</span> <span class="p">)?</span>   <span class="c1"># quantifiers</span>
+</span><span class='line'><span class="sr">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;</span>  <span class="o">|</span> <span class="o">\|</span>                                        <span class="c1"># alternative</span>
+</span><span class='line'>  <span class="p">)</span><span class="o">*</span>                                          <span class="c1"># repeat content</span>
+</span><span class='line'><span class="p">)</span>                                             <span class="c1"># end first group</span>
+</span><span class='line'><span class="nv">$</span>                                             <span class="err">#</span> <span class="nv">end</span> <span class="n">of</span> <span class="n">string</span>
+</span><span class='line'><span class="o">/</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>This is definitely not literate programming, comments and code are clearly separate things.</p>
 
 <p>Named captures groups are also an optional feature to improve and document the readability.</p>
 
-<p>{% codeblock lang:ruby %}
-user_regexp = %r{
-   (?<username> [a-z]+ ){0}</p>
-
-<p>   (?&lt;ip_number> [0-9]{1,3} ){0}
-   (?&lt;ip_address> (\g&lt;ip_number>.){3}\g&lt;ip_number> ){0}</p>
-
-<p>   (?<admin> true | false ){0}</p>
-
-<p>   \g<username>:\g&lt;ip_address>:\g<admin>
- }x
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">user_regexp</span> <span class="o">=</span> <span class="sr">%r{</span>
+</span><span class='line'><span class="sr">   (?&lt;username&gt; [a-z]+ ){0}&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;   (?&amp;lt;ip_number&gt; [0-9]{1,3} ){0}</span>
+</span><span class='line'><span class="sr">   (?&amp;lt;ip_address&gt; (\g&amp;lt;ip_number&gt;.){3}\g&amp;lt;ip_number&gt; ){0}&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;   (?&lt;admin&gt; true | false ){0}&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;   \g&lt;username&gt;:\g&amp;lt;ip_address&gt;:\g&lt;admin&gt;</span>
+</span><span class='line'><span class="sr"> }x</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h3>Mnemonics</h3>
 
 <p>Our memory also struggles to find mnemonics or associations to remember the full vocabary of regexps:</p>
 
-<p>{% codeblock lang:perl %}</p>
-
-<h1>Some easy ones</h1>
-
-<p>/w #word
-/s #space</p>
-
-<h1>Harder ones</h1>
-
-<p>(?&lt;!pat)
-(?&lt;=pat)
-(?!pat)
-(?=pat)
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='perl'><span class='line'><span class="sr">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;h1&gt;</span><span class="n">Some</span> <span class="n">easy</span> <span class="n">ones</span><span class="sr">&lt;/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;</span><span class="o">/</span><span class="n">w</span> <span class="c1">#word</span>
+</span><span class='line'><span class="sr">/s #space&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;h1&gt;</span><span class="n">Harder</span> <span class="n">ones</span><span class="sr">&lt;/h1&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;</span><span class="p">(?</span><span class="o">&amp;</span><span class="ow">lt</span><span class="p">;</span><span class="o">!</span><span class="n">pat</span><span class="p">)</span>
+</span><span class='line'><span class="p">(?</span><span class="o">&amp;</span><span class="ow">lt</span><span class="p">;</span><span class="o">=</span><span class="n">pat</span><span class="p">)</span>
+</span><span class='line'><span class="p">(?</span><span class="o">!</span><span class="n">pat</span><span class="p">)</span>
+</span><span class='line'><span class="p">(?</span><span class="o">=</span><span class="n">pat</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>Reducing the Density of Regular Expressions</h2>
 
@@ -254,29 +335,53 @@ user_regexp = %r{
 
 <p>Lets look at an example:</p>
 
-<p>{% codeblock lang:perl %}</p>
-
-<pre><code>    use Regexp::English;
-
-    my $re = Regexp::English
-            -&gt; start_of_line
-            -&gt; literal('Flippers')
-            -&gt; literal(':')
-            -&gt; optional
-                    -&gt; whitespace_char
-            -&gt; end
-            -&gt; remember
-                    -&gt; multiple
-                            -&gt; digit;
-
-    while (&lt;input /&gt;) {
-            if (my $match = $re-&gt;match($_)) {
-                    print "$match\n";
-            }
-    }
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='perl'><span class='line'><span class="sr">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;</span>    <span class="k">use</span> <span class="nn">Regexp::</span><span class="n">English</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">my</span> <span class="nv">$re</span> <span class="o">=</span> <span class="nn">Regexp::</span><span class="n">English</span>
+</span><span class='line'>            <span class="o">-&amp;</span><span class="ow">gt</span><span class="p">;</span> <span class="n">start_of_line</span>
+</span><span class='line'>            <span class="o">-&amp;</span><span class="ow">gt</span><span class="p">;</span> <span class="n">literal</span><span class="p">(</span><span class="s">&#39;Flippers&#39;</span><span class="p">)</span>
+</span><span class='line'>            <span class="o">-&amp;</span><span class="ow">gt</span><span class="p">;</span> <span class="n">literal</span><span class="p">(</span><span class="s">&#39;:&#39;</span><span class="p">)</span>
+</span><span class='line'>            <span class="o">-&amp;</span><span class="ow">gt</span><span class="p">;</span> <span class="n">optional</span>
+</span><span class='line'>                    <span class="o">-&amp;</span><span class="ow">gt</span><span class="p">;</span> <span class="n">whitespace_char</span>
+</span><span class='line'>            <span class="o">-&amp;</span><span class="ow">gt</span><span class="p">;</span> <span class="n">end</span>
+</span><span class='line'>            <span class="o">-&amp;</span><span class="ow">gt</span><span class="p">;</span> <span class="n">remember</span>
+</span><span class='line'>                    <span class="o">-&amp;</span><span class="ow">gt</span><span class="p">;</span> <span class="n">multiple</span>
+</span><span class='line'>                            <span class="o">-&amp;</span><span class="ow">gt</span><span class="p">;</span> <span class="n">digit</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">while</span> <span class="p">(</span><span class="o">&amp;</span><span class="ow">lt</span><span class="p">;</span><span class="n">input</span> <span class="o">/&amp;</span><span class="ow">gt</span><span class="p">;)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="p">(</span><span class="k">my</span> <span class="nv">$match</span> <span class="o">=</span> <span class="nv">$re</span><span class="o">-&amp;</span><span class="ow">gt</span><span class="p">;</span><span class="n">match</span><span class="p">(</span><span class="nv">$_</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>                    <span class="k">print</span> <span class="s">&quot;$match\n&quot;</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="sr">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>Better?</p>
 
@@ -290,15 +395,23 @@ Tom Stuart</p></blockquote>
 <p>In the Perl community some people have given up completely on the humans and their dense, hard to maintain regular expressions.
 They create tools to decode the density automatically:</p>
 
-<p>{% codeblock lang:perl %}
-use YAPE::Regex::Explain;</p>
-
-<p>print YAPE::Regex::Explain->new(qr/this.*(?:that)?(?!another)/)</p>
-
-<pre><code>  -&gt;explain;
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='perl'><span class='line'><span class="k">use</span> <span class="nn">YAPE::Regex::</span><span class="n">Explain</span><span class="p">;</span><span class="sr">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;</span><span class="k">print</span> <span class="nn">YAPE::Regex::</span><span class="n">Explain</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="sx">qr/this.*(?:that)?(?!another)/</span><span class="p">)</span><span class="sr">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;</span>  <span class="o">-&amp;</span><span class="ow">gt</span><span class="p">;</span><span class="n">explain</span><span class="p">;</span>
+</span><span class='line'><span class="sr">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>Outputs:</p>
 
@@ -355,9 +468,9 @@ NODE                     EXPLANATION
 
 <p>Finding prime numbers using a single  Regexp:</p>
 
-<p>{% codeblock lang:perl%}
-/^1?$|^(11+?)\1+$/
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='perl'><span class='line'><span class="sr">/^1?$|^(11+?)\1+$/</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>It&rsquo;s also drink absinthe and cut off your own ear crazy.</p>
 
@@ -367,18 +480,29 @@ NODE                     EXPLANATION
 
 <p>I spent over a month adding nothing more than a single &ldquo;!&rdquo; mark in the code.</p>
 
-<p>{% codeblock lang:prolog %}
-abdemo_holds_ats([holds_at(F,T)|Gs],R1,R3,N1,N3,D) :&ndash;</p>
-
-<pre><code> !,
- abdemo([holds_at(F,T)],R1,R2,N1,N2,D),
-
- %cut added Joseph Wilk 16/03/2004
- !,
- abdemo_holds_ats(Gs,R2,R3,N2,N3,D).
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='prolog'><span class='line'><span class="nf">abdemo_holds_ats</span><span class="p">([</span><span class="nf">holds_at</span><span class="p">(</span><span class="nv">F</span><span class="p">,</span><span class="nv">T</span><span class="p">)|</span><span class="nv">Gs</span><span class="p">],</span><span class="nv">R1</span><span class="p">,</span><span class="nv">R3</span><span class="p">,</span><span class="nv">N1</span><span class="p">,</span><span class="nv">N3</span><span class="p">,</span><span class="nv">D</span><span class="p">)</span> <span class="s-Atom">:&amp;ndash</span><span class="p">;</span><span class="s-Atom">&lt;/p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="s-Atom">pre&gt;&lt;code</span><span class="o">&gt;</span> <span class="p">!,</span>
+</span><span class='line'> <span class="nf">abdemo</span><span class="p">([</span><span class="nf">holds_at</span><span class="p">(</span><span class="nv">F</span><span class="p">,</span><span class="nv">T</span><span class="p">)],</span><span class="nv">R1</span><span class="p">,</span><span class="nv">R2</span><span class="p">,</span><span class="nv">N1</span><span class="p">,</span><span class="nv">N2</span><span class="p">,</span><span class="nv">D</span><span class="p">),</span>
+</span><span class='line'>
+</span><span class='line'> <span class="c1">%cut added Joseph Wilk 16/03/2004</span>
+</span><span class='line'> <span class="p">!,</span>
+</span><span class='line'> <span class="nf">abdemo_holds_ats</span><span class="p">(</span><span class="nv">Gs</span><span class="p">,</span><span class="nv">R2</span><span class="p">,</span><span class="nv">R3</span><span class="p">,</span><span class="nv">N2</span><span class="p">,</span><span class="nv">N3</span><span class="p">,</span><span class="nv">D</span><span class="p">).</span>
+</span><span class='line'><span class="s-Atom">&lt;/code&gt;&lt;/pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="s-Atom">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>I still feel its some of the most beautiful code I&rsquo;ve written. Why?</p>
 
