@@ -4,7 +4,7 @@
   <title><![CDATA[Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2015-10-02T15:37:18+01:00</updated>
+  <updated>2015-10-02T15:43:31+01:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -804,8 +804,8 @@ For example when consuming from Kinesis a worker is allocated a partition to wor
 <p>In my previous post about <a href="http://blog.josephwilk.net/clojure/building-clojure-services-at-scale.html">Building Clojure services at scale</a> I converted the system metrics to sound. With so many machines processing so many events its easy to loose track of the amount of work being done in the cloud.
 To make this feel more real I captured metrics across all the machines involved and created 3d renderings using <a href="http://openframeworks.cc">OpenFrameworks</a> and meshes of the systems function:</p>
 
-<p><img src="http://josephwilk.github.io/octopress/images/soundcloud_kinesis.png" alt="" />
-<img src="http://josephwilk.github.io/octopress/images/soundcloud_kinesis2.png" alt="" /></p>
+<p><img src="http://josephwilk.github.io/images/soundcloud_kinesis.png" alt="" />
+<img src="http://josephwilk.github.io/images/soundcloud_kinesis2.png" alt="" /></p>
 
 <h2>Thanks</h2>
 
