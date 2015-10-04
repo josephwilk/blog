@@ -4,7 +4,7 @@
   <title><![CDATA[Category: clojure | Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io//clojure/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2015-10-04T10:49:47+01:00</updated>
+  <updated>2015-10-04T11:27:28+01:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -217,12 +217,12 @@ put-request))
 
 <ol>
 <li><p>Amazon had an Internal Failure. We don&rsquo;t know what went wrong. (We see this regularly in normal function).</p></li>
-<li><p>Amazon Kinesis is not resolvable (AmazonClientException/AmazonServiceException).</p></li>
-<li><p>Exceeding the read/write limits of Kinesis (ProvisionedThroughputExceededException).</p></li>
+<li><p>Amazon Kinesis is not resolvable (<code>AmazonClientException/AmazonServiceException</code>).</p></li>
+<li><p>Exceeding the read/write limits of Kinesis (<code>ProvisionedThroughputExceededException</code>).</p></li>
 </ol>
 
 
-<p>This is our backpressure signal, in which case at worst we need to log to disk for replay later</p>
+<p>This is our backpressure signal, in which case at worst we need to log to disk for replay later.</p>
 
 <h2>Consuming Messages from Kinesis</h2>
 
@@ -313,14 +313,13 @@ put-request))
   (log/error e)))]
 </code></p>
 
-<p>Note Kinesis regularly spits out &ldquo;InternalFailure&rdquo; Exceptions. Thats all you get&hellip;</p>
+<p>Note Kinesis regularly spits out &ldquo;<code>InternalFailure</code>&rdquo; Exceptions. Thats all you get&hellip;</p>
 
 <p><img src="http://josephwilk.github.io/images/kinesis_failures.png" alt="Kinesis Internal failures"/></p>
 
 <h2>A Cloud Pipeline in Pictures</h2>
 
-<p>In my previous post about <a href="http://blog.josephwilk.net/clojure/building-clojure-services-at-scale.html">Building Clojure services at scale</a> I converted the system metrics to sound. With so many machines processing so many events its easy to loose track of the amount of work being done in the cloud.
-To make this feel more real I captured metrics across all the machines involved and created 3d renderings using <a href="http://openframeworks.cc">OpenFrameworks</a> and meshes of the systems function:</p>
+<p>In my previous post about <a href="http://blog.josephwilk.net/clojure/building-clojure-services-at-scale.html">Building Clojure services at scale</a> I converted the system metrics to sound. This time I covert the metrics across all the machine into vertexes on mesh using <a href="http://openframeworks.cc">OpenFrameworks</a>. So you start to see a visual representation in 3D of the function of the system.</p>
 
 <p><img src="/images/soundcloud_kinesis.png" alt="" />
 <img src="/images/soundcloud_kinesis2.png" alt="" />
