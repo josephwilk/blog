@@ -180,9 +180,9 @@ ASCII animation requires manipulating text at a sufficient speed that it appears
 </span><span class='line'>    <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nv">eobp</span><span class="p">)</span> <span class="p">(</span><span class="nv">goto-char</span> <span class="p">(</span><span class="nv">point-min</span><span class="p">)))</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="c1">;;Read the char at the cursor</span>
-</span><span class='line'>    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">c</span> <span class="p">(</span><span class="nv">point</span><span class="p">)))</span>
-</span><span class='line'>      <span class="p">(</span><span class="nv">delete-char</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1">;; Remove the char</span>
-</span><span class='line'>      <span class="p">(</span><span class="nv">insert-char</span> <span class="p">(</span><span class="nv">capitalize</span> <span class="nv">c</span><span class="p">)))</span> <span class="c1">;; Reinsert with caps</span>
+</span><span class='line'>    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">c</span> <span class="p">(</span><span class="nv">char-after</span> <span class="p">(</span><span class="nv">point</span><span class="p">))))</span>
+</span><span class='line'>      <span class="p">(</span><span class="nv">delete-char</span> <span class="mi">1</span><span class="p">)</span>           <span class="c1">;; Remove the char</span>
+</span><span class='line'>      <span class="p">(</span><span class="nv">insert-char</span> <span class="p">(</span><span class="nv">upcase</span> <span class="nv">c</span><span class="p">)))</span> <span class="c1">;; Reinsert with caps      </span>
 </span><span class='line'>
 </span><span class='line'>    <span class="c1">;;Sleep</span>
 </span><span class='line'>    <span class="p">(</span><span class="nv">zone-park/sit-for</span> <span class="p">(</span><span class="nv">point-min</span><span class="p">)</span> <span class="mf">0.1</span><span class="p">)))</span>
@@ -191,7 +191,8 @@ ASCII animation requires manipulating text at a sufficient speed that it appears
 
 <p>The animation in all its glory:</p>
 
-<p><img src="/images/emacs-zone-uppercase.png" alt="Emacs zoning uppercase" /></p>
+<iframe src="https://player.vimeo.com/video/141312958" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+
 
 <h3>Zoning Setup</h3>
 

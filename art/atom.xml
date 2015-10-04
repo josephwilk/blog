@@ -4,7 +4,7 @@
   <title><![CDATA[Category: art | Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io//art/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2015-10-04T10:13:43+01:00</updated>
+  <updated>2015-10-04T10:49:47+01:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -65,9 +65,9 @@ ASCII animation requires manipulating text at a sufficient speed that it appears
 (when (eobp) (goto-char (point-min)))
 
 ;;Read the char at the cursor
-(let ((c (point)))
-  (delete-char 1)  ;; Remove the char
-  (insert-char (capitalize c))) ;; Reinsert with caps
+(let ((c (char-after (point))))
+  (delete-char 1)           ;; Remove the char
+  (insert-char (upcase c))) ;; Reinsert with caps      
 
 ;;Sleep
 (zone-park/sit-for (point-min) 0.1)))
@@ -77,7 +77,8 @@ ASCII animation requires manipulating text at a sufficient speed that it appears
 
 <p>The animation in all its glory:</p>
 
-<p><img src="/images/emacs-zone-uppercase.png" alt="Emacs zoning uppercase" /></p>
+<iframe src="https://player.vimeo.com/video/141312958" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+
 
 <h3>Zoning Setup</h3>
 
