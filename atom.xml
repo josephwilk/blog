@@ -4,7 +4,7 @@
   <title><![CDATA[Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2015-10-04T09:42:07+01:00</updated>
+  <updated>2015-10-04T10:10:39+01:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -810,7 +810,8 @@ For example when consuming from Kinesis a worker is allocated a partition to wor
 To make this feel more real I captured metrics across all the machines involved and created 3d renderings using <a href="http://openframeworks.cc">OpenFrameworks</a> and meshes of the systems function:</p>
 
 <p><img src="http://josephwilk.github.io/images/soundcloud_kinesis.png" alt="" />
-<img src="http://josephwilk.github.io/images/soundcloud_kinesis2.png" alt="" /></p>
+<img src="http://josephwilk.github.io/images/soundcloud_kinesis2.png" alt="" />
+<img src="http://josephwilk.github.io/images/soundcloud_kinesis3.png" alt="" /></p>
 
 <h2>Thanks</h2>
 
