@@ -4,7 +4,7 @@
   <title><![CDATA[Category: clojure | Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io//clojure/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2015-10-05T12:33:44+01:00</updated>
+  <updated>2015-10-05T12:34:52+01:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -250,8 +250,8 @@ put-request))
 <p>(defn -main [&amp; args]
   (let [worker-fn (fn [events] (print events))</p>
 
-<pre><code>    config (KinesisClientLibConfiguration.   worker-fn  )   ;;I'm airbrushing over the Java classes
-    processor (reify IRecordProcessorFactory worker-fn)   ;;Ultimately this is a lot of config wrapped in Java fun
+<pre><code>    config (KinesisClientLibConfiguration.   worker-fn) ;;I'm airbrushing over the Java classes
+    processor (reify IRecordProcessorFactory worker-fn) ;;Ultimately this is a lot of config wrapped in Java fun
     [^Worker worker uuid] (Worker. processor config)]                                            
       (future (.run worker))))
 </code></pre>
