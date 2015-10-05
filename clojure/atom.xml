@@ -4,7 +4,7 @@
   <title><![CDATA[Category: clojure | Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io//clojure/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2015-10-05T11:27:49+01:00</updated>
+  <updated>2015-10-05T11:45:29+01:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -268,7 +268,7 @@ put-request))
   {
    ;;default 1 sec, cannot be lower than 200ms
    ;;If we are not reading fast enough this is a good value to tweak
-   :idle-time-between-reads-in-millis 500</p>
+   :idle-time-between-reads-in-millis 1800</p>
 
 <p>   ;;Clean up leases for shards that we&rsquo;ve finished processing (don&rsquo;t wait
    ;;until they expire)
@@ -278,7 +278,7 @@ put-request))
    ;;other workers take over processing of that shard.
    ;;<em>IMPORTANT</em> If this time is shorter than time for a worker to checkpoint all nodes
    ;;will keep stealing each others leases producing a lot of contention.
-   :failover-time-millis &hellip;</p>
+   :failover-time-millis 80000</p>
 
 <p>   ;;Max records in a single returned in a <code>GetRecords</code>. Cannot exceed 10,000
    :max-records 4500</p>
