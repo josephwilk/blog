@@ -720,7 +720,9 @@ A little Go script watches the logs, parses out the data and then forwards them 
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
 <span class='line-number'>16</span>
+<span class='line-number'>17</span>
 </pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">defn- </span><span class="nv">failures-&gt;events</span> <span class="p">[</span><span class="o">^</span><span class="nv">PutRecordsResult</span> <span class="nv">put-results</span> <span class="nv">events</span><span class="p">]</span>
+</span><span class='line'>  <span class="s">&quot;Find the events that are marked as failed in the PutRecordsResult&quot;</span>
 </span><span class='line'>  <span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="nv">put-results</span>
 </span><span class='line'>       <span class="nv">.getRecords</span>
 </span><span class='line'>       <span class="p">(</span><span class="nb">map vector </span><span class="p">(</span><span class="nf">range</span><span class="p">))</span>

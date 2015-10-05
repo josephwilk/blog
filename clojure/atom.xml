@@ -4,7 +4,7 @@
   <title><![CDATA[Category: clojure | Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io//clojure/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2015-10-05T12:34:52+01:00</updated>
+  <updated>2015-10-05T12:47:28+01:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -160,6 +160,7 @@ Amazonica was good to get started quickly in the initial phase but there are a c
 
 <p>```
 (defn- failures->events [^PutRecordsResult put-results events]
+  &ldquo;Find the events that are marked as failed in the PutRecordsResult&rdquo;
   (&ndash;>> put-results</p>
 
 <pre><code>   .getRecords
