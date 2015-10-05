@@ -4,7 +4,7 @@
   <title><![CDATA[Category: clojure | Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io//clojure/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2015-10-05T11:45:29+01:00</updated>
+  <updated>2015-10-05T11:54:02+01:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -30,7 +30,7 @@
 <p>The first step was to tee the traffic from a live system to a test system without comprising its function.
 The main function of the live system is logging JSON events to file (which eventually end up somewhere like HDFS).
 Tailing the logs of the live system gives us access to the raw data we want to forward on to our test system.
-A little Go watches the logs, parses out the data and then forwards them in batch to test instances that will push to kinesis. Hence we had live data flowing through the system and after launch a test setup to experiment with. <a href="https://twitter.com/brapse">Sean Braithwaite</a> was the mastermind behind this little bit of magic.</p>
+A little Go script watches the logs, parses out the data and then forwards them in batch to test instances that will push to Kinesis. Hence we had live data flowing through the system and after launch a test setup to experiment with. <a href="https://twitter.com/brapse">Sean Braithwaite</a> was the mastermind behind this little bit of magic.</p>
 
 <p><figure>
 <img src="http://josephwilk.github.io/images/canary.png" alt="Canary Kinesis pipeline"/>
@@ -39,7 +39,7 @@ A little Go watches the logs, parses out the data and then forwards them in batc
 
 <h2>Sending to Kinesis</h2>
 
-<p>All kinesis sending happens in an application called the EventGateway (also written in Clojure). This endpoint is one of the heaviestly loaded services in SoundCloud (at points it has more traffic than the rest of SoundCloud combined). The Eventgateway does a couple of things but at its core it validates and broadcasts JSON messages. Hence this is where our Kinesis client slots in.</p>
+<p>All Kinesis sending happens in an application called the EventGateway (also written in Clojure). This endpoint is one of the most heavily loaded services in SoundCloud (at points it has more traffic than the rest of SoundCloud combined). The Eventgateway does a couple of things but at its core it validates and broadcasts JSON messages. Hence this is where our Kinesis client slots in.</p>
 
 <h5>Squeezing Clojure Reflection</h5>
 
@@ -114,7 +114,7 @@ Amazonica was good to get started quickly in the initial phase but there are a c
 </ul>
 
 
-<p>When we cannot send messages to kinesis we instead log them to disk, and into our normal logging pipeline (usually ending up in HDFS). Hence we coule replay at a later date if required.</p>
+<p>When we cannot send messages to Kinesis we instead log them to disk, and into our normal logging pipeline (usually ending up in HDFS). Hence we coule replay at a later date if required.</p>
 
 <h4>Sending batches to Kinesis</h4>
 
@@ -209,7 +209,7 @@ put-request))
 <h6>Individual failures</h6>
 
 <ol>
-<li>These messages are re-added to the queue so we can try again. If the messages fail for some nth time they are considered invalid and rejected from kinesis and logged as an error.</li>
+<li>These messages are re-added to the queue so we can try again. If the messages fail for some nth time they are considered invalid and rejected from Kinesis and logged as an error.</li>
 </ol>
 
 
