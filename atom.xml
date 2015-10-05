@@ -4,7 +4,7 @@
   <title><![CDATA[Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2015-10-05T12:08:22+01:00</updated>
+  <updated>2015-10-05T12:09:33+01:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -809,10 +809,10 @@ For example when consuming from Kinesis a worker is allocated a partition to wor
 
 <p>In my previous post about <a href="http://blog.josephwilk.net/clojure/building-clojure-services-at-scale.html">Building Clojure services at scale</a> I converted the system metrics to sound. This time I convert the metrics across all the machine into vertexes on a mesh using <a href="http://openframeworks.cc">OpenFrameworks</a>. So you start to see a visual representation in 3D of the function of the system.</p>
 
-<p><img src="http://josephwilk.github.io/images/soundcloud_kinesis.png" alt="" />
-<img src="http://josephwilk.github.io/images/soundcloud_kinesis2.png" alt="" />
-<img src="http://josephwilk.github.io/images/soundcloud_kinesis4.png" alt="" />
-<img src="http://josephwilk.github.io/images/soundcloud_kinesis3.png" alt="" /></p>
+<p><img src="http://josephwilk.github.io/images/soundcloud_kinesis.png"  height="300"/>
+<img src="http://josephwilk.github.io/images/soundcloud_kinesis2.png" height="300"/>
+<img src="http://josephwilk.github.io/images/soundcloud_kinesis4.png" height="300"/>
+<img src="http://josephwilk.github.io/images/soundcloud_kinesis3.png" height="300"/></p>
 
 <h2>Thanks</h2>
 
