@@ -4,7 +4,7 @@
   <title><![CDATA[Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2015-10-05T12:05:20+01:00</updated>
+  <updated>2015-10-05T12:08:22+01:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -811,6 +811,7 @@ For example when consuming from Kinesis a worker is allocated a partition to wor
 
 <p><img src="http://josephwilk.github.io/images/soundcloud_kinesis.png" alt="" />
 <img src="http://josephwilk.github.io/images/soundcloud_kinesis2.png" alt="" />
+<img src="http://josephwilk.github.io/images/soundcloud_kinesis4.png" alt="" />
 <img src="http://josephwilk.github.io/images/soundcloud_kinesis3.png" alt="" /></p>
 
 <h2>Thanks</h2>
