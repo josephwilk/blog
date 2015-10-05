@@ -4,7 +4,7 @@
   <title><![CDATA[Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2015-10-05T11:57:04+01:00</updated>
+  <updated>2015-10-05T12:04:03+01:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -445,7 +445,7 @@ A little Go script watches the logs, parses out the data and then forwards them 
 
 <h4>Kinesis</h4>
 
-<p>The Eventgateway posts to Kinesis in batch using a <a href="http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/ConcurrentLinkedQueue.html">ConcurrentLinkedQueue</a> and separate producers and consumers. Messages are pushed into a <code>ConcurrentLinkedQueue</code>. We rolled our own Clojure kinesis client using Amazons Java library rather than using <a href="https://github.com/mcohen01/amazonica">Amazonica</a>.</p>
+<p>The Eventgateway posts to Kinesis in batch using a <a href="http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/ConcurrentLinkedQueue.html">ConcurrentLinkedQueue</a> and separate producers and consumers. Messages are pushed into a <code>ConcurrentLinkedQueue</code>. We rolled our own Clojure Kinesis client using Amazons Java library rather than using <a href="https://github.com/mcohen01/amazonica">Amazonica</a>.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -595,7 +595,7 @@ A little Go script watches the logs, parses out the data and then forwards them 
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
 </pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">defn- </span><span class="nv">send-events</span>
-</span><span class='line'>  <span class="s">&quot;Perform putRecords request to send the batch to kinesis</span>
+</span><span class='line'>  <span class="s">&quot;Perform putRecords request to send the batch to Kinesis</span>
 </span><span class='line'><span class="s">   returns a list of events that failed.&quot;</span>
 </span><span class='line'>  <span class="p">[</span><span class="o">^</span><span class="nv">AmazonKinesisClient</span> <span class="nv">client</span> <span class="nv">stream-name</span> <span class="nv">events</span><span class="p">]</span>
 </span><span class='line'>  <span class="p">(</span><span class="nf">try+</span>
