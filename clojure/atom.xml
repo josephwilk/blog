@@ -4,7 +4,7 @@
   <title><![CDATA[Category: clojure | Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io//clojure/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2015-10-05T12:15:37+01:00</updated>
+  <updated>2015-10-05T12:33:44+01:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -159,18 +159,25 @@ Amazonica was good to get started quickly in the initial phase but there are a c
 <p>Once the batch is ready (in terms of age or size) its sent to Kinesis.</p>
 
 <p>```
-(defn- send-events
+(defn- failures->events [^PutRecordsResult put-results events]
+  (&ndash;>> put-results</p>
+
+<pre><code>   .getRecords
+   (map vector (range))
+   (filter (fn [[idx ^PutRecordsResultEntry e]] (.getErrorCode e)))
+   (map (fn [[idx _]] (nth events idx)))))
+</code></pre>
+
+<p>(defn- send-events
   &ldquo;Perform putRecords request to send the batch to Kinesis
    returns a list of events that failed.&rdquo;
   [^AmazonKinesisClient client stream-name events]
   (try+
-   (let [result (.putRecords client (events->put-records-request events stream-name telemetry))]</p>
+   (let [result (.putRecords client (events->put-records-request events stream-name))]</p>
 
 <pre><code> (if (pos? (.getFailedRecordCount result))
-   (let [failed-events (failures-&gt;events result events)]
-     (count-failures telemetry (failures-&gt;error-codes result))
-     failed-events)
-   []))
+   (failures-&gt;events result events))
+   [])))
 </code></pre>
 
 <p>```</p>

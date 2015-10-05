@@ -4,7 +4,7 @@
   <title><![CDATA[Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2015-10-05T12:15:37+01:00</updated>
+  <updated>2015-10-05T12:33:44+01:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -594,17 +594,27 @@ A little Go script watches the logs, parses out the data and then forwards them 
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">defn- </span><span class="nv">send-events</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">defn- </span><span class="nv">failures-&gt;events</span> <span class="p">[</span><span class="o">^</span><span class="nv">PutRecordsResult</span> <span class="nv">put-results</span> <span class="nv">events</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="nv">put-results</span>
+</span><span class='line'>       <span class="nv">.getRecords</span>
+</span><span class='line'>       <span class="p">(</span><span class="nb">map vector </span><span class="p">(</span><span class="nf">range</span><span class="p">))</span>
+</span><span class='line'>       <span class="p">(</span><span class="nb">filter </span><span class="p">(</span><span class="k">fn </span><span class="p">[[</span><span class="nv">idx</span> <span class="o">^</span><span class="nv">PutRecordsResultEntry</span> <span class="nv">e</span><span class="p">]]</span> <span class="p">(</span><span class="nf">.getErrorCode</span> <span class="nv">e</span><span class="p">)))</span>
+</span><span class='line'>       <span class="p">(</span><span class="nb">map </span><span class="p">(</span><span class="k">fn </span><span class="p">[[</span><span class="nv">idx</span> <span class="nv">_</span><span class="p">]]</span> <span class="p">(</span><span class="nb">nth </span><span class="nv">events</span> <span class="nv">idx</span><span class="p">)))))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="kd">defn- </span><span class="nv">send-events</span>
 </span><span class='line'>  <span class="s">&quot;Perform putRecords request to send the batch to Kinesis</span>
 </span><span class='line'><span class="s">   returns a list of events that failed.&quot;</span>
 </span><span class='line'>  <span class="p">[</span><span class="o">^</span><span class="nv">AmazonKinesisClient</span> <span class="nv">client</span> <span class="nv">stream-name</span> <span class="nv">events</span><span class="p">]</span>
 </span><span class='line'>  <span class="p">(</span><span class="nf">try+</span>
-</span><span class='line'>   <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">result</span> <span class="p">(</span><span class="nf">.putRecords</span> <span class="nv">client</span> <span class="p">(</span><span class="nf">events-&gt;put-records-request</span> <span class="nv">events</span> <span class="nv">stream-name</span> <span class="nv">telemetry</span><span class="p">))]</span>
+</span><span class='line'>   <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">result</span> <span class="p">(</span><span class="nf">.putRecords</span> <span class="nv">client</span> <span class="p">(</span><span class="nf">events-&gt;put-records-request</span> <span class="nv">events</span> <span class="nv">stream-name</span><span class="p">))]</span>
 </span><span class='line'>     <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">pos? </span><span class="p">(</span><span class="nf">.getFailedRecordCount</span> <span class="nv">result</span><span class="p">))</span>
-</span><span class='line'>       <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">failed-events</span> <span class="p">(</span><span class="nf">failures-&gt;events</span> <span class="nv">result</span> <span class="nv">events</span><span class="p">)]</span>
-</span><span class='line'>         <span class="p">(</span><span class="nf">count-failures</span> <span class="nv">telemetry</span> <span class="p">(</span><span class="nf">failures-&gt;error-codes</span> <span class="nv">result</span><span class="p">))</span>
-</span><span class='line'>         <span class="nv">failed-events</span><span class="p">)</span>
-</span><span class='line'>       <span class="p">[]))</span>
+</span><span class='line'>       <span class="p">(</span><span class="nf">failures-&gt;events</span> <span class="nv">result</span> <span class="nv">events</span><span class="p">))</span>
+</span><span class='line'>       <span class="p">[])))</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
