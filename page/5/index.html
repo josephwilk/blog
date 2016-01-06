@@ -9,7 +9,7 @@
   <meta name="author" content="Joseph Wilk">
 
   
-  <meta name="description" content="I have written a plugin for the continuous integration server Hudson which uses a metric-fu rake task at its core to build and present graphs &hellip;">
+  <meta name="description" content="There has been lots of activity around the value of metrics for source code and tests. In the Ruby world tools like metric_fu provide a wealth of &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +82,140 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/ruby/metrics-for-plain-text-acceptance-tests.html">Metrics for Plain Text Acceptance Tests</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-11-10T20:37:19+00:00" pubdate data-updated="true">Nov 10<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>There has been lots of activity around the value of metrics for source code and tests. In the Ruby world tools like <a href="http://metric-fu.rubyforge.org/">metric_fu</a> provide a wealth of analysis.</p>
+
+<p>While working on my Cucumber talk for Rails Underground I started investigating how we could apply metrics to the customer focused plain text of Cucumber. For those not familiar with <a href="http://cukes.info/">Cucumber</a> it&rsquo;s an acceptance testing framework which allows non-technical people to write plain-text describing the behaviors of their system. The developers/testers map the plain-text to tests.</p>
+
+<p>Having spent time teaching people about the plain-text side of Cucumber I often found myself recommending the same guidelines and plain-text anti-patterns. This lead me to think about providing metrics scoring the customers plain-text.</p>
+
+<p><strong>Why would we want plain-text acceptance test metrics?</strong></p>
+
+<ul>
+<li><p>Help plain-text beginners avoid bad practices early on.</p></li>
+<li><p>Help improve the quality of plain-text</p></li>
+<li><p>Help quality review with a large frequency of incoming features</p></li>
+</ul>
+
+
+<p><strong>Why does the quality of the plain-text matter?</strong></p>
+
+<p>Why focus on quality, the plain-texts primarily goal is to be easy for customer to use?</p>
+
+<ul>
+<li><p>The developer builds the Domain specific language via mapping plain text to ruby. Higher quality plain-text could make it easier to manage these mappings without any major impact to readability.</p></li>
+<li><p>Higher quality text is easier to read, edit and understand.</p></li>
+</ul>
+
+
+<p><strong>Who would find it useful?</strong></p>
+
+<p>Initially Developers.<strong>
+</strong></p>
+
+<ul>
+<li><p>In some scenarios the developers write the features from discussions and give to the customer to review.</p></li>
+<li><p>Developers may tweak/review customer written changes/features.</p></li>
+<li><p>Developers often edit/tweak plain-text from the customer to enable reuse of existing test code .</p></li>
+<li><p>In open source projects often developers write Cucumber features. Metrics are something they are comfortable with.</p></li>
+</ul>
+
+
+<p><strong>Can you measure quality in plain-text?</strong></p>
+
+<p>First its important to distinguish acceptance tests from pure plain-text. Within acceptance tests we have some degree of structure, for example using Given/When/Then to describe scenarios.</p>
+
+<p>Cucumber Example:</p>
+
+<pre><code>Scenario: Eating all cucumbers
+  Given there are 5 cucumbers
+  When I eat 5 cucumbers
+  Then I should have 0 cucumbers
+</code></pre>
+
+<p>This structure reduces the complexity of analysing the quality of the text. It provides us with different structural elements which have different rules/guidelines on what their content should be.</p>
+
+<p>The problem with measuring the quality of text is that it is far more subjective in than in code. So while we cannot be absolute in our assessment of quality we can try and codify smells that <em>could</em> indicate areas in the text that <em>could</em> be improved. This is pretty much true for all metrics, they are guidelines not absolutes (Dan Norths highlights the dangers of absolute metrics in the <a href="http://dannorth.net/2009/11/the-lady-in-the-taxi-a-parable-of-metrics">Parable of Metrics</a>)</p>
+
+<p>So what useful metrics could we look at?</p>
+
+<h2>Plain text Metrics</h2>
+
+<p>From my experience with Cucumber I would suggest examining:</p>
+
+<ul>
+<li><p>Lack of Feature/Story Narrative</p>
+
+<ul>
+<li>We don&rsquo;t know why this feature is useful and who it&rsquo;s useful to!</li>
+</ul>
+</li>
+<li><p>Scenario length</p>
+
+<ul>
+<li>Very long scenarios may reflect more abstraction should be used to help make the scenarios easier to read (See declarative vs imperative scenarios: <a href="http://www.benmabey.com/2008/05/19/imperative-vs-declarative-scenarios-in-user-stories/">http://www.benmabey.com/2008/05/19/imperative-vs-declarative-scenarios-in-user-stories/</a>)</li>
+</ul>
+</li>
+<li><p>Size of Background (like  a before/setup)</p>
+
+<ul>
+<li>Increases conceptual overhead for each scenario. More reasons here: <a href="http://wiki.github.com/aslakhellesoy/cucumber/background">http://wiki.github.com/aslakhellesoy/cucumber/background</a></li>
+</ul>
+</li>
+<li><p>Semantically close words across features</p>
+
+<ul>
+<li>Can indicate ambiguity around domain terminology</li>
+</ul>
+</li>
+<li><p>Frequency of noise words (&lsquo;basically&rsquo;, &lsquo;be able to&rsquo;, etc)</p>
+
+<ul>
+<li>Adds no value and drives me crazy.</li>
+</ul>
+</li>
+</ul>
+
+
+<h2>Feedback</h2>
+
+<p>What do you think of the idea?</p>
+
+<p>Can you think of any other useful plain-text metrics?</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1311,74 +1445,6 @@ disabl  [ +0.11 +0.02 +0.02 &lt;span style="color: #ff0000;"&gt;+0.19&lt;/span&g
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/ruby/rboss-rubygem-for-yahoo-search-boss.html">Rboss RubyGem for Yahoo! Search BOSS</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2008-08-23T14:55:59+01:00" pubdate data-updated="true">Aug 23<span>rd</span>, 2008</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>With <a href="http://developer.yahoo.com/search/boss/">Search BOSS</a> (Build your Own Search Service)  Yahoo has freed up a lot of the restrictions on their previous search service. Like removing the cap on the number of searches and allowing re-purposing of results. I&rsquo;ve been doing some work on using the service in Ruby. I wrote a little RubyGem called Rboss which wraps around the BOSS webservice. It makes life nice and easy using Ruby and <a href="http://developer.yahoo.com/search/boss/">BOSS</a>.</p>
-
-<pre><code>require 'rubygems'
-require 'boss'
-
-api = Boss::Api.new('boss-api-key-got-from-yahoo')
-
-#Find news articles that are not older than 7 days
-results = api.search_news('monkeys', :age =&gt; '7d')
-results.each do |news|
-   puts news.title
-   puts news.abstract
-   puts news.date
-   puts news.url
-end
-</code></pre>
-
-<p>Install Gem from GitHub:</p>
-
-<ol>
-<li><p> Add github to gem sources</p>
-
-<p>gem sources -a <a href="http://gems.github.com">http://gems.github.com</a></p></li>
-<li><p> Install the gem:</p>
-
-<p>sudo gem install eshopworks-rboss</p></li>
-<li><p> If you don&rsquo;t already have a BOSS api key signup for one: <a href="http://developer.yahoo.com/wsregap">http://developer.yahoo.com/wsregap</a></p></li>
-</ol>
-
-
-<p>Checkout the Rboss documentation and example usage at: <a href="http://github.com/eshopworks/rboss-gem/tree/master">http://github.com/eshopworks/rboss-gem</a></p>
-
-<p>Thanks to <a href="http://www.eshopworks.co.uk/">eShopworks</a> for sponsoring this project.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/6/">&larr; Older</a>
@@ -1394,6 +1460,10 @@ end
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/art/shadertone.html">Visuals with Overtone and Shadertone</a>
+      </li>
     
       <li class="post">
         <a href="/art/emacs-animation.html">Animations with Emacs</a>
@@ -1429,10 +1499,6 @@ end
     
       <li class="post">
         <a href="/elixir/sets-in-elixir.html">Sets in Elixir</a>
-      </li>
-    
-      <li class="post">
-        <a href="/clojure/isolating-external-dependencies-in-clojure.html">Isolating external dependencies in Clojure</a>
       </li>
     
   </ul>
@@ -1477,7 +1543,7 @@ end
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - Joseph Wilk -
+  Copyright &copy; 2016 - Joseph Wilk -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
