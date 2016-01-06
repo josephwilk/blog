@@ -587,7 +587,7 @@ This also gets more complicated when say we have 3 instances of the same synth r
 
 <p>Its always a challenge to utilise this without creating something jerky or causing motion sickness. Hence I tend to use the FFT signal as a distorter rather than a base for animations.</p>
 
-<p>It also helps to tune in on specific frequencies to prevent too much oscillation.</p>
+<p>It also helps to tune out lower frequencies (note the 0.75 below) to prevent too much oscillation.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">float</span> <span class="n">sound</span> <span class="o">=</span> <span class="n">texture2D</span><span class="p">(</span><span class="n">iChannel0</span><span class="p">,</span> <span class="n">vec2</span><span class="p">(</span><span class="n">uv</span><span class="p">.</span><span class="n">x</span><span class="p">,</span><span class="mf">.75</span><span class="p">)).</span><span class="n">x</span><span class="p">;</span>

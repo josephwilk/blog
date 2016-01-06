@@ -4,7 +4,7 @@
   <title><![CDATA[Category: art | Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io//art/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2016-01-06T15:30:31+00:00</updated>
+  <updated>2016-01-06T15:35:00+00:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -366,7 +366,7 @@ const mat3 LETTER_R        = mat3(1, 1, 1,</p>
 
 <p>Its always a challenge to utilise this without creating something jerky or causing motion sickness. Hence I tend to use the FFT signal as a distorter rather than a base for animations.</p>
 
-<p>It also helps to tune in on specific frequencies to prevent too much oscillation.</p>
+<p>It also helps to tune out lower frequencies (note the 0.75 below) to prevent too much oscillation.</p>
 
 <p><code>c
 float sound = texture2D(iChannel0, vec2(uv.x,.75)).x;
