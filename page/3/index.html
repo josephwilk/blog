@@ -9,7 +9,7 @@
   <meta name="author" content="Joseph Wilk">
 
   
-  <meta name="description" content="I&rsquo;m happy to announce that I have joined Elizabeth Hendrickson as Co-Chair of the Agile Alliance Functional Testing Tools group (AAFTT, yes the &hellip;">
+  <meta name="description" content="Failure Rates vs Change Rates I&rsquo;ve been spending a lot of  time recently data mining our test suite at Songkick.com. I&rsquo;ve been using our &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,57 +82,6 @@
     <div id="content">
       <div class="blog-index">
   
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/testing/co-chair-of-the-agile-alliance-functional-testing-tools-group.html">Co-chair of the Agile Alliance Functional Testing Tools Group</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-13T18:40:27+00:00" pubdate data-updated="true">Feb 13<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;m happy to announce that I have joined <a href="http://testobsessed.com">Elizabeth Hendrickson</a> as Co-Chair of the Agile Alliance Functional Testing Tools group (AAFTT, yes the name is a bit of a mouthful).</p>
-
-<p>I came across the AAFTT group when they organised a pattern writing workshop in London 2010, facilitated by <a href="http://www.lindarising.org/">Linda Rising</a>. It was an opportunity to bringing together some of the thought leaders in testing and share experiences. Somehow I managed to sneak in and proceded to steal all these experts knowledge. The AAFTT also runs an open space pria to the Agile conference. Last year I was surprised to find people who had travelled to the conference just for the AAFTT open space!</p>
-
-<p>As a developer who loves messing around with testing tools, I’ll happily admit I know little about testing as a profession. The scope and breath of ideas that the AAFTT exposed me to has left me excited and hungry to play with new tools, ideas and patterns to make testing as fun as it should be. I hope as a developer who is obsessed about testing I can help blur the lines between developers and testers. I’m both.</p>
-
-<p>Want to know more about the Agile Alliance Functional Testing Tools group?</p>
-
-<ul>
-<li><p>Mailing list: <a href="http://tech.groups.yahoo.com/group/aa-ftt/">http://tech.groups.yahoo.com/group/aa-ftt/</a></p></li>
-<li><p>AAFTT workshop 2009, Chicago <a href="http://cds43.wordpress.com/2009/10/06/aaftt-workshop-2009-chicago/">http://cds43.wordpress.com/2009/10/06/aaftt-workshop-2009-chicago/</a></p></li>
-<li><p>Records from previous AAFTT workshops: <a href="http://www.managing-expectations.com">http://www.managing-expectations.com</a></p></li>
-</ul>
-
-
-<p>And keep your ears open for any events!</p>
-</div>
-  
-  
-
-
-    </article>
   
   
     <article>
@@ -904,6 +853,81 @@ No easy way to be reused outside of Cucumber or test in isolation. By isolating 
 
     </article>
   
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/acceptance-testing/allowing-features-to-breathe.html">Allowing Features to Breathe</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-11-17T16:42:22+00:00" pubdate data-updated="true">Nov 17<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Your Cucumber features are living documentation. The world is evolving around them and without exposure they tend to rot.</p>
+
+<h3>Evolving language</h3>
+
+<p>When features are written we use a snapshot of the domain language at some specific timeframe. This ubiquitous language changes and grows outside the codebase and is influenced by more than just developers. When do we refactor features to reflect these changes?</p>
+
+<h3>Taints</h3>
+
+<p>Since the features are in the code base it becomes the developers/QAs responsibility to maintain them. When writing the features for the first time we have lots of discussion. But at a later date the feature language may be tweaked by a developer to allow reuse or some new technical constraint means they want a special step added. This is where taints can sneak into the language.</p>
+
+<h3>Quality</h3>
+
+<p>It&rsquo;s amazing what a difference it makes when people know something they are writing will be published and read by others. Exposing the features can help increase their quality.</p>
+
+<h3>Barriers to entry</h3>
+
+<p>It&rsquo;s great that the features sit close to the code but there is a barrier in how you gain access to that code. While developers find source control like second nature its something that gets in the way for non-technical people.</p>
+
+<h2>Allowing features to breathe</h2>
+
+<p>When someone wants to know about the behaviour of a feature they should be able to turn to the features irrelevant of technical expertise. This engenders discussion which helps bring about changes to the features to better reflect the ubiquitous language and remove taints. The easier it is to access the features the more likely they are to be the first port of call.</p>
+
+<p>So my advice is exposure your Cucumber features to your team (and if possible your users, which <a href="http://relishapp.com/rspec">Rspec has done with Relish</a>), allowing them to browse and question them.</p>
+
+<h3>Relish</h3>
+
+<p>To expose features I currently use <a href="http://relishapp.com">Relish</a>. This is a web based browser for features.</p>
+
+<p><img src="/images/blog/2010/11/Screen-shot-2010-11-17-at-14.27.21.png" alt="" /></p>
+
+<p>Relish has a <a href="https://github.com/justinko/relish">command line gem</a> for pushing features up to the website. I use a post-receive server git hook which upon every push also pushes the features to Relish.</p>
+
+<p>.git/hooks/post-receive
+<code></code></p>
+
+<pre><code>#!/bin/sh
+relish push --project air --organization breathe
+</code></pre>
+
+<p><code></code></p>
+</div>
+  
+  
+
+
+    </article>
+  
   <div class="pagination">
     
       <a class="prev" href="/page/4/">&larr; Older</a>
@@ -919,10 +943,6 @@ No easy way to be reused outside of Cucumber or test in isolation. By isolating 
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/art/shadertone.html">Visuals with Overtone and Shadertone</a>
-      </li>
     
       <li class="post">
         <a href="/art/emacs-animation.html">Animations with Emacs</a>
@@ -958,6 +978,10 @@ No easy way to be reused outside of Cucumber or test in isolation. By isolating 
     
       <li class="post">
         <a href="/elixir/sets-in-elixir.html">Sets in Elixir</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/isolating-external-dependencies-in-clojure.html">Isolating external dependencies in Clojure</a>
       </li>
     
   </ul>

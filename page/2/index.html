@@ -9,7 +9,7 @@
   <meta name="author" content="Joseph Wilk">
 
   
-  <meta name="description" content="Isolating external dependencies helps make testing easier. We can focus on a specific unit of code and we can avoid slow tests calling real services &hellip;">
+  <meta name="description" content="So your talk got selected. Great! Oh Crap! Now hits the panic, you have to actually create a presentation. Every presenter wants to give the best &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,488 +82,6 @@
     <div id="content">
       <div class="blog-index">
   
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/clojure/isolating-external-dependencies-in-clojure.html">Isolating External Dependencies in Clojure</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-06-08T12:00:00+01:00" pubdate data-updated="true">Jun 8<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Isolating external dependencies helps make testing easier. We can focus on a specific unit of code and we can avoid slow tests calling real services or databases.</p>
-
-<p>Clojure provides many different ways of achieving isolation. Lets explore what&rsquo;s possible:</p>
-
-<h2>Redefining functions</h2>
-
-<p>We can redefine vars and hence functions in a limited scope with <a href="http://clojuredocs.org/clojure_core/clojure.core/with-redefs">with-redefs</a></p>
-
-<p>The documentation suggests its usefulness in testing:</p>
-
-<blockquote><p>Useful for mocking out functions during testing.</p></blockquote>
-
-<p>Lets look at an example where we want to isolate a function that logs to file:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">defn </span><span class="nv">log-fn</span> <span class="p">[]</span> <span class="o">#</span><span class="p">(</span><span class="nf">spit</span> <span class="s">&quot;report.xml&quot;</span> <span class="nv">%</span><span class="p">))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="kd">defn </span><span class="nv">log</span> <span class="p">[</span><span class="nv">string</span><span class="p">]</span> <span class="p">((</span><span class="nf">log-fn</span><span class="p">)</span> <span class="nv">string</span><span class="p">))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And the test removing the dependency on the filesytem:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="nf">with-redefs</span> <span class="p">[</span><span class="nv">log-fn</span> <span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">data</span><span class="p">]</span> <span class="nv">data</span><span class="p">)]</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">log</span> <span class="s">&quot;hello&quot;</span><span class="p">))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Its important to note that <code>with-redefs</code> are visible in <em>all threads</em> and it does not play well with concurrency:</p>
-
-<blockquote><p>with-redefs can permanently change a var if applied concurrently:</p></blockquote>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">defn </span><span class="nv">ten-sixty-six</span> <span class="p">[]</span> <span class="mi">1066</span><span class="p">)</span>
-</span><span class='line'><span class="p">(</span><span class="nb">doall </span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">pmap</span> <span class="o">#</span><span class="p">(</span><span class="nf">with-redefs</span> <span class="p">[</span><span class="nv">ten-sixty-six</span> <span class="p">(</span><span class="k">fn </span><span class="p">[]</span> <span class="nv">%</span><span class="p">)]</span> <span class="p">(</span><span class="nf">ten-sixty-six</span><span class="p">))</span>
-</span><span class='line'>        <span class="p">(</span><span class="nb">range </span><span class="mi">20</span> <span class="mi">100</span><span class="p">)))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="nf">ten-sixty-six</span><span class="p">)</span> <span class="c1">; =&gt; 49 Ouch!</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The parallel redefs conflict with each other when setting back the var to its original value.</p>
-
-<p>Another option is <a href="http://clojuredocs.org/clojure_core/clojure.core/alter-var-root">alter-var-root</a> which globally redefines a var and hence a function. <code>alter-var-root</code> can alter functions in other namespaces.</p>
-
-<p>Writing our test to use <code>alter-var-root</code>:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="nf">alter-var-root</span>
-</span><span class='line'> <span class="p">(</span><span class="k">var </span><span class="nv">log-fn</span><span class="p">)</span>
-</span><span class='line'> <span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">real-fn</span><span class="p">]</span> <span class="c1">; We are passed the function we are about to stub.</span>
-</span><span class='line'>   <span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">data</span><span class="p">]</span> <span class="p">(</span><span class="nb">println </span><span class="nv">data</span><span class="p">))))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Its important to note we have to reset the var if we want to restore the system to its previous state for other tests.</p>
-
-<h3>Redefining Dynamic Vars</h3>
-
-<p>Using dynamic vars we can rebind the value and hence we can use this as an injection point. Again if we can rebind vars we can rebind functions. Note though that we have to mark those functions as dynamic:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="c1">;The real http request</span>
-</span><span class='line'><span class="p">(</span><span class="kd">defn </span><span class="o">^</span><span class="ss">:dynamic</span> <span class="nv">http-get-request</span> <span class="p">[</span><span class="nv">url</span><span class="p">]</span> <span class="nv">http/get</span> <span class="nv">url</span><span class="p">)</span>
-</span><span class='line'><span class="p">(</span><span class="kd">defn </span><span class="nb">get </span><span class="p">[</span><span class="nv">url</span><span class="p">]</span> <span class="p">(</span><span class="nf">http-get-request</span> <span class="p">[</span><span class="nv">url</span><span class="p">]))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="kd">defn </span><span class="nv">fake-http-get</span> <span class="p">[</span><span class="nv">url</span><span class="p">]</span> <span class="s">&quot;{}&quot;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="nf">fact</span> <span class="s">&quot;make a http get request&quot;</span>
-</span><span class='line'>  <span class="p">(</span><span class="nb">binding </span><span class="p">[</span><span class="nv">http-get-request</span> <span class="nv">fake-http-get</span><span class="p">]</span>
-</span><span class='line'>    <span class="p">(</span><span class="nb">get </span><span class="s">&quot;/some-resource&quot;</span><span class="p">))</span> <span class="nv">=&gt;</span> <span class="s">&quot;{}&quot;</span><span class="p">))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Unlike <code>alter-var-root</code> and <code>with-redefs</code> dynamic vars are bound at a thread-local level. So the stubbings would only be visible in that thread. Which makes this safe for tests being run concurrently!</p>
-
-<h3>Atoms &amp; Refs (Global vars in disguise)</h3>
-
-<p>While insidious, evil, malicious and ugly we could use atom or refs to contain a dependency.</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">cache</span> <span class="p">(</span><span class="nf">atom</span> <span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">method</span>, <span class="o">&amp;</span> <span class="nv">args</span><span class="p">]</span> <span class="p">(</span><span class="nb">apply </span><span class="p">(</span><span class="nb">resolve </span><span class="p">(</span><span class="nb">symbol </span><span class="p">(</span><span class="nb">str </span><span class="s">&quot;memcache/&quot;</span> <span class="nv">method</span><span class="p">)))</span> <span class="nv">args</span><span class="p">))))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="kd">defn </span><span class="nb">get </span><span class="p">[</span><span class="nv">key</span><span class="p">]</span> <span class="p">(</span><span class="err">@</span><span class="nv">cache</span> <span class="nb">get </span><span class="nv">key</span><span class="p">))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And in our test:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="nf">reset!</span> <span class="nv">cache</span> <span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">method</span>, <span class="o">&amp;</span> <span class="nv">args</span><span class="p">]</span> <span class="p">(</span><span class="nb">apply </span><span class="p">(</span><span class="nb">resolve </span><span class="p">(</span><span class="nb">symbol </span><span class="p">(</span><span class="nb">str </span><span class="s">&quot;fake-cache/&quot;</span> <span class="nv">method</span><span class="p">)))</span> <span class="nv">args</span><span class="p">)))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Yuck, lets never speak of that again.</p>
-
-<h3>Midje</h3>
-
-<p>The <a href="https://github.com/marick/Midje">Midje</a> testing framework provides stubbing methods through <code>provided</code>. In the core of Midje this uses our previously visited <code>alter-var-root</code>.</p>
-
-<p>Lets see how our example would look using Midje:</p>
-
-<p>The code:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">defn </span><span class="nv">log-fn</span> <span class="p">[]</span> <span class="o">#</span><span class="p">(</span><span class="nf">spit</span> <span class="s">&quot;report.xml&quot;</span> <span class="nv">%</span><span class="p">))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="kd">defn </span><span class="nv">log</span> <span class="p">[</span><span class="nv">string</span><span class="p">]</span> <span class="p">((</span><span class="nf">log-fn</span><span class="p">)</span> <span class="nv">string</span><span class="p">))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And our test that uses <code>provided</code>:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="nf">fact</span> <span class="s">&quot;it should spit out strings&quot;</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">log</span> <span class="s">&quot;hello&quot;</span><span class="p">)</span> <span class="nv">=&gt;</span> <span class="s">&quot;hello&quot;</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">provided</span>
-</span><span class='line'>    <span class="p">(</span><span class="nf">log-fn</span><span class="p">)</span> <span class="nv">=&gt;</span> <span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">data</span><span class="p">]</span> <span class="nv">data</span><span class="p">)))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Its important to note that the <code>provided</code> is scoped in effect. It is only active during the form before the Midje &ldquo;=>&rdquo; assertion arrow.</p>
-
-<p>Conceptually think of it like this:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="nf">provided</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">log-fn</span><span class="p">)</span> <span class="nv">=&gt;</span> <span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">data</span><span class="p">]</span> <span class="p">(</span><span class="nb">println </span><span class="nv">data</span><span class="p">))</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">captured-output</span> <span class="p">(</span><span class="nf">log</span> <span class="s">&quot;hello&quot;</span><span class="p">)))</span> <span class="nv">=&gt;</span> <span class="p">(</span><span class="nf">contains</span> <span class="s">&quot;hello&quot;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Flexibility</h4>
-
-<p>Midjes <code>provided</code> gives very fine grained control of when a stub is used:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="nf">do</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">log</span> <span class="s">&quot;mad hatter&quot;</span><span class="p">)</span>   <span class="c1">;will use the stub</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">log</span> <span class="s">&quot;white rabbit&quot;</span><span class="p">)</span> <span class="c1">;will not use the stub</span>
-</span><span class='line'><span class="p">)</span>
-</span><span class='line'><span class="p">(</span><span class="nf">provided</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">log</span> <span class="s">&quot;mad hatter&quot;</span><span class="p">)</span> <span class="nv">=&gt;</span> <span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">data</span><span class="p">]</span> <span class="p">(</span><span class="nb">println </span><span class="nv">data</span><span class="p">)))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And we can go further and define argument matcher functions giving huge flexibility in when a stub should be run.</p>
-
-<h4>Safety</h4>
-
-<p>Midje validates your stubs and checks your not doing anything too crazy which would fundamentally break everything.</p>
-
-<h2>Higher order functions</h2>
-
-<p>We can isolate dependencies by passing in functions which wrap that dependency. This abstracts the details of the dependency and provides a point where we can inject our own functions which bypasses the dependency.</p>
-
-<p>For example:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">defn </span><span class="nv">extract-urn</span> <span class="p">[</span><span class="nv">data</span><span class="p">]</span>
-</span><span class='line'>  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">urn-getter</span> <span class="o">#</span><span class="p">(</span><span class="ss">:urn</span> <span class="nv">data</span><span class="p">)]</span>
-</span><span class='line'> <span class="p">(</span><span class="nf">do-it</span> <span class="nv">urn-getter</span><span class="p">)))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>In our tests:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'>  <span class="p">(</span><span class="nf">do-it</span> <span class="p">(</span><span class="k">fn </span><span class="p">[]</span> <span class="mi">10</span><span class="p">))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Simple and beautiful.</p>
-
-<h2>Substituting namespaces</h2>
-
-<p>We can switch the namespace that a block of functions are evaluated in. Hence we can swap in a completely new implementation (such as a fake) by changing the namespace.</p>
-
-<p>An example faking out a key value store:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">defn </span><span class="nv">get-it</span> <span class="p">[</span><span class="nv">arg</span> <span class="o">&amp;</span> <span class="p">[</span><span class="nv">namespace</span><span class="p">]]</span>
-</span><span class='line'>  <span class="p">((</span><span class="nb">ns-resolve </span><span class="p">(</span><span class="nb">or namespace </span><span class="nv">*ns*</span><span class="p">)</span> <span class="ss">&#39;get</span><span class="p">)</span> <span class="nv">arg</span><span class="p">))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>A fake implementation of this service:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">ns </span><span class="nv">test.cache.fake</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">cache</span> <span class="p">(</span><span class="nf">atom</span> <span class="p">{}))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="kd">defn </span><span class="nb">get </span><span class="p">[</span><span class="nv">arg</span><span class="p">]</span>
-</span><span class='line'>  <span class="p">(</span><span class="err">@</span><span class="nv">cache</span> <span class="nv">arg</span><span class="p">))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="kd">defn </span><span class="nv">put</span> <span class="p">[</span><span class="nv">arg</span> <span class="nv">value</span><span class="p">]</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">reset!</span> <span class="err">@</span><span class="nv">cache</span> <span class="p">(</span><span class="nb">assoc </span><span class="err">@</span><span class="nv">cache</span> <span class="nv">arg</span> <span class="nv">value</span><span class="p">)))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And our test:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="nf">fact</span> <span class="s">&quot;it should do something useful&quot;</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">get-it</span> <span class="s">&quot;1234&quot;</span> <span class="ss">&#39;test.cache.fake</span><span class="p">)</span> <span class="nv">=&gt;</span> <span class="s">&quot;1234&quot;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Alternatively if we don&rsquo;t want the mess of injecting new namespaces into our functions we could change namespace aliases to achieve the same effect:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">ns </span><span class="nv">example</span>
-</span><span class='line'>  <span class="p">(</span><span class="ss">:require</span> <span class="p">[</span><span class="nv">cache.memcache</span> <span class="ss">:as</span> <span class="nv">memcache</span><span class="p">]))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="nb">when </span><span class="p">(</span><span class="nb">= </span><span class="p">(</span><span class="nf">System/getenv</span> <span class="s">&quot;ENV&quot;</span><span class="p">)</span> <span class="s">&quot;TEST&quot;</span><span class="p">)</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">ns-unalias</span> <span class="ss">&#39;example</span> <span class="ss">&#39;memcache</span><span class="p">)</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">require</span> <span class="ss">&#39;test.cache.fake</span><span class="p">)</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">alias</span> <span class="ss">&#39;memcache</span> <span class="ss">&#39;test.cache.fake</span><span class="p">))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="kd">defn </span><span class="nb">get </span><span class="p">[</span><span class="nv">arg</span><span class="p">]</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">memcache/get</span> <span class="nv">arg</span><span class="p">))</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">; ...</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="nb">when </span><span class="p">(</span><span class="nb">= </span><span class="p">(</span><span class="nf">System/getenv</span> <span class="s">&quot;ENV&quot;</span><span class="p">)</span> <span class="s">&quot;TEST&quot;</span><span class="p">)</span>
-</span><span class='line'>  <span class="c1">;Cleanup our rebinding of memcache alias</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">ns-unalias</span> <span class="ss">&#39;memcache</span> <span class="ss">&#39;example</span><span class="p">))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>When running our tests we mutate the behaviour of the system by setting the ENV environment variable to TEST.</p>
-
-<h2>Runtime Polymorphism</h2>
-
-<p>Switch behaviour based on a the type of an argument. During testing we can inject a specific type which will behave differently from the real system.</p>
-
-<p>Clojure gives us <a href="http://clojure.org/protocols">protocols</a> and <a href="http://clojure.org/multimethods">multimethods</a> to achieve this:</p>
-
-<h3>Protocols</h3>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="ss">:require</span> <span class="p">[[</span><span class="nv">fake-service</span> <span class="ss">:as</span> <span class="nv">fake</span><span class="p">]</span>
-</span><span class='line'>           <span class="p">[</span><span class="nv">service</span>      <span class="ss">:as</span> <span class="nv">service</span><span class="p">]])</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="kd">defprotocol </span><span class="nv">Service</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">do-get</span> <span class="p">[</span><span class="nv">this</span> <span class="nv">arg</span><span class="p">]))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="kd">deftype </span><span class="nv">FakeService</span> <span class="p">[]</span>
-</span><span class='line'>  <span class="nv">Service</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">do-get</span> <span class="p">[</span><span class="nv">this</span> <span class="nv">arg</span><span class="p">]</span> <span class="p">(</span><span class="nf">fake/do-get</span> <span class="nv">arg</span><span class="p">)))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="kd">deftype </span><span class="nv">RealService</span> <span class="p">[]</span>
-</span><span class='line'>  <span class="nv">Service</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">do-get</span> <span class="p">[</span><span class="nv">this</span> <span class="nv">arg</span><span class="p">]</span> <span class="p">(</span><span class="nf">service/do-get</span> <span class="nv">arg</span><span class="p">)))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And in our test:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="nf">do-get</span> <span class="p">(</span><span class="nf">FakeService.</span><span class="p">)</span> <span class="s">&quot;cheshire&quot;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Multimethods</h3>
-
-<p>Similar we can use the type of arguments to indicate different behaviour.</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="ss">:require</span> <span class="p">[[</span><span class="nv">fake-service</span> <span class="ss">:as</span> <span class="nv">fake</span><span class="p">]</span>
-</span><span class='line'>           <span class="p">[</span><span class="nv">service</span>      <span class="ss">:as</span> <span class="nv">service</span><span class="p">]])</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="kd">defmulti </span><span class="nv">do-get</span> <span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">service</span> <span class="nv">param</span><span class="p">]</span> <span class="p">[(</span><span class="ss">:Service</span> <span class="nv">service</span><span class="p">)</span> <span class="nv">param</span><span class="p">]))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="kd">defmethod </span><span class="nv">do-get</span> <span class="p">[</span><span class="ss">:FakeService</span><span class="p">]</span> <span class="p">[</span><span class="nv">service</span> <span class="nv">param</span><span class="p">]</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">fake/do-get</span> <span class="nv">param</span><span class="p">))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="kd">defmethod </span><span class="nv">do-get</span> <span class="p">[</span><span class="ss">:RealService</span><span class="p">]</span> <span class="p">[</span><span class="nv">service</span> <span class="nv">param</span><span class="p">]</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">service/do-get</span> <span class="nv">param</span><span class="p">))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And in our test:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="nf">do-get</span> <span class="p">(</span><span class="nf">FakeService.</span><span class="p">)</span> <span class="s">&quot;rabbit&quot;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Defining functions at Runtime</h2>
-
-<p>Using environment variables its possible to switch what functions are defined at runtime. <code>def</code> always defines a method at the top level of a namespace.</p>
-
-<p>Here is an example inspired from Midje&rsquo;s source code:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">defn </span><span class="nv">init!</span> <span class="p">[]</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">case</span> <span class="p">(</span><span class="nf">System/getenv</span> <span class="s">&quot;ENV&quot;</span><span class="p">)</span>
-</span><span class='line'>    <span class="s">&quot;TEST&quot;</span>
-</span><span class='line'>    <span class="p">(</span><span class="nf">do</span>
-</span><span class='line'>      <span class="p">(</span><span class="k">def </span><span class="nb">get </span><span class="p">[</span><span class="nv">key</span><span class="p">]</span>       <span class="p">(</span><span class="nf">fake/get</span> <span class="nv">key</span><span class="p">))</span>
-</span><span class='line'>      <span class="p">(</span><span class="k">def </span><span class="nb">set </span><span class="p">[</span><span class="nb">key </span><span class="nv">value</span><span class="p">]</span> <span class="p">(</span><span class="nf">fake/set</span> <span class="nb">key </span><span class="nv">value</span><span class="p">))</span>
-</span><span class='line'>    <span class="c1">;; else</span>
-</span><span class='line'>    <span class="p">(</span><span class="nf">do</span>
-</span><span class='line'>      <span class="p">(</span><span class="k">def </span><span class="nb">get </span><span class="p">[</span><span class="nv">key</span><span class="p">]</span>       <span class="p">(</span><span class="nf">memcache/get</span> <span class="nv">key</span><span class="p">))</span>
-</span><span class='line'>      <span class="p">(</span><span class="k">def </span><span class="nb">set </span><span class="p">[</span><span class="nb">key </span><span class="nv">value</span><span class="p">]</span> <span class="p">(</span><span class="nf">memcache/set</span> <span class="nb">key </span><span class="nv">value</span><span class="p">))))))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>We would run our tests with <code>ENV=test lein test</code>.</p>
-
-<h1>How should I isolate dependencies in Clojure?</h1>
-
-<p>Having explored what we can do, what should we do?</p>
-
-<p>There are a number of choices and a lot depends on you&rsquo;re programming and testing style:</p>
-
-<h3>The Purest form of isolation</h3>
-
-<p>Passing a function, functions that wrap our dependencies means we do not have to mutate the code under test. This is the ideal form of isolating. This is where we want to be.</p>
-
-<p>But sometimes either aesthetics or control might make us look elsewhere.</p>
-
-<p>Functions with many parameters can become ugly and cumbersome to use.</p>
-
-<p>Using external libraries where we cannot have design the way we want it (though we can try by wrapping the heck out of any library).</p>
-
-<p>Finally integration tests are hard if not impossible to do with this form of dependency isolation.</p>
-
-<h3>The Aesthetic small touch form of isolation</h3>
-
-<p><code>var-alter-root</code> is (very) scary, but the guard rails of Midje make it an easy way to isolate dependencies. It also supports flexibility in how we stub functions based on the arguments they are called with (or completely ignore the arguments). This flexibility is extremely powerful and is a big plus for Midjes <code>provided</code>.</p>
-
-<p>The danger ever present with this form of isolation is ignoring your tests telling you about a problem in your design.</p>
-
-<h3>The Simple small touch form of isolation</h3>
-
-<p>While Midje provides lots of power and flexibly it does so at the cost of slightly awkward syntax and a lot of crazy macros (I say this having stared into the heart of Midje). For example parallel functions do not work with <code>provided</code>.</p>
-
-<p><code>with-redefs</code>, <code>binding</code> and <code>var-alter-root</code> provide flexibly to handle different testing scenarios. and no prior knowledge of an external tool is required.</p>
-
-<p>If you don&rsquo;t need the power of Midje or fear its complexity you can happily use nothing but Clojure&rsquo;s standard library. Maybe you will even learn something about how Clojure works!</p>
-
-<h3>The Java small touch form of isolation.</h3>
-
-<p>Since Clojure supports java interop its always possible to fall back to using Java, OO and dependency injection. If you love Java, this is a good path.</p>
-
-<h3>The Crazy Large touch form of isolation</h3>
-
-<p>Namespace switching is a shortcut to having to stub out every single method. In one sweep we redefine all the functions of a namespace. This might be more useful for integration tests than unit tests.</p>
-
-<p>That shortcut does come at a cost, we still have to maintain our fake ns every time something changes in the real namespace and our production code is left wrapped in <code>ns-resolve</code> or a ugly switch based on Environment settings. Ugly!</p>
-
-<p>I don&rsquo;t recommend using this form of isolation regularly but in edge cases it can be very convenient, though people will still think you are crazy.</p>
-</div>
-  
-  
-
-
-    </article>
   
   
     <article>
@@ -2650,6 +2168,57 @@ end
 
     </article>
   
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/testing/co-chair-of-the-agile-alliance-functional-testing-tools-group.html">Co-chair of the Agile Alliance Functional Testing Tools Group</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-13T18:40:27+00:00" pubdate data-updated="true">Feb 13<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;m happy to announce that I have joined <a href="http://testobsessed.com">Elizabeth Hendrickson</a> as Co-Chair of the Agile Alliance Functional Testing Tools group (AAFTT, yes the name is a bit of a mouthful).</p>
+
+<p>I came across the AAFTT group when they organised a pattern writing workshop in London 2010, facilitated by <a href="http://www.lindarising.org/">Linda Rising</a>. It was an opportunity to bringing together some of the thought leaders in testing and share experiences. Somehow I managed to sneak in and proceded to steal all these experts knowledge. The AAFTT also runs an open space pria to the Agile conference. Last year I was surprised to find people who had travelled to the conference just for the AAFTT open space!</p>
+
+<p>As a developer who loves messing around with testing tools, I’ll happily admit I know little about testing as a profession. The scope and breath of ideas that the AAFTT exposed me to has left me excited and hungry to play with new tools, ideas and patterns to make testing as fun as it should be. I hope as a developer who is obsessed about testing I can help blur the lines between developers and testers. I’m both.</p>
+
+<p>Want to know more about the Agile Alliance Functional Testing Tools group?</p>
+
+<ul>
+<li><p>Mailing list: <a href="http://tech.groups.yahoo.com/group/aa-ftt/">http://tech.groups.yahoo.com/group/aa-ftt/</a></p></li>
+<li><p>AAFTT workshop 2009, Chicago <a href="http://cds43.wordpress.com/2009/10/06/aaftt-workshop-2009-chicago/">http://cds43.wordpress.com/2009/10/06/aaftt-workshop-2009-chicago/</a></p></li>
+<li><p>Records from previous AAFTT workshops: <a href="http://www.managing-expectations.com">http://www.managing-expectations.com</a></p></li>
+</ul>
+
+
+<p>And keep your ears open for any events!</p>
+</div>
+  
+  
+
+
+    </article>
+  
   <div class="pagination">
     
       <a class="prev" href="/page/3/">&larr; Older</a>
@@ -2665,10 +2234,6 @@ end
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/art/shadertone.html">Visuals with Overtone and Shadertone</a>
-      </li>
     
       <li class="post">
         <a href="/art/emacs-animation.html">Animations with Emacs</a>
@@ -2704,6 +2269,10 @@ end
     
       <li class="post">
         <a href="/elixir/sets-in-elixir.html">Sets in Elixir</a>
+      </li>
+    
+      <li class="post">
+        <a href="/clojure/isolating-external-dependencies-in-clojure.html">Isolating external dependencies in Clojure</a>
       </li>
     
   </ul>
