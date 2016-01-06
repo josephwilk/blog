@@ -4,7 +4,7 @@
   <title><![CDATA[Category: art | Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io//art/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2016-01-06T15:35:00+00:00</updated>
+  <updated>2016-01-06T15:42:22+00:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -18,7 +18,7 @@
     <link href="http://josephwilk.github.io/art/shadertone.html"/>
     <updated>2016-01-07T14:58:12+00:00</updated>
     <id>http://josephwilk.github.io/art/shadertone</id>
-    <content type="html"><![CDATA[<p>I&rsquo;ve used OpenGL Fragment Shaders in my Overtone based <a href="https://vimeo.com/replelectric">Repl Electric performances</a>. All that shader source code is open: <a href="https://github.com/repl-electric/cassiopeia/tree/master/resources/shaders.">https://github.com/repl-electric/cassiopeia/tree/master/resources/shaders.</a>
+    <content type="html"><![CDATA[<p>I&rsquo;ve used OpenGL Fragment Shaders in my Overtone based <a href="https://vimeo.com/replelectric">Repl Electric performances</a>. All that shader source code is open: <a href="https://github.com/repl-electric/cassiopeia/tree/master/resources/shaders">https://github.com/repl-electric/cassiopeia/tree/master/resources/shaders</a>
 I&rsquo;ll explore some tricks I&rsquo;ve developed to best express myself while live coding visuals with audio.</p>
 
 <p><img src="http://josephwilk.github.io/images/end-of-buffer.png" alt="shaders"/></p>
