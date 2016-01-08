@@ -4,7 +4,7 @@
   <title><![CDATA[Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2016-01-08T15:07:33+00:00</updated>
+  <updated>2016-01-08T15:21:29+00:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Visuals with Overtone and Shadertone]]></title>
     <link href="http://josephwilk.github.io/art/shadertone.html"/>
-    <updated>2016-01-07T14:58:12+00:00</updated>
+    <updated>2016-01-08T14:58:12+00:00</updated>
     <id>http://josephwilk.github.io/art/shadertone</id>
     <content type="html"><![CDATA[<p>Exploring techniques for creating live coded performances with Overtone and <a href="https://www.opengl.org/wiki/Fragment_Shader">OpenGL Fragment Shaders</a>. Much learnt from my work performing as <a href="https://vimeo.com/replelectric">Repl Electric</a>. All my shader source code for these performances is open: <a href="https://github.com/repl-electric/cassiopeia/tree/master/resources/shaders">https://github.com/repl-electric/cassiopeia/tree/master/resources/shaders</a></p>
 
