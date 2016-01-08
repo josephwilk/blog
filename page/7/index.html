@@ -9,7 +9,7 @@
   <meta name="author" content="Joseph Wilk">
 
   
-  <meta name="description" content="The event calculus planner used within my thesis was based on Dr. Murray Shanahan&rsquo;s ASLDICN (Abductive SLD with Integrity constraints and proof &hellip;">
+  <meta name="description" content="A vector space search involves converting documents into vectors. Each dimension within the vectors represents a term. If a document contains that &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +82,214 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/projects/building-a-vector-space-search-engine-in-python.html">Building a Vector Space Search Engine in Python</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-11-27T08:08:49+00:00" pubdate data-updated="true">Nov 27<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>A vector space search involves converting documents into vectors. Each dimension within the vectors represents a term. If a document contains that term then the value within the vector is greater than zero.</p>
+
+<p>Here is an implementation of Vector space searching using python (2.4+).</p>
+
+<h3>1 Stemming &amp; Stop words</h3>
+
+<p>Fetch all terms within documents and clean &ndash; use a stemmer to reduce. A stemmer takes words and tries to reduce them to there base or root. Words which have a common stem often have similar meanings.
+Example:
+<em>CONNECTED
+CONNECTING
+CONNECTION
+CONNECTIONS</em></p>
+
+<p>all map to <em>CONNECT</em></p>
+
+<p>We also remove any stopwords from the documents. [a,am,an,also,any,and] are all examples of stopwords in English.  Stop words have little value in search so we strip them. The stoplist used was taken from: <a href="ftp://ftp.cs.cornell.edu/pub/smart/english.stop">ftp://ftp.cs.cornell.edu/pub/smart/english.stop</a></p>
+
+<pre><code> self.stemmer = PorterStemmer()
+</code></pre>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'>     <span class="k">def</span> <span class="nf">removeStopWords</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">list</span><span class="p">):</span>
+</span><span class='line'>             <span class="sd">&quot;&quot;&quot; Remove common words which have no search value &quot;&quot;&quot;</span>
+</span><span class='line'>             <span class="k">return</span> <span class="p">[</span><span class="n">word</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">list</span> <span class="k">if</span> <span class="n">word</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopwords</span> <span class="p">]</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>     <span class="k">def</span> <span class="nf">tokenise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
+</span><span class='line'>             <span class="sd">&quot;&quot;&quot; break string up into tokens and stem words &quot;&quot;&quot;</span>
+</span><span class='line'>             <span class="n">string</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clean</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+</span><span class='line'>             <span class="n">words</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>             <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stemmer</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">word</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>2 Map Keywords to Vector Dimensions</h3>
+
+<p>Map the vector dimensions to keywords using a dictionary: keyword=>position</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">getVectorKeywordIndex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">documentList</span><span class="p">):</span>
+</span><span class='line'>        <span class="sd">&quot;&quot;&quot; create the keyword associated to the position of the elements within the document vectors &quot;&quot;&quot;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c">#Mapped documents into a single word string</span>
+</span><span class='line'>        <span class="n">vocabularyString</span> <span class="o">=</span> <span class="s">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">documentList</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">vocabularyList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">tokenise</span><span class="p">(</span><span class="n">vocabularyString</span><span class="p">)</span>
+</span><span class='line'>        <span class="c">#Remove common words which have no search value</span>
+</span><span class='line'>        <span class="n">vocabularyList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">removeStopWords</span><span class="p">(</span><span class="n">vocabularyList</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">uniqueVocabularyList</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">removeDuplicates</span><span class="p">(</span><span class="n">vocabularyList</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">vectorIndex</span><span class="o">=</span><span class="p">{}</span>
+</span><span class='line'>        <span class="n">offset</span><span class="o">=</span><span class="mi">0</span>
+</span><span class='line'>        <span class="c">#Associate a position with the keywords which maps to the dimension on the vector used to represent this word</span>
+</span><span class='line'>        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">uniqueVocabularyList</span><span class="p">:</span>
+</span><span class='line'>                <span class="n">vectorIndex</span><span class="p">[</span><span class="n">word</span><span class="p">]</span><span class="o">=</span><span class="n">offset</span>
+</span><span class='line'>                <span class="n">offset</span><span class="o">+=</span><span class="mi">1</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">vectorIndex</span>  <span class="c">#(keyword:position)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>3 Map Document Strings to Vectors.</h3>
+
+<p>We use the simple Term Count Model. A more accurate model would be to use <a href="http://en.wikipedia.org/wiki/Tf-idf">tf-idf</a> (termFrequency-inverseDocumentFrequnecy).</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">makeVector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wordString</span><span class="p">):</span>
+</span><span class='line'>        <span class="sd">&quot;&quot;&quot; @pre: unique(vectorIndex) &quot;&quot;&quot;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c">#Initialise vector with 0&#39;s</span>
+</span><span class='line'>        <span class="n">vector</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vectorKeywordIndex</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">wordList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">tokenise</span><span class="p">(</span><span class="n">wordString</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">wordList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">removeStopWords</span><span class="p">(</span><span class="n">wordList</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">wordList</span><span class="p">:</span>
+</span><span class='line'>                <span class="n">vector</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">vectorKeywordIndex</span><span class="p">[</span><span class="n">word</span><span class="p">]]</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span> <span class="c">#Use simple Term Count Model</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">vector</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>4 Find Related Documents</h3>
+
+<p>We now have the ability to find related documents. We can test if two documents are in the concept space by looking at the the cosine of the angle between the document vectors.  We use the cosine of the angle as a metric for comparison. If the cosine is 1 then the angle is 0° and hence the vectors are parallel (and the document terms are related).  If the cosine is 0 then the angle is 90° and the vectors are perpendicular (and the document terms are not related).</p>
+
+<p>We calculate the cosine between the document vectors in python using scipy.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">cosine</span><span class="p">(</span><span class="n">vector1</span><span class="p">,</span> <span class="n">vector2</span><span class="p">):</span>
+</span><span class='line'>        <span class="sd">&quot;&quot;&quot; related documents j and q are in the concept space by comparing the vectors :</span>
+</span><span class='line'><span class="sd">                cosine  = ( V1 * V2 ) / ||V1|| x ||V2|| &quot;&quot;&quot;</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">vector1</span><span class="p">,</span><span class="n">vector2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">vector1</span><span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="p">(</span><span class="n">vector2</span><span class="p">)))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>5 Search the Vector Space!</h3>
+
+<p>In order to perform a search across keywords we need to map the keywords to the vector space. We create a temporary document which represents the search terms and then we compare it against the document vectors using the same cosine measurement mentioned for relatedness.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">searchList</span><span class="p">):</span>
+</span><span class='line'>        <span class="sd">&quot;&quot;&quot; search for documents that match based on a list of terms &quot;&quot;&quot;</span>
+</span><span class='line'>        <span class="n">queryVector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buildQueryVector</span><span class="p">(</span><span class="n">searchList</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">ratings</span> <span class="o">=</span> <span class="p">[</span><span class="n">util</span><span class="o">.</span><span class="n">cosine</span><span class="p">(</span><span class="n">queryVector</span><span class="p">,</span> <span class="n">documentVector</span><span class="p">)</span> <span class="k">for</span> <span class="n">documentVector</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">documentVectors</span><span class="p">]</span>
+</span><span class='line'>        <span class="n">ratings</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">ratings</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Further Extensions</h3>
+
+<ol>
+<li><p> Use tf-idf rather than the Term count model for term weightings</p></li>
+<li><p> Instead of linear processing of all document vectors when searching for related content use:  <a href="http://en.wikipedia.org/wiki/Lanczos_method">Lanczos methods</a> OR a <a href="http://en.wikipedia.org/wiki/Neural_network">neural network</a>-like approach.</p></li>
+<li><p> Moving towards <a href="http://en.wikipedia.org/wiki/Latent_semantic_indexing">Latent Semantic analysis</a>, <a href="http://en.wikipedia.org/wiki/Probabilistic_latent_semantic_analysis">Probabilistic latent semantic analysis</a> or <a href="http://en.wikipedia.org/wiki/Latent_Dirichlet_allocation">Latent Dirichlet allocation</a>.</p></li>
+</ol>
+
+
+<h3>Third Party tools</h3>
+
+<p>The stemmer used comes from:
+<a href="http://tartarus.org/~martin/PorterStemmer/python.txt">http://tartarus.org/~martin/PorterStemmer/python.txt</a></p>
+
+<p>And the library for performing cosine calculations comes from NumPy:
+<a href="http://www.scipy.org/">http://www.scipy.org/</a></p>
+
+<h3>Source</h3>
+
+<p><a href="https://github.com/josephwilk/semanticpy.git">https://github.com/josephwilk/semanticpy.git</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -988,6 +1196,10 @@ service:
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/art/shadertone.html">Visuals with Overtone and Shadertone</a>
+      </li>
+    
+      <li class="post">
         <a href="/art/emacs-animation.html">Animations with Emacs</a>
       </li>
     
@@ -1021,10 +1233,6 @@ service:
     
       <li class="post">
         <a href="/elixir/sets-in-elixir.html">Sets in Elixir</a>
-      </li>
-    
-      <li class="post">
-        <a href="/clojure/isolating-external-dependencies-in-clojure.html">Isolating external dependencies in Clojure</a>
       </li>
     
   </ul>

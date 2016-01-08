@@ -9,7 +9,7 @@
   <meta name="author" content="Joseph Wilk">
 
   
-  <meta name="description" content="Through various meetings at Agile2010 and London agile testing meetings Gojko Adzic and others have been converging on a common language to talk &hellip;">
+  <meta name="description" content="Your Cucumber features are living documentation. The world is evolving around them and without exposure they tend to rot. Evolving language When &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +82,81 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/acceptance-testing/allowing-features-to-breathe.html">Allowing Features to Breathe</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-11-17T16:42:22+00:00" pubdate data-updated="true">Nov 17<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Your Cucumber features are living documentation. The world is evolving around them and without exposure they tend to rot.</p>
+
+<h3>Evolving language</h3>
+
+<p>When features are written we use a snapshot of the domain language at some specific timeframe. This ubiquitous language changes and grows outside the codebase and is influenced by more than just developers. When do we refactor features to reflect these changes?</p>
+
+<h3>Taints</h3>
+
+<p>Since the features are in the code base it becomes the developers/QAs responsibility to maintain them. When writing the features for the first time we have lots of discussion. But at a later date the feature language may be tweaked by a developer to allow reuse or some new technical constraint means they want a special step added. This is where taints can sneak into the language.</p>
+
+<h3>Quality</h3>
+
+<p>It&rsquo;s amazing what a difference it makes when people know something they are writing will be published and read by others. Exposing the features can help increase their quality.</p>
+
+<h3>Barriers to entry</h3>
+
+<p>It&rsquo;s great that the features sit close to the code but there is a barrier in how you gain access to that code. While developers find source control like second nature its something that gets in the way for non-technical people.</p>
+
+<h2>Allowing features to breathe</h2>
+
+<p>When someone wants to know about the behaviour of a feature they should be able to turn to the features irrelevant of technical expertise. This engenders discussion which helps bring about changes to the features to better reflect the ubiquitous language and remove taints. The easier it is to access the features the more likely they are to be the first port of call.</p>
+
+<p>So my advice is exposure your Cucumber features to your team (and if possible your users, which <a href="http://relishapp.com/rspec">Rspec has done with Relish</a>), allowing them to browse and question them.</p>
+
+<h3>Relish</h3>
+
+<p>To expose features I currently use <a href="http://relishapp.com">Relish</a>. This is a web based browser for features.</p>
+
+<p><img src="/images/blog/2010/11/Screen-shot-2010-11-17-at-14.27.21.png" alt="" /></p>
+
+<p>Relish has a <a href="https://github.com/justinko/relish">command line gem</a> for pushing features up to the website. I use a post-receive server git hook which upon every push also pushes the features to Relish.</p>
+
+<p>.git/hooks/post-receive
+<code></code></p>
+
+<pre><code>#!/bin/sh
+relish push --project air --organization breathe
+</code></pre>
+
+<p><code></code></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1471,140 +1546,6 @@ Examples:
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/ruby/metrics-for-plain-text-acceptance-tests.html">Metrics for Plain Text Acceptance Tests</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-11-10T20:37:19+00:00" pubdate data-updated="true">Nov 10<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>There has been lots of activity around the value of metrics for source code and tests. In the Ruby world tools like <a href="http://metric-fu.rubyforge.org/">metric_fu</a> provide a wealth of analysis.</p>
-
-<p>While working on my Cucumber talk for Rails Underground I started investigating how we could apply metrics to the customer focused plain text of Cucumber. For those not familiar with <a href="http://cukes.info/">Cucumber</a> it&rsquo;s an acceptance testing framework which allows non-technical people to write plain-text describing the behaviors of their system. The developers/testers map the plain-text to tests.</p>
-
-<p>Having spent time teaching people about the plain-text side of Cucumber I often found myself recommending the same guidelines and plain-text anti-patterns. This lead me to think about providing metrics scoring the customers plain-text.</p>
-
-<p><strong>Why would we want plain-text acceptance test metrics?</strong></p>
-
-<ul>
-<li><p>Help plain-text beginners avoid bad practices early on.</p></li>
-<li><p>Help improve the quality of plain-text</p></li>
-<li><p>Help quality review with a large frequency of incoming features</p></li>
-</ul>
-
-
-<p><strong>Why does the quality of the plain-text matter?</strong></p>
-
-<p>Why focus on quality, the plain-texts primarily goal is to be easy for customer to use?</p>
-
-<ul>
-<li><p>The developer builds the Domain specific language via mapping plain text to ruby. Higher quality plain-text could make it easier to manage these mappings without any major impact to readability.</p></li>
-<li><p>Higher quality text is easier to read, edit and understand.</p></li>
-</ul>
-
-
-<p><strong>Who would find it useful?</strong></p>
-
-<p>Initially Developers.<strong>
-</strong></p>
-
-<ul>
-<li><p>In some scenarios the developers write the features from discussions and give to the customer to review.</p></li>
-<li><p>Developers may tweak/review customer written changes/features.</p></li>
-<li><p>Developers often edit/tweak plain-text from the customer to enable reuse of existing test code .</p></li>
-<li><p>In open source projects often developers write Cucumber features. Metrics are something they are comfortable with.</p></li>
-</ul>
-
-
-<p><strong>Can you measure quality in plain-text?</strong></p>
-
-<p>First its important to distinguish acceptance tests from pure plain-text. Within acceptance tests we have some degree of structure, for example using Given/When/Then to describe scenarios.</p>
-
-<p>Cucumber Example:</p>
-
-<pre><code>Scenario: Eating all cucumbers
-  Given there are 5 cucumbers
-  When I eat 5 cucumbers
-  Then I should have 0 cucumbers
-</code></pre>
-
-<p>This structure reduces the complexity of analysing the quality of the text. It provides us with different structural elements which have different rules/guidelines on what their content should be.</p>
-
-<p>The problem with measuring the quality of text is that it is far more subjective in than in code. So while we cannot be absolute in our assessment of quality we can try and codify smells that <em>could</em> indicate areas in the text that <em>could</em> be improved. This is pretty much true for all metrics, they are guidelines not absolutes (Dan Norths highlights the dangers of absolute metrics in the <a href="http://dannorth.net/2009/11/the-lady-in-the-taxi-a-parable-of-metrics">Parable of Metrics</a>)</p>
-
-<p>So what useful metrics could we look at?</p>
-
-<h2>Plain text Metrics</h2>
-
-<p>From my experience with Cucumber I would suggest examining:</p>
-
-<ul>
-<li><p>Lack of Feature/Story Narrative</p>
-
-<ul>
-<li>We don&rsquo;t know why this feature is useful and who it&rsquo;s useful to!</li>
-</ul>
-</li>
-<li><p>Scenario length</p>
-
-<ul>
-<li>Very long scenarios may reflect more abstraction should be used to help make the scenarios easier to read (See declarative vs imperative scenarios: <a href="http://www.benmabey.com/2008/05/19/imperative-vs-declarative-scenarios-in-user-stories/">http://www.benmabey.com/2008/05/19/imperative-vs-declarative-scenarios-in-user-stories/</a>)</li>
-</ul>
-</li>
-<li><p>Size of Background (like  a before/setup)</p>
-
-<ul>
-<li>Increases conceptual overhead for each scenario. More reasons here: <a href="http://wiki.github.com/aslakhellesoy/cucumber/background">http://wiki.github.com/aslakhellesoy/cucumber/background</a></li>
-</ul>
-</li>
-<li><p>Semantically close words across features</p>
-
-<ul>
-<li>Can indicate ambiguity around domain terminology</li>
-</ul>
-</li>
-<li><p>Frequency of noise words (&lsquo;basically&rsquo;, &lsquo;be able to&rsquo;, etc)</p>
-
-<ul>
-<li>Adds no value and drives me crazy.</li>
-</ul>
-</li>
-</ul>
-
-
-<h2>Feedback</h2>
-
-<p>What do you think of the idea?</p>
-
-<p>Can you think of any other useful plain-text metrics?</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/5/">&larr; Older</a>
@@ -1620,6 +1561,10 @@ Examples:
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/art/shadertone.html">Visuals with Overtone and Shadertone</a>
+      </li>
     
       <li class="post">
         <a href="/art/emacs-animation.html">Animations with Emacs</a>
@@ -1655,10 +1600,6 @@ Examples:
     
       <li class="post">
         <a href="/elixir/sets-in-elixir.html">Sets in Elixir</a>
-      </li>
-    
-      <li class="post">
-        <a href="/clojure/isolating-external-dependencies-in-clojure.html">Isolating external dependencies in Clojure</a>
       </li>
     
   </ul>

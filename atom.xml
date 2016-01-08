@@ -4,7 +4,7 @@
   <title><![CDATA[Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2016-01-06T16:12:06+00:00</updated>
+  <updated>2016-01-08T15:04:17+00:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -12,6 +12,604 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Visuals with Overtone and Shadertone]]></title>
+    <link href="http://josephwilk.github.io/art/shadertone.html"/>
+    <updated>2016-01-07T14:58:12+00:00</updated>
+    <id>http://josephwilk.github.io/art/shadertone</id>
+    <content type="html"><![CDATA[<p>Exploring techniques for creating live coded performances with Overtone and <a href="https://www.opengl.org/wiki/Fragment_Shader">OpenGL Fragment Shaders</a>. Much learnt from my work performing as <a href="https://vimeo.com/replelectric">Repl Electric</a>. All my shader source code for these performances is open: <a href="https://github.com/repl-electric/cassiopeia/tree/master/resources/shaders">https://github.com/repl-electric/cassiopeia/tree/master/resources/shaders</a></p>
+
+<p><img src="http://josephwilk.github.io/images/end-of-buffer.png" alt="shaders"/></p>
+
+<p>To bring OpenGl to Clojure I use <a href="https://github.com/overtone/shadertone">Shadertone</a> written by <a href="https://github.com/rogerallen">rogerallen</a>. This utilises LWJGL (Java Light Weight Java Game Library <a href="https://www.lwjgl.org">https://www.lwjgl.org</a>).</p>
+
+<h3>The Bridge between Clojure and Shaders</h3>
+
+<p>A vital feature of Shadertone is a map between Clojure atoms and shader Uniforms. What is a shader Uniform? Well think of it as a read-only global variable in your shader. A Clojure watcher ensures any updates to your Clojure atom persist into your Uniform. A little clunky but all uniforms start with the letter <code>i</code>.</p>
+
+<p>The shader:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">uniform</span> <span class="kt">float</span> <span class="n">iExample</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And in Clojure</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">example-weight</span> <span class="p">(</span><span class="nf">atom</span> <span class="mf">0.5</span><span class="p">))</span>
+</span><span class='line'><span class="p">(</span><span class="nf">shadertone/start-fullscreen</span> <span class="s">&quot;resources/shaders/example.glsl&quot;</span>
+</span><span class='line'>  <span class="ss">:user-data</span> <span class="p">{</span><span class="s">&quot;iExample&quot;</span> <span class="nv">example-weight</span><span class="p">})</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">;;iExample Uniform will also be updated.</span>
+</span><span class='line'><span class="p">(</span><span class="nf">reset!</span> <span class="nv">example-weight</span> <span class="mf">0.2</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Live editing shaders</h2>
+
+<p>When a shader file is edited Shadertone is watching the file (using <a href="https://github.com/ibdknox/watchtower">watchtower</a>) and will reload/recompile the changed file. This results in a slight freeze as the new code is run (This might be down to my graphics card).
+Hence most of the time I prefer alternatives to live editing the shader to create smoother transitions.</p>
+
+<h2>Injecting movement</h2>
+
+<p>To make static images move we need a continuously changing value.</p>
+
+<p>Shadertone gives us <code>iGlobalTime</code> using the number of seconds since the shader was started:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">uniform</span> <span class="n">iGlobalTime</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+</span><span class='line'>  <span class="c1">//Use the continuously changing time signal as the value for a color.  </span>
+</span><span class='line'>  <span class="n">gl_FragColor</span> <span class="o">=</span> <span class="n">vec4</span><span class="p">(</span><span class="n">sin</span><span class="p">(</span><span class="n">iGlobalTime</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span><span class="o">+</span><span class="mf">0.5</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Putting a continuously changing value through a function like sin/cos is the
+bread and butter of creating animations with shaders.</p>
+
+<h2>Randomness</h2>
+
+<p>We often need a cheap and fast way to generate random floats in Shaders. Without persistent state and preservation of a seed it can be difficult. One solution is to use a noise image and the current pixel coordinates as an index into the image for a  float value.</p>
+
+<p>Shadertone supports loading custom textures into your shaders:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="nf">shadetone/start</span> <span class="s">&quot;shaders/example.glsl&quot;</span>
+</span><span class='line'>         <span class="ss">:textures</span> <span class="p">[</span><span class="s">&quot;/josephwilk/textures/noise.png&quot;</span><span class="p">])</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The noise texture:</p>
+
+<p><img src="http://raw.githubusercontent.com/josephwilk/shaderview/master/bin/data/textures/tex10.png" /></p>
+
+<p>And finally the shader:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="c1">//Turning the current pixel coordinates (uv) into a random float. </span>
+</span><span class='line'><span class="n">vec2</span> <span class="n">uv</span> <span class="o">=</span> <span class="n">gl_FragCoord</span><span class="p">.</span><span class="n">xy</span> <span class="o">/</span> <span class="n">iResolution</span><span class="p">.</span><span class="n">xy</span><span class="p">;</span>
+</span><span class='line'><span class="k">return</span> <span class="nf">texture2D</span><span class="p">(</span><span class="n">iChannel0</span><span class="p">,</span> <span class="n">vec2</span><span class="p">(</span><span class="n">uv</span><span class="p">)</span><span class="o">/</span><span class="mf">256.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Composing visual effects</h2>
+
+<p>I attach a weight to each function or visual phase of the shader. Through this we can select which visual effect is visible or combine multiple effects. Its a bit messy, since I have all my functions in a single shader file. I&rsquo;ve not explored including of external files with shaders.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">uniform</span> <span class="kt">float</span> <span class="n">iCircularWeight</span><span class="p">;</span>
+</span><span class='line'><span class="n">uniform</span> <span class="kt">float</span> <span class="n">iPopulationWeight</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">vec4</span> <span class="nf">circular</span><span class="p">(){...}</span>
+</span><span class='line'><span class="n">vec4</span> <span class="nf">population</span><span class="p">(){..}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+</span><span class='line'>  <span class="n">vec4</span> <span class="n">circleResult</span>     <span class="o">=</span> <span class="n">vec4</span><span class="p">(</span><span class="mf">0.0</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">vec4</span> <span class="n">populationResult</span> <span class="o">=</span> <span class="n">vec4</span><span class="p">(</span><span class="mf">0.0</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="n">iCircularWeight</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">){</span>
+</span><span class='line'>    <span class="n">circleResult</span> <span class="o">=</span> <span class="n">circular</span><span class="p">()</span> <span class="o">*</span> <span class="n">iCircularWeight</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="n">iPopulationWeight</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">){</span>
+</span><span class='line'>    <span class="n">populationResult</span> <span class="o">=</span> <span class="n">population</span><span class="p">()</span> <span class="o">*</span> <span class="n">iPopulationWeight</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="n">gl_FragColor</span> <span class="o">=</span> <span class="p">(</span><span class="n">populationResult</span> <span class="o">+</span> <span class="n">circleResult</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And within Clojure:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">circular-w</span> <span class="p">(</span><span class="nf">atom</span> <span class="mf">1.0</span><span class="p">))</span>
+</span><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">population-w</span> <span class="p">(</span><span class="nf">atom</span> <span class="mf">1.0</span><span class="p">))</span>
+</span><span class='line'><span class="p">(</span><span class="nf">shadertone/start-fullscreen</span> <span class="s">&quot;resources/shaders/example.glsl&quot;</span>
+</span><span class='line'>  <span class="ss">:user-data</span> <span class="p">{</span><span class="s">&quot;iCircularWeight&quot;</span> <span class="nv">circular-w</span>
+</span><span class='line'>              <span class="s">&quot;iPopulationWeight&quot;</span> <span class="nv">population-w</span><span class="p">})</span>
+</span><span class='line'><span class="p">(</span><span class="nf">reset!</span> <span class="nv">circular-weight</span> <span class="mf">1.0</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Synchronisation</h2>
+
+<p>Shadertone uses the seconds since start (<code>iGlobalTime</code>) while Overtone via Supercollider uses the soundcards clock. Hence there is no guarantee these two sources will be in sync.</p>
+
+<p>Replacing iGlobalTime is the only option. We create a special synth called data-probes which sole function is to transfer data from the Supercollider world to the Clojure world. Overtone calls these bindings a <code>tap</code>. We add a tap into our Overtone synth which is polling our global timing signal (this powers all synths and is how we co-ordinate everything).</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="nf">defsynth</span> <span class="nv">data-probes</span> <span class="p">[</span><span class="nv">timing-signal-bus</span> <span class="mi">0</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">beat-count</span> <span class="p">(</span><span class="nf">in</span><span class="ss">:kr</span> <span class="nv">timing-signal-bus</span><span class="p">)</span>
+</span><span class='line'>        <span class="nv">_</span>  <span class="p">(</span><span class="nf">tap</span> <span class="s">&quot;global-beat-count&quot;</span> <span class="mi">60</span><span class="p">(</span><span class="nf">a2k</span> <span class="nv">beat-count</span><span class="p">))</span>
+</span><span class='line'>      <span class="p">(</span><span class="nf">out</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">active-data-probes</span> <span class="p">(</span><span class="nf">data-probes</span> <span class="p">(</span><span class="ss">:count</span> <span class="nv">time/beat-1th</span><span class="p">)))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="nf">shadertone/start-fullscreen</span> <span class="s">&quot;resources/shaders/example.glsl&quot;</span>
+</span><span class='line'>  <span class="ss">:user-data</span>
+</span><span class='line'>  <span class="c1">;;An atom wrapping the tap and the running synth instance</span>
+</span><span class='line'>   <span class="s">&quot;global-beat-count&quot;</span> <span class="p">{</span><span class="s">&quot;iGlobalBeatCount&quot;</span> <span class="p">(</span><span class="nf">atom</span> <span class="p">{</span><span class="ss">:synth</span> <span class="nv">active-data-probes</span> <span class="ss">:tap</span> <span class="s">&quot;global-beat-count&quot;</span><span class="p">})})</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Using our <code>iGlobalBeatCount</code> in our shader now means anything requiring a continuously increasing value flows to our beat.</p>
+
+<h2>Shaders &amp; global mutable state</h2>
+
+<p>Persistent mutable state between executions is not possible in OpenGL Shaders. Uniforms are read-only.</p>
+
+<p>Lets look at an example. On a drum hit I want the color of a visual to change and <em>persist</em> until the next drum hit.
+The drum signal is 1 for a hit 0 for silence:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">[</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The current value based on the global clock is passed into the Shader as the iBeat Uniform.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">uniform</span> <span class="kt">float</span> <span class="n">iBeat</span><span class="p">;</span>
+</span><span class='line'><span class="kt">float</span> <span class="n">color</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">vec4</span> <span class="n">function</span> <span class="nf">showColor</span><span class="p">(){</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="n">iBeat</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">){</span>
+</span><span class='line'>    <span class="n">color</span> <span class="o">+=</span> <span class="mf">1.0</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">vec4</span><span class="p">(</span><span class="n">color</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Will return:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">vec4</span><span class="p">(</span><span class="mf">1.0</span><span class="p">);</span>
+</span><span class='line'><span class="n">vec4</span><span class="p">(</span><span class="mf">0.0</span><span class="p">);</span>
+</span><span class='line'><span class="n">vec4</span><span class="p">(</span><span class="mf">0.0</span><span class="p">);</span>
+</span><span class='line'><span class="n">vec4</span><span class="p">(</span><span class="mf">0.0</span><span class="p">);</span>
+</span><span class='line'><span class="n">vec4</span><span class="p">(</span><span class="mf">1.0</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>What we were after is actually:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">vec4</span><span class="p">(</span><span class="mf">1.0</span><span class="p">);</span>
+</span><span class='line'><span class="n">vec4</span><span class="p">(</span><span class="mf">1.0</span><span class="p">);</span>
+</span><span class='line'><span class="n">vec4</span><span class="p">(</span><span class="mf">1.0</span><span class="p">);</span>
+</span><span class='line'><span class="n">vec4</span><span class="p">(</span><span class="mf">1.0</span><span class="p">);</span>
+</span><span class='line'><span class="n">vec4</span><span class="p">(</span><span class="mf">2.0</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>My solution is to move to Clojure where mutable state using atoms is simple.</p>
+
+<p>Our timing is guided by Supercollider and a global clock. The value of our kick buffer at anyone time is only known inside the synth and hence inside Supercollider. But if we want to have mutable state we need access to this value in Clojure. So we create a custom synth that taps the value of the kick buffer based on the global clock signal.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="nf">defsynth</span> <span class="nv">drum-data-probe</span> <span class="p">[</span><span class="nv">kick-drum-buffer</span> <span class="nv">timing-signal-bus</span> <span class="mi">0</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">beat-count</span> <span class="p">(</span><span class="nf">in</span><span class="ss">:kr</span> <span class="nv">timing-signal-bus</span><span class="p">)</span>
+</span><span class='line'>    <span class="nv">drum-beat</span> <span class="p">(</span><span class="nf">buf-rd</span><span class="ss">:kr</span> <span class="mi">1</span> <span class="nv">kick-drum-buffer</span> <span class="nv">beat-count</span><span class="p">)</span>
+</span><span class='line'>    <span class="nv">_</span>  <span class="p">(</span><span class="nf">tap</span> <span class="s">&quot;drum-beat&quot;</span> <span class="mi">60</span> <span class="p">(</span><span class="nf">a2k</span> <span class="nv">drum-beat</span><span class="p">))])</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">out</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="kd">defonce </span><span class="nv">kick-drum-buffer</span> <span class="p">(</span><span class="nf">buffer</span> <span class="mi">256</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">;;Create the synth with the &quot;drum-beat&quot; tap</span>
+</span><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">drum-data-probe</span> <span class="p">(</span><span class="nf">data-probes</span> <span class="nv">kick-drum-buffer</span> <span class="p">(</span><span class="ss">:count</span> <span class="nv">time/beat-1th</span><span class="p">)))</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">;;Bind the running synth and the tap</span>
+</span><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">kick-atom</span> <span class="p">(</span><span class="nf">atom</span> <span class="p">{</span><span class="ss">:synth</span> <span class="nv">drum-data-probe</span> <span class="ss">:tap</span> <span class="s">&quot;drum-beat&quot;</span><span class="p">}))</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">;;Extract the tap atom</span>
+</span><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">kick-tap</span> <span class="p">(</span><span class="nf">get-in</span> <span class="p">(</span><span class="ss">:synth</span> <span class="o">@</span><span class="nv">kick-atom</span><span class="p">)</span> <span class="p">[</span><span class="ss">:taps</span> <span class="p">(</span><span class="ss">:tap</span> <span class="o">@</span><span class="nv">kick-atom</span><span class="p">)]))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now in the Clojure world its simple to watch our tap atom and hence get alerted when it changes value. Overtone is dealing with the magic of updating the atom under the covers, the watcher is a nice implementation independent way of hooking into this. We now know the value of our kick buffer in Clojure. If we use another atom as our accumulator we can update it when the tap atom changes. Finally pushing this new accumulator to the Shader.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">active-color</span> <span class="p">(</span><span class="nf">atom</span> <span class="mf">0.0</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="nf">add-watch</span> <span class="nv">kick-tap</span> <span class="ss">:cell-color</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">_</span> <span class="nv">_</span> <span class="nv">old</span> <span class="nv">new</span><span class="p">]</span>
+</span><span class='line'>    <span class="p">(</span><span class="nb">when </span><span class="p">(</span><span class="nb">and </span><span class="p">(</span><span class="nb">= </span><span class="nv">old</span> <span class="mf">0.0</span><span class="p">)</span> <span class="p">(</span><span class="nb">= </span><span class="mf">1.0</span> <span class="nv">new</span><span class="p">))</span>
+</span><span class='line'>    <span class="p">(</span><span class="nf">reset!</span> <span class="nv">cell-dance-color</span> <span class="p">(</span><span class="nf">mod</span> <span class="p">(</span><span class="nb">+ </span><span class="o">@</span><span class="nv">cell-dance-color</span> <span class="mf">1.0</span><span class="p">)</span> <span class="mi">100</span><span class="p">)))))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Within the shader</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">uniform</span> <span class="kt">float</span> <span class="n">iActiveColor</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">vec4</span> <span class="n">function</span> <span class="nf">showColor</span><span class="p">(){</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">vec4</span><span class="p">(</span><span class="n">iActiveColor</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Thats a lot of work, but I&rsquo;m very happy with the results in my <a href="https://vimeo.com/117516352">(end-of-buffer)</a> performance.</p>
+
+<h2>Buffer events</h2>
+
+<p>Writing to a buffer is a common way of live coding in Overtone. Its very useful to attach some visual effect based on the settings of a buffer.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="c1">;;Setting notes to a buffer</span>
+</span><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">notes-buf</span> <span class="p">(</span><span class="nf">buffer</span> <span class="mi">256</span><span class="p">))</span>
+</span><span class='line'><span class="p">(</span><span class="nf">pattern!</span> <span class="nv">notes-buf</span> <span class="p">(</span><span class="nf">degrees-seq</span> <span class="p">[</span><span class="ss">:f3</span> <span class="mi">1314</span><span class="p">]))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We could put a tap into the synth and grab the current note and pass this into the shader. As I&rsquo;ve mentioned taps are expensive and they are always on while we may not always be using them.
+This also gets more complicated when say we have 3 instances of the same synth running playing simultaneous to form a chord.</p>
+
+<p>An alternative is to invent an atom which is used as a signal on every buffer write.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="c1">;;Could also do this with OSC messages...</span>
+</span><span class='line'><span class="p">(</span><span class="nf">do</span>
+</span><span class='line'>  <span class="p">(</span><span class="kd">defonce </span><span class="nv">buffer-change-event-notes-buf</span> <span class="p">(</span><span class="nf">atom</span> <span class="mf">0.0</span><span class="p">))</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">pattern!</span> <span class="nv">notes-buf</span> <span class="p">(</span><span class="nf">degrees-seq</span> <span class="p">[</span><span class="ss">:f3</span> <span class="mi">1314</span><span class="p">]))</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">swap!</span> <span class="nv">buffer-change-event-notes-buf</span> <span class="nb">+ </span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And adding a watcher</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="nf">add-watch</span>
+</span><span class='line'>  <span class="nv">buffer-change-event-notes-buf</span>
+</span><span class='line'>  <span class="ss">:buffer-change-event-notes-buf</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="o">&amp;</span> <span class="nv">_</span><span class="p">]</span>
+</span><span class='line'>    <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">n</span> <span class="p">(</span><span class="nb">int </span><span class="p">(</span><span class="nf">buffer-get</span> <span class="nv">notes-buf</span> <span class="mi">0</span><span class="p">))]</span>
+</span><span class='line'>      <span class="p">(</span><span class="nf">case</span> <span class="nv">n</span>
+</span><span class='line'>        <span class="mi">29</span> <span class="p">(</span><span class="nf">reset!</span> <span class="nv">color</span> <span class="mf">0.4</span><span class="p">)</span>
+</span><span class='line'>           <span class="p">(</span><span class="nf">reset!</span> <span class="nv">color</span> <span class="mf">0.0</span><span class="p">)))))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">buffer-atoms</span> <span class="p">(</span><span class="nf">atom</span> <span class="p">{}))</span>
+</span><span class='line'><span class="p">(</span><span class="nf">pattern!</span> <span class="nv">notes-buf</span><span class="p">)</span>
+</span><span class='line'><span class="p">(</span><span class="nf">reset!</span> <span class="nv">buffer-atoms</span> <span class="p">(</span><span class="nb">assoc </span><span class="o">@</span><span class="nv">buffer-atoms</span> <span class="p">(</span><span class="ss">:id</span> <span class="nv">notes-buf</span><span class="p">)</span> <span class="p">(</span><span class="nb">inc </span><span class="p">(</span><span class="o">@</span><span class="nv">buffer-atoms</span> <span class="p">(</span><span class="ss">:id</span> <span class="nv">notes-buf</span><span class="p">)))))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I use this trick in (end-of-buffer) to use the bass note to control the level of distortion of the visuals (<a href="https://github.com/repl-electric/cassiopeia/blob/master/src/cassiopeia/destination/flatiron.clj#L84-L99">source</a>). Its wonderful to focus on the notes and feel the visuals following you automatically.</p>
+
+<h2>Midi notes to visuals</h2>
+
+<p>I often want to map a midi note to a visual effect. All my notes are mapped to buffers. Much like we did with the drums I can use a tap to get access to the current note being played in a buffer. Skipping over the details, when we have a midi note we send it as an float (to support crazy 42.333 like notes) to the shader via an atom.</p>
+
+<p>We then map it to a nice range value to effect visuals:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">uniform</span> <span class="kt">float</span> <span class="n">iLeadNote</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//midi note: 42 =&gt; F#2  </span>
+</span><span class='line'><span class="c1">//midi note: 78 =&gt; F#5</span>
+</span><span class='line'><span class="kt">float</span> <span class="n">noteMapped</span> <span class="o">=</span> <span class="n">smoothstep</span><span class="p">(</span><span class="mf">42.0</span><span class="p">,</span> <span class="mf">78.0</span><span class="p">,</span> <span class="n">iLeadNote</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//noteMapped now spans =&gt; 0..1</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>A cheap way to scale effects based on the height of the note.</p>
+
+<h2>Gradual transitions</h2>
+
+<p>Often I want a smooth fading it or out of a shader function. Say for example fading to black. Pretty simple, just fire a thread which sleeps and ticks an atom. The atom is fed into the Shader.</p>
+
+<p>Since I use this a lot I created a helper fn in <a href="https://github.com/josephwilk/mud/blob/4866f9db8077f8d4244fdd94b42bc0fef0e69f40/src/mud/core.clj#L90">MUD</a>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">uniform</span> <span class="kt">float</span> <span class="n">iColor</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+</span><span class='line'>  <span class="n">gl_color</span> <span class="o">=</span> <span class="n">vec4</span><span class="p">(</span><span class="n">iColor</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">color</span> <span class="p">(</span><span class="nf">atom</span> <span class="mf">1.0</span><span class="p">))</span>
+</span><span class='line'><span class="c1">;;         atom / target /  rate</span>
+</span><span class='line'><span class="p">(</span><span class="nf">overtime!</span> <span class="nv">color</span>   <span class="mf">0.0</span>      <span class="mf">0.001</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Text</h2>
+
+<p>In end-of-buffer I spell the word Repl Electric out of floating lights. We are bound to only a few data structures with fragment Shaders. I used a simple 3x3 matrix mapping each part of a character. Then using this to decided the position of the lights.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="k">const</span> <span class="n">mat3</span> <span class="n">LETTER_R</span>        <span class="o">=</span> <span class="n">mat3</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'>                                  <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>                                  <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="k">const</span> <span class="n">mat3</span> <span class="n">LETTER_E</span>        <span class="o">=</span> <span class="n">mat3</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'>                                  <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>                                  <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">vec4</span> <span class="nf">letter</span><span class="p">(</span><span class="n">mat3</span> <span class="n">letter</span><span class="p">,</span> <span class="n">vec2</span> <span class="n">offset</span><span class="p">,</span> <span class="n">vec2</span> <span class="n">uv</span><span class="p">){</span>
+</span><span class='line'>  <span class="n">vec2</span> <span class="n">point</span> <span class="o">=</span> <span class="n">vec2</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">vec4</span> <span class="n">helloPoint</span> <span class="o">=</span> <span class="n">vec4</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">vec3</span> <span class="n">xPos</span> <span class="o">=</span> <span class="n">vec3</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">vec3</span> <span class="n">yPos</span> <span class="o">=</span> <span class="n">vec3</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="n">y</span><span class="o">++</span><span class="p">){</span>
+</span><span class='line'>    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="n">x</span><span class="o">++</span><span class="p">){</span>
+</span><span class='line'>      <span class="k">if</span><span class="p">(</span><span class="n">letter</span><span class="p">[</span><span class="n">y</span><span class="p">][</span><span class="n">x</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">){</span><span class="c1">// Show this part of the letter</span>
+</span><span class='line'>        <span class="n">point</span> <span class="o">=</span> <span class="n">vec2</span><span class="p">(</span><span class="n">xPos</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">+</span><span class="n">offset</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">offset</span><span class="p">.</span><span class="n">y</span><span class="o">+</span><span class="n">yPos</span><span class="p">[</span><span class="n">y</span><span class="p">]);</span>
+</span><span class='line'>        <span class="n">helloPoint</span> <span class="o">+=</span> <span class="n">buildCell</span><span class="p">(</span><span class="n">uv</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">STATIC_LETTERS</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">helloPoint</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">letter</span><span class="p">(</span><span class="n">LETTER_R</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">uv</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And the visual.</p>
+
+<p><img src="http://josephwilk.github.io/images/font-example.png" alt="Font example"/></p>
+
+<h2>Visuals effected by frequencies</h2>
+
+<p>Shadertone provides a 2x512 array with the frequency spectrum (FFT) and audio waveform data. It does this by loading the data into a 2D Texture. The audio data is taken from tapping the main Overtone audio bus.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="c1">;;Tell Shadertone to fill iChannel0 with audio data</span>
+</span><span class='line'><span class="p">(</span><span class="nf">shadetone/start</span> <span class="s">&quot;shaders/example.glsl&quot;</span> <span class="ss">:textures</span> <span class="p">[</span><span class="ss">:overtone-audio</span><span class="p">])</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It&rsquo;s always a challenge to utilise this without creating something jerky or causing motion sickness. Hence I tend to use the waveform or FFT as a distorter rather than a base for animations.</p>
+
+<p>It also helps to concentrate on specific ranges of frequencies of the waveform data to create a stronger connection between a synth and the visuals.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="nb">float </span><span class="nv">sound</span> <span class="nb">= </span><span class="nv">texture2D</span><span class="p">(</span><span class="nf">iChannel0</span>, <span class="nv">vec2</span><span class="p">(</span><span class="nf">max</span><span class="p">(</span><span class="nf">uv.x</span>,<span class="mf">0.9</span><span class="p">)</span>,<span class="nv">.75</span><span class="p">))</span><span class="nv">.x</span><span class="c1">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">//uv.xy</span> <span class="nv">=&gt;</span> <span class="nv">current</span> <span class="nv">x</span>,<span class="nv">y</span> <span class="nv">coordinates</span> <span class="nv">of</span> <span class="nv">pixel.</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">//First</span> <span class="nv">argument</span> <span class="nv">is</span> <span class="nv">an</span> <span class="nb">index into </span><span class="nv">the</span> <span class="mi">512</span> <span class="nv">values</span> <span class="nv">of</span> <span class="nv">the</span> <span class="nv">waveform.</span>
+</span><span class='line'><span class="nv">//By</span> <span class="nv">limiting</span> <span class="nv">the</span> <span class="nb">first </span><span class="nv">argument</span> <span class="nv">we</span> <span class="nv">can</span> <span class="nv">ignore</span> <span class="nv">certain</span> <span class="nv">ranges.</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">//Second</span> <span class="nv">argument</span> <span class="nv">selects</span><span class="err">:</span>
+</span><span class='line'><span class="nv">//</span>    <span class="mf">0.25</span> <span class="nv">=&gt;</span> <span class="nv">FFT</span>
+</span><span class='line'><span class="nv">//</span>    <span class="mf">0.75</span> <span class="nv">=&gt;</span> <span class="nv">audio</span> <span class="nv">waveform</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here is an example where I use the audio waveform to distort the scale &amp; jaggedness of a series of circle shapes.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="k">const</span> <span class="kt">float</span> <span class="n">tau</span> <span class="o">=</span> <span class="mf">6.28318530717958647692</span><span class="p">;</span>
+</span><span class='line'><span class="n">vec3</span> <span class="n">wave</span> <span class="o">=</span> <span class="n">vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">);</span>
+</span><span class='line'><span class="kt">float</span> <span class="n">width</span> <span class="o">=</span> <span class="mf">4.0</span><span class="o">/</span><span class="mi">500</span><span class="p">;</span>
+</span><span class='line'><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">60</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+</span><span class='line'>  <span class="kt">float</span> <span class="n">sound</span> <span class="o">=</span> <span class="n">texture2D</span><span class="p">(</span><span class="n">iChannel0</span><span class="p">,</span> <span class="n">vec2</span><span class="p">(</span><span class="n">uv</span><span class="p">.</span><span class="n">x</span><span class="p">,</span><span class="mf">.75</span><span class="p">)).</span><span class="n">x</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kt">float</span> <span class="n">a</span> <span class="o">=</span> <span class="mf">0.1</span><span class="o">*</span><span class="kt">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">*</span><span class="n">tau</span><span class="o">/</span><span class="kt">float</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">vec3</span> <span class="n">phase</span> <span class="o">=</span> <span class="n">smoothstep</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">.5</span><span class="p">,</span> <span class="n">vec3</span><span class="p">(</span><span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">tau</span><span class="o">/</span><span class="mf">3.0</span><span class="p">),</span> <span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">tau</span><span class="o">*</span><span class="mf">2.0</span><span class="o">/</span><span class="mf">3.0</span><span class="p">)));</span>
+</span><span class='line'>  <span class="n">wave</span> <span class="o">+=</span> <span class="n">phase</span> <span class="o">*</span> <span class="n">smoothstep</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">abs</span><span class="p">(</span><span class="n">uv</span><span class="p">.</span><span class="n">y</span> <span class="o">-</span> <span class="p">((</span><span class="n">sound</span><span class="o">*</span><span class="mf">0.9</span><span class="p">)</span><span class="o">+</span><span class="mf">0.2</span><span class="p">)));</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">//This shift of uv.x means our index into the sound data also moves along, examining a different part of the audio wave. </span>
+</span><span class='line'>  <span class="n">uv</span><span class="p">.</span><span class="n">x</span> <span class="o">+=</span> <span class="mf">0.4</span><span class="o">/</span><span class="kt">float</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">uv</span><span class="p">.</span><span class="n">y</span> <span class="o">-=</span> <span class="mf">0.05</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="n">wave</span> <span class="o">*=</span> <span class="mf">10.0</span><span class="o">/</span><span class="kt">float</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+</span><span class='line'><span class="k">return</span> <span class="nf">vec4</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And the resulting visual:</p>
+
+<p><img src="http://josephwilk.github.io/images/fft-example.png" alt="FFT example"/></p>
+
+<h2>Final thoughts on Live coding visuals</h2>
+
+<p>Through Clojure&rsquo;s binding of atoms with Fragment shaders we have the power to live code visuals and music. Though it comes at a cost of complexity having to wrap lots of functions in order to have powerfully connected visuals. Fragment shaders are extremely terse, and can be pushed to replicate many advanced effects <em>but</em> they are also performance intense, and often taking a non-shader route will be much more performant.</p>
+
+<h4>Stability</h4>
+
+<p>My knowledge of LWJGL is small, but crashes in the fragment shaders often occur leaving the JVM wedged. This has happened to me quite a lot practicing, but never in a performance. Its worth reflecting that something (be it fixable) leaves a risk of a freeze in a performance.</p>
+
+<h4>Combining State &amp; Shaders</h4>
+
+<p>I&rsquo;ve started to explore what a shader application might look like if it was a server and provided a state machine so the live coding language does have this complexity. In turn producing a freer and more spontaneous interaction. This project is <a href="https://github.com/josephwilk/shaderview">Shaderview</a> and steals all the good ideas of Shadertone while adding some new features like <a href="www.vertexshaderart.com">vertex shader art</a>. I&rsquo;ll be writing up more about Shaderview soon.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Animations with Emacs]]></title>
@@ -5201,30 +5799,6 @@ end
 <p>Rspec is an example of a project that has taken its Cucumber features and <a href="https://www.relishapp.com/rspec">published them as its documentation</a>. Just browse through those features and it quickly highlights how important it is to have a specification as well as examples. Imagine an API with nothing but examples, leaving you the detective work of trying to work out what the thing actually does.</p>
 
 <p>Documentation needs to explain/specify what something does as well provide examples. If you really want anyone to read your feature provide both examples and a specification.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Co-chair of the Agile Alliance Functional Testing Tools group]]></title>
-    <link href="http://josephwilk.github.io/testing/co-chair-of-the-agile-alliance-functional-testing-tools-group.html"/>
-    <updated>2012-02-13T18:40:27+00:00</updated>
-    <id>http://josephwilk.github.io/testing/co-chair-of-the-agile-alliance-functional-testing-tools-group</id>
-    <content type="html"><![CDATA[<p>I&rsquo;m happy to announce that I have joined <a href="http://testobsessed.com">Elizabeth Hendrickson</a> as Co-Chair of the Agile Alliance Functional Testing Tools group (AAFTT, yes the name is a bit of a mouthful).</p>
-
-<p>I came across the AAFTT group when they organised a pattern writing workshop in London 2010, facilitated by <a href="http://www.lindarising.org/">Linda Rising</a>. It was an opportunity to bringing together some of the thought leaders in testing and share experiences. Somehow I managed to sneak in and proceded to steal all these experts knowledge. The AAFTT also runs an open space pria to the Agile conference. Last year I was surprised to find people who had travelled to the conference just for the AAFTT open space!</p>
-
-<p>As a developer who loves messing around with testing tools, I’ll happily admit I know little about testing as a profession. The scope and breath of ideas that the AAFTT exposed me to has left me excited and hungry to play with new tools, ideas and patterns to make testing as fun as it should be. I hope as a developer who is obsessed about testing I can help blur the lines between developers and testers. I’m both.</p>
-
-<p>Want to know more about the Agile Alliance Functional Testing Tools group?</p>
-
-<ul>
-<li><p>Mailing list: <a href="http://tech.groups.yahoo.com/group/aa-ftt/">http://tech.groups.yahoo.com/group/aa-ftt/</a></p></li>
-<li><p>AAFTT workshop 2009, Chicago <a href="http://cds43.wordpress.com/2009/10/06/aaftt-workshop-2009-chicago/">http://cds43.wordpress.com/2009/10/06/aaftt-workshop-2009-chicago/</a></p></li>
-<li><p>Records from previous AAFTT workshops: <a href="http://www.managing-expectations.com">http://www.managing-expectations.com</a></p></li>
-</ul>
-
-
-<p>And keep your ears open for any events!</p>
 ]]></content>
   </entry>
   

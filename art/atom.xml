@@ -4,7 +4,7 @@
   <title><![CDATA[Category: art | Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io//art/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2016-01-06T16:12:06+00:00</updated>
+  <updated>2016-01-08T15:04:17+00:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -12,6 +12,446 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Visuals with Overtone and Shadertone]]></title>
+    <link href="http://josephwilk.github.io/art/shadertone.html"/>
+    <updated>2016-01-07T14:58:12+00:00</updated>
+    <id>http://josephwilk.github.io/art/shadertone</id>
+    <content type="html"><![CDATA[<p>Exploring techniques for creating live coded performances with Overtone and <a href="https://www.opengl.org/wiki/Fragment_Shader">OpenGL Fragment Shaders</a>. Much learnt from my work performing as <a href="https://vimeo.com/replelectric">Repl Electric</a>. All my shader source code for these performances is open: <a href="https://github.com/repl-electric/cassiopeia/tree/master/resources/shaders">https://github.com/repl-electric/cassiopeia/tree/master/resources/shaders</a></p>
+
+<p><img src="http://josephwilk.github.io/images/end-of-buffer.png" alt="shaders"/></p>
+
+<p>To bring OpenGl to Clojure I use <a href="https://github.com/overtone/shadertone">Shadertone</a> written by <a href="https://github.com/rogerallen">rogerallen</a>. This utilises LWJGL (Java Light Weight Java Game Library <a href="https://www.lwjgl.org">https://www.lwjgl.org</a>).</p>
+
+<h3>The Bridge between Clojure and Shaders</h3>
+
+<p>A vital feature of Shadertone is a map between Clojure atoms and shader Uniforms. What is a shader Uniform? Well think of it as a read-only global variable in your shader. A Clojure watcher ensures any updates to your Clojure atom persist into your Uniform. A little clunky but all uniforms start with the letter <code>i</code>.</p>
+
+<p>The shader:
+<code>c
+uniform float iExample;
+</code></p>
+
+<p>And in Clojure</p>
+
+<p>```clojure
+(def example-weight (atom 0.5))
+(shadertone/start-fullscreen &ldquo;resources/shaders/example.glsl&rdquo;
+  :user-data {&ldquo;iExample&rdquo; example-weight})</p>
+
+<p>;;iExample Uniform will also be updated.
+(reset! example-weight 0.2)
+```</p>
+
+<h2>Live editing shaders</h2>
+
+<p>When a shader file is edited Shadertone is watching the file (using <a href="https://github.com/ibdknox/watchtower">watchtower</a>) and will reload/recompile the changed file. This results in a slight freeze as the new code is run (This might be down to my graphics card).
+Hence most of the time I prefer alternatives to live editing the shader to create smoother transitions.</p>
+
+<h2>Injecting movement</h2>
+
+<p>To make static images move we need a continuously changing value.</p>
+
+<p>Shadertone gives us <code>iGlobalTime</code> using the number of seconds since the shader was started:</p>
+
+<p>```c
+uniform iGlobalTime</p>
+
+<p>void main(void){
+  //Use the continuously changing time signal as the value for a color.<br/>
+  gl_FragColor = vec4(sin(iGlobalTime)*0.5+0.5);
+}
+```</p>
+
+<p>Putting a continuously changing value through a function like sin/cos is the
+bread and butter of creating animations with shaders.</p>
+
+<h2>Randomness</h2>
+
+<p>We often need a cheap and fast way to generate random floats in Shaders. Without persistent state and preservation of a seed it can be difficult. One solution is to use a noise image and the current pixel coordinates as an index into the image for a  float value.</p>
+
+<p>Shadertone supports loading custom textures into your shaders:</p>
+
+<p>```clojure
+(shadetone/start &ldquo;shaders/example.glsl&rdquo;</p>
+
+<pre><code>     :textures ["/josephwilk/textures/noise.png"])
+</code></pre>
+
+<p>```</p>
+
+<p>The noise texture:</p>
+
+<p><img src="http://raw.githubusercontent.com/josephwilk/shaderview/master/bin/data/textures/tex10.png" /></p>
+
+<p>And finally the shader:</p>
+
+<p><code>c
+//Turning the current pixel coordinates (uv) into a random float.
+vec2 uv = gl_FragCoord.xy / iResolution.xy;
+return texture2D(iChannel0, vec2(uv)/256.0, 0.0);
+</code></p>
+
+<h2>Composing visual effects</h2>
+
+<p>I attach a weight to each function or visual phase of the shader. Through this we can select which visual effect is visible or combine multiple effects. Its a bit messy, since I have all my functions in a single shader file. I&rsquo;ve not explored including of external files with shaders.</p>
+
+<p>```c
+uniform float iCircularWeight;
+uniform float iPopulationWeight;</p>
+
+<p>vec4 circular(){&hellip;}
+vec4 population(){..}</p>
+
+<p>void main(void){
+  vec4 circleResult     = vec4(0.0);
+  vec4 populationResult = vec4(0.0);
+  if(iCircularWeight > 0.0){</p>
+
+<pre><code>circleResult = circular() * iCircularWeight;
+</code></pre>
+
+<p>  }
+  if(iPopulationWeight > 0.0){</p>
+
+<pre><code>populationResult = population() * iPopulationWeight;
+</code></pre>
+
+<p>  }
+  gl_FragColor = (populationResult + circleResult);
+}
+```</p>
+
+<p>And within Clojure:</p>
+
+<p>```clojure
+(def circular-w (atom 1.0))
+(def population-w (atom 1.0))
+(shadertone/start-fullscreen &ldquo;resources/shaders/example.glsl&rdquo;
+  :user-data {&ldquo;iCircularWeight&rdquo; circular-w</p>
+
+<pre><code>          "iPopulationWeight" population-w})
+</code></pre>
+
+<p>(reset! circular-weight 1.0)
+```</p>
+
+<h2>Synchronisation</h2>
+
+<p>Shadertone uses the seconds since start (<code>iGlobalTime</code>) while Overtone via Supercollider uses the soundcards clock. Hence there is no guarantee these two sources will be in sync.</p>
+
+<p>Replacing iGlobalTime is the only option. We create a special synth called data-probes which sole function is to transfer data from the Supercollider world to the Clojure world. Overtone calls these bindings a <code>tap</code>. We add a tap into our Overtone synth which is polling our global timing signal (this powers all synths and is how we co-ordinate everything).</p>
+
+<p>```clojure
+(defsynth data-probes [timing-signal-bus 0]
+  (let [beat-count (in:kr timing-signal-bus)</p>
+
+<pre><code>    _  (tap "global-beat-count" 60(a2k beat-count))
+  (out 0 0))
+</code></pre>
+
+<p>(def active-data-probes (data-probes (:count time/beat-1th)))</p>
+
+<p>(shadertone/start-fullscreen &ldquo;resources/shaders/example.glsl&rdquo;
+  :user-data
+  ;;An atom wrapping the tap and the running synth instance
+   &ldquo;global-beat-count&rdquo; {&ldquo;iGlobalBeatCount&rdquo; (atom {:synth active-data-probes :tap &ldquo;global-beat-count&rdquo;})})
+```</p>
+
+<p>Using our <code>iGlobalBeatCount</code> in our shader now means anything requiring a continuously increasing value flows to our beat.</p>
+
+<h2>Shaders &amp; global mutable state</h2>
+
+<p>Persistent mutable state between executions is not possible in OpenGL Shaders. Uniforms are read-only.</p>
+
+<p>Lets look at an example. On a drum hit I want the color of a visual to change and <em>persist</em> until the next drum hit.
+The drum signal is 1 for a hit 0 for silence:</p>
+
+<p><code>clojure
+[1 0 0 0 1 0 0 0 1 0 0 0]
+</code></p>
+
+<p>The current value based on the global clock is passed into the Shader as the iBeat Uniform.</p>
+
+<p>```c
+uniform float iBeat;
+float color = 0.0;</p>
+
+<p>vec4 function showColor(){
+  if(iBeat == 1.0){</p>
+
+<pre><code>color += 1.0;
+</code></pre>
+
+<p>  }
+  return vec4(color);
+}
+```</p>
+
+<p>Will return:</p>
+
+<p><code>c
+vec4(1.0);
+vec4(0.0);
+vec4(0.0);
+vec4(0.0);
+vec4(1.0);
+</code></p>
+
+<p>What we were after is actually:</p>
+
+<p><code>c
+vec4(1.0);
+vec4(1.0);
+vec4(1.0);
+vec4(1.0);
+vec4(2.0);
+</code></p>
+
+<p>My solution is to move to Clojure where mutable state using atoms is simple.</p>
+
+<p>Our timing is guided by Supercollider and a global clock. The value of our kick buffer at anyone time is only known inside the synth and hence inside Supercollider. But if we want to have mutable state we need access to this value in Clojure. So we create a custom synth that taps the value of the kick buffer based on the global clock signal.</p>
+
+<p>```clojure
+(defsynth drum-data-probe [kick-drum-buffer timing-signal-bus 0]
+  (let [beat-count (in:kr timing-signal-bus)</p>
+
+<pre><code>drum-beat (buf-rd:kr 1 kick-drum-buffer beat-count)
+_  (tap "drum-beat" 60 (a2k drum-beat))])
+</code></pre>
+
+<p>  (out 0 0))</p>
+
+<p>(defonce kick-drum-buffer (buffer 256))</p>
+
+<p>;;Create the synth with the &ldquo;drum-beat&rdquo; tap
+(def drum-data-probe (data-probes kick-drum-buffer (:count time/beat-1th)))</p>
+
+<p>;;Bind the running synth and the tap
+(def kick-atom (atom {:synth drum-data-probe :tap &ldquo;drum-beat&rdquo;}))</p>
+
+<p>;;Extract the tap atom
+(def kick-tap (get-in (:synth @kick-atom) [:taps (:tap @kick-atom)]))
+```</p>
+
+<p>Now in the Clojure world its simple to watch our tap atom and hence get alerted when it changes value. Overtone is dealing with the magic of updating the atom under the covers, the watcher is a nice implementation independent way of hooking into this. We now know the value of our kick buffer in Clojure. If we use another atom as our accumulator we can update it when the tap atom changes. Finally pushing this new accumulator to the Shader.</p>
+
+<p>```clojure
+(def active-color (atom 0.0))</p>
+
+<p>(add-watch kick-tap :cell-color
+  (fn [_ _ old new]</p>
+
+<pre><code>(when (and (= old 0.0) (= 1.0 new))
+(reset! cell-dance-color (mod (+ @cell-dance-color 1.0) 100)))))
+</code></pre>
+
+<p>```</p>
+
+<p>Within the shader</p>
+
+<p>```c
+uniform float iActiveColor;</p>
+
+<p>vec4 function showColor(){
+  return vec4(iActiveColor);
+}
+```</p>
+
+<p>Thats a lot of work, but I&rsquo;m very happy with the results in my <a href="https://vimeo.com/117516352">(end-of-buffer)</a> performance.</p>
+
+<h2>Buffer events</h2>
+
+<p>Writing to a buffer is a common way of live coding in Overtone. Its very useful to attach some visual effect based on the settings of a buffer.</p>
+
+<p><code>clojure
+;;Setting notes to a buffer
+(def notes-buf (buffer 256))
+(pattern! notes-buf (degrees-seq [:f3 1314]))
+</code></p>
+
+<p>We could put a tap into the synth and grab the current note and pass this into the shader. As I&rsquo;ve mentioned taps are expensive and they are always on while we may not always be using them.
+This also gets more complicated when say we have 3 instances of the same synth running playing simultaneous to form a chord.</p>
+
+<p>An alternative is to invent an atom which is used as a signal on every buffer write.</p>
+
+<p><code>clojure
+;;Could also do this with OSC messages...
+(do
+  (defonce buffer-change-event-notes-buf (atom 0.0))
+  (pattern! notes-buf (degrees-seq [:f3 1314]))
+  (swap! buffer-change-event-notes-buf + 1)
+)
+</code></p>
+
+<p>And adding a watcher</p>
+
+<p>```clojure
+(add-watch
+  buffer-change-event-notes-buf
+  :buffer-change-event-notes-buf
+  (fn [&amp; _]</p>
+
+<pre><code>(let [n (int (buffer-get notes-buf 0))]
+  (case n
+    29 (reset! color 0.4)
+       (reset! color 0.0)))))
+</code></pre>
+
+<p>(def buffer-atoms (atom {}))
+(pattern! notes-buf)
+(reset! buffer-atoms (assoc @buffer-atoms (:id notes-buf) (inc (@buffer-atoms (:id notes-buf)))))
+```</p>
+
+<p>I use this trick in (end-of-buffer) to use the bass note to control the level of distortion of the visuals (<a href="https://github.com/repl-electric/cassiopeia/blob/master/src/cassiopeia/destination/flatiron.clj#L84-L99">source</a>). Its wonderful to focus on the notes and feel the visuals following you automatically.</p>
+
+<h2>Midi notes to visuals</h2>
+
+<p>I often want to map a midi note to a visual effect. All my notes are mapped to buffers. Much like we did with the drums I can use a tap to get access to the current note being played in a buffer. Skipping over the details, when we have a midi note we send it as an float (to support crazy 42.333 like notes) to the shader via an atom.</p>
+
+<p>We then map it to a nice range value to effect visuals:</p>
+
+<p>```c
+uniform float iLeadNote;</p>
+
+<p>//midi note: 42 => F#2<br/>
+//midi note: 78 => F#5
+float noteMapped = smoothstep(42.0, 78.0, iLeadNote);</p>
+
+<p>//noteMapped now spans => 0..1
+```</p>
+
+<p>A cheap way to scale effects based on the height of the note.</p>
+
+<h2>Gradual transitions</h2>
+
+<p>Often I want a smooth fading it or out of a shader function. Say for example fading to black. Pretty simple, just fire a thread which sleeps and ticks an atom. The atom is fed into the Shader.</p>
+
+<p>Since I use this a lot I created a helper fn in <a href="https://github.com/josephwilk/mud/blob/4866f9db8077f8d4244fdd94b42bc0fef0e69f40/src/mud/core.clj#L90">MUD</a>:</p>
+
+<p>```c
+uniform float iColor;</p>
+
+<p>void main(void){
+  gl_color = vec4(iColor);
+}
+```</p>
+
+<p><code>clojure
+(def color (atom 1.0))
+;;         atom / target /  rate
+(overtime! color   0.0      0.001)
+</code></p>
+
+<h2>Text</h2>
+
+<p>In end-of-buffer I spell the word Repl Electric out of floating lights. We are bound to only a few data structures with fragment Shaders. I used a simple 3x3 matrix mapping each part of a character. Then using this to decided the position of the lights.</p>
+
+<p>```c
+const mat3 LETTER_R        = mat3(1, 1, 1,</p>
+
+<pre><code>                              1, 1, 0,  
+                              1, 0, 1);
+</code></pre>
+
+<p>const mat3 LETTER_E        = mat3(1, 1, 1,</p>
+
+<pre><code>                              1, 1, 0, 
+                              1, 1, 1);
+</code></pre>
+
+<p>vec4 letter(mat3 letter, vec2 offset, vec2 uv){
+  vec2 point = vec2(0,0);
+  vec4 helloPoint = vec4(0,0,0,0);
+  vec3 xPos = vec3(0.01, 0.03, 0.05);
+  vec3 yPos = vec3(0.05, 0.03, 0.01);</p>
+
+<p>  for(int y=0; y &lt; 3; y++){</p>
+
+<pre><code>for(int x=0; x &lt; 3; x++){
+  if(letter[y][x] == 1){// Show this part of the letter
+    point = vec2(xPos[x]+offset.x, offset.y+yPos[y]);
+    helloPoint += buildCell(uv, point, STATIC_LETTERS);
+  }
+}
+</code></pre>
+
+<p>  }
+  return helloPoint;
+}</p>
+
+<p>letter(LETTER_R, 0.2, uv);                                                          <br/>
+```</p>
+
+<p>And the visual.</p>
+
+<p><img src="http://josephwilk.github.io/images/font-example.png" alt="Font example"/></p>
+
+<h2>Visuals effected by frequencies</h2>
+
+<p>Shadertone provides a 2x512 array with the frequency spectrum (FFT) and audio waveform data. It does this by loading the data into a 2D Texture. The audio data is taken from tapping the main Overtone audio bus.</p>
+
+<p><code>clojure
+;;Tell Shadertone to fill iChannel0 with audio data
+(shadetone/start "shaders/example.glsl" :textures [:overtone-audio])
+</code></p>
+
+<p>It&rsquo;s always a challenge to utilise this without creating something jerky or causing motion sickness. Hence I tend to use the waveform or FFT as a distorter rather than a base for animations.</p>
+
+<p>It also helps to concentrate on specific ranges of frequencies of the waveform data to create a stronger connection between a synth and the visuals.</p>
+
+<p>```
+float sound = texture2D(iChannel0, vec2(max(uv.x,0.9),.75)).x;</p>
+
+<p>//uv.xy => current x,y coordinates of pixel.</p>
+
+<p>//First argument is an index into the 512 values of the waveform.
+//By limiting the first argument we can ignore certain ranges.</p>
+
+<p>//Second argument selects:
+//    0.25 => FFT  <br/>
+//    0.75 => audio waveform
+```</p>
+
+<p>Here is an example where I use the audio waveform to distort the scale &amp; jaggedness of a series of circle shapes.</p>
+
+<p>```c
+const float tau = 6.28318530717958647692;
+vec3 wave = vec3(0.0);
+float width = 4.0/500;
+for (int i=0; i &lt; 60; i++){
+  float sound = texture2D(iChannel0, vec2(uv.x,.75)).x;</p>
+
+<p>  float a = 0.1<em>float(i)</em>tau/float(n);
+  vec3 phase = smoothstep(-1.0,.5, vec3(cos(a), cos(a-tau/3.0), cos(a-tau<em>2.0/3.0)));
+  wave += phase * smoothstep(width, 0.0, abs(uv.y &ndash; ((sound</em>0.9)+0.2)));</p>
+
+<p>  //This shift of uv.x means our index into the sound data also moves along, examining a different part of the audio wave.
+  uv.x += 0.4/float(n);
+  uv.y &ndash;= 0.05;
+}
+wave *= 10.0/float(n);
+return vec4(wave,1);
+```</p>
+
+<p>And the resulting visual:</p>
+
+<p><img src="http://josephwilk.github.io/images/fft-example.png" alt="FFT example"/></p>
+
+<h2>Final thoughts on Live coding visuals</h2>
+
+<p>Through Clojure&rsquo;s binding of atoms with Fragment shaders we have the power to live code visuals and music. Though it comes at a cost of complexity having to wrap lots of functions in order to have powerfully connected visuals. Fragment shaders are extremely terse, and can be pushed to replicate many advanced effects <em>but</em> they are also performance intense, and often taking a non-shader route will be much more performant.</p>
+
+<h4>Stability</h4>
+
+<p>My knowledge of LWJGL is small, but crashes in the fragment shaders often occur leaving the JVM wedged. This has happened to me quite a lot practicing, but never in a performance. Its worth reflecting that something (be it fixable) leaves a risk of a freeze in a performance.</p>
+
+<h4>Combining State &amp; Shaders</h4>
+
+<p>I&rsquo;ve started to explore what a shader application might look like if it was a server and provided a state machine so the live coding language does have this complexity. In turn producing a freer and more spontaneous interaction. This project is <a href="https://github.com/josephwilk/shaderview">Shaderview</a> and steals all the good ideas of Shadertone while adding some new features like <a href="www.vertexshaderart.com">vertex shader art</a>. I&rsquo;ll be writing up more about Shaderview soon.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Animations with Emacs]]></title>
