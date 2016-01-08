@@ -4,7 +4,7 @@
   <title><![CDATA[Category: art | Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io//art/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2016-01-08T15:35:11+00:00</updated>
+  <updated>2016-01-08T15:36:14+00:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -429,7 +429,8 @@ for (int i=0; i &lt; 60; i++){
   vec3 phase = smoothstep(-1.0,.5, vec3(cos(a), cos(a-tau/3.0), cos(a-tau<em>2.0/3.0)));
   wave += phase * smoothstep(width, 0.0, abs(uv.y &ndash; ((sound</em>0.9)+0.2)));</p>
 
-<p>  //This shift of uv.x means our index into the sound data also moves along, examining a different part of the audio wave.
+<p>  //This shift of uv.x means our index into the sound data also
+  //moves along, examining a different part of the audio wave.
   uv.x += 0.4/float(n);
   uv.y &ndash;= 0.05;
 }

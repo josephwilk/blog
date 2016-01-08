@@ -668,6 +668,7 @@ This also gets more complicated when say we have 3 instances of the same synth r
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
 <span class='line-number'>16</span>
+<span class='line-number'>17</span>
 </pre></td><td class='code'><pre><code class='c'><span class='line'><span class="k">const</span> <span class="kt">float</span> <span class="n">tau</span> <span class="o">=</span> <span class="mf">6.28318530717958647692</span><span class="p">;</span>
 </span><span class='line'><span class="n">vec3</span> <span class="n">wave</span> <span class="o">=</span> <span class="n">vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">);</span>
 </span><span class='line'><span class="kt">float</span> <span class="n">width</span> <span class="o">=</span> <span class="mf">4.0</span><span class="o">/</span><span class="mi">500</span><span class="p">;</span>
@@ -678,7 +679,8 @@ This also gets more complicated when say we have 3 instances of the same synth r
 </span><span class='line'>  <span class="n">vec3</span> <span class="n">phase</span> <span class="o">=</span> <span class="n">smoothstep</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">.5</span><span class="p">,</span> <span class="n">vec3</span><span class="p">(</span><span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">tau</span><span class="o">/</span><span class="mf">3.0</span><span class="p">),</span> <span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">tau</span><span class="o">*</span><span class="mf">2.0</span><span class="o">/</span><span class="mf">3.0</span><span class="p">)));</span>
 </span><span class='line'>  <span class="n">wave</span> <span class="o">+=</span> <span class="n">phase</span> <span class="o">*</span> <span class="n">smoothstep</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">abs</span><span class="p">(</span><span class="n">uv</span><span class="p">.</span><span class="n">y</span> <span class="o">-</span> <span class="p">((</span><span class="n">sound</span><span class="o">*</span><span class="mf">0.9</span><span class="p">)</span><span class="o">+</span><span class="mf">0.2</span><span class="p">)));</span>
 </span><span class='line'>
-</span><span class='line'>  <span class="c1">//This shift of uv.x means our index into the sound data also moves along, examining a different part of the audio wave. </span>
+</span><span class='line'>  <span class="c1">//This shift of uv.x means our index into the sound data also </span>
+</span><span class='line'>  <span class="c1">//moves along, examining a different part of the audio wave. </span>
 </span><span class='line'>  <span class="n">uv</span><span class="p">.</span><span class="n">x</span> <span class="o">+=</span> <span class="mf">0.4</span><span class="o">/</span><span class="kt">float</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
 </span><span class='line'>  <span class="n">uv</span><span class="p">.</span><span class="n">y</span> <span class="o">-=</span> <span class="mf">0.05</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
