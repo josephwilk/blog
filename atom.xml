@@ -4,7 +4,7 @@
   <title><![CDATA[Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2016-01-08T15:04:17+00:00</updated>
+  <updated>2016-01-08T15:07:33+00:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -431,8 +431,6 @@ This also gets more complicated when say we have 3 instances of the same synth r
 
 <p>Often I want a smooth fading it or out of a shader function. Say for example fading to black. Pretty simple, just fire a thread which sleeps and ticks an atom. The atom is fed into the Shader.</p>
 
-<p>Since I use this a lot I created a helper fn in <a href="https://github.com/josephwilk/mud/blob/4866f9db8077f8d4244fdd94b42bc0fef0e69f40/src/mud/core.clj#L90">MUD</a>:</p>
-
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -446,7 +444,7 @@ This also gets more complicated when say we have 3 instances of the same synth r
 </span></code></pre></td></tr></table></div></figure>
 
 
-
+<p>Since I use this a lot I created a helper fn in <a href="https://github.com/josephwilk/mud/blob/4866f9db8077f8d4244fdd94b42bc0fef0e69f40/src/mud/core.clj#L90">MUD</a>:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
