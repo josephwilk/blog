@@ -4,7 +4,7 @@
   <title><![CDATA[Category: art | Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io//art/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2016-01-08T15:36:14+00:00</updated>
+  <updated>2016-01-08T19:16:10+00:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -226,7 +226,7 @@ _  (tap "drum-beat" 60 (a2k drum-beat))])
 <p>(defonce kick-drum-buffer (buffer 256))</p>
 
 <p>;;Create the synth with the &ldquo;drum-beat&rdquo; tap
-(def drum-data-probe (data-probes kick-drum-buffer (:count time/beat-1th)))</p>
+(def drum-data-probe (drum-data-probe kick-drum-buffer (:count time/beat-1th)))</p>
 
 <p>;;Bind the running synth and the tap
 (def kick-atom (atom {:synth drum-data-probe :tap &ldquo;drum-beat&rdquo;}))</p>

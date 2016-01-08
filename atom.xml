@@ -4,7 +4,7 @@
   <title><![CDATA[Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2016-01-08T15:36:14+00:00</updated>
+  <updated>2016-01-08T19:16:10+00:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -294,7 +294,7 @@ The drum signal is 1 for a hit 0 for silence:</p>
 </span><span class='line'><span class="p">(</span><span class="kd">defonce </span><span class="nv">kick-drum-buffer</span> <span class="p">(</span><span class="nf">buffer</span> <span class="mi">256</span><span class="p">))</span>
 </span><span class='line'>
 </span><span class='line'><span class="c1">;;Create the synth with the &quot;drum-beat&quot; tap</span>
-</span><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">drum-data-probe</span> <span class="p">(</span><span class="nf">data-probes</span> <span class="nv">kick-drum-buffer</span> <span class="p">(</span><span class="ss">:count</span> <span class="nv">time/beat-1th</span><span class="p">)))</span>
+</span><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">drum-data-probe</span> <span class="p">(</span><span class="nf">drum-data-probe</span> <span class="nv">kick-drum-buffer</span> <span class="p">(</span><span class="ss">:count</span> <span class="nv">time/beat-1th</span><span class="p">)))</span>
 </span><span class='line'>
 </span><span class='line'><span class="c1">;;Bind the running synth and the tap</span>
 </span><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">kick-atom</span> <span class="p">(</span><span class="nf">atom</span> <span class="p">{</span><span class="ss">:synth</span> <span class="nv">drum-data-probe</span> <span class="ss">:tap</span> <span class="s">&quot;drum-beat&quot;</span><span class="p">}))</span>
