@@ -4,7 +4,7 @@
   <title><![CDATA[Category: art | Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io//art/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2016-01-08T15:34:16+00:00</updated>
+  <updated>2016-01-08T15:35:11+00:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -247,9 +247,11 @@ _  (tap "drum-beat" 60 (a2k drum-beat))])
 (reset! active-color (mod (+ @active-color 1.0) 100)))))
 </code></pre>
 
-<p>```</p>
+<p>(shadertone/start-fullscreen &ldquo;resources/shaders/example.glsl&rdquo;
+  :user-data {:iActiveColor active-color}
+```</p>
 
-<p>Within the shader</p>
+<p>Within the shader:</p>
 
 <p>```c
 uniform float iActiveColor;</p>

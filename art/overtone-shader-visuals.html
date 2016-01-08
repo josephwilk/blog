@@ -402,16 +402,22 @@ The drum signal is 1 for a hit 0 for silence:</p>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
 </pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">active-color</span> <span class="p">(</span><span class="nf">atom</span> <span class="mf">0.0</span><span class="p">))</span>
 </span><span class='line'>
 </span><span class='line'><span class="p">(</span><span class="nf">add-watch</span> <span class="nv">kick-tap</span> <span class="ss">:cell-color</span>
 </span><span class='line'>  <span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">_</span> <span class="nv">_</span> <span class="nv">old</span> <span class="nv">new</span><span class="p">]</span>
 </span><span class='line'>    <span class="p">(</span><span class="nb">when </span><span class="p">(</span><span class="nb">and </span><span class="p">(</span><span class="nb">= </span><span class="nv">old</span> <span class="mf">0.0</span><span class="p">)</span> <span class="p">(</span><span class="nb">= </span><span class="mf">1.0</span> <span class="nv">new</span><span class="p">))</span>
 </span><span class='line'>    <span class="p">(</span><span class="nf">reset!</span> <span class="nv">active-color</span> <span class="p">(</span><span class="nf">mod</span> <span class="p">(</span><span class="nb">+ </span><span class="o">@</span><span class="nv">active-color</span> <span class="mf">1.0</span><span class="p">)</span> <span class="mi">100</span><span class="p">)))))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="nf">shadertone/start-fullscreen</span> <span class="s">&quot;resources/shaders/example.glsl&quot;</span>
+</span><span class='line'>  <span class="ss">:user-data</span> <span class="p">{</span><span class="ss">:iActiveColor</span> <span class="nv">active-color</span><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Within the shader</p>
+<p>Within the shader:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
