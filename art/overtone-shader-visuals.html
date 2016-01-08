@@ -407,7 +407,7 @@ The drum signal is 1 for a hit 0 for silence:</p>
 </span><span class='line'><span class="p">(</span><span class="nf">add-watch</span> <span class="nv">kick-tap</span> <span class="ss">:cell-color</span>
 </span><span class='line'>  <span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">_</span> <span class="nv">_</span> <span class="nv">old</span> <span class="nv">new</span><span class="p">]</span>
 </span><span class='line'>    <span class="p">(</span><span class="nb">when </span><span class="p">(</span><span class="nb">and </span><span class="p">(</span><span class="nb">= </span><span class="nv">old</span> <span class="mf">0.0</span><span class="p">)</span> <span class="p">(</span><span class="nb">= </span><span class="mf">1.0</span> <span class="nv">new</span><span class="p">))</span>
-</span><span class='line'>    <span class="p">(</span><span class="nf">reset!</span> <span class="nv">cell-dance-color</span> <span class="p">(</span><span class="nf">mod</span> <span class="p">(</span><span class="nb">+ </span><span class="o">@</span><span class="nv">cell-dance-color</span> <span class="mf">1.0</span><span class="p">)</span> <span class="mi">100</span><span class="p">)))))</span>
+</span><span class='line'>    <span class="p">(</span><span class="nf">reset!</span> <span class="nv">active-color</span> <span class="p">(</span><span class="nf">mod</span> <span class="p">(</span><span class="nb">+ </span><span class="o">@</span><span class="nv">active-color</span> <span class="mf">1.0</span><span class="p">)</span> <span class="mi">100</span><span class="p">)))))</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
