@@ -4,7 +4,7 @@
   <title><![CDATA[Category: art | Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io//art/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2016-01-08T15:30:38+00:00</updated>
+  <updated>2016-01-08T15:31:40+00:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -141,7 +141,7 @@ vec4 population(){..}</p>
 
 <p>Shadertone uses the seconds since start (<code>iGlobalTime</code>) while Overtone via Supercollider uses the soundcard&rsquo;s clock. Hence there is no guarantee these two sources will be in sync.</p>
 
-<p>Replacing iGlobalTime is the only option. We create a special synth called data-probes which sole function is to transfer data from the Supercollider world to the Clojure world. Overtone calls these bindings a <code>tap</code>. We add a tap into our Overtone synth which is polling our global timing signal (this powers all synths and is how we co-ordinate everything).</p>
+<p>Replacing iGlobalTime is the only option. We create a special synth called <code>data-probes</code> which sole function is to transfer data from the Supercollider world to the Clojure world. Overtone provides a Supercollider to Clojure binding called a <code>tap</code>. We add a tap into our Overtone synth which is polling our global timing signal (this powers all synths and is how we co-ordinate everything).</p>
 
 <p>```clojure
 (defsynth data-probes [timing-signal-bus 0]
