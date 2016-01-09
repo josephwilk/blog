@@ -4,7 +4,7 @@
   <title><![CDATA[Joseph Wilk]]></title>
   <link href="http://josephwilk.github.io/atom.xml" rel="self"/>
   <link href="http://josephwilk.github.io/"/>
-  <updated>2016-01-09T20:26:00+00:00</updated>
+  <updated>2016-01-09T21:25:16+00:00</updated>
   <id>http://josephwilk.github.io/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -613,7 +613,7 @@ This also gets more complicated when say we have 3 instances of the same synth r
 
 <h4>Combining State &amp; Shaders</h4>
 
-<p>I&rsquo;ve started to explore what a shader application might look like if it was a server and provided a state machine so the live coding language does have this complexity. In turn producing a freer and more spontaneous interaction. This project is <a href="https://github.com/josephwilk/shaderview">Shaderview</a> and steals all the good ideas of Shadertone while adding some new features like <a href="www.vertexshaderart.com">vertex shader art</a>. I&rsquo;ll be writing up more about Shaderview soon.</p>
+<p>I&rsquo;ve started to explore what a shader application might look like if it was a server and provided a state machine so the live coding language does have this complexity. In turn producing a freer and more spontaneous interaction. This project is <a href="https://github.com/josephwilk/shaderview">Shaderview</a> and steals all the good ideas of Shadertone while adding some new features like <a href="http://www.vertexshaderart.com">vertex shader art</a>. I&rsquo;ll be writing up more about Shaderview soon.</p>
 ]]></content>
   </entry>
   
