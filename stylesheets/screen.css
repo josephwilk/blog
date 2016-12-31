@@ -71,7 +71,7 @@ a {
 	transition: color 0.3s
 }
 html {
-	background: #fff url('/images/images/body-bg.png?1452094398') top left
+	background: #fff url('/images/body-bg.png?1452094398') top left
 }
 body>div {
 	background: #f2f2f2 url('/images/noise.png?1452094398') top left;
