@@ -215,7 +215,7 @@
 
 <ol>
 <li><p>Dynamically generating Overtone synths using generative testing framework <a href="https://github.com/clojure/test.check">test.check</a>.
-Using QuickCheck style generators is a cheap way of exploring a permutation space given grammar rules, like those of a synth definition in Overtone. Supports selection of:</p>
+Using QuickCheck style generators is a cheap way of exploring a permutation space given grammar rules, like those of a synth definition in Overtone. Supports selection of:
 
 <ul>
 <li>Audio wave (potentially many combined)</li>
@@ -223,9 +223,9 @@ Using QuickCheck style generators is a cheap way of exploring a permutation spac
 <li>Effects (reverb/echo/pitchshift/delays)</li>
 <li>Filters (low pass/high pass)
 The various properties of the audio units are selected randomly.</li>
-</ul>
+</ul></p>
 </li>
-<li><p>Dynamically generating a score varying:</p>
+<li><p>Dynamically generating a score varying:
 
 <ul>
 <li>Clock tempo</li>
@@ -233,13 +233,15 @@ The various properties of the audio units are selected randomly.</li>
 <li>Root note / scale</li>
 <li>Octaves</li>
 </ul>
+</p>
 </li>
-<li><p>Dynamically generating synth control parameters:</p>
+<li><p>Dynamically generating synth control parameters:
 
 <ul>
 <li>Distortion</li>
 <li>Changing audio wave (sin/saw/triangle/square/etc)</li>
 </ul>
+</p>
 </li>
 <li><p>Running for 3 minutes with a random chance of mutation to score and parameters.</p></li>
 <li><p>Each generation scored based on number of Shazam matches (scraped from Notification alerts on OS X).</p></li>
