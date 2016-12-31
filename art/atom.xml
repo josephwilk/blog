@@ -156,7 +156,10 @@ The various properties of the audio units are selected randomly.</li>
 </ol>
 
 
-<p>To ensure a perfect signal we feed the Overtone sound out to a <a href="https://github.com/mattingalls/Soundflower">Soundflower</a> out channel and ensure Shazam Desktop is feeding in from this.</p>
+<p>To avoid any background noise or messing with mics we use <a href="https://github.com/mattingalls/Soundflower">SoundFlower</a> with the following setup:</p>
+<p>	Overtone main audio ->🔈 Soundflower input device</a><br\>
+	Soundflower output device ->🔈 Shazam Desktop.</p>
+
 
 <p>For every generation we store the state and mutations (edn) for reference and for guiding future generations: <a href="https://gist.githubusercontent.com/josephwilk/410f68a857f81e8073815999bf1a4b4f/raw/78319023141b18dfe90ab1183ecc13b30c4def33/1470683054969.edn">Example state for one generation</a></p>
 
