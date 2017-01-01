@@ -80,6 +80,290 @@
   
   
   
+  
+      <article>
+      
+    <header>
+    
+        <h1 class="entry-title"><a href="/elixir/sets-in-elixir.html">Sets in Elixir</a></h1>
+    
+    
+        <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+  <time datetime="2013-07-02T14:43:00+01:00" pubdate data-updated="true">Jul 2<span>nd</span>, 2013</time>
+        
+        </p>
+    
+    </header>
+
+
+    <div class="entry-content"><p>I recently contributed the <code>Set</code> data structure to the <a href="http://elixir-lang.org/">Elixir</a> programming language.
+  The <code>Set</code> is implemented through a HashSet.</p>
+
+  <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  </pre></td><td class='code'><pre><code class='elixir'><span class='line'><span class="n">s1</span> <span class="o">=</span> <span class="no">HashSet</span><span class="o">.</span><span class="n">new</span><span class="p">([</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">])</span>
+  </span><span class='line'><span class="n">s2</span> <span class="o">=</span> <span class="no">HashSet</span><span class="o">.</span><span class="n">new</span><span class="p">([</span><span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">])</span>
+  </span><span class='line'>
+  </span><span class='line'><span class="no">Set</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span> <span class="c1"># =&gt; HashSet&lt;[1, 2]&gt;</span>
+  </span></code></pre></td></tr></table></div></figure>
+
+
+  <p>Elixir&rsquo;s Set implementation is often faster than Erlangs own <a href="http://www.erlang.org/doc/man/sets.html">sets</a>. Which is pretty impressive since Elixir runs on the same Erlang VM. It does this by adapting the internal data structure based on the size of the sets.</p>
+
+  <p>Lets explore how Elixir does this while also explaining a little about Elixir:</p>
+
+  <h2>Growing Data structures</h2>
+
+  <p>For small sets the internal representation uses an ordered set (which really is just a list).</p>
+
+  <p>We refer to this as a Bucket.</p>
+
+  <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  </pre></td><td class='code'><pre><code class='elixir'><span class='line'><span class="p">[</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">]</span>
+  </span></code></pre></td></tr></table></div></figure>
+
+
+  <p>Being ordered allows us to perform faster access and modification.</p>
+
+  <p>For example finding a member of a set:</p>
+
+  <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  </pre></td><td class='code'><pre><code class='elixir'><span class='line'><span class="c1"># Only needs a single comparison to know if 1 is in the Set.</span>
+  </span><span class='line'><span class="c1"># Since the first element is greater than 1 we know its not in the Set.</span>
+  </span><span class='line'><span class="no">Set</span><span class="o">.</span><span class="n">member?</span><span class="p">(</span><span class="no">HashSet</span><span class="o">.</span><span class="n">new</span> <span class="p">[</span><span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">,</span> <span class="m">5</span><span class="p">],</span> <span class="m">1</span><span class="p">)</span>
+  </span></code></pre></td></tr></table></div></figure>
+
+
+  <p>Order in the list is not maintained in the data structure but in the insertion/put:</p>
+
+  <h3>Putting elements into a Bucket</h3>
+
+  <p>Before we jump into some Elixir code its important to understand that the order of functions in Elixir is important. We start from the top function and if this function matches a criteria we call it otherwise we try the function below and so on. If we find no function that matches that&rsquo;s a error and execution aborts.</p>
+
+  <p>Here is the Elixir code for inserting a member into a bucket.</p>
+
+  <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  <span class='line-number'>10</span>
+  <span class='line-number'>11</span>
+  <span class='line-number'>12</span>
+  <span class='line-number'>13</span>
+  <span class='line-number'>14</span>
+  <span class='line-number'>15</span>
+  <span class='line-number'>16</span>
+  <span class='line-number'>17</span>
+  <span class='line-number'>18</span>
+  <span class='line-number'>19</span>
+  <span class='line-number'>20</span>
+  <span class='line-number'>21</span>
+  </pre></td><td class='code'><pre><code class='elixir'><span class='line'><span class="c1"># We have found the place to insert the new member.</span>
+  </span><span class='line'><span class="k">defp</span> <span class="n">bucket_put</span><span class="p">([</span><span class="n">m</span><span class="o">|</span><span class="n">_</span><span class="p">]</span><span class="o">=</span><span class="n">bucket</span><span class="p">,</span> <span class="n">member</span><span class="p">)</span> <span class="ow">when</span> <span class="n">m</span> <span class="o">&gt;</span> <span class="n">member</span> <span class="k">do </span>
+  </span><span class='line'><span class="k">  </span><span class="p">{</span> <span class="p">[</span><span class="n">member</span><span class="o">|</span><span class="n">bucket</span><span class="p">],</span> <span class="m">1</span> <span class="p">}</span>
+  </span><span class='line'><span class="k">end</span>
+  </span><span class='line'>
+  </span><span class='line'><span class="c1"># Member is already in the set, we don&#39;t added it. (notice how member is being used to pattern match here).</span>
+  </span><span class='line'><span class="c1"># Its the same as writing: `defp bucket_put([m|bucket], member) when m == member do</span>
+  </span><span class='line'><span class="k">defp</span> <span class="n">bucket_put</span><span class="p">([</span><span class="n">member</span><span class="o">|</span><span class="n">bucket</span><span class="p">],</span> <span class="n">member</span><span class="p">)</span> <span class="k">do</span>
+  </span><span class='line'><span class="k">  </span><span class="p">{</span> <span class="p">[</span><span class="n">member</span><span class="o">|</span><span class="n">bucket</span><span class="p">],</span> <span class="m">0</span> <span class="p">}</span>
+  </span><span class='line'><span class="k">end</span>
+  </span><span class='line'>
+  </span><span class='line'><span class="c1"># Recursive case, keep calling bucket_put as this is not the point to insert.</span>
+  </span><span class='line'><span class="k">defp</span> <span class="n">bucket_put</span><span class="p">([</span><span class="n">e</span><span class="o">|</span><span class="n">bucket</span><span class="p">],</span> <span class="n">member</span><span class="p">)</span> <span class="k">do</span>
+  </span><span class='line'><span class="k">  </span><span class="p">{</span> <span class="n">rest</span><span class="p">,</span> <span class="n">count</span> <span class="p">}</span> <span class="o">=</span> <span class="n">bucket_put</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="n">member</span><span class="p">)</span>
+  </span><span class='line'>  <span class="p">{</span> <span class="p">[</span><span class="n">e</span><span class="o">|</span><span class="n">rest</span><span class="p">],</span> <span class="n">count</span> <span class="p">}</span>
+  </span><span class='line'><span class="k">end</span>
+  </span><span class='line'>
+  </span><span class='line'><span class="c1"># Empty set, insert the number</span>
+  </span><span class='line'><span class="k">defp</span> <span class="n">bucket_put</span><span class="p">([],</span> <span class="n">member</span><span class="p">)</span> <span class="k">do</span>
+  </span><span class='line'><span class="k">  </span><span class="p">{</span> <span class="p">[</span><span class="n">member</span><span class="p">],</span> <span class="m">1</span> <span class="p">}</span>
+  </span><span class='line'><span class="k">end</span>
+  </span></code></pre></td></tr></table></div></figure>
+
+
+  <h2>Expanding into a Trie</h2>
+
+  <p>Upon reaching a threshold the Set changes the internal representation into a Trie (What the hell is a <a href="http://en.wikipedia.org/wiki/Trie">trie</a>).</p>
+
+  <p>Why a Trie?</p>
+
+  <blockquote><p>For a Trie the time required for insert, delete and find operations is almost identical.
+  As a result, for situations where code is inserting, deleting and finding in equal measure, tries can handily beat binary search trees.</p></blockquote>
+
+  <p>In a Trie we don&rsquo;t store any keys or hashes, instead a elements position in the tree defines the key with which it is associated.</p>
+
+  <p>Hence we can take advantage of Erlangs fast <a href="http://www.erlang.org/doc/reference_manual/data_types.html#id65673">tuples</a> to model the trie. A multi-depth trie is just tuples inside tuples.</p>
+
+  <h3>Buckets growing into Tries</h3>
+
+  <p>Lets work through an example. For simplicity we will assume the expansion happens at the very small size of 5 elements:</p>
+
+  <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  </pre></td><td class='code'><pre><code class='elixir'><span class='line'><span class="n">set</span> <span class="o">=</span> <span class="no">Set</span><span class="o">.</span><span class="n">new</span> <span class="p">[</span><span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">]</span>
+  </span><span class='line'>
+  </span><span class='line'><span class="c1"># Apply an operation that forces the internal structure to change</span>
+  </span><span class='line'><span class="n">set</span> <span class="o">=</span> <span class="no">Set</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">set</span><span class="p">,</span> <span class="m">4</span><span class="p">)</span>
+  </span></code></pre></td></tr></table></div></figure>
+
+
+  <h4>Create a new Erlang Tuple</h4>
+
+  <p><img alt="bucket to trie" src="/images/trie_step1.png"/></p>
+
+  <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  </pre></td><td class='code'><pre><code class='elixir'><span class='line'>  <span class="ss">:erlang</span><span class="o">.</span><span class="n">make_tuple</span><span class="p">(</span><span class="n">node_size</span> <span class="o">=</span> <span class="m">4</span><span class="p">,</span> <span class="p">[])</span>
+  </span></code></pre></td></tr></table></div></figure>
+
+
+  <h4>Redistribute the bucket elements into the Tuple</h4>
+
+  <p><img alt="bucket to trie" src="/images/trie_step2.png"/></p>
+
+  <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  <span class='line-number'>10</span>
+  <span class='line-number'>11</span>
+  <span class='line-number'>12</span>
+  <span class='line-number'>13</span>
+  <span class='line-number'>14</span>
+  <span class='line-number'>15</span>
+  <span class='line-number'>16</span>
+  </pre></td><td class='code'><pre><code class='elixir'><span class='line'><span class="c1"># This returns the index that a set value should have in the tuple.</span>
+  </span><span class='line'><span class="k">defp</span> <span class="n">bucket_nth_index</span><span class="p">(</span><span class="n">set_value</span><span class="p">,</span> <span class="n">trie_depth</span><span class="p">)</span> <span class="k">do</span>
+  </span><span class='line'><span class="k">  </span><span class="n">node_shift</span> <span class="o">=</span> <span class="m">2</span>
+  </span><span class='line'>  <span class="n">node_bitmap</span> <span class="o">=</span> <span class="m">0b0011</span>
+  </span><span class='line'>
+  </span><span class='line'>  <span class="p">(</span><span class="ss">:erlang</span><span class="o">.</span><span class="n">phash2</span><span class="p">(</span><span class="n">set_value</span><span class="p">)</span> <span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="n">node_shift</span> <span class="o">*</span> <span class="n">trie_depth</span><span class="p">))</span> <span class="o">&amp;&amp;</span><span class="err">&amp;</span> <span class="n">node_bitmap</span>
+  </span><span class='line'><span class="k">end</span>
+  </span><span class='line'>
+  </span><span class='line'><span class="c1"># Create a new node or add to an existing node.</span>
+  </span><span class='line'><span class="c1"># Based on the bucket_nth_index of the set member put it into a bucket at that index in the tuple.</span>
+  </span><span class='line'><span class="k">defp</span> <span class="n">node_relocate</span><span class="p">(</span><span class="n">node</span> <span class="o">//</span> <span class="ss">:erlang</span><span class="o">.</span><span class="n">make_tuple</span><span class="p">(</span><span class="n">node_size</span> <span class="o">=</span> <span class="m">4</span><span class="p">,</span> <span class="p">[]),</span> <span class="n">bucket</span><span class="p">,</span> <span class="n">depth</span><span class="p">)</span> <span class="k">do</span>
+  </span><span class='line'><span class="k">  </span><span class="ss">:lists</span><span class="o">.</span><span class="n">foldl</span> <span class="k">fn</span> <span class="n">member</span><span class="p">,</span> <span class="n">new_node</span> <span class="o">-&gt;</span>
+  </span><span class='line'>    <span class="n">position_in_tuple</span> <span class="o">=</span> <span class="n">bucket_nth_index</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="n">depth</span><span class="p">)</span>
+  </span><span class='line'>    <span class="n">set_elem</span><span class="p">(</span><span class="n">new_node</span><span class="p">,</span> <span class="n">position_in_tuple</span><span class="p">,</span> <span class="n">bucket_put</span><span class="p">(</span><span class="n">elem</span><span class="p">(</span><span class="n">new_node</span><span class="p">,</span> <span class="n">position_in_tuple</span><span class="p">),</span> <span class="n">member</span><span class="p">))</span>
+  </span><span class='line'>  <span class="k">end</span><span class="p">,</span> <span class="n">new_node</span><span class="p">,</span> <span class="n">bucket</span>
+  </span><span class='line'><span class="k">end</span>
+  </span></code></pre></td></tr></table></div></figure>
+
+
+  <h4>Finally add the new set member into the Trie</h4>
+
+  <p><img alt="bucket to trie" src="/images/trie_step3.png"/></p>
+
+  <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  <span class='line-number'>10</span>
+  <span class='line-number'>11</span>
+  <span class='line-number'>12</span>
+  <span class='line-number'>13</span>
+  <span class='line-number'>14</span>
+  <span class='line-number'>15</span>
+  <span class='line-number'>16</span>
+  <span class='line-number'>17</span>
+  <span class='line-number'>18</span>
+  <span class='line-number'>19</span>
+  <span class='line-number'>20</span>
+  <span class='line-number'>21</span>
+  <span class='line-number'>22</span>
+  <span class='line-number'>23</span>
+  <span class='line-number'>24</span>
+  <span class='line-number'>25</span>
+  <span class='line-number'>26</span>
+  <span class='line-number'>27</span>
+  </pre></td><td class='code'><pre><code class='elixir'><span class='line'><span class="c1"># Base case. We have found the right bucket, just insert the new member into it.</span>
+  </span><span class='line'><span class="k">defp</span> <span class="n">node_put</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">member</span><span class="p">)</span> <span class="k">do</span>
+  </span><span class='line'><span class="k">  </span><span class="n">position</span> <span class="o">=</span> <span class="n">bucket_index</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
+  </span><span class='line'>  <span class="p">{</span> <span class="n">new</span><span class="p">,</span> <span class="n">count</span> <span class="p">}</span> <span class="o">=</span> <span class="n">bucket_put</span><span class="p">(</span><span class="n">elem</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">position</span><span class="p">),</span> <span class="n">member</span><span class="p">)</span>
+  </span><span class='line'>  <span class="p">{</span> <span class="n">set_elem</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">new</span><span class="p">),</span> <span class="n">count</span> <span class="p">}</span>
+  </span><span class='line'><span class="k">end</span>
+  </span><span class='line'>
+  </span><span class='line'><span class="c1"># Recursive case. Keeping trying to find the right bucket.</span>
+  </span><span class='line'><span class="k">defp</span> <span class="n">node_put</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">member</span><span class="p">)</span> <span class="k">do</span>
+  </span><span class='line'><span class="k">  </span><span class="n">position</span> <span class="o">=</span> <span class="n">bucket_index</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
+  </span><span class='line'>  <span class="p">{</span> <span class="n">new</span><span class="p">,</span> <span class="n">count</span> <span class="p">}</span> <span class="o">=</span> <span class="n">node_put</span><span class="p">(</span><span class="n">elem</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">position</span><span class="p">),</span> <span class="n">depth</span> <span class="o">-</span> <span class="m">1</span><span class="p">,</span> <span class="n">bucket_next</span><span class="p">(</span><span class="n">hash</span><span class="p">),</span> <span class="n">member</span><span class="p">)</span>
+  </span><span class='line'>  <span class="p">{</span> <span class="n">set_elem</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">new</span><span class="p">),</span> <span class="n">count</span> <span class="p">}</span>
+  </span><span class='line'><span class="k">end</span>
+  </span><span class='line'>
+  </span><span class='line'><span class="c1"># The bucket index of this member</span>
+  </span><span class='line'><span class="k">defp</span> <span class="n">bucket_index</span><span class="p">(</span><span class="n">member</span><span class="p">)</span> <span class="k">do</span>
+  </span><span class='line'><span class="k">  </span><span class="n">node_bitmap</span> <span class="o">=</span> <span class="m">0b0011</span>
+  </span><span class='line'>  <span class="n">hash</span> <span class="o">=</span> <span class="ss">:erlang</span><span class="o">.</span><span class="n">phash2</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
+  </span><span class='line'>  <span class="n">hash</span> <span class="o">&amp;&amp;</span><span class="err">&amp;</span> <span class="n">node_bitmap</span>
+  </span><span class='line'><span class="k">end</span>
+  </span><span class='line'>
+  </span><span class='line'><span class="c1"># The bucket index of this element with depth + 1.</span>
+  </span><span class='line'><span class="k">defp</span> <span class="n">bucket_next</span><span class="p">(</span><span class="n">member</span><span class="p">)</span> <span class="k">do</span>
+  </span><span class='line'><span class="k">  </span><span class="n">node_shift</span> <span class="o">=</span> <span class="m">2</span>
+  </span><span class='line'>  <span class="n">hash</span> <span class="o">=</span> <span class="ss">:erlang</span><span class="o">.</span><span class="n">phash2</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
+  </span><span class='line'>  <span class="n">hash</span> <span class="o">&gt;&gt;&gt;</span> <span class="n">node_shift</span>
+  </span><span class='line'><span class="k">end</span>
+  </span></code></pre></td></tr></table></div></figure>
+
+
+  <p>Notice while we have a more complicated data structure with a trie the leaves are always plain old buckets. Hence insertion with a trie is a case of finding the right bucket and then just reusing our <code>bucket_put</code> function. Beautiful and fast :)</p>
+
+  <h4>Tries expanding into deeper Tries</h4>
+
+  <p>Things get a little more complicated with multi depth tries. If you are interested digging more into the implementation you can see all the <a href="https://github.com/elixir-lang/elixir/blob/master/lib/elixir/lib/hash_set.ex">source code of HashSet</a> on Github.</p>
+
+  <h2>Contraction</h2>
+
+  <p>We can also remove elements from a set so in much the same as we expanded we have to contract the internal representation of the set.</p>
+
+  <h1>Performance Benchmarks</h1>
+
+  <p>Here is some sample data comparing Erlang sets to Elixir Sets. Smaller is better.</p>
+
+  <p><img alt="HashSet vs :sets" src="/images/sets_vs_hashset.png"/></p>
+
+  <p>The benchmark scripts are on github (<a href="https://gist.github.com/josephwilk/5808525">https://gist.github.com/josephwilk/5808525</a>) if you are interested in running them yourself.</p>
+  </div>
+  
+  
+
+
+      </article>
+	  
     <article>
       
   <header>
