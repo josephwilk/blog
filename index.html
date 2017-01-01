@@ -225,6 +225,9 @@
 	  </p>
 	  </li>
 	  <li><p>Running for 3 minutes with a random chance of mutation to score and parameters.</p></li>
+	  
+	  <li>Store state of a generation for future evolution. We store the state and mutations as edn: <a href="https://gist.githubusercontent.com/josephwilk/410f68a857f81e8073815999bf1a4b4f/raw/78319023141b18dfe90ab1183ecc13b30c4def33/1470683054969.edn">Example state for one generation</a></p></li>
+	  
 	  <li><p>Each generation scored based on number of Shazam matches (scraped from Notification alerts on OS X).</p></li>
 	  <li><p>Each generation scored by popularity of artists matched (manually 😐).</p></li>
 	  </ol>
@@ -235,7 +238,6 @@
 		Soundflower output device ->🔈 Shazam Desktop.</p>
 	
 
-	  <p>For every generation we store the state and mutations (edn) for reference and for guiding future generations: <a href="https://gist.githubusercontent.com/josephwilk/410f68a857f81e8073815999bf1a4b4f/raw/78319023141b18dfe90ab1183ecc13b30c4def33/1470683054969.edn">Example state for one generation</a></p>
 
 	  <h3>Source code</h3>
 
