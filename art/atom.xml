@@ -113,9 +113,8 @@
 
 	  <h2>Machines listening with ambient background noise</h2>
 
-	  <p>The previous examples were identified by Shazam, which focuses on operating in noisy environments and identifying a sound as quickly as possible. Also probably erring on the side of returning any result if possible as that might equal a sale.</p>
-
-	  <p>This tolerance makes it very easy to get Shazam to mis-match audio to songs.</p>
+	  <p>While I experimented with lots of different services the above examples where most successfull when using Shazam for identification. This focuses on operating in noisy environments and identifying a sound as quickly as possible. Also probably erring on the side of returning any result if possible as that might equal a sale. This tolerance makes it very easy to get Shazam to mis-match audio to songs</p>
+	 
 
 	  <p>Shazam has a <a href="https://www.shazam.com/">desktop app</a> which will run detection on audio for 8 hours continuously. So over that time we generate a large set of audio and pick the winners from each generation.</p>
 
