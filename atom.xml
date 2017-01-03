@@ -18,8 +18,7 @@
     <link href="http://blog.josephwilk.net/art/audio-fingerprint-smudges.html"/>
     <updated>2016-12-31T10:12:00+01:00</updated>
     <id>http://blog.josephwilk.net/art/audio-fingerprint-smudges</id>
-    <content type="html"><![CDATA[<p>Procedurally generating music, scoring generations based on an audio service (like SoundCloud) identifying it as an existing song/artist. The more famous the track/artist the better.</p>
-
+    <content type="html"><![CDATA[<p>Procedurally generating music, scoring generations based on an audio service (like SoundCloud) identifying it as an existing song/artist. The more famous the track&#47;artist the better.</p>
 
 	  <p>Machines identifying audio tend to:</p>
 
