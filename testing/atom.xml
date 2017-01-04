@@ -2,9 +2,9 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: testing | Joseph Wilk]]></title>
-  <link href="http://blog.josephwilk.net//testing/atom.xml" rel="self"/>
+  <link href="http://blog.josephwilk.net/testing/atom.xml" rel="self"/>
   <link href="http://blog.josephwilk.net/"/>
-  <updated>2017-01-04T11:45:51+00:00</updated>
+  <updated>2017-01-04T11:53:02+00:00</updated>
   <id>http://blog.josephwilk.net/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -46,7 +46,7 @@
 
 <h2>Slides</h2>
 
-<script async class="speakerdeck-embed" data-id="4e7b46a413614c003f000dc9" data-ratio="1.33333333333333" src="http://blog.josephwilk.net//speakerdeck.com/assets/embed.js"></script>
+<script async class="speakerdeck-embed" data-id="4e7b46a413614c003f000dc9" data-ratio="1.33333333333333" src="http://blog.josephwilk.net/speakerdeck.com/assets/embed.js"></script>
 
 
 <h2>Further Resources</h2>

@@ -2,9 +2,9 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: ruby | Joseph Wilk]]></title>
-  <link href="http://blog.josephwilk.net//ruby/atom.xml" rel="self"/>
+  <link href="http://blog.josephwilk.net/ruby/atom.xml" rel="self"/>
   <link href="http://blog.josephwilk.net/"/>
-  <updated>2017-01-04T11:45:51+00:00</updated>
+  <updated>2017-01-04T11:53:02+00:00</updated>
   <id>http://blog.josephwilk.net/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -502,7 +502,7 @@ Checkout this great paper on the effectiveness of different functions: <a href="
     <id>http://blog.josephwilk.net/ruby/rocket-fuelled-cucumbers</id>
     <content type="html"><![CDATA[<p>Here are the slides from my talk at <a href="http://en.oreilly.com/rails2010/public/schedule/detail/14404">Railsconf 2010 on Rocket Fuelled Cucumbers</a>.</p>
 
-<script async class="speakerdeck-embed" data-id="4e7b470857252f003f000e61" data-ratio="1.33333333333333" src="http://blog.josephwilk.net//speakerdeck.com/assets/embed.js"></script>
+<script async class="speakerdeck-embed" data-id="4e7b470857252f003f000e61" data-ratio="1.33333333333333" src="http://blog.josephwilk.net/speakerdeck.com/assets/embed.js"></script>
 
 
 <p>This talk looked at a number of issues in scaling Cucumber tests. I&rsquo;ve also been speaking about this at <a href="http://frozenrails.eu/">Frozen Rails</a> and The <a href="http://scottishrubyconference.com">Scottish Ruby conference</a>.</p>
