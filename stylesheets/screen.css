@@ -849,6 +849,11 @@ font-size: 2.0em;
 font-style: italic;
 line-height: 1.3em
 }
+
+article img .emoji{
+  border: 0.0;
+}
+
 article img,article video,article .flash-video {
 -webkit-border-radius: 0.3em;
 -moz-border-radius: 0.3em;
