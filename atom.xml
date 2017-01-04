@@ -4,7 +4,7 @@
   <title><![CDATA[Joseph Wilk]]></title>
   <link href="http://blog.josephwilk.net/atom.xml" rel="self"/>
   <link href="http://blog.josephwilk.net/"/>
-  <updated>2017-01-04T11:53:02+00:00</updated>
+  <updated>2017-01-04T12:16:33+00:00</updated>
   <id>http://blog.josephwilk.net/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -261,7 +261,7 @@ The various properties of the audio units are selected randomly.</li>
 <li>Store state of a generation for future evolution. We store the state and mutations as edn: <a href="https://gist.githubusercontent.com/josephwilk/410f68a857f81e8073815999bf1a4b4f/raw/78319023141b18dfe90ab1183ecc13b30c4def33/1470683054969.edn">Example state for one generation</a></p></li>
 
 <li><p>Each generation scored based on number of Shazam matches (scraped from Notification alerts on OS X).</p></li>
-<li><p>Each generation scored by popularity of artists matched (manually 😐).</p></li>
+<li><p>Each generation scored by popularity of artists matched (manually <img src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f62c.png" width="25" alt="grimace" class="emoji">).</p></li>
 </ol>
 
 
@@ -2742,7 +2742,7 @@ it has no pretensions whatever to originate anything</p></blockquote>
 
 <p>My Strangeloop talk: Creative Machines &ndash; <a href="http://www.infoq.com/presentations/ai-machine-creativity">http://www.infoq.com/presentations/ai-machine-creativity</a></p>
 
-<p>Slides: <script async class="speakerdeck-embed" data-id="9b2acfa020760131db422ebaf23009b5" data-ratio="1.33333333333333" src="http://blog.josephwilk.net/speakerdeck.com/assets/embed.js"></script></p>
+<p>Slides: <script async class="speakerdeck-embed" data-id="9b2acfa020760131db422ebaf23009b5" data-ratio="1.33333333333333" src="http://blog.josephwilk.net//speakerdeck.com/assets/embed.js"></script></p>
 
 <p>Full source code: <a href="https://github.com/josephwilk/musical-creativity">https://github.com/josephwilk/musical-creativity</a></p>
 
@@ -5984,7 +5984,7 @@ Checkout this great paper on the effectiveness of different functions: <a href="
 
 <h2>Slides</h2>
 
-<script async class="speakerdeck-embed" data-id="4ff1e7144b8be00184011461" data-ratio="1.33333333333333" src="http://blog.josephwilk.net/speakerdeck.com/assets/embed.js"></script>
+<script async class="speakerdeck-embed" data-id="4ff1e7144b8be00184011461" data-ratio="1.33333333333333" src="http://blog.josephwilk.net//speakerdeck.com/assets/embed.js"></script>
 
 
 <h2>Further Reading</h2>
