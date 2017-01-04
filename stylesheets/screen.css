@@ -852,6 +852,7 @@ line-height: 1.3em
 
 .emoji {
   border: none;
+  box-shadow: none;
 }
 
 article img,article video,article .flash-video {
