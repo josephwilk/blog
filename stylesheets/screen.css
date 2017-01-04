@@ -850,8 +850,8 @@ font-style: italic;
 line-height: 1.3em
 }
 
-article img .emoji{
-  border: 0.0;
+.emoji {
+  border: none;
 }
 
 article img,article video,article .flash-video {
