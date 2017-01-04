@@ -19,7 +19,7 @@ ASCII animation requires manipulating text at a sufficient speed that it &hellip
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://josephwilk.github.io/art/emacs-animation.html">
+  <link rel="canonical" href="http://blog.josephwilk.net/art/emacs-animation.html">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Joseph Wilk" type="application/atom+xml">
@@ -63,7 +63,8 @@ ASCII animation requires manipulating text at a sufficient speed that it &hellip
   <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
   
 </ul>
-    
+  
+  
 <ul class="main-navigation">
  <li><a href="/">Home</a></li>
  <li><a href="/about">About</a></li>
@@ -96,7 +97,7 @@ ASCII animation requires manipulating text at a sufficient speed that it &hellip
   
 
 
-<time datetime="2015-10-02T15:58:12+01:00" pubdate data-updated="true">Oct 2<span>nd</span>, 2015</time>
+<time datetime="2015-10-02T15:58:00+01:00" pubdate data-updated="true">Oct 2<span>nd</span>, 2015</time>
         
       </p>
     
@@ -106,32 +107,70 @@ ASCII animation requires manipulating text at a sufficient speed that it &hellip
 <div class="entry-content"><p>Emacs is designed for fast, highly customisable manipulation of text.
 ASCII animation requires manipulating text at a sufficient speed that it appears animated. Emacs is also used by a number of performers to live code musical &amp; visual performances (and many other things). Where the audience can see the code in emacs and hear it.</p>
 
+
+
+
 <p><img src="/images/live-coding-emacs.png" alt="Live Coding with Emacs" /></p>
+
+
+
 
 <p>In my live coding performances as <a href="http://www.repl-electric.com">Repl Electric</a> I&rsquo;ve used emacs animations to  augment emacs with more feedback for the performer and a chance to destroy the order and structure the programmer has spent the entire performance building. Reminding us that we are looking at thoughts expressed through code that seem magical but are ultimately nothing more than text.</p>
 
+
+
+
 <p>Maybe something akin to the creation and destruction of Sand Mandalas.</p>
+
+
+
 
 <p><img src="/images/sandmandala.jpg" alt="Sand Mandala" /></p>
 
+
+
+
 <h2>Framework for Emacs Animation</h2>
+
+
+
 
 <p>Zone Mode is an Emacs plugin which provides a framework for screensaver like animations.</p>
 
+
+
+
 <p><a href="http://www.emacswiki.org/emacs/ZoneMode">http://www.emacswiki.org/emacs/ZoneMode</a></p>
 
+
+
+
 <p>Importantly it allows us to turn on an animation using our current code buffer as input and to terminate the animation, returning to the original code on a key press. So we can safely mangle the text knowing we can also return to safety. Well so far I&rsquo;ve always found it to be safe but there is a small risk as mentioned in the zoning warning:</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='lisp'><span class='line'><span class="p">(</span><span class="nv">message</span> <span class="s">&quot;...here&#39;s hoping we didn&#39;t hose your buffer!&quot;</span><span class="p">)</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>A nice property of taking our buffer as input is we are never quite sure what text will be there and hence the properties of the animation.</p>
+
+
+
 
 <h3>Example: Uppercase all letters</h3>
 
+
+
+
 <p>A simple function that finds non-whitespace in the buffer and tries to uppercase the char. It knows nothing about the zoning framework, its just a plain old function that operates on the active buffer.</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -180,14 +219,27 @@ ASCII animation requires manipulating text at a sufficient speed that it appears
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>The animation in all its glory:</p>
+
+
+
 
 <iframe src="https://player.vimeo.com/video/141312958" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 
 
+
+
 <h3>Zoning Setup</h3>
 
+
+
+
 <p>We can override all other zoning programs and just specify our zone-fn. When we activate zoning our animation will be run.</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -198,11 +250,22 @@ ASCII animation requires manipulating text at a sufficient speed that it appears
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <h3>Zoning Examples:</h3>
+
+
+
 
 <p>Zoning mode comes with lots of example animations that are good starting points:</p>
 
+
+
+
 <p><a href="http://www.opensource.apple.com/source/emacs/emacs-51/emacs/lisp/play/zone.el">http://www.opensource.apple.com/source/emacs/emacs-51/emacs/lisp/play/zone.el</a></p>
+
+
+
 
 <ul>
 <li>zone-pgm-jitter</li>
@@ -223,20 +286,36 @@ ASCII animation requires manipulating text at a sufficient speed that it appears
 </ul>
 
 
+
+
 <h2>Open Sound Control Protocol Based animation</h2>
+
+
+
 
 <p>OSC is a handy protocol for sending data between networked devices using url like endpoints.
 Emacs has a plugin to run an OSC server (<a href="http://delysid.org/emacs/osc.html">http://delysid.org/emacs/osc.html</a>).
 Hence if we have some kind of beat signal we could send a message to Emacs and in turn it could render changes based on our musics timing.</p>
 
+
+
+
 <p>With my Overtone setup for Repl-Electric I have the following flow of OSC messages:</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='lisp'><span class='line'><span class="nv">[Supercollider]</span> <span class="nv">-&gt;</span> <span class="nv">OSC</span> <span class="nv">-&gt;</span> <span class="nv">[Clojure]</span> <span class="nv">-&gt;</span> <span class="nv">OSC</span> <span class="nv">-&gt;</span> <span class="nv">[Emacs]</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>Within Emacs setup an OSC server and define two call backs which change the color of the window face number</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -321,7 +400,12 @@ Hence if we have some kind of beat signal we could send a message to Emacs and i
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>In Overtone/Clojure the sending signal:</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -330,21 +414,47 @@ Hence if we have some kind of beat signal we could send a message to Emacs and i
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>Heres a little demo with the brackets and window number changing colour based on the Overtone beat.</p>
+
+
+
 
 <p><img src="/images/brackets.gif" alt="Emacs rendering to the beat" /></p>
 
+
+
+
 <h3>Synchronisation</h3>
+
+
+
 
 <p>Given some small local lag we now have a timing signal which is threaded through all our tools. <a href="http://supercollider.github.io/">Supercollider</a>, <a href="http://overtone.github.io/">Overtone</a> and Emacs.</p>
 
+
+
+
 <p>Which means our emacs animations can start to change to the beat of the music&hellip;</p>
+
+
+
 
 <h2>Sound in ASCII</h2>
 
+
+
+
 <p>Now that we have ways to animate and to connect audio data with emacs we can go a little further (way too far) and start to visualise the data about our sound in ASCII.</p>
 
+
+
+
 <p>From Overtone or SuperCollider we can create a synth which tracks the peak and power of an audio signal. It sends us messages back with the data which we then forward on as OSC messages to Emacs.</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -393,7 +503,12 @@ Hence if we have some kind of beat signal we could send a message to Emacs and i
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>And in our emacs OSC server:</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -421,25 +536,53 @@ Hence if we have some kind of beat signal we could send a message to Emacs and i
 <iframe src="https://player.vimeo.com/video/141159277" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 
 
+
+
 <h2>Repl Electric Emacs animations</h2>
+
+
+
 
 <p>All my Emacs animations are used to conclude the performance.
 Heres lies the source code, some screenshots and tricks &amp; tips that made the animations possible.</p>
 
+
+
+
 <p>Here&rsquo;s a demo of all the Repl Electric animations discussed in action:</p>
+
+
+
 
 <iframe src="https://player.vimeo.com/video/141310772" width="500" height="375" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 
 
+
+
 <h3>End of Buffer</h3>
+
+
+
 
 <p><a href="https://github.com/repl-electric/view-pane/blob/master/animations/end-of-buffer.el">https://github.com/repl-electric/view-pane/blob/master/animations/end-of-buffer.el</a></p>
 
+
+
+
 <p><img src="/images/endofbuffer01.png"/ alt="end-of-buffer-01"><img src="/images/endofbuffer02.png" alt="end-of-buffer-02"/><img src="/images/endofbuffer03.png" alt="end-of-buffer-03"/></p>
+
+
+
 
 <p>In this animations the text gets slowly broken up with white spaces and then like the wind, blows the characters away. Sometimes words are ripped apart as they blow in the wind (if we get lucky).</p>
 
+
+
+
 <p>Two main phases:</p>
+
+
+
 
 <ul>
 <li><p>Injection of spaces.
@@ -449,9 +592,17 @@ A Regex matches whitespace and replaces it with a randomly increasing amount of 
 </ul>
 
 
+
+
 <p>If we move the text fast enough soft word wrapping means the text appears to re-enter from the left side of the screen and eventually disappear out of the buffer. Without soft wrapping we get a horrible jitter as emacs moves back and forth between left and right side of the buffer.</p>
 
+
+
+
 <p>A couple of other tricks/tactics used:</p>
+
+
+
 
 <ul>
 <li>Continually incrementing integer. Useful for injecting movement or using sin/cos fn with a continuous value.</li>
@@ -459,31 +610,70 @@ A Regex matches whitespace and replaces it with a randomly increasing amount of 
 </ul>
 
 
+
+
 <h3>The Stars</h3>
+
+
+
 
 <p><a href="https://github.com/repl-electric/view-pane/blob/master/animations/the-stars.el">https://github.com/repl-electric/view-pane/blob/master/animations/the-stars.el</a></p>
 
+
+
+
 <p><img src="/images/thestars01.png"/></p>
+
+
+
 
 <p>This was my first animation and was based heavily on <code>zone-pgm-drip-fretfully</code>.</p>
 
+
+
+
 <p>It randomly picks a single character and moves it down the screen until it hits another letter or exits the screen.</p>
+
+
+
 
 <p>When running Emacs + Overtone + OpenGL, Emacs starts to slow down so part of the challenge was ensuring the animation ran as fast as possible.</p>
 
+
+
+
 <p>A nice property of this is that as the OpenGL shaders shutdown, the speed of the animation increases and the code destroys itself more quickly.</p>
+
+
+
 
 <h3>Waves</h3>
 
+
+
+
 <p><a href="https://github.com/repl-electric/view-pane/blob/master/animations/waves.el">https://github.com/repl-electric/view-pane/blob/master/animations/waves.el</a></p>
+
+
+
 
 <p><img src="/images/waves01.png"/><img src="/images/waves02.png"/></p>
 
+
+
+
 <p>This animations attempts to simulate the effect of waves using line wrapping and mixing deletions with insertions of different sizes to create lines that seem to move at different speeds.</p>
+
+
+
 
 <h2>Breaking Tools</h2>
 
+
+
+
 <p>While it may seem silly to bend Emacs to do things it was never intended to do, it&rsquo;s an important part of discovering for yourself how you want your tools to work. Not just doing what you are expected but breaking them apart and discovering for yourself how you want to use them.</p>
+
 </div>
 
 
@@ -506,7 +696,7 @@ A Regex matches whitespace and replaces it with a randomly increasing amount of 
   
 
 
-<time datetime="2015-10-02T15:58:12+01:00" pubdate data-updated="true">Oct 2<span>nd</span>, 2015</time>
+<time datetime="2015-10-02T15:58:00+01:00" pubdate data-updated="true">Oct 2<span>nd</span>, 2015</time>
       
 
 <span class="categories">
@@ -520,7 +710,7 @@ A Regex matches whitespace and replaces it with a randomly increasing amount of 
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://josephwilk.github.io/art/emacs-animation.html" data-via="josephwilk" data-counturl="http://josephwilk.github.io/art/emacs-animation.html" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.josephwilk.net/art/emacs-animation.html" data-via="josephwilk" data-counturl="http://blog.josephwilk.net/art/emacs-animation.html" >Tweet</a>
   
   
   <div class="g-plusone" data-size="small"></div>
@@ -553,7 +743,7 @@ A Regex matches whitespace and replaces it with a randomly increasing amount of 
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
-
+    
       <li class="post">
         <a href="/art/audio-fingerprint-smudges.html">Audio Fingerprint Smudges</a>
       </li>
@@ -592,10 +782,6 @@ A Regex matches whitespace and replaces it with a randomly increasing amount of 
     
       <li class="post">
         <a href="/clojure/creating-instruments-with-overtone.html">Creating sampled instruments with Overtone</a>
-      </li>
-    
-      <li class="post">
-        <a href="/elixir/sets-in-elixir.html">Sets in Elixir</a>
       </li>
     
   </ul>
@@ -653,8 +839,8 @@ A Regex matches whitespace and replaces it with a randomly increasing amount of 
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://josephwilk.github.io/art/emacs-animation.html';
-        var disqus_url = 'http://josephwilk.github.io/art/emacs-animation.html';
+        var disqus_identifier = 'http://blog.josephwilk.net/art/emacs-animation.html';
+        var disqus_url = 'http://blog.josephwilk.net/art/emacs-animation.html';
         var disqus_script = 'embed.js';
       
     (function () {

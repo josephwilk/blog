@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: training | Joseph Wilk]]></title>
-  <link href="http://josephwilk.github.io//training/atom.xml" rel="self"/>
-  <link href="http://josephwilk.github.io/"/>
-  <updated>2016-01-13T21:21:48+00:00</updated>
-  <id>http://josephwilk.github.io/</id>
+  <link href="http://blog.josephwilk.net//training/atom.xml" rel="self"/>
+  <link href="http://blog.josephwilk.net/"/>
+  <updated>2017-01-04T11:45:51+00:00</updated>
+  <id>http://blog.josephwilk.net/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
     <email><![CDATA[joe@josephwilk.net]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[The Art of Cucumber London Workshop]]></title>
-    <link href="http://josephwilk.github.io/training/the-art-of-cucumber-london-workshop.html"/>
+    <link href="http://blog.josephwilk.net/training/the-art-of-cucumber-london-workshop.html"/>
     <updated>2011-04-26T11:21:13+01:00</updated>
-    <id>http://josephwilk.github.io/training/the-art-of-cucumber-london-workshop</id>
+    <id>http://blog.josephwilk.net/training/the-art-of-cucumber-london-workshop</id>
     <content type="html"><![CDATA[<p><a href="/images/blog/2011/04/1588795129-3.png"><img src="/images/blog/2011/04/1588795129-3.png" alt="" /></a>I&rsquo;ll be hosting a &frac12; workshop &ldquo;The Art of Cucumber&rdquo; at Skillsmatters in London. If you are interested in learning more about Cucumber, understanding how Cucumber can fit in software development and patterns for writing healthy Cukes this workshop is for you.</p>
 
 <p>The workshop will also give you a sneak peek into my talk at Agile2011 (Salt Lake City)  and Spa2011 (London) without the big conference ticket price.</p>

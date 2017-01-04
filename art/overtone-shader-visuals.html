@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://josephwilk.github.io/art/overtone-shader-visuals.html">
+  <link rel="canonical" href="http://blog.josephwilk.net/art/overtone-shader-visuals.html">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Joseph Wilk" type="application/atom+xml">
@@ -63,7 +63,6 @@
   
 </ul>
   
-
   
 <ul class="main-navigation">
  <li><a href="/">Home</a></li>
@@ -97,7 +96,7 @@
   
 
 
-<time datetime="2016-01-08T14:58:12+00:00" pubdate data-updated="true">Jan 8<span>th</span>, 2016</time>
+<time datetime="2016-01-08T14:58:00+00:00" pubdate data-updated="true">Jan 8<span>th</span>, 2016</time>
         
       </p>
     
@@ -106,22 +105,45 @@
 
 <div class="entry-content"><p>Exploring techniques for creating live coded performances with Overtone and <a href="https://www.opengl.org/wiki/Fragment_Shader">OpenGL Fragment Shaders</a>. Much learnt from my work performing as <a href="https://vimeo.com/replelectric">Repl Electric</a>. All my shader source code for these performances is open: <a href="https://github.com/repl-electric/cassiopeia/tree/master/resources/shaders">https://github.com/repl-electric/cassiopeia/tree/master/resources/shaders</a></p>
 
+
+
+
 <p><img src="/images/end-of-buffer.png" alt="shaders"/></p>
+
+
+
 
 <p>To bring OpenGl to Clojure I use <a href="https://github.com/overtone/shadertone">Shadertone</a> written by <a href="https://github.com/rogerallen">rogerallen</a>. This utilises LWJGL (Java Light Weight Java Game Library <a href="https://www.lwjgl.org">https://www.lwjgl.org</a>).</p>
 
+
+
+
 <h3>The Bridge between Clojure and Shaders</h3>
+
+
+
 
 <p>A vital feature of Shadertone is a map between Clojure atoms and shader Uniforms. What is a shader Uniform? Well think of it as a read-only global variable in your shader. A Clojure watcher ensures any updates to your Clojure atom persist into your Uniform. A little clunky but all uniforms start with the letter <code>i</code>.</p>
 
+
+
+
 <p>The shader:</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">uniform</span> <span class="kt">float</span> <span class="n">iExample</span><span class="p">;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>And in Clojure</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -138,16 +160,33 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <h2>Live editing shaders</h2>
+
+
+
 
 <p>When a shader file is edited Shadertone is watching the file (using <a href="https://github.com/ibdknox/watchtower">watchtower</a>) and will reload/recompile the changed file. This results in a slight freeze as the new code is run (This might be down to my graphics card).
 Hence most of the time I prefer alternatives to live editing the shader to create smoother transitions.</p>
 
+
+
+
 <h2>Injecting movement</h2>
+
+
+
 
 <p>To make static images move we need a continuously changing value.</p>
 
+
+
+
 <p>Shadertone gives us <code>iGlobalTime</code> using the number of seconds since the shader was started:</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -164,14 +203,28 @@ Hence most of the time I prefer alternatives to live editing the shader to creat
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>Putting a continuously changing value through a function like sin/cos is the
 bread and butter of creating animations with shaders.</p>
 
+
+
+
 <h2>Randomness</h2>
+
+
+
 
 <p>We often need a cheap and fast way to generate random floats in Shaders. Without persistent state and preservation of a seed it can be difficult. One solution is to use a noise image and the current pixel coordinates as an index into the image for a  float value.</p>
 
+
+
+
 <p>Shadertone supports loading custom textures into your shaders:</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -180,11 +233,22 @@ bread and butter of creating animations with shaders.</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>The noise texture:</p>
+
+
+
 
 <p><img src="http://raw.githubusercontent.com/josephwilk/shaderview/master/bin/data/textures/tex10.png" /></p>
 
+
+
+
 <p>And finally the shader:</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -195,9 +259,17 @@ bread and butter of creating animations with shaders.</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <h2>Composing visual effects</h2>
 
+
+
+
 <p>I attach a weight to each function or visual phase of the shader. Through this we can select which visual effect is visible or combine multiple effects. Its a bit messy, since I have all my functions in a single shader file. I&rsquo;ve not explored including of external files with shaders.</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -236,7 +308,12 @@ bread and butter of creating animations with shaders.</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>And within Clojure:</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -253,11 +330,22 @@ bread and butter of creating animations with shaders.</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <h2>Synchronisation</h2>
+
+
+
 
 <p>Shadertone uses the seconds since start (<code>iGlobalTime</code>) while Overtone via Supercollider uses the soundcard&rsquo;s clock. Hence there is no guarantee these two sources will be in sync.</p>
 
+
+
+
 <p>Replacing iGlobalTime is the only option. We create a special synth called <code>data-probes</code> which sole function is to transfer data from the Supercollider world to the Clojure world. Overtone provides a Supercollider to Clojure binding called a <code>tap</code>. We add a tap into our Overtone synth which is polling our global timing signal (this powers all synths and is how we co-ordinate everything).</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -284,21 +372,40 @@ bread and butter of creating animations with shaders.</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>Using our <code>iGlobalBeatCount</code> in our shader now means anything requiring a continuously increasing value flows to our beat.</p>
+
+
+
 
 <h2>Shaders &amp; global mutable state</h2>
 
+
+
+
 <p>Persistent mutable state between executions is not possible in OpenGL Shaders. Uniforms are read-only.</p>
+
+
+
 
 <p>Lets look at an example. On a drum hit I want the color of a visual to change and <em>persist</em> until the next drum hit.
 The drum signal is 1 for a hit 0 for silence:</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">[</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">]</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>The current value based on the global clock is passed into the Shader as the iBeat Uniform.</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -321,7 +428,12 @@ The drum signal is 1 for a hit 0 for silence:</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>Will return:</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -336,7 +448,12 @@ The drum signal is 1 for a hit 0 for silence:</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>What we were after is actually:</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -351,9 +468,17 @@ The drum signal is 1 for a hit 0 for silence:</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>My solution is to move to Clojure where mutable state using atoms is simple.</p>
 
+
+
+
 <p>Our timing is guided by Supercollider and a global clock. The value of our kick buffer at anyone time is only known inside the synth and hence inside Supercollider. But if we want to have mutable state we need access to this value in Clojure. So we create a custom synth that taps the value of the kick buffer based on the global clock signal.</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -390,7 +515,12 @@ The drum signal is 1 for a hit 0 for silence:</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>Now in the Clojure world its simple to watch our tap atom and hence get alerted when it changes value. Overtone is dealing with the magic of updating the atom under the covers, the watcher is a nice implementation independent way of hooking into this. We now know the value of our kick buffer in Clojure. If we use another atom as our accumulator we can update it when the tap atom changes. Finally pushing this new accumulator to the Shader.</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -413,7 +543,12 @@ The drum signal is 1 for a hit 0 for silence:</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>Within the shader:</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -428,11 +563,22 @@ The drum signal is 1 for a hit 0 for silence:</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>Thats a lot of work, but I&rsquo;m very happy with the results in my <a href="https://vimeo.com/117516352">(end-of-buffer)</a> performance.</p>
+
+
+
 
 <h2>Buffer events</h2>
 
+
+
+
 <p>Writing to a buffer is a common way of live coding in Overtone. Its very useful to attach some visual effect based on the settings of a buffer.</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -443,10 +589,18 @@ The drum signal is 1 for a hit 0 for silence:</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>We could put a tap into the synth and grab the current note and pass this into the shader. As I&rsquo;ve mentioned taps are expensive and they are always on while we may not always be using them.
 This also gets more complicated when say we have 3 instances of the same synth running playing simultaneous to form a chord.</p>
 
+
+
+
 <p>An alternative is to invent an atom which is used as a signal on every buffer write.</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -463,7 +617,12 @@ This also gets more complicated when say we have 3 instances of the same synth r
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>And adding a watcher</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -492,13 +651,27 @@ This also gets more complicated when say we have 3 instances of the same synth r
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>I use this trick in (end-of-buffer) to use the bass note to control the level of distortion of the visuals (<a href="https://github.com/repl-electric/cassiopeia/blob/master/src/cassiopeia/destination/flatiron.clj#L84-L99">source</a>). Its wonderful to focus on the notes and feel the visuals following you automatically.</p>
+
+
+
 
 <h2>Midi notes to visuals</h2>
 
+
+
+
 <p>I often want to map a midi note to a visual effect. All my notes are mapped to buffers. Much like we did with the drums I can use a tap to get access to the current note being played in a buffer. Skipping over the details, when we have a midi note we send it as an float (to support crazy 42.333 like notes) to the shader via an atom.</p>
 
+
+
+
 <p>We then map it to a nice range value to effect visuals:</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -517,11 +690,22 @@ This also gets more complicated when say we have 3 instances of the same synth r
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>A cheap way to scale effects based on the height of the note.</p>
+
+
+
 
 <h2>Gradual transitions</h2>
 
+
+
+
 <p>Often I want a smooth fading it or out of a shader function. Say for example fading to black. Pretty simple, just fire a thread which sleeps and ticks an atom. The atom is fed into the Shader.</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -536,7 +720,12 @@ This also gets more complicated when say we have 3 instances of the same synth r
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>Since I use this a lot I created a helper fn in <a href="https://github.com/josephwilk/mud/blob/4866f9db8077f8d4244fdd94b42bc0fef0e69f40/src/mud/core.clj#L90">MUD</a>:</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -547,9 +736,17 @@ This also gets more complicated when say we have 3 instances of the same synth r
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <h2>Text</h2>
 
+
+
+
 <p>In end-of-buffer I spell the word Repl Electric out of floating lights. We are bound to only a few data structures with fragment Shaders. I used a simple 3x3 matrix mapping each part of a character. Then using this to decided the position of the lights.</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -604,13 +801,27 @@ This also gets more complicated when say we have 3 instances of the same synth r
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>And the visual.</p>
+
+
+
 
 <p><img src="/images/font-example.png" alt="Font example"/></p>
 
+
+
+
 <h2>Visuals effected by frequencies</h2>
 
+
+
+
 <p>Shadertone provides a 2x512 array with the frequency spectrum (FFT) and audio waveform data. It does this by loading the data into a 2D Texture. The audio data is taken from tapping the main Overtone audio bus.</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -619,9 +830,17 @@ This also gets more complicated when say we have 3 instances of the same synth r
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>It&rsquo;s always a challenge to utilise this without creating something jerky or causing motion sickness. Hence I tend to use the waveform or FFT as a distorter rather than a base for animations.</p>
 
+
+
+
 <p>It also helps to concentrate on specific ranges of frequencies of the waveform data to create a stronger connection between a synth and the visuals.</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -646,7 +865,12 @@ This also gets more complicated when say we have 3 instances of the same synth r
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>Here is an example where I use the audio waveform to distort the scale &amp; jaggedness of a series of circle shapes.</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -685,21 +909,45 @@ This also gets more complicated when say we have 3 instances of the same synth r
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>And the resulting visual:</p>
+
+
+
 
 <p><img src="/images/fft-example.png" alt="FFT example"/></p>
 
+
+
+
 <h2>Final thoughts on Live coding visuals</h2>
+
+
+
 
 <p>Through Clojure&rsquo;s binding of atoms with Fragment shaders we have the power to live code visuals and music. Though it comes at a cost of complexity having to wrap lots of functions in order to have powerfully connected visuals. Fragment shaders are extremely terse, and can be pushed to replicate many advanced effects <em>but</em> they are also performance intense, and often taking a non-shader route will be much more performant.</p>
 
+
+
+
 <h4>Stability</h4>
+
+
+
 
 <p>My knowledge of LWJGL is small, but crashes in the fragment shaders often occur leaving the JVM wedged. This has happened to me quite a lot practicing, but never in a performance. Its worth reflecting that something (be it fixable) leaves a risk of a freeze in a performance.</p>
 
+
+
+
 <h4>Combining State &amp; Shaders</h4>
 
+
+
+
 <p>I&rsquo;ve started to explore what a shader application might look like if it was a server and provided a state machine so the live coding language does have this complexity. In turn producing a freer and more spontaneous interaction. This project is <a href="https://github.com/josephwilk/shaderview">Shaderview</a> and steals all the good ideas of Shadertone while adding some new features like <a href="http://www.vertexshaderart.com">vertex shader art</a>. I&rsquo;ll be writing up more about Shaderview soon.</p>
+
 </div>
 
 
@@ -722,7 +970,7 @@ This also gets more complicated when say we have 3 instances of the same synth r
   
 
 
-<time datetime="2016-01-08T14:58:12+00:00" pubdate data-updated="true">Jan 8<span>th</span>, 2016</time>
+<time datetime="2016-01-08T14:58:00+00:00" pubdate data-updated="true">Jan 8<span>th</span>, 2016</time>
       
 
 <span class="categories">
@@ -736,7 +984,7 @@ This also gets more complicated when say we have 3 instances of the same synth r
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://josephwilk.github.io/art/overtone-shader-visuals.html" data-via="josephwilk" data-counturl="http://josephwilk.github.io/art/overtone-shader-visuals.html" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.josephwilk.net/art/overtone-shader-visuals.html" data-via="josephwilk" data-counturl="http://blog.josephwilk.net/art/overtone-shader-visuals.html" >Tweet</a>
   
   
   <div class="g-plusone" data-size="small"></div>
@@ -749,6 +997,8 @@ This also gets more complicated when say we have 3 instances of the same synth r
       
         <a class="basic-alignment left" href="/art/emacs-animation.html" title="Previous Post: Animations with Emacs">&laquo; Animations with Emacs</a>
       
+      
+        <a class="basic-alignment right" href="/art/audio-fingerprint-smudges.html" title="Next Post: Audio Fingerprint Smudges">Audio Fingerprint Smudges &raquo;</a>
       
     </p>
   </footer>
@@ -767,7 +1017,7 @@ This also gets more complicated when say we have 3 instances of the same synth r
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
-	  
+    
       <li class="post">
         <a href="/art/audio-fingerprint-smudges.html">Audio Fingerprint Smudges</a>
       </li>
@@ -806,10 +1056,6 @@ This also gets more complicated when say we have 3 instances of the same synth r
     
       <li class="post">
         <a href="/clojure/creating-instruments-with-overtone.html">Creating sampled instruments with Overtone</a>
-      </li>
-    
-      <li class="post">
-        <a href="/elixir/sets-in-elixir.html">Sets in Elixir</a>
       </li>
     
   </ul>
@@ -867,8 +1113,8 @@ This also gets more complicated when say we have 3 instances of the same synth r
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://josephwilk.github.io/art/overtone-shader-visuals.html';
-        var disqus_url = 'http://josephwilk.github.io/art/overtone-shader-visuals.html';
+        var disqus_identifier = 'http://blog.josephwilk.net/art/overtone-shader-visuals.html';
+        var disqus_url = 'http://blog.josephwilk.net/art/overtone-shader-visuals.html';
         var disqus_script = 'embed.js';
       
     (function () {

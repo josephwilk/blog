@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: ruby | Joseph Wilk]]></title>
-  <link href="http://josephwilk.github.io//ruby/atom.xml" rel="self"/>
-  <link href="http://josephwilk.github.io/"/>
-  <updated>2016-01-13T21:21:48+00:00</updated>
-  <id>http://josephwilk.github.io/</id>
+  <link href="http://blog.josephwilk.net//ruby/atom.xml" rel="self"/>
+  <link href="http://blog.josephwilk.net/"/>
+  <updated>2017-01-04T11:45:51+00:00</updated>
+  <id>http://blog.josephwilk.net/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
     <email><![CDATA[joe@josephwilk.net]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Recurrent neural networks in Ruby]]></title>
-    <link href="http://josephwilk.github.io/ruby/recurrent-neural-networks-in-ruby.html"/>
+    <link href="http://blog.josephwilk.net/ruby/recurrent-neural-networks-in-ruby.html"/>
     <updated>2012-10-29T14:00:30+00:00</updated>
-    <id>http://josephwilk.github.io/ruby/recurrent-neural-networks-in-ruby</id>
+    <id>http://blog.josephwilk.net/ruby/recurrent-neural-networks-in-ruby</id>
     <content type="html"><![CDATA[<p>We look at how neural networks work, what is different about a recurrent networks and a library which allows us to use recurrent networks in Ruby (<a href="https://github.com/josephwilk/tlearn-rb">tlearn-rb</a>).</p>
 
 <h2>What the heck is a Recurrent Network?</h2>
@@ -264,9 +264,9 @@ Checkout this great paper on the effectiveness of different functions: <a href="
   
   <entry>
     <title type="html"><![CDATA[Fake Execution]]></title>
-    <link href="http://josephwilk.github.io/ruby/fake-execution.html"/>
+    <link href="http://blog.josephwilk.net/ruby/fake-execution.html"/>
     <updated>2012-08-30T17:51:07+01:00</updated>
-    <id>http://josephwilk.github.io/ruby/fake-execution</id>
+    <id>http://blog.josephwilk.net/ruby/fake-execution</id>
     <content type="html"><![CDATA[<p>A little RubyGem for faking out execution in your tests and inspecting afterwards what was run.</p>
 
 <h2>Why FakeExecution?</h2>
@@ -362,9 +362,9 @@ Checkout this great paper on the effectiveness of different functions: <a href="
   
   <entry>
     <title type="html"><![CDATA[Limiting Red: Smarter Test Builds Through Metrics]]></title>
-    <link href="http://josephwilk.github.io/ruby/limiting-red-smarter-test-builds-through-metrics.html"/>
+    <link href="http://blog.josephwilk.net/ruby/limiting-red-smarter-test-builds-through-metrics.html"/>
     <updated>2010-08-15T03:28:31+01:00</updated>
-    <id>http://josephwilk.github.io/ruby/limiting-red-smarter-test-builds-through-metrics</id>
+    <id>http://blog.josephwilk.net/ruby/limiting-red-smarter-test-builds-through-metrics</id>
     <content type="html"><![CDATA[<h2>The Current State of the Art</h2>
 
 <p>In the Ruby world there is a wealth of metrics which can provide insight into our code. Looking at such things as:</p>
@@ -497,12 +497,12 @@ Checkout this great paper on the effectiveness of different functions: <a href="
   
   <entry>
     <title type="html"><![CDATA[Rocket Fuelled Cucumbers]]></title>
-    <link href="http://josephwilk.github.io/ruby/rocket-fuelled-cucumbers.html"/>
+    <link href="http://blog.josephwilk.net/ruby/rocket-fuelled-cucumbers.html"/>
     <updated>2010-06-06T22:03:43+01:00</updated>
-    <id>http://josephwilk.github.io/ruby/rocket-fuelled-cucumbers</id>
+    <id>http://blog.josephwilk.net/ruby/rocket-fuelled-cucumbers</id>
     <content type="html"><![CDATA[<p>Here are the slides from my talk at <a href="http://en.oreilly.com/rails2010/public/schedule/detail/14404">Railsconf 2010 on Rocket Fuelled Cucumbers</a>.</p>
 
-<script async class="speakerdeck-embed" data-id="4e7b470857252f003f000e61" data-ratio="1.33333333333333" src="http://josephwilk.github.io//speakerdeck.com/assets/embed.js"></script>
+<script async class="speakerdeck-embed" data-id="4e7b470857252f003f000e61" data-ratio="1.33333333333333" src="http://blog.josephwilk.net//speakerdeck.com/assets/embed.js"></script>
 
 
 <p>This talk looked at a number of issues in scaling Cucumber tests. I&rsquo;ve also been speaking about this at <a href="http://frozenrails.eu/">Frozen Rails</a> and The <a href="http://scottishrubyconference.com">Scottish Ruby conference</a>.</p>
@@ -519,9 +519,9 @@ Checkout this great paper on the effectiveness of different functions: <a href="
   
   <entry>
     <title type="html"><![CDATA[Testing Javascript with Cucumber in Javascript]]></title>
-    <link href="http://josephwilk.github.io/ruby/testing-javascript-with-cucumber-in-javascript.html"/>
+    <link href="http://blog.josephwilk.net/ruby/testing-javascript-with-cucumber-in-javascript.html"/>
     <updated>2010-05-22T09:55:42+01:00</updated>
-    <id>http://josephwilk.github.io/ruby/testing-javascript-with-cucumber-in-javascript</id>
+    <id>http://blog.josephwilk.net/ruby/testing-javascript-with-cucumber-in-javascript</id>
     <content type="html"><![CDATA[<p>I recently created an adapter in Cucumber which provides support for writing step definitions in Javascript. So as a Javascript programmer you can test your code with Cucumber without having to write any Ruby.</p>
 
 <p>It does this through TheRubyRacer (<a href="http://github.com/cowboyd/therubyracer">http://github.com/cowboyd/therubyracer</a> written by Charles Lowell) which provides Ruby bindings to V8 (<a href="http://code.google.com/p/v8/">http://code.google.com/p/v8/</a>).</p>

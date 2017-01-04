@@ -9,7 +9,7 @@
   <meta name="author" content="Joseph Wilk">
 
   
-  <meta name="description" content="Your Cucumber features are living documentation. The world is evolving around them and without exposure they tend to rot. Evolving language When &hellip;">
+  <meta name="description" content="I keep coming across story cards written like this: This is usually a tell tale sign that the why stack was not popped. The value (In order to ) has &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://josephwilk.github.io/page/4/index.html">
+  <link rel="canonical" href="http://blog.josephwilk.net/page/4/index.html">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Joseph Wilk" type="application/atom+xml">
@@ -63,7 +63,6 @@
   
 </ul>
   
-
   
 <ul class="main-navigation">
  <li><a href="/">Home</a></li>
@@ -78,6 +77,48 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/agile/story-smells-in-order-to-do-x-i-want-x.html">Story Smells: In Order to Do X I Want X</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-11-23T18:40:48+00:00" pubdate data-updated="true">Nov 23<span>rd</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I keep coming across story cards written like this:</p>
+
+<p><img src="/images/blog/2010/11/card.png" alt="" /></p>
+
+<p>This is usually a tell tale sign that the <a href="http://www.theregister.co.uk/2007/06/25/thoughtworks_req_manage/">why stack was not popped</a>. The value (<em>In order to <value></em>) has been written at the lowest possible level of abstraction, the same as the feature (<em>I want <feature></em>). The card does not tell us why this feature is being built.</p>
+
+<p>If you find yourself writing cards like this take it as a chance to find out a bit more about why you are adding this feature. Hopefully you will uncover a more meaningful value that you can write on the card or perhaps discover that you don&rsquo;t really need this feature after all.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1352,196 +1393,6 @@ my_js_project/features/my_feature.feature
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/ruby/pairwise-testing-with-cucumber.html">Pairwise Testing With Cucumber</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-01-09T17:59:21+00:00" pubdate data-updated="true">Jan 9<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Combinatorial testing is a difficult problem. Having to test a small number of inputs  can result in a combinatorial explosion of possible permutations. In <a href="http://cukes.info/">Cucumber</a> we see this problem in <a href="http://wiki.github.com/aslakhellesoy/cucumber/scenario-outlines">Scenario Outlines</a> where we can have a large number of rows for the Examples table.</p>
-
-<p>We want to reduce the combinations to a more manageable size while still providing effective fault detection.</p>
-
-<p>Pairwise testing provides one method of achieving this. However providing effective fault detection is dependent on the suitability of Pairwise to the data/system, it is not guaranteed.</p>
-
-<h2>What is Pairwise testing?</h2>
-
-<p>Pairwise testing (also called All-pairs testing or 2-way testing) is a way of generating a test suite which covers all input combinations of two and is therefore much smaller than exhaustive suites.</p>
-
-<p>To put this in perspective a system of 72 binary inputs with Pairwise testing would require 28 combinations. Exhaustive testing would require 37,778,931,862,957,161,709,568 combinations!</p>
-
-<p><strong>Sounds great, but how does the method preserve good defect detection?</strong></p>
-
-<p>Pairwise relies on a simple principle:</p>
-
-<blockquote><p><em>&ldquo;most faults are caused by interactions of at most two factors”</em>
-&ndash; <a href="http://www.argreenhouse.com/papers/gcp/AETGissre96.shtml">The Combinatorial Design Approach to Automatic Test Generation</a></p></blockquote>
-
-<p>Pairwise focuses on the minimal set of inputs (1 or 2 interactions) that cover the most likely causes of faults.</p>
-
-<p><strong>So whats the catch?</strong></p>
-
-<p>Pairwise does not guarantee coverage of all faults of at most two factors. It only provides coverage of faults reachable from the inputs and values you select when generating the Pairwise set. Also the general principle that faults are caused by at most two factors does not guarantee that your data sets faults will follow that distribution. And hence Pairwise testing might miss a proportion of faults.</p>
-
-<h2>Pairwise Cucumber example</h2>
-
-<p>Here is a scenario taken from a web based system which deals with sports events.</p>
-
-<pre><code>Scenario Outline: Visiting events with another events media
-  Given I have a &lt;event without media&gt;
-  And I have a &lt;media item&gt; attached to &lt;event with media&gt;
-  When I go to the &lt;media item&gt; page for the &lt;event without media&gt;
-  Then I should be redirected
-  And I should see the &lt;media item&gt; in the &lt;event with media&gt;
-  Examples:
-    |media item|event without media|event with an media|
-    ...
-</code></pre>
-
-<p>The permutations for the Examples table cells are:</p>
-
-<pre><code>media item: [Image, Video, Music]
-event with media: [Football, Basketball, Soccer]
-event without media: [Football, Basketball, Soccer]
-</code></pre>
-
-<p>There are a total of 27 possible permutations. So lets see what permutations Pairwise testing would suggest.</p>
-
-<p>To generate the combinations I used a Ruby based tool I&rsquo;ve written called <a href="http://wiki.github.com/josephwilk/pairwise">Pairwise</a> which uses the in-parameter-order Pairwise generation strategy (<a href="http://ranger.uta.edu/~ylei/paper/ipo-tse.pdf">http://ranger.uta.edu/~ylei/paper/ipo-tse.pd</a>).</p>
-
-<p>This tool outputs a table ready to be used in a Cucumber feature:</p>
-
-<pre><code> | media item | event without media | event with media |
- | Image      | Football            | Football         |
- | Image      | Basketball          | Basketball       |
- | Image      | Soccer              | Soccer           |
- | Video      | Football            | Soccer           |
- | Video      | Basketball          | Football         |
- | Video      | Soccer              | Basketball       |
- | Music      | Football            | Basketball       |
- | Music      | Basketball          | Soccer           |
- | Music      | Soccer              | Football         |
-</code></pre>
-
-<p>That&rsquo;s 11 permutations covering all possible input pairs.</p>
-
-<p>Giving the final Scenario:</p>
-
-<pre><code>Scenario Outline: Visiting events with another events media
-  Given I have a &lt;event without media&gt;
-  And I have a &lt;media item&gt; attached to &lt;event with media&gt;
-  When I go to the &lt;media item&gt; page for the &lt;event without media&gt;
-  Then I should be redirected
-  And I should see the &lt;media item&gt; in the &lt;event with media&gt;
-Examples:
-  | media item | event without media | event with media |
-  | Image      | Football            | Football         |
-  | Image      | Basketball          | Basketball       |
-  | Image      | Soccer              | Soccer           |
-  | Video      | Football            | Soccer           |
-  | Video      | Basketball          | Football         |
-  | Video      | Soccer              | Basketball       |
-  | Music      | Football            | Basketball       |
-  | Music      | Basketball          | Soccer           |
-  | Music      | Soccer              | Football         |
-</code></pre>
-
-<h2>Selecting the right values to test with</h2>
-
-<p>In Cucumber we encounter plain text steps which use high level language to hide low level details that are not important for the scenario. For example:</p>
-
-<pre><code>Given a default configuration
-</code></pre>
-
-<p>By abstracting and pushing the data out of the plain text we are also hiding the values from any Pairwise generation. It is therefore important to realise there will be sets of uncovered pairs and hence potential faults missed.</p>
-
-<p>In deciding what is exposed in the Scenario Outline (as columns in the Examples table) you are selecting what inputs your want to focus the Pairwise generation around. And in turn the input space you want to limit the search for faults to.</p>
-
-<h2>When Pairwise testing fails</h2>
-
-<p>Pairwise testing is not suitable for all data sets. With any technique that throws away data examples based on a pattern you loose some degree of resolution and you may misfit your data missing important faults.</p>
-
-<p>Here are some cases where Pairwise testing may not be effective.</p>
-
-<h3>You have probable combinations which you want to focus on.</h3>
-
-<p>If you have certain combinations of inputs that have far more commonality or importance you would want to focus your testing data around these. Pairwise testing ignores any probable importance.</p>
-
-<h3>You don’t know how the input variables interact</h3>
-
-<p>Pairwise testing assumes each input value carries the same significance on the outcome. If certain inputs have greater influence over the outcome you would want to focus your test data around these.</p>
-
-<h3>Your data requires higher order test combinations</h3>
-
-<p>Not all data sets follow the distribution of most faults being caused by at most 2 factors. You may have a larger number of faults outside the 2 parameter range. Using higher order test data combinations (Such as 3-wise, 4-wise etc) or completely different test methods may be required to reduce the risk of missing faults.</p>
-
-<p>The real difficulty here is knowing beforehand the distribution of faults.</p>
-
-<h3>You want a best practice</h3>
-
-<p>There are no testing &ldquo;best practices&rdquo; that you can simply &ldquo;follow&rdquo; in order to achieve success.</p>
-
-<p>To quote James Marcus Bach:</p>
-
-<p><em>&ldquo;blindly applying Pairwise testing to combinatorial testing problems may increase the risk of delivering faulty software.&rdquo;</em>
-&ndash; <a href="http://www.testingeducation.org/wtst5/PairwisePNSQC2004.pdf">http://www.testingeducation.org/wtst5/PairwisePNSQC2004.pdf</a></p>
-
-<h3>Your faults mean people are going to die</h3>
-
-<p>In realtime or safety critical systems any faults irrelevant of the number of interacting parameters wants to be detected.</p>
-
-<h2>Final words on Pairwise</h2>
-
-<p>Shortcuts to Combinatorial problems in testing carry their pitfalls. No matter how you reduce the input permutations you should spend time understanding your combinatorial data set. This is especially the case with Pairwise testing which does not consider the relationships the inputs have on the outputs. Its up to you to examine any interactions or strong influences in order to evaluate Pairwise&rsquo;s suitability. If Pairwise testing is used thoughtfully with due considerations to its limitations and pitfalls it can provide a powerful tool to testers and Cucumberists alike.</p>
-
-<h2>Pairwise tools</h2>
-
-<ul>
-<li><p>Ruby based tool which supports usage through Ruby or on the command line:
-<a href="http://wiki.github.com/josephwilk/pairwise">http://wiki.github.com/josephwilk/pairwise</a></p></li>
-<li><p>A free web-based tool from Testers Desk that provides generation of Pairwise data sets:
-<a href="http://www.testersdesk.com/TestersDesk/">http://www.testersdesk.com/TestersDesk/</a></p></li>
-</ul>
-
-
-<h2>Further Reading</h2>
-
-<ul>
-<li><p>Pairwise &ndash; <a href="http://www.pairwise.org/">http://www.pairwise.org/</a></p></li>
-<li><p>Combinatorial Testing &ndash; <a href="http://www.combinatorialtesting.com">http://www.combinatorialtesting.com/</a></p></li>
-<li><p>Pairwise Testing: A Best Practice That Isn’t &ndash; <a href="http://www.testingeducation.org/wtst5/PairwisePNSQC2004.pdf">http://www.testingeducation.org/wtst5/PairwisePNSQC2004.pdf</a></p></li>
-<li><p>A Test Generation Strategy for Pairwise Testing &ndash; [<a href="http://ranger.uta.edu/~ylei/paper/ipo-tse.pdf">http://ranger.uta.edu/~ylei/paper/ipo-tse.pdf</a>]</p></li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/5/">&larr; Older</a>
@@ -1557,6 +1408,10 @@ Examples:
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/art/audio-fingerprint-smudges.html">Audio Fingerprint Smudges</a>
+      </li>
     
       <li class="post">
         <a href="/art/overtone-shader-visuals.html">Visuals with Overtone and Shadertone</a>
@@ -1592,10 +1447,6 @@ Examples:
     
       <li class="post">
         <a href="/clojure/creating-instruments-with-overtone.html">Creating sampled instruments with Overtone</a>
-      </li>
-    
-      <li class="post">
-        <a href="/elixir/sets-in-elixir.html">Sets in Elixir</a>
       </li>
     
   </ul>

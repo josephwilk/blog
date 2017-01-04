@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: agile | Joseph Wilk]]></title>
-  <link href="http://josephwilk.github.io//agile/atom.xml" rel="self"/>
-  <link href="http://josephwilk.github.io/"/>
-  <updated>2016-01-13T21:21:48+00:00</updated>
-  <id>http://josephwilk.github.io/</id>
+  <link href="http://blog.josephwilk.net//agile/atom.xml" rel="self"/>
+  <link href="http://blog.josephwilk.net/"/>
+  <updated>2017-01-04T11:45:51+00:00</updated>
+  <id>http://blog.josephwilk.net/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
     <email><![CDATA[joe@josephwilk.net]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Story Smells: The Valueless Story]]></title>
-    <link href="http://josephwilk.github.io/agile/story-smells-the-valueless-story.html"/>
+    <link href="http://blog.josephwilk.net/agile/story-smells-the-valueless-story.html"/>
     <updated>2011-03-10T15:00:17+00:00</updated>
-    <id>http://josephwilk.github.io/agile/story-smells-the-valueless-story</id>
+    <id>http://blog.josephwilk.net/agile/story-smells-the-valueless-story</id>
     <content type="html"><![CDATA[<blockquote><p>&ldquo;Why bother discussing the value or writing it down for the stories, everybody already knows what it is&rdquo;</p></blockquote>
 
 <h2>Problem</h2>
@@ -113,9 +113,9 @@
   
   <entry>
     <title type="html"><![CDATA[Story smells: In order to do X I want X]]></title>
-    <link href="http://josephwilk.github.io/agile/story-smells-in-order-to-do-x-i-want-x.html"/>
+    <link href="http://blog.josephwilk.net/agile/story-smells-in-order-to-do-x-i-want-x.html"/>
     <updated>2010-11-23T18:40:48+00:00</updated>
-    <id>http://josephwilk.github.io/agile/story-smells-in-order-to-do-x-i-want-x</id>
+    <id>http://blog.josephwilk.net/agile/story-smells-in-order-to-do-x-i-want-x</id>
     <content type="html"><![CDATA[<p>I keep coming across story cards written like this:</p>
 
 <p><img src="/images/blog/2010/11/card.png" alt="" /></p>

@@ -9,7 +9,7 @@
   <meta name="author" content="Joseph Wilk">
 
   
-  <meta name="description" content="With Search BOSS (Build your Own Search Service) Yahoo has freed up a lot of the restrictions on their previous search service. Like removing the cap &hellip;">
+  <meta name="description" content="I&rsquo;ve had lots of requests for a Ruby version to follow up my Latent Semantic Analysis in Python article. So I&rsquo;ve rewritten the code and &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://josephwilk.github.io/page/6/index.html">
+  <link rel="canonical" href="http://blog.josephwilk.net/page/6/index.html">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Joseph Wilk" type="application/atom+xml">
@@ -63,7 +63,6 @@
   
 </ul>
   
-
   
 <ul class="main-navigation">
  <li><a href="/">Home</a></li>
@@ -78,6 +77,334 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/ruby/latent-semantic-analysis-in-ruby.html">Latent Semantic Analysis in Ruby</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-11-21T20:54:47+00:00" pubdate data-updated="true">Nov 21<span>st</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve had lots of requests for a Ruby version to follow up my <a href="http://blog.josephwilk.net/projects/latent-semantic-analysis-in-python.html">Latent Semantic Analysis  in Python</a> article. So I&rsquo;ve rewritten the code and article for Ruby. I wrote LSA from scratch this time and test driven so it has some subtle differences from the Python version.</p>
+
+<h2>What is LSA?</h2>
+
+<p>Latent Semantic Analysis (LSA) is a mathematical method that tries to bring out latent relationships within a collection of documents. Rather than looking at each document isolated from the others it looks at all the documents as a whole and the terms within them to identify relationships.</p>
+
+<p>An example of LSA:
+Using a search engine search for &ldquo;<em>ruby</em>&rdquo;.</p>
+
+<p>Documents are returned which do not contain the search term &ldquo;<em>ruby</em>&rdquo; but contains terms like &ldquo;<em>rails</em>&rdquo;.</p>
+
+<p>LSA has identified a latent relationship, &ldquo;<em>ruby</em>&rdquo; is semantically close to &ldquo;<em>rails</em>&rdquo;.</p>
+
+<h2>How does it work?</h2>
+
+<p>Given a set of word documents, each word in those documents represents a point in the semantic space. LSA uses a mathematical technique called <a href="http://en.wikipedia.org/wiki/Singular_value_decomposition">Singular value decomposition</a> to take the documents/words represented as a matrix and produce a reduced approximation of this matrix. In doing this it reduces the overall noise in the semantic space bringing words together. Hence after applying LSA some words share similar points in the semantic space, they are semantically similar.</p>
+
+<p>These groups of semantically similar words form concepts and those concepts in turn relate to documents.</p>
+
+<pre><code>Term a &lt;-----------&gt;
+Term b &lt;-----------&gt; Concept d &lt;---------&gt; Document e
+Term c &lt;-----------&gt;
+</code></pre>
+
+<h2>Background Reading on LSA</h2>
+
+<p>There are some very good papers which describe LSA in detail:</p>
+
+<ul>
+<li><p>An introduction to LSA: <a href="http://lsa.colorado.edu/papers/dp1.LSAintro.pdf">http://lsa.colorado.edu/papers/dp1.LSAintro.pdf</a></p></li>
+<li><p>Creating your own LSA space: <a href="http://www.andrew.cmu.edu/user/jquesada/pdf/bookSpacesRev1.pdf">http://www.andrew.cmu.edu/user/jquesada/pdf/bookSpacesRev1.pdf</a></p></li>
+<li><p>Latent Semantic analysis: <a href="http://en.wikipedia.org/wiki/Latent_semantic_indexing">http://en.wikipedia.org/wiki/Latent_semantic_indexing</a></p></li>
+</ul>
+
+
+<p>And on SVD</p>
+
+<ul>
+<li><p>SVD recommendation system in ruby: <a href="http://www.igvita.com/2007/01/15/svd-recommendation-system-in-ruby/">http://www.igvita.com/2007/01/15/svd-recommendation-system-in-ruby/</a></p></li>
+<li><p>MIT video lectures on SVD: <a href="http://ocw.mit.edu/OcwWeb/Mathematics/18-06Spring-2005/VideoLectures/index.htm">http://ocw.mit.edu/OcwWeb/Mathematics/18-06Spring-2005/VideoLectures/index.htm</a></p></li>
+</ul>
+
+
+<h2>LSA Algorithm</h2>
+
+<p>This is an implementation of LSA in Ruby (v1.8.7). I made use of the <a href="http://rubyforge.org/projects/linalg/">linalg</a> project which while not as mature as Python&rsquo;s <a href="http://www.scipy.org/">SciPy</a> it does the job. Installing linalg can be rather challenging as it relies on <a href="http://www.netlib.org/lapack/">LAPACK</a> which in turn relies on some Fortran code.</p>
+
+<h3>1 Create the term-document matrix</h3>
+
+<p>We take a set of documents and map them to a vector space matrix. Each column represents a document and each row represents a term.</p>
+
+<pre><code>         Document n  Document n+1
+term n    [   1           0 ]
+term n+1  [   0           1 ]
+</code></pre>
+
+<p>Read more about the <a href="http://en.wikipedia.org/wiki/Vector_space_model">Vector Space Model</a> at Wikipedia.</p>
+
+<p>We use the <a href="http://linalg.rubyforge.org/classes/Linalg/DMatrix.html">DMatrix</a> class from Linalg to represent our term-document matrix. This is like the Ruby standard library <a href="does%20provide%20http://www.ruby-doc.org/stdlib/libdoc/matrix/rdoc/classes/Matrix.html">Matrix</a> class but with some powerful matrix functions builtin.</p>
+
+<h3>2 tf-idf Transform</h3>
+
+<p>tf => Term frequency</p>
+
+<p>idf => Inverse document frequency.</p>
+
+<p>Apply the <a href="http://en.wikipedia.org/wiki/Tf-idf">tf-idf</a> transform to the term-document matrix. This generally tends to help improve results with LSA.</p>
+
+<p>Github source file: <a href="http://github.com/josephwilk/rsemantic/tree/master/lib/semantic/transform/tf_idf_transform.rb">tf_idf_transform.rb</a></p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>      <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">transform</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">number_of_documents</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">num_columns</span>
+</span><span class='line'>        <span class="vc">@@number_of_documents_with_term</span> <span class="o">=</span> <span class="o">[]</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">each_with_index</span> <span class="k">do</span> <span class="o">|</span><span class="n">document</span><span class="p">,</span> <span class="n">column_index</span><span class="o">|</span>
+</span><span class='line'>          <span class="n">document_term_total</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">rows</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span><span class="o">|</span><span class="n">word_sum</span><span class="p">,</span> <span class="n">word_count</span><span class="o">|</span> <span class="n">word_sum</span> <span class="o">+</span> <span class="n">word_count</span><span class="o">.</span><span class="n">to_f</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>          <span class="n">document</span><span class="o">.</span><span class="n">rows</span><span class="o">.</span><span class="n">each_with_index</span> <span class="k">do</span> <span class="o">|</span><span class="n">term_weight</span><span class="p">,</span> <span class="n">row_index</span><span class="o">|</span>
+</span><span class='line'>            <span class="k">unless</span> <span class="n">term_weight</span><span class="o">.</span><span class="n">to_f</span> <span class="o">==</span> <span class="mi">0</span><span class="o">.</span><span class="mi">0</span>
+</span><span class='line'>              <span class="n">matrix</span><span class="o">[</span><span class="n">row_index</span><span class="p">,</span> <span class="n">column_index</span><span class="o">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">term_weight</span> <span class="o">/</span> <span class="n">document_term_total</span><span class="p">)</span> <span class="o">*</span>
+</span><span class='line'>              <span class="no">Math</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="n">number_of_documents</span> <span class="o">/</span> <span class="n">number_of_documents_with_term</span><span class="p">(</span><span class="n">row_index</span><span class="p">,</span> <span class="n">matrix</span><span class="p">)</span><span class="o">.</span><span class="n">to_f</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">)</span>
+</span><span class='line'>            <span class="k">end</span>
+</span><span class='line'>          <span class="k">end</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>        <span class="n">matrix</span>
+</span><span class='line'>      <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>3 Latent Semantic transform</h3>
+
+<p>Github source file: <a href="http://github.com/josephwilk/rsemantic/tree/master/lib/semantic/transform/lsa_transform.rb">lsa_transform.rb</a></p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>      <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">number_of_dimensions_to_reduce</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>          <span class="n">columns</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">num_columns</span>
+</span><span class='line'>
+</span><span class='line'>          <span class="k">if</span> <span class="n">dimensions</span> <span class="o">&lt;=</span> <span class="ss">columns</span><span class="p">:</span> <span class="c1">#Its a valid reduction</span>
+</span><span class='line'>            <span class="n">u</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">vt</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">singular_value_decomposition</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="n">sigma_prime</span> <span class="o">=</span> <span class="n">reduce_dimensions</span><span class="p">(</span><span class="n">number_of_dimensions_to_reduce</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="n">matrix_prime</span> <span class="o">=</span> <span class="n">u</span> <span class="o">*</span> <span class="n">sigma_prime</span> <span class="o">*</span> <span class="n">vt</span>
+</span><span class='line'>          <span class="k">else</span>
+</span><span class='line'>            <span class="k">raise</span> <span class="no">Exception</span><span class="p">,</span> <span class="s2">&quot;dimension reduction cannot be greater than %s&quot;</span> <span class="o">%</span> <span class="n">columns</span>
+</span><span class='line'>          <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>          <span class="n">matrix_prime</span>
+</span><span class='line'>        <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The LSA transform consists of 3 stages. Lets take a closer look at these 3 stages:</p>
+
+<h4>1. Singular Value Decomposition</h4>
+
+<p>SVD: <a href="http://en.wikipedia.org/wiki/Singular_value_decomposition">http://en.wikipedia.org/wiki/Singular_value_decomposition</a>
+<a href="http://rubyforge.org/projects/linalg/">Linalg</a>&rsquo;s DMatrix has a <a href="http://linalg.rubyforge.org/classes/Linalg/DMatrix.html#M000063">singular_value_decomposition</a> method which saves us a lot of work!</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'> <span class="n">u</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">vt</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">singular_value_decomposition</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>2. Reduce the dimensions of Sigma</h4>
+
+<p>We generally delete the smallest coefficients in the diagonal matrix Sigma to produce Sigma&#8217;.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>        <span class="k">def</span> <span class="nf">reduce_dimensions</span><span class="p">(</span><span class="n">number_of_dimensions_to_reduce</span><span class="p">,</span> <span class="n">matrix</span><span class="p">)</span>
+</span><span class='line'>          <span class="k">for</span> <span class="n">diagonal_index</span> <span class="k">in</span> <span class="n">dimensions_to_be_reduced</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">number_of_dimensions_to_reduce</span><span class="p">)</span>
+</span><span class='line'>            <span class="n">matrix</span><span class="o">[</span><span class="n">diagonal_index</span><span class="p">,</span> <span class="n">diagonal_index</span><span class="o">]</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span class='line'>          <span class="k">end</span>
+</span><span class='line'>          <span class="n">matrix</span>
+</span><span class='line'>        <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The reduction of the dimensions of Sigma combines some dimensions such that they are on more than one term. The number of coefficients deleted can depend of the corpus used. It should be large enough to fit the real structure in the data, but small enough such that noise or unimportant details are not modelled.</p>
+
+<p>The <strong>real difficulty and weakness of  LSA</strong> is knowing <strong>how many dimensions to remove</strong>. There is no exact method of finding the right dimensions. Approaches which are used are <a href="http://mathworld.wolfram.com/L2-Norm.html">L2-norm</a> or <a href="http://en.wikipedia.org/wiki/Frobenius_norm#Frobenius_norm">Frobenius norm</a>.</p>
+
+<h4>3. Calculate the Product with New Sigma&#8217;</h4>
+
+<p>Finally we calculate:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'> <span class="n">matrix_prime</span> <span class="o">=</span> <span class="n">u</span> <span class="o">*</span> <span class="n">sigma_prime</span> <span class="o">*</span> <span class="n">vt</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>LSA In Action &ndash; rSemantic Gem</h2>
+
+<p>First install the rsemantic gem from Github</p>
+
+<pre><code>gem sources -a http://gems.github.com
+sudo gem install josephwilk-rsemantic
+</code></pre>
+
+<p>Then we can run an example:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;rubygems&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;semantic&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">D1</span> <span class="o">=</span> <span class="s2">&quot;The cat in the hat disabled&quot;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="no">D2</span> <span class="o">=</span> <span class="s2">&quot;A cat is a fine pet ponies.&quot;</span>
+</span><span class='line'><span class="no">D3</span> <span class="o">=</span> <span class="s2">&quot;Dogs and cats make good pets&quot;</span>
+</span><span class='line'><span class="no">D4</span> <span class="o">=</span> <span class="s2">&quot;I haven&#39;t got a hat.&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">#verbose mode so it shows us all the different stages</span>
+</span><span class='line'><span class="n">search</span> <span class="o">=</span> <span class="ss">Semantic</span><span class="p">:</span><span class="ss">:Search</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="no">D1</span><span class="p">,</span> <span class="no">D2</span><span class="p">,</span> <span class="no">D3</span><span class="p">,</span> <span class="no">D4</span><span class="o">]</span><span class="p">,</span> <span class="ss">:verbose</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We start with out Model-Term frequency matrix with is generated from creating a Vector Space Search with four documents (D1-D4):</p>
+
+<pre><code>           D1    D2    D3    D4
+hat     [ +1.00 +0.00 +0.00 +1.00 ]
+dog     [ +0.00 +0.00 +1.00 +0.00 ]
+cat     [ +1.00 +1.00 +1.00 +0.00 ]
+make    [ +0.00 +0.00 +1.00 +0.00 ]
+good    [ +0.00 +0.00 +1.00 +0.00 ]
+pet     [ +0.00 +1.00 +1.00 +0.00 ]
+fine    [ +0.00 +1.00 +0.00 +0.00 ]
+poni    [ +0.00 +1.00 +0.00 +0.00 ]
+disabl  [ +1.00 +0.00 +0.00 +0.00 ]
+</code></pre>
+
+<p>Apply tf-idf transform:</p>
+
+<pre><code>           D1    D2    D3    D4
+hat     [ +0.23 +0.00 +0.00 +0.69 ]
+dog     [ +0.00 +0.00 +0.28 +0.00 ]
+cat     [ +0.10 +0.07 +0.06 +0.00 ]
+make    [ +0.00 +0.00 +0.28 +0.00 ]
+good    [ +0.00 +0.00 +0.28 +0.00 ]
+pet     [ +0.00 +0.17 +0.14 +0.00 ]
+fine    [ +0.00 +0.35 +0.00 +0.00 ]
+poni    [ +0.00 +0.35 +0.00 +0.00 ]
+disabl  [ +0.46 +0.00 +0.00 &lt;span style="color: #ff0000;"&gt;+0.00&lt;/span&gt; ]
+</code></pre>
+
+<p>Perform SVD &ndash; Reduce Sigmas dimensions (removing the 2 smallest coefficients)</p>
+
+<pre><code>           D1    D2    D3    D4
+hat     [ +0.34 -0.01 -0.01 +0.63 ]
+dog     [ +0.01 -0.00 +0.28 -0.01 ]
+cat     [ +0.03 +0.08 +0.06 +0.04 ]
+make    [ +0.01 -0.00 +0.28 -0.01 ]
+good    [ +0.01 -0.00 +0.28 -0.01 ]
+pet     [ +0.01 +0.17 +0.14 -0.01 ]
+fine    [ +0.02 +0.35 -0.00 -0.01 ]
+poni    [ +0.02 +0.35 -0.00 -0.01 ]
+disabl  [ +0.11 +0.02 +0.02 &lt;span style="color: #ff0000;"&gt;+0.19&lt;/span&gt; ]
+</code></pre>
+
+<p>Note the Word &lsquo;disabl&rsquo; despite not being in D4 now has a weighting in that document.</p>
+
+<h2>Dependencies</h2>
+
+<ul>
+<li><p>linalg &ndash; <a href="http://rubyforge.org/projects/linalg/">http://rubyforge.org/projects/linalg/</a></p></li>
+<li><p>stemmer &ndash; <a href="http://stemmer.rubyforge.org/wiki/wiki.pl?HomePage">http://stemmer.rubyforge.org/wiki/wiki.pl?HomePage</a></p></li>
+</ul>
+
+
+<p>Linalg is dependent on <a href="http://www.netlib.org/lapack/">LAPACK</a> which can be a challenge to install.</p>
+
+<p>This article on setting up linalg on Mac OS X helped: <a href="http://www.commonmediainc.com/2008/03/24/building-lapack-and-rubys-linalg-on-mac-os-x/">http://www.commonmediainc.com/2008/03/24/building-lapack-and-rubys-linalg-</a><a href="http://www.commonmediainc.com/2008/03/24/building-lapack-and-rubys-linalg-on-mac-os-x/">on-mac-os-x/</a></p>
+
+<h2>Problems</h2>
+
+<p>LSA assumes the <a href="http://en.wikipedia.org/wiki/Normal_distribution">Normal distribution</a> where the <a href="http://en.wikipedia.org/wiki/Poisson_distribution">Poisson distribution</a> has actually been observed.</p>
+
+<h2>Source Code</h2>
+
+<p>The source code initially shown here has gone through a lot of refactoring and has become much more than just LSA. You can get the full project with source code from github:</p>
+
+<pre><code>git clone git://github.com/josephwilk/rsemantic.git
+</code></pre>
+
+<p>And you can read about rSemantic on Github: <a href="http://josephwilk.github.com/rsemantic">http://josephwilk.github.com/rsemantic</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1317,219 +1644,6 @@ _</p></li>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/projects/latent-semantic-analysis-in-python.html">Latent Semantic Analysis in Python</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2007-12-19T11:14:42+00:00" pubdate data-updated="true">Dec 19<span>th</span>, 2007</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Latent Semantic Analysis (LSA) is a mathematical method that tries to bring out latent relationships within a collection of documents. Rather than looking at each document isolated from the others it looks at all the documents as a whole and the terms within them to identify relationships.</p>
-
-<p>An example of LSA:
-Using a search engine search for &ldquo;<em>sand</em>&rdquo;.</p>
-
-<p>Documents are returned which do not contain the search term &ldquo;sand&rdquo; but contains terms like &ldquo;beach&rdquo;.</p>
-
-<p>LSA has identified a latent relationship, &ldquo;<em>sand</em>&rdquo; is semantically close to &ldquo;beach&rdquo;.</p>
-
-<p>There are some very good papers which describing LSA in detail:</p>
-
-<ul>
-<li><p>An introduction to LSA: <a href="http://lsa.colorado.edu/papers/dp1.LSAintro.pdf">http://lsa.colorado.edu/papers/dp1.LSAintro.pdf</a></p></li>
-<li><p>Creating your own LSA space: <a href="http://www.andrew.cmu.edu/user/jquesada/pdf/bookSpacesRev1.pdf">http://www.andrew.cmu.edu/user/jquesada/pdf/bookSpacesRev1.pdf</a></p></li>
-<li><p>Latent Semantic analysis: <a href="http://en.wikipedia.org/wiki/Latent_semantic_indexing">http://en.wikipedia.org/wiki/Latent_semantic_indexing</a></p></li>
-</ul>
-
-
-<p>This is an implementation of LSA in Python (2.4+). Thanks to scipy its rather simple!</p>
-
-<h3>1 Create the term-document matrix</h3>
-
-<p>We use the previous work in <a href="/projects/building-a-vector-space-search-engine-in-python.html">Vector Space Search</a> to build this matrix.</p>
-
-<h3>2 tf-idf Transform</h3>
-
-<p>Apply the tf-idf transform to the term-document matrix. This generally tends to help improve results with LSA.</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">tfidfTransform</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
-</span><span class='line'>        <span class="sd">&quot;&quot;&quot; Apply TermFrequency(tf)*inverseDocumentFrequency(idf) for each matrix element.</span>
-</span><span class='line'><span class="sd">            This evaluates how important a word is to a document in a corpus</span>
-</span><span class='line'>
-</span><span class='line'><span class="sd">            With a document-term matrix: matrix[x][y]</span>
-</span><span class='line'><span class="sd">                tf[x][y] = frequency of term y in document x / frequency of all terms in document x</span>
-</span><span class='line'><span class="sd">                idf[x][y] = log( abs(total number of documents in corpus) / abs(number of documents with term y)  )</span>
-</span><span class='line'><span class="sd">            Note: This is not the only way to calculate tf*idf</span>
-</span><span class='line'><span class="sd">        &quot;&quot;&quot;</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">documentTotal</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">)</span>
-</span><span class='line'>        <span class="n">rows</span><span class="p">,</span><span class="n">cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="o">.</span><span class="n">shape</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rows</span><span class="p">):</span> <span class="c">#For each document</span>
-</span><span class='line'>
-</span><span class='line'>                <span class="n">wordTotal</span><span class="o">=</span> <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>                <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">cols</span><span class="p">):</span> <span class="c">#For each term</span>
-</span><span class='line'>
-</span><span class='line'>                        <span class="c">#For consistency ensure all self.matrix values are floats</span>
-</span><span class='line'>                        <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">])</span>
-</span><span class='line'>
-</span><span class='line'>                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span><span class="o">!=</span><span class="mi">0</span><span class="p">:</span>
-</span><span class='line'>
-</span><span class='line'>                                <span class="n">termDocumentOccurences</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__getTermDocumentOccurences</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>                                <span class="n">termFrequency</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">wordTotal</span><span class="p">)</span>
-</span><span class='line'>                                <span class="n">inverseDocumentFrequency</span> <span class="o">=</span> <span class="n">log</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">documentTotal</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">termDocumentOccurences</span><span class="p">)))</span>
-</span><span class='line'>                                <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span><span class="o">=</span><span class="n">termFrequency</span><span class="o">*</span><span class="n">inverseDocumentFrequency</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>3 Singular Value Decomposition</h3>
-
-<p>SVD: <a href="http://en.wikipedia.org/wiki/Singular_value_decomposition">http://en.wikipedia.org/wiki/Singular_value_decomposition</a></p>
-
-<p>Determine U, Sigma, VT from our MATRIX from previous steps.</p>
-
-<pre><code> U . SIGMA . VT = MATRIX
-</code></pre>
-
-<p>We use the <a href="http://www.scipy.org/">scipy</a> svd implementation here. Note that numpy (version: <strong>1.0.4 </strong>) also has an implementation of svd but I had lots of problems with it. I found it  did not work with anything larger than a 2 dimensional matrix.</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#Sigma comes out as a list rather than a matrix</span>
-</span><span class='line'> <span class="n">u</span><span class="p">,</span><span class="n">sigma</span><span class="p">,</span><span class="n">vt</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">)</span>
-</span><span class='line'>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>4 Reduce the dimensions of Sigma</h3>
-
-<p>We generally delete the smallest coefficients in the diagonal matrix Sigma to produce Sigma&#8217;. The reduction of the dimensions of Sigma combines some dimensions such that they are on more than one term. The number of coefficients deleted can depend of the corpus used. It should be large enough to fit the real structure in the data, but small enough such that noise or unimportant details are not modelled.</p>
-
-<p>The <strong>real difficulty and weakness of  LSA</strong> is knowing <strong>how many dimensions to remove</strong>. There is no exact method of finding the right dimensions. Generally <a href="http://mathworld.wolfram.com/L2-Norm.html">L2-norm</a> or <a href="http://en.wikipedia.org/wiki/Frobenius_norm#Frobenius_norm">Frobenius norm</a> are used.</p>
-
-<h3>5 Calculate the Product with New Sigma&#8217;</h3>
-
-<p>Finally we calculate:</p>
-
-<pre><code>U . SIGMA' . VT = MATRIX'
-</code></pre>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#Reconstruct MATRIX&#39;</span>
-</span><span class='line'><span class="n">reconstructedMatrix</span><span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">linalg</span><span class="o">.</span><span class="n">diagsvd</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">vt</span><span class="p">))),</span><span class="n">vt</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Giving use our final LSA matrix. We can now apply the same functionality used in Vector space search: searching and finding related scores for documents.</p>
-
-<h2>LSA In Action &ndash; Matrices</h2>
-
-<p>We start with out Model-Term frequency matrix with is generated from creating a <a href="/projects/building-a-vector-space-search-engine-in-python.html">Vector Space Search</a> with four documents (D1-D4):
-D1:&ldquo;<em>The cat in the hat disabled</em>&rdquo;
-D2:&ldquo;<em>A cat is a fine pet ponies.</em>&rdquo;
-D3:&ldquo;<em>Dogs and cats make good pets</em>&rdquo;
-D4:&ldquo;<em>I haven&rsquo;t got a hat.</em>&rdquo;</p>
-
-<pre><code>    &lt;strong&gt;good  pet   hat   make  dog   cat   poni  fine  disabl&lt;/strong&gt;
-D1 [+0.00 +0.00 +1.00 +0.00 +0.00 +1.00 +0.00 +0.00 +1.00 ]
-D2 [+0.00 +1.00 +0.00 +0.00 +0.00 +1.00 +1.00 +1.00 +0.00 ]
-D3 [+1.00 +1.00 +0.00 +1.00 +1.00 +1.00 +0.00 +0.00 +0.00 ]
-D4 [+0.00 +0.00 +1.00 +0.00 +0.00 +0.00 +0.00 +0.00 +0.00 ]
-</code></pre>
-
-<p>Apply tf-idf transform:</p>
-
-<pre><code>D1 [+0.00 +0.00 +0.23 +0.00 +0.00 +0.10 +0.00 +0.00 +0.46 ]
-D2 [+0.00 +0.17 +0.00 +0.00 +0.00 +0.07 +0.35 +0.35 +0.00 ]
-D3 [+0.28 +0.14 +0.00 +0.28 +0.28 +0.06 +0.00 +0.00 +0.00 ]
-D4 [+0.00 +0.00 +0.69 +0.00 +0.00 +0.00 +0.00 +0.00 &lt;span style="color: #ff0000;"&gt;&lt;strong&gt;+0.00&lt;/strong&gt;&lt;/span&gt; ]
-</code></pre>
-
-<p>Perform SVD &ndash; Reduce Sigmas dimensions(removing the 2 smallest coefficients)</p>
-
-<pre><code>D1 [+0.01 +0.01 +0.34 +0.01 +0.01 +0.03 +0.02 +0.02 +0.11 ]
-D2 [-0.00 +0.17 -0.01 -0.00 -0.00 +0.08 +0.35 +0.35 +0.02 ]
-D3 [+0.28 +0.14 -0.01 +0.28 +0.28 +0.06 -0.00 -0.00 +0.02 ]
-D4 [-0.01 -0.01 +0.63 -0.01 -0.01 +0.04 -0.01 -0.01 &lt;strong&gt;&lt;span style="color: #ff0000;"&gt;+0.19&lt;/span&gt;&lt;/strong&gt; ]
-</code></pre>
-
-<p>Note the Word &lsquo;disabl&rsquo; despite not being in D4 now has a weighting in that document.</p>
-
-<h3>Dependencies</h3>
-
-<p><a href="http://www.scipy.org/">http://www.scipy.org/</a></p>
-
-<h3>Problems</h3>
-
-<p>LSA assumes the <a href="http://en.wikipedia.org/wiki/Normal_distribution">Normal distribution</a> where the <a href="http://en.wikipedia.org/wiki/Poisson_distribution">Poisson distribution</a> has actually been observed.</p>
-
-<h3>Source Code</h3>
-
-<p>Available at github:</p>
-
-<pre><code>git clone git://github.com/josephwilk/semanticpy.git
-</code></pre>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/7/">&larr; Older</a>
@@ -1545,6 +1659,10 @@ D4 [-0.01 -0.01 +0.63 -0.01 -0.01 +0.04 -0.01 -0.01 &lt;strong&gt;&lt;span style
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/art/audio-fingerprint-smudges.html">Audio Fingerprint Smudges</a>
+      </li>
     
       <li class="post">
         <a href="/art/overtone-shader-visuals.html">Visuals with Overtone and Shadertone</a>
@@ -1580,10 +1698,6 @@ D4 [-0.01 -0.01 +0.63 -0.01 -0.01 +0.04 -0.01 -0.01 &lt;strong&gt;&lt;span style
     
       <li class="post">
         <a href="/clojure/creating-instruments-with-overtone.html">Creating sampled instruments with Overtone</a>
-      </li>
-    
-      <li class="post">
-        <a href="/elixir/sets-in-elixir.html">Sets in Elixir</a>
       </li>
     
   </ul>

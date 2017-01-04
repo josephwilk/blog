@@ -9,7 +9,7 @@
   <meta name="author" content="Joseph Wilk">
 
   
-  <meta name="description" content="I&rsquo;m happy to announce that I have joined Elizabeth Hendrickson as Co-Chair of the Agile Alliance Functional Testing Tools group (AAFTT, yes the &hellip;">
+  <meta name="description" content="The Gherkin syntax used by Cucumber enforces that Feature files contain scenarios which are examples of the behaviour of a feature. However Gherkin &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://josephwilk.github.io/page/3/index.html">
+  <link rel="canonical" href="http://blog.josephwilk.net/page/3/index.html">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Joseph Wilk" type="application/atom+xml">
@@ -63,7 +63,6 @@
   
 </ul>
   
-
   
 <ul class="main-navigation">
  <li><a href="/">Home</a></li>
@@ -78,6 +77,159 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cucumber/examples-are-not-a-specification.html">Examples Alone Are Not a Specification</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-24T14:25:30+00:00" pubdate data-updated="true">Feb 24<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The Gherkin syntax used by Cucumber enforces that Feature files contain scenarios which are examples of the behaviour of a feature. However Gherkin has no constraints on if there is a specification present. Examples are great at helping us understand specifications but <strong>they are not specifications themselves</strong>.</p>
+
+<p>What do we mean when we say specification?</p>
+
+<p><em>definition: A detailed, exact statement of particulars</em></p>
+
+<p>In a Gherkin feature the specification lives here:</p>
+
+<p><img src="/images/blog/2012/02/spec7.png" alt="" /></p>
+
+<p>Lets look at a real example:</p>
+
+<h2>A Feature with just Examples</h2>
+
+<p>A Cucumber example based on a feature  (which I have modified) from the test library Rspec <a href="https://github.com/rspec/rspec-expectations">rspec-expectations</a>:</p>
+
+<pre><code>Feature: be_within matcher
+  Scenario: basic usage
+  Given a file named "be_within_matcher_spec.rb" with:
+  """
+  describe 27.5 do
+  it { should be_within(0.5).of(27.9) }
+  it { should be_within(0.5).of(27.1) }
+  it { should_not be_within(0.5).of(28) }
+  it { should_not be_within(0.5).of(27) }
+  # deliberate failures
+  it { should_not be_within(0.5).of(27.9) }
+  it { should_not be_within(0.5).of(27.1) }
+  it { should be_within(0.5).of(28) }
+  it { should be_within(0.5).of(27) }
+  end
+  """
+  When I run `rspec be_within_matcher_spec.rb`
+  Then the output should contain all of these:
+  | 8 examples, 4 failures                     |
+  | expected 27.5 not to be within 0.5 of 27.9 |
+  | expected 27.5 not to be within 0.5 of 27.1 |
+  | expected 27.5 to be within 0.5 of 28       |
+  | expected 27.5 to be within 0.5 of 27       |
+</code></pre>
+
+<p>So where is the explanation of what <em>be_within</em> does? If I want to know how <em>be_within</em> works I want a single concise explanation not 5/6 different examples. Examples add value later to validate that specification.</p>
+
+<h2>A Feature with both Specification and Examples</h2>
+
+<p>Lets add back in the specification part of the Feature. <em>drum roll</em></p>
+
+<pre><code>Feature: be_within matcher
+
+  Normal equality expectations do not work well for floating point values.
+  Consider this irb session:
+
+      &gt; radius = 3
+        =&gt; 3 
+      &gt; area_of_circle = radius * radius * Math::PI
+        =&gt; 28.2743338823081 
+      &gt; area_of_circle == 28.2743338823081
+        =&gt; false 
+
+  Instead, you should use the be_within matcher to check that the value
+  is within a delta of your expected value:
+
+      area_of_circle.should be_within(0.1).of(28.3)
+
+  Note that the difference between the actual and expected values must be
+  smaller than your delta; if it is equal, the matcher will fail.
+
+  Scenario: basic usage
+    Given a file named "be_within_matcher_spec.rb" with:
+      """
+      describe 27.5 do
+        it { should be_within(0.5).of(27.9) }
+        it { should be_within(0.5).of(27.1) }
+        it { should_not be_within(0.5).of(28) }
+        it { should_not be_within(0.5).of(27) }
+
+        # deliberate failures
+        it { should_not be_within(0.5).of(27.9) }
+        it { should_not be_within(0.5).of(27.1) }
+        it { should be_within(0.5).of(28) }
+        it { should be_within(0.5).of(27) }
+      end
+      """
+    When I run `rspec be_within_matcher_spec.rb`
+    Then the output should contain all of these:
+      | 8 examples, 4 failures                     |
+      | expected 27.5 not to be within 0.5 of 27.9 |
+      | expected 27.5 not to be within 0.5 of 27.1 |
+      | expected 27.5 to be within 0.5 of 28       |
+      | expected 27.5 to be within 0.5 of 27       |
+</code></pre>
+
+<p>Thats better, we can get an explanation of why this method exists and how to use it.</p>
+
+<h2>Imagine RSpec without the specification</h2>
+
+<p>I think of a Cucumber feature without a specification much like an Rspec example without any English sentence/description.</p>
+
+<pre><code>context "" do
+  it "" do
+    user = Factory(:user)
+    user.generate_password
+    user.activate
+
+    get "/session/new", :user_id =&gt; user.id
+
+    last_response.should == "Welcome #{user.name}"
+  end
+end
+</code></pre>
+
+<p>Feels a little odd doesn&rsquo;t it.</p>
+
+<h2>Cucumber Features as Documentation (for real)</h2>
+
+<p>Rspec is an example of a project that has taken its Cucumber features and <a href="https://www.relishapp.com/rspec">published them as its documentation</a>. Just browse through those features and it quickly highlights how important it is to have a specification as well as examples. Imagine an API with nothing but examples, leaving you the detective work of trying to work out what the thing actually does.</p>
+
+<p>Documentation needs to explain/specify what something does as well provide examples. If you really want anyone to read your feature provide both examples and a specification.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -858,48 +1010,6 @@ No easy way to be reused outside of Cucumber or test in isolation. By isolating 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/agile/story-smells-in-order-to-do-x-i-want-x.html">Story Smells: In Order to Do X I Want X</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-11-23T18:40:48+00:00" pubdate data-updated="true">Nov 23<span>rd</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I keep coming across story cards written like this:</p>
-
-<p><img src="/images/blog/2010/11/card.png" alt="" /></p>
-
-<p>This is usually a tell tale sign that the <a href="http://www.theregister.co.uk/2007/06/25/thoughtworks_req_manage/">why stack was not popped</a>. The value (<em>In order to <value></em>) has been written at the lowest possible level of abstraction, the same as the feature (<em>I want <feature></em>). The card does not tell us why this feature is being built.</p>
-
-<p>If you find yourself writing cards like this take it as a chance to find out a bit more about why you are adding this feature. Hopefully you will uncover a more meaningful value that you can write on the card or perhaps discover that you don&rsquo;t really need this feature after all.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/4/">&larr; Older</a>
@@ -915,6 +1025,10 @@ No easy way to be reused outside of Cucumber or test in isolation. By isolating 
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/art/audio-fingerprint-smudges.html">Audio Fingerprint Smudges</a>
+      </li>
     
       <li class="post">
         <a href="/art/overtone-shader-visuals.html">Visuals with Overtone and Shadertone</a>
@@ -950,10 +1064,6 @@ No easy way to be reused outside of Cucumber or test in isolation. By isolating 
     
       <li class="post">
         <a href="/clojure/creating-instruments-with-overtone.html">Creating sampled instruments with Overtone</a>
-      </li>
-    
-      <li class="post">
-        <a href="/elixir/sets-in-elixir.html">Sets in Elixir</a>
       </li>
     
   </ul>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: personal | Joseph Wilk]]></title>
-  <link href="http://josephwilk.github.io//personal/atom.xml" rel="self"/>
-  <link href="http://josephwilk.github.io/"/>
-  <updated>2016-01-13T21:21:48+00:00</updated>
-  <id>http://josephwilk.github.io/</id>
+  <link href="http://blog.josephwilk.net//personal/atom.xml" rel="self"/>
+  <link href="http://blog.josephwilk.net/"/>
+  <updated>2017-01-04T11:45:51+00:00</updated>
+  <id>http://blog.josephwilk.net/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
     <email><![CDATA[joe@josephwilk.net]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Conferences and Accessibility: Please Try Harder]]></title>
-    <link href="http://josephwilk.github.io/personal/conferences-and-accessibility-please-try-harder.html"/>
+    <link href="http://blog.josephwilk.net/personal/conferences-and-accessibility-please-try-harder.html"/>
     <updated>2011-06-27T13:25:23+01:00</updated>
-    <id>http://josephwilk.github.io/personal/conferences-and-accessibility-please-try-harder</id>
+    <id>http://blog.josephwilk.net/personal/conferences-and-accessibility-please-try-harder</id>
     <content type="html"><![CDATA[<p>I speak at a lot of conferences around the world and I&rsquo;ve been happy to hear a lot of healthy debate around the diversity of the programming community. I really enjoyed and felt inspired by the talk from <a href="http://blogs.thewehners.net/josh">Joshua Wehner</a> on &ldquo;Must It Always Be About Sex&rdquo; at <a href="http://nordicruby.org/">Nordic Ruby</a> and <a href="http://rulu.eu/">Ruby Lugdunum.</a></p>
 
 <p>It got me thinking about the issue of accessibility at conferences. I use a wheelchair and happily throw myself at any conference irrelevant of the obstacles. But not everyone is as crazy or as flexible as I am. Once at the conference the organisers are always willing to help but I wonder if we are not excluding disabled people who may dimiss the chance to talk or attend as unfeasible due to lack of information about access. Even if thats only a few people, those people are valuable members of our communities and deserve the chance to participate if they want to.</p>
