@@ -4,7 +4,7 @@
   <title><![CDATA[Joseph Wilk]]></title>
   <link href="http://blog.josephwilk.net/atom.xml" rel="self"/>
   <link href="http://blog.josephwilk.net/"/>
-  <updated>2017-01-04T12:16:33+00:00</updated>
+  <updated>2017-01-04T12:21:09+00:00</updated>
   <id>http://blog.josephwilk.net/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -273,8 +273,8 @@ The various properties of the audio units are selected randomly.</li>
 <p>To avoid any background noise or messing with microphones we use <a href="https://github.com/mattingalls/Soundflower">SoundFlower</a> with the following setup:</p>
 
 
-<p> Overtone main audio ->🔈 Soundflower input device<br/>
-Soundflower output device ->🔈 Shazam Desktop.</p>
+<p> Overtone main audio -><img src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f508.png" alt="speaker" class="emoji"> Soundflower input device<br/>
+Soundflower output device -><img src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f508.png" alt="speaker" class="emoji"> Shazam Desktop.</p>
 
 
 
