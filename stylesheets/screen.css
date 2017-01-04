@@ -854,6 +854,7 @@ line-height: 1.3em
   border: none;
   box-shadow: none;
   margin-bottom: -5px;
+  width: 25px;
 }
 
 article img,article video,article .flash-video {
