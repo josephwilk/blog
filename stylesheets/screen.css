@@ -111,7 +111,7 @@ body {
 h1 {
 	font-size: 2.2em;
 	color: #f3686d;
-	line-height: 1.2em
+	line-height: 1.2em;
 	text-shadow: 0.5px 0.5px #f3383f;	
 }
 @media only screen and (min-width: 992px) {body {
