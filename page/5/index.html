@@ -9,7 +9,7 @@
   <meta name="author" content="Joseph Wilk">
 
   
-  <meta name="description" content="Combinatorial testing is a difficult problem. Having to test a small number of inputs  can result in a combinatorial explosion of possible &hellip;">
+  <meta name="description" content="Testing your tests is kind of crazy. However when writing a library of Cucumber step definitions which will be used in many projects it started to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,202 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/ruby/specing-cucumber-step-definitions.html">Specing Cucumber Step Definitions</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-03-04T23:40:25+00:00" pubdate data-updated="true">Mar 4<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Testing your tests is kind of crazy. However when writing a library of Cucumber step definitions which will be used in many projects it started to make sense to test my tests.</p>
+
+<ul>
+<li><p>The step definitions are the code.</p></li>
+<li><p>It helps reduce fear of breaking lots of projects which use the steps.</p></li>
+<li><p>The tests/specs show examples of how to use the step definitions.</p></li>
+</ul>
+
+
+<p>It is important to note that I&rsquo;m not imply TDD/BDDing these step definitions. My use-case is adding tests afterwards when it comes time to extract them to a library.</p>
+
+<h2>How to test step definitions</h2>
+
+<h3>Exercise the full step (with Rspec)</h3>
+
+<p>The common way of testing complex steps is to extract all the ruby from the step definitions and then just test that. But this way of testing does not exercise the step definitions from the outside, getting as close as possible to how they will be used. It also does not provide examples of how to use the step definitions.</p>
+
+<p>So I sat down with <a href="http://blog.mattwynne.net/">Matt Wynne</a>, who started this discussion and we thrashed out some <a href="http://github.com/mattwynne/cucumber-step_definitions/blob/master/spec/spec_helper.rb">Rspec macros for testing whole step definitions</a>.</p>
+
+<p>If we were testing this step definition (icalendar_steps.rb):</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;icalendar&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">module</span> <span class="nn">Cucumber</span>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">Stepdefs</span>
+</span><span class='line'>    <span class="k">module</span> <span class="nn">Icalendar</span>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">response_calendars</span>
+</span><span class='line'>        <span class="o">::</span><span class="no">Icalendar</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">response_events</span>
+</span><span class='line'>        <span class="n">response_calendars</span><span class="o">.</span><span class="n">length</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="mi">1</span>
+</span><span class='line'>        <span class="n">response_calendars</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">events</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Before</span><span class="p">(</span><span class="s1">&#39;@ical&#39;</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>  <span class="kp">extend</span> <span class="ss">Cucumber</span><span class="p">:</span><span class="ss">:Stepdefs</span><span class="o">::</span><span class="no">Icalendar</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Then</span> <span class="sr">/^the iCalendar should have exactly (\d+) events?$/</span> <span class="k">do</span> <span class="o">|</span><span class="n">number_of_events</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">response_events</span><span class="o">.</span><span class="n">length</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="n">number_of_events</span><span class="o">.</span><span class="n">to_i</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Our spec would look like this (Note: we test the Before hook as well as the step definition):</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="s1">&#39;icalendar_steps&#39;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">step_file</span> <span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">__FILE__</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;/../../../lib/cucumber/stepdefs/icalendar_steps&#39;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># Test that the Before hook is not called when there is no tag</span>
+</span><span class='line'>  <span class="n">without_tags</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">it</span> <span class="s2">&quot;should not mix in any calendar related methods&quot;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">world_methods</span><span class="o">.</span><span class="n">should_not</span> <span class="kp">include</span><span class="p">(</span><span class="s1">&#39;response_calendars&#39;</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">world_methods</span><span class="o">.</span><span class="n">should_not</span> <span class="kp">include</span><span class="p">(</span><span class="s1">&#39;response_events&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># Test the Before hook mixes in the right methods when tagged with @ical</span>
+</span><span class='line'>  <span class="n">with_tag</span> <span class="s1">&#39;@ical&#39;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="o">[</span><span class="s1">&#39;response_calendars&#39;</span><span class="p">,</span> <span class="s1">&#39;response_events&#39;</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">method</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">it</span> <span class="s2">&quot;should add the </span><span class="si">#{</span><span class="nb">method</span><span class="si">}</span><span class="s2"> to world&quot;</span> <span class="k">do</span>
+</span><span class='line'>        <span class="n">world_methods</span><span class="o">.</span><span class="n">should</span> <span class="kp">include</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">the_step</span> <span class="s2">&quot;the iCalendar should have exactly 1 event&quot;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">describe</span> <span class="s2">&quot;when 1 calendar with 0 events is in the response body&quot;</span> <span class="k">do</span>
+</span><span class='line'>        <span class="n">before</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>          <span class="n">world</span><span class="o">.</span><span class="n">stub!</span><span class="p">(</span><span class="ss">:response</span><span class="p">)</span><span class="o">.</span><span class="n">and_return</span><span class="p">(</span><span class="n">mock_response_with_0_events</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">it_should_fail_with</span><span class="p">(</span><span class="ss">Spec</span><span class="p">:</span><span class="ss">:Expectations</span><span class="o">::</span><span class="no">ExpectationNotMetError</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="n">describe</span> <span class="s2">&quot;when 1 calendar with 1 event is in the response body&quot;</span> <span class="k">do</span>
+</span><span class='line'>        <span class="n">before</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>          <span class="n">world</span><span class="o">.</span><span class="n">stub!</span><span class="p">(</span><span class="ss">:response</span><span class="p">)</span><span class="o">.</span><span class="n">and_return</span><span class="p">(</span><span class="n">mock_response_with_1_event</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">it_should_pass</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Experiment&rsquo;s Source code</h4>
+
+<p>You can see the source on Github:</p>
+
+<pre><code>git clone git://github.com/mattwynne/cucumber-step_definitions.git
+</code></pre>
+
+<p>If this experiment proves successful these macros will make their way to a nice gem.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1260,48 +1456,6 @@ Feature:
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/ruby/speaking-at-scotland-on-rails-2009.html">Speaking at Scotland on Rails 2009</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-01-17T19:20:46+00:00" pubdate data-updated="true">Jan 17<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I’m really excited to be giving a talk at this years <a href="http://scotlandonrails.com/">Scotland on Rails</a> conference in Edinburgh.</p>
-
-<p>I&rsquo;ll be talking about working outside-in with <a href="http://cukes.info/">Cucumber</a> and <a href="http://rspec.info/">RSpec</a>. Having used Cucumber and as a member of the Cucumber core developer team I hope to share lots of experiences and lessons about getting the most out of the tool.</p>
-
-<p>It&rsquo;s looking like a <a href="http://scotlandonrails.com/schedule">great line up</a> with with some really interesting presentations across a broad number of topics. The keynotes speakers are <a href="http://www.michaelfeathers.com/">Michael Feathers</a> and <a href="http://marcelmolina.com/">Marcel Molina, Jnr</a>.</p>
-
-<p>If you’re going to be in Edinburgh for the conference or have any burning questions about Cucumber, let me know.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/6/">&larr; Older</a>
@@ -1317,6 +1471,10 @@ Feature:
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/clojure/functions-explained-through-patterns.html">Functions Explained Through Patterns</a>
+      </li>
     
       <li class="post">
         <a href="/art/audio-fingerprint-smudges.html">Audio Fingerprint Smudges</a>
@@ -1352,10 +1510,6 @@ Feature:
     
       <li class="post">
         <a href="/clojure/building-clojure-services-at-scale.html">Building Clojure services at scale</a>
-      </li>
-    
-      <li class="post">
-        <a href="/clojure/creating-instruments-with-overtone.html">Creating sampled instruments with Overtone</a>
       </li>
     
   </ul>

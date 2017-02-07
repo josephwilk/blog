@@ -9,7 +9,7 @@
   <meta name="author" content="Joseph Wilk">
 
   
-  <meta name="description" content="I&rsquo;ve had lots of requests for a Ruby version to follow up my Latent Semantic Analysis in Python article. So I&rsquo;ve rewritten the code and &hellip;">
+  <meta name="description" content="I’m really excited to be giving a talk at this years Scotland on Rails conference in Edinburgh. I&rsquo;ll be talking about working outside-in with &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,48 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/ruby/speaking-at-scotland-on-rails-2009.html">Speaking at Scotland on Rails 2009</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-01-17T19:20:46+00:00" pubdate data-updated="true">Jan 17<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I’m really excited to be giving a talk at this years <a href="http://scotlandonrails.com/">Scotland on Rails</a> conference in Edinburgh.</p>
+
+<p>I&rsquo;ll be talking about working outside-in with <a href="http://cukes.info/">Cucumber</a> and <a href="http://rspec.info/">RSpec</a>. Having used Cucumber and as a member of the Cucumber core developer team I hope to share lots of experiences and lessons about getting the most out of the tool.</p>
+
+<p>It&rsquo;s looking like a <a href="http://scotlandonrails.com/schedule">great line up</a> with with some really interesting presentations across a broad number of topics. The keynotes speakers are <a href="http://www.michaelfeathers.com/">Michael Feathers</a> and <a href="http://marcelmolina.com/">Marcel Molina, Jnr</a>.</p>
+
+<p>If you’re going to be in Edinburgh for the conference or have any burning questions about Cucumber, let me know.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1504,146 +1546,6 @@ _</p></li>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/critique/automatic-admin-systems-semantics-with-rails-and-django.html">Automatic Admin Systems - Semantics With Rails & Django</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2008-01-18T11:52:59+00:00" pubdate data-updated="true">Jan 18<span>th</span>, 2008</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>The Magically Appearing Admin</h3>
-
-<p>Web developers using an MVC framework produce their websites playing with their models, views and controllers. Then by adding a few lines of magic an admin system appears which allows users to add/edit/delete/view/search their models.</p>
-
-<p>Examples:
-<a href="http://www.djangoproject.com/">Django&rsquo;s</a> Magic Admin (Also <a href="http://code.djangoproject.com/wiki/NewformsAdminBranch">NewFormsAdmin</a> &ndash; a branch of Django focused on making it easier to customise auto-admin)
-<a href="http://www.rubyonrails.org/"> Ruby on rails</a> Plugins:</p>
-
-<ul>
-<li><p>Streamlined framework &ndash; <a href="http://streamlinedframework.org/">http://streamlinedframework.org/</a></p>
-
-<ul>
-<li>Admin magic/config  &ndash; outside of the models</li>
-</ul>
-</li>
-<li><p>Auto-Admin &ndash; <a href="http://code.trebex.net/auto-admin">http://code.trebex.net/auto-admin</a></p>
-
-<ul>
-<li>Admin magic/config &ndash; inside the models</li>
-</ul>
-</li>
-</ul>
-
-
-<h3>Limitations of Database types and Semantics</h3>
-
-<p>While we could have an admin that displayed all a models attributes as text inputs, it would be nice if it was a bit more intelligent. We need the magic admin to infer what type of form input should be used from database types.</p>
-
-<p>If within our database (and hence in the model) we have a</p>
-
-<p><code>partyDate -&gt; Datetime</code></p>
-
-<p>Then we would like the admin to display a date styled input.</p>
-
-<p><img src="http://www.joesniff.co.uk/wp-content/uploads/2008/01/datetime-form.png" alt="Django Datetime Input In Auto Admin" /></p>
-
-<p>We have a limited set of database types:</p>
-
-<ul>
-<li>varchar</li>
-<li>text</li>
-<li>integer</li>
-<li>blob</li>
-<li>datetime</li>
-<li>timestamp</li>
-<li>&hellip;</li>
-</ul>
-
-
-<p>For very simple magic admins these database types are good enough.</p>
-
-<p>But we find in more complex instances the database types are not expressive enough. Within our models we have an implicit idea about the meaning of the attributes (generally derived from our naming of variables) not just the type.</p>
-
-<p>For example we may have the concept of <em>IPAddress</em> within our model. We have a clear idea of the semantic meaning of <em>IPAddress</em> and that it should be presented as a form input in a specific way. e.g.</p>
-
-<p><img src="http://www.joesniff.co.uk/wp-content/uploads/2008/01/ipaddress-small.jpg" alt="IP Address Form" /></p>
-
-<p>The database type is just char(12), so  the database types are not enough for our magic admin to build a more complex admin.</p>
-
-<h3>Django Approach &ndash; Explicit &amp; High level</h3>
-
-<p>Within Django we explicitly define all our Model fields in Python. We can introduce high level concepts like model attributes of type &lsquo;<em>IPAddressField</em>&rsquo; and not worry about the way this maps to the db (Django deals with the transformation between <em>IPAddressField</em> and  the database types).</p>
-
-<p>[viewcode] src=../projects/python/examples/model.py geshi=python [/viewcode]</p>
-
-<h3>Ruby on Rails Approach &ndash; Implicit &amp; Low Level</h3>
-
-<p>In rails our models define relationships between themselves but we generally do not list all model fields explicitly. That&rsquo;s one of the beauty&rsquo;s of rails compared to heavy <a href="http://en.wikipedia.org/wiki/Object-relational_mapping">ORM</a> layers.</p>
-
-<p>[viewcode] src=../projects/ruby/examples/Post.rb geshi=ruby [/viewcode]</p>
-
-<p>To quote the <a href="http://ar.rubyonrails.com/classes/ActiveRecord/Base.html">Rails Active Record API</a></p>
-
-<p><em>&ldquo;Adding, removing, and changing attributes and their type is done directly in the database&rdquo;</em></p>
-
-<p>Hence we cannot easily attach metadata to attributes which are only defined in the database. We can overcome this by listing these fields in the model and attaching some metadata to describe the semantic meaning of the fields (rather than using special types for the fields in the model, keeping ActiveRecord happy).</p>
-
-<p>But does this remove the idea of having lean and simple models?</p>
-
-<h3>Thoughts</h3>
-
-<p>Django&rsquo;s high level model provides a very natural way to attach semantic meaning to model attributes which  the  admin can use. Its also all located in a single place, the model.</p>
-
-<p>Rail has lower level models embracing the database, and attaching semantic meaning requires us to add more detail to the model, which feels like its breaking the <a href="http://en.wikipedia.org/wiki/Don't_repeat_yourself">DRY</a> principle. Since Ruby embraces the idea of the only place certain model attributes are defined is in the database it feels like having the atributes mentioned in the model as-well is duplication.</p>
-
-<p>Streamlined&rsquo;s attempt (which is defined in a separate file to the model):</p>
-
-<p>[viewcode] src=../projects/ruby/examples/streamlined.rb geshi=ruby [/viewcode]</p>
-
-<p>There are potentially other ways of handling Rails representation of semantic information:</p>
-
-<ul>
-<li><p>Storing the semantics in the database.</p></li>
-<li><p>Imply semantic meaning from naming of database columns (&lsquo;myZipCode&rsquo;  should use zipcode input type in the admin).</p></li>
-<li><p>Customize Migrations to map semantic types to db types.</p></li>
-</ul>
-
-
-<p><strong>Rails has the flexibility to mirror Django, so can we find a good way for Rails to represent semantic meaning for models?</strong></p>
-
-<h3>Interesting Further Projects</h3>
-
-<p>SemanticAttributes &ndash;  <a href="http://code.google.com/p/semanticattributes/">http://code.google.com/p/semanticattributes/</a></p>
-
-<p>Semantic Web, meet Ruby on Rails &ndash; <a href="http://www.jroller.com/obie/entry/more_about_ontologies">http://www.jroller.com/obie/entry/more_about_ontologies</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/7/">&larr; Older</a>
@@ -1659,6 +1561,10 @@ _</p></li>
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/clojure/functions-explained-through-patterns.html">Functions Explained Through Patterns</a>
+      </li>
     
       <li class="post">
         <a href="/art/audio-fingerprint-smudges.html">Audio Fingerprint Smudges</a>
@@ -1694,10 +1600,6 @@ _</p></li>
     
       <li class="post">
         <a href="/clojure/building-clojure-services-at-scale.html">Building Clojure services at scale</a>
-      </li>
-    
-      <li class="post">
-        <a href="/clojure/creating-instruments-with-overtone.html">Creating sampled instruments with Overtone</a>
       </li>
     
   </ul>

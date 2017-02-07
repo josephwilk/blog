@@ -9,12 +9,7 @@
   <meta name="author" content="Joseph Wilk">
 
   
-  <meta name="description" content="I recently contributed the Set data structure to the Elixir programming language.
-The Set is implemented through a HashSet. 1
-2
-3
-4
-s1 = HashSet.new &hellip;">
+  <meta name="description" content="Overtone is an open source audio environment which uses Clojure and SuperCollider (an environment and programming language for real time audio &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +77,422 @@ s1 = HashSet.new &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/clojure/creating-instruments-with-overtone.html">Creating Sampled Instruments With Overtone</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-26T21:28:00+01:00" pubdate data-updated="true">Aug 26<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://overtone.github.io">Overtone</a> is an open source audio environment which uses Clojure and <a href="http://supercollider.sourceforge.net/">SuperCollider</a> (an environment and programming language for real time audio synthesis and algorithmic composition).</p>
+
+<p>Overtone makes it very easy to define instruments based on sound samples from <a href="http://www.freesound.org">freesound</a>.
+We will walk through getting samples for a flute and then using them to define the flute instrument in Overtone.</p>
+
+<h2>The Flute</h2>
+
+<p><img src="/images/flute.jpg"/></p>
+
+<h3>Getting the samples</h3>
+
+<p>Firstly we need to manually grab all the IDs from freesound. Sounds are often grouped into packs making this a little less painful.</p>
+
+<p>We will be using the <a href="http://www.freesound.org/search/?q=flute&amp;f=grouping_pack%3A%229549_Transverse+Flute%3A+Tenuto+Vibrato+C4-C7%22&amp;s=score+desc&amp;advanced=0&amp;g=1">&ldquo;Transverse Flute: Tenuto Vibrato C4-C7&rdquo;</a> pack.</p>
+
+<p>A little Ruby script I use to produce a map of freesound ids to notes (which are usually in the filename of the sample):</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">#!/usr/bin/env ruby -w</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;rubygems&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;json&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">raise</span> <span class="no">Exception</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;You must pass in the pack id!&quot;</span><span class="p">)</span> <span class="k">unless</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">pack_id</span> <span class="o">=</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+</span><span class='line'><span class="n">note_extractor</span> <span class="o">=</span> <span class="err">λ</span><span class="p">{</span><span class="o">|</span><span class="n">filename</span><span class="o">|</span> <span class="n">filename</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/Transverse-Flute |\.wav|Tenuto|NonVibrato|-/</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/ NonVibrato/</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">data</span> <span class="o">=</span> <span class="no">JSON</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="sb">`curl --silent &quot;http://www.freesound.org/api/packs/</span><span class="si">#{</span><span class="n">pack_id</span><span class="si">}</span><span class="sb">/sounds/?api_key=47efd585321048819a2328721507ee23&quot;`</span><span class="p">)</span>
+</span><span class='line'><span class="n">number_of_pages</span> <span class="o">=</span> <span class="n">data</span><span class="o">[</span><span class="s2">&quot;num_pages&quot;</span><span class="o">]</span> <span class="o">||</span> <span class="mi">1</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">number_of_pages</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">page</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">data</span> <span class="o">=</span> <span class="no">JSON</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="sb">`curl --silent &quot;http://www.freesound.org/api/packs/</span><span class="si">#{</span><span class="n">pack_id</span><span class="si">}</span><span class="sb">/sounds/?api_key=47efd585321048819a2328721507ee23&amp;p=</span><span class="si">#{</span><span class="n">page</span> <span class="o">+</span> <span class="mi">1</span><span class="si">}</span><span class="sb">&quot;`</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">sound_ids</span> <span class="o">=</span> <span class="n">data</span><span class="o">[</span><span class="s2">&quot;sounds&quot;</span><span class="o">].</span><span class="n">map</span><span class="p">{</span><span class="o">|</span><span class="n">sound</span><span class="o">|</span> <span class="n">sound</span><span class="o">[</span><span class="s2">&quot;id&quot;</span><span class="o">]</span><span class="p">}</span>
+</span><span class='line'>  <span class="n">note_names</span> <span class="o">=</span> <span class="n">data</span><span class="o">[</span><span class="s2">&quot;sounds&quot;</span><span class="o">].</span><span class="n">map</span><span class="p">{</span><span class="o">|</span><span class="n">sound</span><span class="o">|</span> <span class="n">note_extractor</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">sound</span><span class="o">[</span><span class="s2">&quot;original_filename&quot;</span><span class="o">]</span><span class="p">)}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">sound_ids</span><span class="o">.</span><span class="n">each_with_index</span> <span class="k">do</span> <span class="o">|</span><span class="n">sound_id</span><span class="p">,</span> <span class="n">index</span><span class="o">|</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">sound_id</span><span class="si">}</span><span class="s2"> :</span><span class="si">#{</span><span class="n">note_names</span><span class="o">[</span><span class="n">index</span><span class="o">]</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Adding these to our Clojure code we have a Freesound ID to note mapping:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">FREESOUND-VIBRATO-FLUTE-SAMPLES</span>
+</span><span class='line'>  <span class="s">&quot;Freesound ids for all samples in the Vibrato Transverse Flute pack&quot;</span>
+</span><span class='line'>  <span class="p">{</span><span class="mi">154274</span> <span class="ss">:C7</span>  <span class="mi">154273</span> <span class="ss">:B6</span> <span class="mi">154272</span> <span class="ss">:A#6</span> <span class="mi">154271</span> <span class="ss">:A6</span> <span class="mi">154270</span> <span class="ss">:G#6</span> <span class="mi">154269</span> <span class="ss">:G6</span>  <span class="mi">154268</span> <span class="ss">:F#6</span>
+</span><span class='line'>   <span class="mi">154267</span> <span class="ss">:F6</span>  <span class="mi">154266</span> <span class="ss">:E6</span> <span class="mi">154265</span> <span class="ss">:D#6</span> <span class="mi">154264</span> <span class="ss">:D6</span> <span class="mi">154263</span> <span class="ss">:C#6</span> <span class="mi">154262</span> <span class="ss">:C6</span>  <span class="mi">154261</span> <span class="ss">:B5</span>
+</span><span class='line'>   <span class="mi">154260</span> <span class="ss">:A#5</span> <span class="mi">154259</span> <span class="ss">:A5</span> <span class="mi">154258</span> <span class="ss">:G#5</span> <span class="mi">154257</span> <span class="ss">:G5</span> <span class="mi">154256</span> <span class="ss">:F#5</span> <span class="mi">154255</span> <span class="ss">:F5</span>  <span class="mi">154254</span> <span class="ss">:E5</span>
+</span><span class='line'>   <span class="mi">154253</span> <span class="ss">:D#5</span> <span class="mi">154252</span> <span class="ss">:D5</span> <span class="mi">154251</span> <span class="ss">:C#5</span> <span class="mi">154250</span> <span class="ss">:C5</span> <span class="mi">154249</span> <span class="ss">:B4</span>  <span class="mi">154248</span> <span class="ss">:A#4</span> <span class="mi">154247</span> <span class="ss">:A4</span>
+</span><span class='line'>   <span class="mi">154246</span> <span class="ss">:G#4</span> <span class="mi">154245</span> <span class="ss">:G4</span> <span class="mi">154244</span> <span class="ss">:F#4</span> <span class="mi">154243</span> <span class="ss">:E4</span> <span class="mi">154242</span> <span class="ss">:F4</span>  <span class="mi">154241</span> <span class="ss">:D#4</span> <span class="mi">154240</span> <span class="ss">:D4</span>
+</span><span class='line'>   <span class="mi">154239</span> <span class="ss">:C#4</span> <span class="mi">154238</span> <span class="ss">:C4</span><span class="p">})</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>These samples are cached in the asset store (usually ~/.overtone/assets) so we don&rsquo;t have to keep downloading them. We define a cache key for our downloaded samples.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">defn- </span><span class="nv">registered-samples</span>
+</span><span class='line'>  <span class="s">&quot;Fetch flute samples from the asset store if they have been manually registered&quot;</span>
+</span><span class='line'>  <span class="p">[]</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">registered-assets</span> <span class="ss">::TransverseFluteTenutoVibrato</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Load all the samples into Overtone. This will automatically download the samples if they are not already present.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">flute-samples</span>
+</span><span class='line'>  <span class="p">(</span><span class="nb">doall </span><span class="p">(</span><span class="nb">map </span><span class="nv">freesound-sample</span> <span class="p">(</span><span class="nb">keys </span><span class="nv">FREESOUND-VIBRATO-FLUTE-SAMPLES</span><span class="p">))))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In order to play the samples we need to produce a mapping between the buffer that has the sound loaded and the midi pitch that buffer relates to.</p>
+
+<p>First we convert a freesound-id into a midi note (pitch)</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">defn- </span><span class="nv">buffer-&gt;midi-note</span> <span class="p">[</span><span class="nv">buf</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">(</span><span class="nb">-&gt; </span><span class="nv">buf</span> <span class="ss">:freesound-id</span> <span class="nv">FREESOUND-VIBRATO-FLUTE-SAMPLES</span> <span class="nb">name </span><span class="nv">note</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now we can generate the buffer id to midi note map.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">defn- </span><span class="nv">note-index</span>
+</span><span class='line'>  <span class="s">&quot;Returns a map of midi-note values [0-127] to buffer ids.&quot;</span>
+</span><span class='line'>  <span class="p">[</span><span class="nv">buffers</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">(</span><span class="nb">reduce </span><span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nb">index </span><span class="nv">buf</span><span class="p">]</span>
+</span><span class='line'>            <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">id</span> <span class="p">(</span><span class="nb">-&gt; </span><span class="nv">buf</span> <span class="ss">:id</span><span class="p">)</span>
+</span><span class='line'>                  <span class="nv">note</span> <span class="p">(</span><span class="nf">buffer-&gt;midi-note</span> <span class="nv">buf</span><span class="p">)]</span>
+</span><span class='line'>              <span class="p">(</span><span class="nb">assoc index </span><span class="nv">note</span> <span class="nv">id</span><span class="p">)))</span>
+</span><span class='line'>          <span class="p">{}</span>
+</span><span class='line'>          <span class="nv">buffers</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And we use this to set the buffers:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="c1">;Silent buffer used to ensure all 127 buffer spaces are filled </span>
+</span><span class='line'><span class="p">(</span><span class="kd">defonce </span><span class="o">^</span><span class="ss">:private</span> <span class="nv">silent-buffer</span> <span class="p">(</span><span class="nf">buffer</span> <span class="mi">0</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="kd">defonce </span><span class="nv">index-buffer</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">tab</span> <span class="p">(</span><span class="nf">note-index</span> <span class="nv">flute-samples</span><span class="p">)</span>
+</span><span class='line'>        <span class="nv">buf</span> <span class="p">(</span><span class="nf">buffer</span> <span class="mi">128</span><span class="p">)]</span>
+</span><span class='line'>    <span class="p">(</span><span class="nf">buffer-fill!</span> <span class="nv">buf</span> <span class="p">(</span><span class="ss">:id</span> <span class="nv">silent-buffer</span><span class="p">))</span>
+</span><span class='line'>    <span class="p">(</span><span class="nb">doseq </span><span class="p">[[</span><span class="nv">idx</span> <span class="nv">val</span><span class="p">]</span> <span class="nv">tab</span><span class="p">]</span>
+</span><span class='line'>      <span class="p">(</span><span class="nf">buffer-set!</span> <span class="nv">buf</span> <span class="nv">idx</span> <span class="nv">val</span><span class="p">))</span>
+</span><span class='line'>    <span class="nv">buf</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Defining the Instrument</h2>
+
+<p>Now we have all our samples we define a instrument in Overtone using <code>definst</code>:</p>
+
+<p>This allows us to specify a (huge) number of options on how our samples are played.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="nf">definst</span> <span class="nv">sampled-flute-vibrato</span>
+</span><span class='line'>  <span class="p">[</span><span class="nv">note</span> <span class="mi">60</span> <span class="nv">level</span> <span class="mi">1</span> <span class="nv">rate</span> <span class="mi">1</span> <span class="nv">loop?</span> <span class="mi">0</span> <span class="nv">attack</span> <span class="mi">0</span> <span class="nv">decay</span> <span class="mi">1</span> <span class="nv">sustain</span> <span class="mi">1</span> <span class="nv">release</span> <span class="mf">0.1</span> <span class="nv">curve</span> <span class="mi">-4</span> <span class="nv">gate</span> <span class="mi">1</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">buf</span> <span class="p">(</span><span class="nf">index</span><span class="ss">:kr</span> <span class="p">(</span><span class="ss">:id</span> <span class="nv">index-buffer</span><span class="p">)</span> <span class="nv">note</span><span class="p">)</span>
+</span><span class='line'>        <span class="nv">env</span> <span class="p">(</span><span class="nf">env-gen</span> <span class="p">(</span><span class="nf">adsr</span> <span class="nv">attack</span> <span class="nv">decay</span> <span class="nv">sustain</span> <span class="nv">release</span> <span class="nv">level</span> <span class="nv">curve</span><span class="p">)</span>
+</span><span class='line'>                     <span class="ss">:gate</span> <span class="nv">gate</span>
+</span><span class='line'>                     <span class="ss">:action</span> <span class="nv">FREE</span><span class="p">)]</span>
+</span><span class='line'>    <span class="p">(</span><span class="nb">* </span><span class="nv">env</span> <span class="p">(</span><span class="nf">scaled-play-buf</span> <span class="mi">2</span> <span class="nv">buf</span> <span class="ss">:level</span> <span class="nv">level</span> <span class="ss">:loop</span> <span class="nv">loop?</span> <span class="ss">:action</span> <span class="nv">FREE</span><span class="p">))))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>There is quite a lot going on here. Lets focus on the configuration that effects how our sound samples are played.</p>
+
+<h3>Defining the Envelope Generator (env-gen).</h3>
+
+<p>An envelope generator (mapping to function <code>env-gen</code>) makes an audio signal that smoothly rises and falls. We are taking the recording of the real flute instrument as a digitized waveform, and then playing back its recordings at different speeds to produce different tones.</p>
+
+<p>The most common form of envelope generator and the one we are using here is ADSR:</p>
+
+<p>attack (A), decay (D), sustain (S) and release &#40;R)</p>
+
+<p><img src="/images/ADSR.png" /></p>
+
+<p>There are a number of other config settings in our example:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">[</span>
+</span><span class='line'> <span class="nv">note</span> <span class="mi">60</span>     <span class="c1">; Default pitch</span>
+</span><span class='line'> <span class="nv">level</span> <span class="mi">1</span>     <span class="c1">; Volume</span>
+</span><span class='line'> <span class="nv">rate</span> <span class="mi">1</span>      <span class="c1">; Playback rate </span>
+</span><span class='line'> <span class="nv">loop?</span> <span class="mi">0</span>     <span class="c1">; The note should loop after the first play</span>
+</span><span class='line'> <span class="nv">attack</span> <span class="mi">0</span>    <span class="c1">; The way a sound is initiated. Fast attack (gunshot) vs Slow attack (closing a door slowly)</span>
+</span><span class='line'> <span class="nv">decay</span> <span class="mi">1</span>     <span class="c1">; The time for notes to decay after the initial strike</span>
+</span><span class='line'> <span class="nv">sustain</span> <span class="mi">1</span>   <span class="c1">; Once a sound has reached its peak, the length of time that the sound will sustain.</span>
+</span><span class='line'> <span class="nv">release</span> <span class="mf">0.1</span> <span class="c1">; The time for notes to decay after the key is released</span>
+</span><span class='line'> <span class="nv">curve</span> <span class="mi">-4</span>    <span class="c1">; Curve factor</span>
+</span><span class='line'> <span class="nv">gate</span> <span class="mi">1</span>      <span class="c1">; note occurs when gate goes from nonpositive to positive. Note off occurs when it goes from positive to nonpositive</span>
+</span><span class='line'><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Look to the <a href="http://supercollider.sourceforge.net/">SuperCollider</a> documentation on <a href="http://doc.sccode.org/Classes/UGen.html">UGENs</a> if you want to see all possible configuration options. Overtone is really a wrapper around the extremely powerful SuperCollider.</p>
+
+<h2>Grand finale</h2>
+
+<p>Finally we can start to play music in overtone using our flute:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="nf">sampled-flute-vibrato</span> <span class="mi">60</span><span class="p">)</span> <span class="o">#</span><span class="nv">=&gt;</span> <span class="nv">pitch</span> <span class="mi">60</span>
+</span><span class='line'><span class="p">(</span><span class="nf">sampled-flute-vibrato</span> <span class="mi">61</span><span class="p">)</span> <span class="o">#</span><span class="nv">=&gt;</span> <span class="nv">pitch</span> <span class="mi">61</span>
+</span><span class='line'><span class="p">(</span><span class="nf">sampled-flute-vibrato</span> <span class="mi">60</span><span class="p">)</span> <span class="o">#</span><span class="nv">=&gt;</span> <span class="nv">pitch</span> <span class="mi">60</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Hear for yourself:</p>
+
+<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F107183072&amp;color=ff6600&amp;auto_play=false&amp;show_artwork=false"></iframe>
+
+
+<h2>The Code in Full</h2>
+
+<p>Defining an instrument in Overtone:</p>
+
+<figure class='code'><figcaption><span>Loading buffers </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">ns </span><span class="nv">overtone.samples.flute-vibrato</span>
+</span><span class='line'>  <span class="p">(</span><span class="ss">:use</span> <span class="p">[</span><span class="nv">overtone.core</span><span class="p">])</span>
+</span><span class='line'>  <span class="p">(</span><span class="ss">:require</span> <span class="p">[</span><span class="nv">clojure.string</span> <span class="ss">:as</span> <span class="nv">str</span><span class="p">]))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="kd">defn- </span><span class="nv">registered-samples</span>
+</span><span class='line'>  <span class="s">&quot;Fetch flute samples from the asset store if they have been manually</span>
+</span><span class='line'><span class="s">  registered&quot;</span>
+</span><span class='line'>  <span class="p">[]</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">registered-assets</span> <span class="ss">::TransverseFluteTenutoVibrato</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">FREESOUND-VIBRATO-FLUTE-SAMPLES</span>
+</span><span class='line'>  <span class="s">&quot;Freesound ids for all samples in the Vibrato Transverse Flute pack&quot;</span>
+</span><span class='line'>  <span class="p">{</span><span class="mi">154274</span> <span class="ss">:C7</span>  <span class="mi">154273</span> <span class="ss">:B6</span> <span class="mi">154272</span> <span class="ss">:A#6</span> <span class="mi">154271</span> <span class="ss">:A6</span> <span class="mi">154270</span> <span class="ss">:G#6</span> <span class="mi">154269</span> <span class="ss">:G6</span>  <span class="mi">154268</span> <span class="ss">:F#6</span>
+</span><span class='line'>   <span class="mi">154267</span> <span class="ss">:F6</span>  <span class="mi">154266</span> <span class="ss">:E6</span> <span class="mi">154265</span> <span class="ss">:D#6</span> <span class="mi">154264</span> <span class="ss">:D6</span> <span class="mi">154263</span> <span class="ss">:C#6</span> <span class="mi">154262</span> <span class="ss">:C6</span>  <span class="mi">154261</span> <span class="ss">:B5</span>
+</span><span class='line'>   <span class="mi">154260</span> <span class="ss">:A#5</span> <span class="mi">154259</span> <span class="ss">:A5</span> <span class="mi">154258</span> <span class="ss">:G#5</span> <span class="mi">154257</span> <span class="ss">:G5</span> <span class="mi">154256</span> <span class="ss">:F#5</span> <span class="mi">154255</span> <span class="ss">:F5</span>  <span class="mi">154254</span> <span class="ss">:E5</span>
+</span><span class='line'>   <span class="mi">154253</span> <span class="ss">:D#5</span> <span class="mi">154252</span> <span class="ss">:D5</span> <span class="mi">154251</span> <span class="ss">:C#5</span> <span class="mi">154250</span> <span class="ss">:C5</span> <span class="mi">154249</span> <span class="ss">:B4</span>  <span class="mi">154248</span> <span class="ss">:A#4</span> <span class="mi">154247</span> <span class="ss">:A4</span>
+</span><span class='line'>   <span class="mi">154246</span> <span class="ss">:G#4</span> <span class="mi">154245</span> <span class="ss">:G4</span> <span class="mi">154244</span> <span class="ss">:F#4</span> <span class="mi">154243</span> <span class="ss">:E4</span> <span class="mi">154242</span> <span class="ss">:F4</span>  <span class="mi">154241</span> <span class="ss">:D#4</span> <span class="mi">154240</span> <span class="ss">:D4</span>
+</span><span class='line'>   <span class="mi">154239</span> <span class="ss">:C#4</span> <span class="mi">154238</span> <span class="ss">:C4</span><span class="p">})</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">FLUTE-SAMPLE-IDS</span> <span class="p">(</span><span class="nb">keys </span><span class="nv">FREESOUND-VIBRATO-FLUTE-SAMPLES</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">flute-samples</span>
+</span><span class='line'>  <span class="p">(</span><span class="nb">doall </span><span class="p">(</span><span class="nb">map </span><span class="nv">freesound-sample</span> <span class="nv">FLUTE-SAMPLE-IDS</span><span class="p">)))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="kd">defn- </span><span class="nv">buffer-&gt;midi-note</span> <span class="p">[</span><span class="nv">buf</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">(</span><span class="nb">-&gt; </span><span class="nv">buf</span> <span class="ss">:freesound-id</span> <span class="nv">FREESOUND-VIBRATO-FLUTE-SAMPLES</span> <span class="nb">name </span><span class="nv">note</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="kd">defn- </span><span class="nv">note-index</span>
+</span><span class='line'>  <span class="s">&quot;Returns a map of midi-note values [0-127] to buffer ids.&quot;</span>
+</span><span class='line'>  <span class="p">[</span><span class="nv">buffers</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">(</span><span class="nb">reduce </span><span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nb">index </span><span class="nv">buf</span><span class="p">]</span>
+</span><span class='line'>            <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">id</span> <span class="p">(</span><span class="nb">-&gt; </span><span class="nv">buf</span> <span class="ss">:id</span><span class="p">)</span>
+</span><span class='line'>                  <span class="nv">note</span> <span class="p">(</span><span class="nf">buffer-&gt;midi-note</span> <span class="nv">buf</span><span class="p">)]</span>
+</span><span class='line'>              <span class="p">(</span><span class="nb">assoc index </span><span class="nv">note</span> <span class="nv">id</span><span class="p">)))</span>
+</span><span class='line'>          <span class="p">{}</span>
+</span><span class='line'>          <span class="nv">buffers</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">;; Silent buffer used to fill in the gaps.</span>
+</span><span class='line'><span class="p">(</span><span class="kd">defonce </span><span class="o">^</span><span class="ss">:private</span> <span class="nv">silent-buffer</span> <span class="p">(</span><span class="nf">buffer</span> <span class="mi">0</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="kd">defonce </span><span class="nv">index-buffer</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">tab</span> <span class="p">(</span><span class="nf">note-index</span> <span class="nv">flute-samples</span><span class="p">)</span>
+</span><span class='line'>        <span class="nv">buf</span> <span class="p">(</span><span class="nf">buffer</span> <span class="mi">128</span><span class="p">)]</span>
+</span><span class='line'>    <span class="p">(</span><span class="nf">buffer-fill!</span> <span class="nv">buf</span> <span class="p">(</span><span class="ss">:id</span> <span class="nv">silent-buffer</span><span class="p">))</span>
+</span><span class='line'>    <span class="p">(</span><span class="nb">doseq </span><span class="p">[[</span><span class="nv">idx</span> <span class="nv">val</span><span class="p">]</span> <span class="nv">tab</span><span class="p">]</span>
+</span><span class='line'>      <span class="p">(</span><span class="nf">buffer-set!</span> <span class="nv">buf</span> <span class="nv">idx</span> <span class="nv">val</span><span class="p">))</span>
+</span><span class='line'>    <span class="nv">buf</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>Defining the instrument </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">ns </span><span class="nv">overtone.inst.sampled-flute</span>
+</span><span class='line'>  <span class="p">(</span><span class="ss">:use</span> <span class="p">[</span><span class="nv">overtone.core</span><span class="p">])</span>
+</span><span class='line'>  <span class="p">(</span><span class="ss">:require</span>
+</span><span class='line'>   <span class="p">[</span><span class="nv">overtone.samples.flute-vibrato</span> <span class="ss">:as</span> <span class="nv">vibrato</span><span class="p">]))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="nf">definst</span> <span class="nv">sampled-flute-vibrato</span>
+</span><span class='line'>  <span class="p">[</span><span class="nv">note</span> <span class="mi">60</span> <span class="nv">level</span> <span class="mi">1</span> <span class="nv">rate</span> <span class="mi">1</span> <span class="nv">loop?</span> <span class="mi">0</span>
+</span><span class='line'>   <span class="nv">attack</span> <span class="mi">0</span> <span class="nv">decay</span> <span class="mi">1</span> <span class="nv">sustain</span> <span class="mi">1</span> <span class="nv">release</span> <span class="mf">0.1</span> <span class="nv">curve</span> <span class="mi">-4</span> <span class="nv">gate</span> <span class="mi">1</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">buf</span> <span class="p">(</span><span class="nf">index</span><span class="ss">:kr</span> <span class="p">(</span><span class="ss">:id</span> <span class="nv">vibrato/index-buffer</span><span class="p">)</span> <span class="nv">note</span><span class="p">)</span>
+</span><span class='line'>        <span class="nv">env</span> <span class="p">(</span><span class="nf">env-gen</span> <span class="p">(</span><span class="nf">adsr</span> <span class="nv">attack</span> <span class="nv">decay</span> <span class="nv">sustain</span> <span class="nv">release</span> <span class="nv">level</span> <span class="nv">curve</span><span class="p">)</span>
+</span><span class='line'>                     <span class="ss">:gate</span> <span class="nv">gate</span>
+</span><span class='line'>                     <span class="ss">:action</span> <span class="nv">FREE</span><span class="p">)]</span>
+</span><span class='line'>    <span class="p">(</span><span class="nb">* </span><span class="nv">env</span> <span class="p">(</span><span class="nf">scaled-play-buf</span> <span class="mi">2</span> <span class="nv">buf</span> <span class="ss">:level</span> <span class="nv">level</span> <span class="ss">:loop</span> <span class="nv">loop?</span> <span class="ss">:action</span> <span class="nv">FREE</span><span class="p">))))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -2552,235 +2963,6 @@ Checkout this great paper on the effectiveness of different functions: <a href="
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/big-data/a-little-bit-of-pig.html">A Little Bit of Pig</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-11T17:35:41+01:00" pubdate data-updated="true">Jun 11<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Currently in the Science team at Songkick I&rsquo;ve been working with Apache Pig to generate lots of interesting metrics for our business intelligence. We use Amazon&rsquo;s MapReduce and Pig to avoid having to run complex, long running and intensive queries on our live db, we can run them on Amazon in a timely fashion instead. So lets dive into Pig and how we use it at Songkick.com.</p>
-
-<h2>Pig (whats with all these silly names)</h2>
-
-<p>The Apache project Pig is a data flow language designed for analysing large datasets. It provides a high-level platform for creating MapReduce programs used with <em>Hadoop. </em>A little bit like SQL but Pig&rsquo;s programs by their structure are suitable for <strong>parallelization</strong>, which is why they are great at  handling very large data sets.</p>
-
-<p><img src="/images/blog/2012/05/pig-300x284.gif" alt="" /></p>
-
-<p>Heres how we use Pig and ElasticMapReduce at Songkick in our Science team.</p>
-
-<h2>Data (Pig food)</h2>
-
-<p><img src="/images/blog/2012/06/pig_eating.png" alt="" /></p>
-
-<p>Lets start by uploading some huge and interesting data about Songkicks artists onto S3. We start by dumping a table from mysql (along with a lot of other tables) and then query that data with Pig on Hadoop. While we could extract all the artist data by querying the live table its actually faster to use mysqldump and dump the table as a TSV file.</p>
-
-<p>For example it took 35 minutes to dump our artist table with a sql query &lsquo;select * from artists&rsquo;. It takes 10 minutes to dump the entire table with mysqldump.</p>
-
-<p>We format the table dump as a TSV which we push to S3 as that makes it super easy to use Amazons ElasticMapReduce with Pig.</p>
-
-<pre><code>shell&gt; mysqldump --user=joe --password  --fields-optionally-enclosed-by='"'
-                  --fields-terminated-by='\t' --tab /tmp/path_to_dump/ songkick artist_trackings
-</code></pre>
-
-<p>Unfortunately this has to be run on the db machine since mysqldump needs access to the file system to save the data. If this is a problem for you there is a Ruby script for dumping tables to TSV: <a href="http://github.com/apeckham/mysqltsvdump/blob/master/mysqltsvdump.rb">http://github.com/apeckham/mysqltsvdump/blob/master/mysqltsvdump.rb</a></p>
-
-<h2>Launching (Pig catapult)</h2>
-
-<p><img src="/images/blog/2012/06/flying_pig.png" alt="" /></p>
-
-<p>We will be using Amazons Elastic MapReduce to run our Pig scripts. We can start our job in interactive Pig mode which allows us to ssh to the box and run the pig script line by line.</p>
-
-<p><img src="/images/blog/2012/05/aws_pig.png" alt="" /></p>
-
-<h2>Examples (Dancing Pigs)</h2>
-
-<p><img src="/images/blog/2012/06/dancing_pigs1.jpg" alt="" /></p>
-
-<p>An important thing to note when running pig scripts interactively is that they defer execution until they have to expose a result. This means you can get nice schema checks and validations helping ensure your PIG script is valid without actually executing it over your large dataset.</p>
-
-<p>We are going to try and calculate the average number of users tracking an artist based on the condition that we only count users who logged in, in the last 30 days.</p>
-
-<p>This is what our Pig script is doing:</p>
-
-<p><img src="/images/blog/2012/06/query6.png" alt="" /></p>
-
-<p>The Pig script:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>-- Define some useful dates we will use later
-</span><span class='line'>%default TODAYS_DATE `date  +%Y/%m/%d`
-</span><span class='line'>%default 30_DAYS_AGO `date -d "$TODAYS_DATE - 30 day" +%Y-%m-%d`
-</span><span class='line'>    
-</span><span class='line'>-- Pig is smart enough when given a folder to go and find files, decompress them if necessarily and load them.
-</span><span class='line'>-- Note we have to specify the schema as PIG does not know know this from our TSV file.
-</span><span class='line'>trackings = LOAD 's3://songkick/db/trackings/$TODAYS_DATE/' AS (id:int, artist_id:int,  user_id:int); 
-</span><span class='line'>users = LOAD 's3://songkick/db/users/$TODAYS_DATE/' AS (id:int, username:chararray, last_logged_in_at:chararray);</span></code></pre></td></tr></table></div></figure>
-
-
-<pre><code>trackings
-&lt;1, 1, 1&gt;
-&lt;2, 1, 2&gt;
-
-users
-&lt;1,'josephwilk', '11/06/2012'&gt;
-&lt;2,'elisehuard', '11/06/2012'&gt;
-&lt;3,'tycho', '11/06/2010'&gt;
-</code></pre>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>-- Filter users to only those who logged in, in the last 30 days
-</span><span class='line'>    -- Pig does not understand dates, so just treat them as strings
-</span><span class='line'>    active_users = FILTER users by last_logged_in_at gte '$30_DAYS_AGO'</span></code></pre></td></tr></table></div></figure>
-
-
-<pre><code>Users
-&lt;1,'josephwilk', '11/06/2012'&gt;
-&lt;2,'elisehuard', '11/06/2012'&gt;
-</code></pre>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>active_users_and_trackings = JOIN active_users BY id, trackings BY user_id
-</span><span class='line'>    
-</span><span class='line'>    -- group all the users tracking an artists so we can count them.
-</span><span class='line'>    active_users_and_trackings_grouped = GROUP active_users_and_trackings BY active_users::user_id;</span></code></pre></td></tr></table></div></figure>
-
-
-<pre><code>&lt;1, 1, /\{&lt;1,'josephwilk', '11/06/2012'&gt;, &lt;2,'elisehuard', '11/06/2012'&gt;\/}&gt;`
-</code></pre>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>trackings_per_artist = FOREACH active_users_and_trackings_grouped GENERATE group, COUNT($2) as number_of_trackings;</span></code></pre></td></tr></table></div></figure>
-
-
-<pre><code>`&lt;\/{&lt;1,'josephwilk', '11/06/2012'&gt;, &lt;2,'elisehuard', '11/06/2012'&gt;\/}, 2&gt;`
-</code></pre>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>-- group all the counts so we can calculate the average
-</span><span class='line'>    all_trackings_per_artist = GROUP trackings_per_artist ALL;</span></code></pre></td></tr></table></div></figure>
-
-
-<pre><code>&lt;\/{\/{&lt;1,'josephwilk', '11/06/2012'&gt;, &lt;2,'elisehuard', '11/06/2012'&gt;\/}, 2\/}&gt;
-</code></pre>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>-- Calculate the average
-</span><span class='line'>    average_artist_trackings_per_active_user = FOREACH all_trackings_per_artist
-</span><span class='line'>      GENERATE '$DATE' as dt, AVG(trackings_per_artist.number_of_trackings);</span></code></pre></td></tr></table></div></figure>
-
-
-<pre><code>&lt;{&lt;'11/062012', 2&gt;}&gt;
-</code></pre>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>--Now we have done the work store the result in S3.
-</span><span class='line'>    STORE average_artist_trackings_per_active_user INTO
-</span><span class='line'>      's3://songkick/stats/average_artist_trackings_per_active_user/$TODAYS_DATE'</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Debugging Pigs (Pig autopsy)</h2>
-
-<p><img src="/images/blog/2012/06/pig_insides.png" alt="" />
-In an interactive pig session there are two useful commands for debugging:
-<strong>DESCRIBE</strong> to see the schema.
-<strong>ILLUSTRATE</strong> to see the schema with sample data:</p>
-
-<pre><code>DESCRIBE users;
-users: {id:int, username:chararray, created_at:chararray, trackings:int}
-
-ILLUSTRATE users;
-----------------------------------------------------------------------
-| users   | id: int | username:chararray | created_at | trackings:int |
-----------------------------------------------------------------------
-|         | 18      | Joe                | 10/10/13   | 1000          |
-|         | 20      | Elise              | 10/10/14   | 2300          |
-----------------------------------------------------------------------
-</code></pre>
-
-<h2>Automating Elastic MapReduce (Pig robots)</h2>
-
-<p><img src="/images/blog/2012/06/pig_robot.png" alt="" /></p>
-
-<p>Once you are happy with your script you&rsquo;ll want to automate all of this. I currently do this by having a cron task which at regular intervals uses the  elastic-mapreduce-ruby lib to fire up a elastic map reduce job and run it with the pig script to execute.</p>
-
-<p>Its important to note that I <em>store the pig scripts on S3</em> so its easy for elastic-mapreduce to find the scripts.</p>
-
-<p>Follow the instructions to install elastic-mapreduce-ruby: <a href="https://github.com/tc/elastic-mapreduce-ruby">https://github.com/tc/elastic-mapreduce-ruby</a></p>
-
-<p>To avoid having to call elastic-mapreduce with 100s of arguments a colleague has written a little python wrapper to make it quick and easy to use: <a href="https://gist.github.com/2911006">https://gist.github.com/2911006</a></p>
-
-<p>You&rsquo;ll need to configure where you&rsquo;re elastic-mapreduce tool is installed AND where you want elastic map-reduce to log to on S3 (this means you can debug your elastic map reduce job if things go wrong!).</p>
-
-<p>Now all we need to do is pass the script the path to the pig script on S3.</p>
-
-<pre><code>./emrjob s3://songkick/lib/stats/pig/average_artist_trackings_per_active_user.pig
-</code></pre>
-
-<h2>Testing with PigUnit (Simulating Pigs)</h2>
-
-<p><img src="/images/blog/2012/06/virtual_pig.png" alt="" /></p>
-
-<p>Pig scripts can still take a long time to run even with all that Hadoop magic. Thankfully there is a testing framework PigUnit.</p>
-
-<p><a href="http://pig.apache.org/docs/r0.8.1/pigunit.html#Overview">http://pig.apache.org/docs/r0.8.1/pigunit.html#Overview</a></p>
-
-<p>Unfortunately this is where you have to step into writing Java. So I skipped it. Sshhh.</p>
-
-<h2>References</h2>
-
-<ol>
-<li><p> Apache Pig official site: <a href="http://pig.apache.org/">http://pig.apache.org</a></p></li>
-<li><p> Nearest Neighbours with Apache Pig and JRuby: <a href="http://thedatachef.blogspot.co.uk/2011/10/nearest-neighbors-with-apache-pig-and.html">http://thedatachef.blogspot.co.uk/2011/10/nearest-neighbors-with-apache-pig-and.html </a></p></li>
-<li><p> Helpers for messing with Elastic MapReduce in Ruby <a href="https://github.com/tc/elastic-mapreduce-ruby">https://github.com/tc/elastic-mapreduce-ruby</a></p></li>
-<li><p> mysqltsvdump <a href="http://github.com/apeckham/mysqltsvdump/blob/master/mysqltsvdump.rb">http://github.com/apeckham/mysqltsvdump/blob/master/mysqltsvdump.rb</a></p></li>
-</ol>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/3/">&larr; Older</a>
@@ -2796,6 +2978,10 @@ ILLUSTRATE users;
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/clojure/functions-explained-through-patterns.html">Functions Explained Through Patterns</a>
+      </li>
     
       <li class="post">
         <a href="/art/audio-fingerprint-smudges.html">Audio Fingerprint Smudges</a>
@@ -2831,10 +3017,6 @@ ILLUSTRATE users;
     
       <li class="post">
         <a href="/clojure/building-clojure-services-at-scale.html">Building Clojure services at scale</a>
-      </li>
-    
-      <li class="post">
-        <a href="/clojure/creating-instruments-with-overtone.html">Creating sampled instruments with Overtone</a>
       </li>
     
   </ul>

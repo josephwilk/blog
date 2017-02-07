@@ -9,7 +9,8 @@
   <meta name="author" content="Joseph Wilk">
 
   
-  <meta name="description" content="Procedurally generating music, scoring generations based on an audio service (like SoundCloud) identifying it as an existing song/artist. The more &hellip;">
+  <meta name="description" content="Exploring patterns as a means of documenting Clojure functions to aid recall and understanding. Whats the difference in Clojure between:
+partition &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +84,544 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/clojure/functions-explained-through-patterns.html">Functions Explained Through Patterns</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2017-02-07T14:00:00+00:00" pubdate data-updated="true">Feb 7<span>th</span>, 2017</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Exploring patterns as a means of documenting Clojure functions to aid recall and understanding.</p>
+
+<p>Whats the difference in Clojure between:
+<code>partition</code> and <code>partition-all</code>?
+<code>interpose</code> and <code>interleave</code>?
+<code>cons</code> and <code>conj</code>?</p>
+
+<h2>Documenting Functions</h2>
+
+<p>All non-side effecting functions create or alter a pattern. To explain a function&rsquo;s pattern we use a number of descriptions.</p>
+
+<ul>
+<li>A function signature:</li>
+</ul>
+
+
+<p><code>(nthrest col nth)</code></p>
+
+<ul>
+<li>A textual description:</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Returns a lazy seq of the elements of coll separated by sep.
+</span><span class='line'>Returns a stateful transducer when no collection is provided.</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Examples showing application of the function:</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="nf">interpose</span> <span class="mf">1.0</span> <span class="p">[</span><span class="mf">0.3</span> <span class="mf">0.4</span><span class="p">])</span>
+</span><span class='line'><span class="c1">;;=&gt; [0.3 1.0 0.4 1.0]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Exploration vs Recall</h2>
+
+<p>As someone with a brain far more orientated to visuals than text I struggled to remember and understand many Clojure functions: <code>nthrest</code>, <code>conj</code> <code>cons</code>, etc.
+The documentation of patterns in the Clojure documentation is all text. Even with the documentation brought into the editor I struggle. Example from <a href="https://github.com/clojure-emacs/cider">Cider</a> &amp; Emacs:</p>
+
+<p><img src="/images/emacs-cider.png"></p>
+
+<p>Clojure has a strong focus on REPL driven development. If you don&rsquo;t understand a function use an interactive REPL to explore examples.</p>
+
+<p>Critically this favours <strong>discovery over recall</strong>. I can never remember the difference between <code>conj</code> and <code>cons</code>, but I can find out through the REPL.</p>
+
+<p>To help aid memory and understanding I&rsquo;ve turn the examples of the collection orientated functions in Clojure into visual patterns. I won&rsquo;t try and make any general case on visuals vs text (Its a fuzzy research area: <a href="http://studiokayama.com/text-vs-visuals/">http://studiokayama.com/text-vs-visuals/</a>).</p>
+
+<h2>Patterns for the visual brain</h2>
+
+<p>Applying functions to collections of data using: <a href="https://github.com/josephwilk/functions-as-patterns">https://github.com/josephwilk/functions-as-patterns</a></p>
+
+<h2><code>(butlast col)</code></h2>
+
+<pre><code>Return a seq of all but the last item in coll, in linear time
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>butlast <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24butlast_arg0.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24butlast_post.png"></span>
+</div>
+
+
+<h2><code>(concat x y)</code></h2>
+
+<pre><code>Returns a lazy seq representing the concatenation of the elements
+in the supplied colls.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>concat <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24concat_arg0.png"> <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24concat_arg1.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24concat_post.png"></span>
+</div>
+
+
+<h2><code>(conj coll x) (conj coll x &amp; xs)</code></h2>
+
+<pre><code>conj[oin]. Returns a new collection with the xs
+'added'. (conj nil item) returns (item).  The 'addition' may
+happen at different 'places' depending on the concrete type.
+</code></pre>
+
+<h5><code>conj vector</code></h5>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>conj <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24conj_arg0_vec.png"> <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24conj_arg1_vec.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24conj_post_vec.png"></span>
+</div>
+
+
+<h5><code>conj list</code></h5>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>conj <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24conj_arg0_list.png"> <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24conj_arg1_list.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24conj_post_list.png"></span>
+</div>
+
+
+<h2><code>(cons x seq)</code></h2>
+
+<pre><code>Returns a new seq where x is the first element and seq is
+the rest.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>cons <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24cons_arg0.png"> <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24cons_arg1.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24cons_post.png"></span>
+</div>
+
+
+<h2><code>(distinct col)</code></h2>
+
+<pre><code>Returns a lazy sequence of the elements of coll with duplicates removed.
+Returns a stateful transducer when no collection is provided.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>distinct <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24distinct_arg0.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24distinct_post.png"></span>
+</div>
+
+
+<h2><code>(drop-last n col)</code></h2>
+
+<pre><code>Return a lazy sequence of all but the last n (default 1) items in coll
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>drop-last 2 <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24drop_last_arg1.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24drop_last_post.png"></span>
+</div>
+
+
+<h2><code>(flatten col)</code></h2>
+
+<pre><code>Takes any nested combination of sequential things (lists, vectors,
+etc.) and returns their contents as a single, flat foldable
+collection.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>flatten <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24flatten_arg0.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24flatten_post.png"></span>
+</div>
+
+
+<h2><code>(interpose col col)</code></h2>
+
+<pre><code>Returns a lazy seq of the elements of coll separated by sep.
+Returns a stateful transducer when no collection is provided.
+</code></pre>
+
+<div style="padding-bottom: 10px;">
+<span><span style="font-size: 2em;">(</span><code>interpose <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24interpose_arg0.png"> <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24interpose_arg1.png"><span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24interpose_post.png"></span>
+</div>
+
+
+<h2><code>(interleave col col)</code></h2>
+
+<pre><code>Returns a lazy seq of the first item in each coll, then the second etc.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>interleave <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24interleave_arg0.png"> <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24interleave_arg1.png"><span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24interleave_post.png"></span>
+</div>
+
+
+<h2><code>(nthnext col n)</code></h2>
+
+<pre><code>Returns the nth next of coll, (seq coll) when n is 0.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>nthnext <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24nthnext_arg0.png"> 3<span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24nthnext_post.png"></span>
+</div>
+
+
+<h2><code>(nthrest n col)</code></h2>
+
+<pre><code>Returns the nth rest of coll, coll when n is 0.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>nthrest 3 <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24nthrest_arg0.png"><span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24nthrest_post.png"></span>
+</div>
+
+
+<h2><code>(partition n col)</code></h2>
+
+<pre><code>Returns a lazy sequence of lists of n items each, at offsets step apart.
+If step is not supplied, defaults to n, i.e. the partitions do not overlap.
+If a pad collection is supplied, use its elements as necessary to complete
+last partition upto n items. In case there are not enough padding elements,
+return a partition with less than n items.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>partition 3 <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24partition_arg1.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24partition_post.png"></span>
+</div>
+
+
+<h2><code>(partition-all n col)</code></h2>
+
+<pre><code>Returns a lazy sequence of lists like partition, but may include
+partitions with fewer than n items at the end.  Returns a stateful
+transducer when no collection is provided.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>partition-all 3 <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24partition_all_arg1.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24partition_all_post.png"></span>
+</div>
+
+
+<h2><code>(replace smap col)</code></h2>
+
+<pre><code>Given a map of replacement pairs and a vector/collection, returns a vector/seq
+with any elements = a key in smap replaced with the corresponding val in smap.  
+Returns a transducer when no collection is provided.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>replace <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24replace_arg0.png"> [0 3 4] <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24replace_post.png"></span>
+</div>
+
+
+<h2><code>(rest col)</code></h2>
+
+<pre><code>Returns a possibly empty seq of the items after the first. Calls seq on its
+argument.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>rest <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24rest_arg0.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24rest_post.png"></span>
+</div>
+
+
+<h2><code>(reverse col)</code></h2>
+
+<pre><code>Returns a seq of the items in coll in reverse order. Not lazy.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>reverse <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24reverse_arg0.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24reverse_post.png"></span>
+</div>
+
+
+<h2><code>(shuffle coll)</code></h2>
+
+<pre><code>Return a random permutation of coll.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>shuffle <img style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24shuffle_arg0.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24shuffle_post.png"></span>
+</div>
+
+
+<h2><code>(sort coll)</code></h2>
+
+<pre><code>Returns a sorted sequence of the items in coll. If no comparator is
+supplied, uses compare.  comparator must implement
+java.util.Comparator.  Guaranteed to be stable: equal elements will
+not be reordered.  If coll is a Java array, it will be modified.  To
+avoid this, sort a copy of the array.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>sort <img style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24sort_arg0.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24sort_post.png"></span>
+</div>
+
+
+<h2><code>(take-nth n coll)</code></h2>
+
+<pre><code>Returns a lazy seq of every nth item in coll.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>take-nth 3 <img style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24take_nth_arg1.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24take_nth_post.png"></span>
+</div>
+
+
+<h2><code>(split-at n col)</code></h2>
+
+<pre><code>Returns a vector of [(take n coll) (drop n coll)]
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>split-at 2 <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24split_at_arg1.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24split_at_post.png"></span>
+</div>
+
+
+<h2>Conclusions</h2>
+
+<p>As someone who performs live coding to an audience I perhaps have a different value on recall vs exploration. Hundreds of eyes staring at you tends to have that effect.
+While some examples are stronger through patterns than others, at least for myself the use of a visual aid as part of development and documentation is beneficial. Its the only way I can the remember the oddity of <code>conj</code>.</p>
+
+<p>Within my REPL interaction I use the <a href="https://github.com/josephwilk/functions-as-patterns">functions-as-patterns</a> toolkit, providing a higher level representation of the patterns and data. I can understand a drum pattern faster through colour than I can through a 1 &amp; 0 data structure.</p>
+
+<p>In creating the cheatsheet the value of the comparison of functions through patterns also became clear. I discovered almost identical functions such as <code>nthnext</code> and <code>nthrest</code> which only differed in a special case (with an empty sequence).</p>
+
+<h3>Problems of turning data into colour</h3>
+
+<p>While this visual cheatsheet is useful there are caveats:</p>
+
+<h4>Semantic&rsquo;s of arguments</h4>
+
+<p>Its not always clear if an argument is an index or a value. If we look at the <code>replace</code> function example:</p>
+
+<p><code>(replace (take 5 (hues-of-color)) [0 3 4])</code></p>
+
+<p>0,3 &amp; 4 are references to indices within the first argument. Ideally it would be nice to replace those with the relevant colour.
+However the functions-as-patterns library cannot tell these are not values, it assumes everything is a value. Hence you end up with <code>[0 3 4]</code> drawn in shades of black:</p>
+
+<p><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24replace_arg1.png"></p>
+
+<h4>Pattern of emptyness</h4>
+
+<p>I&rsquo;ve not tried to visually represent, <code>empty</code> or <code>nil</code>. Some functions are defined by the difference in handling the empty case. The patterns might mis-lead you to think <code>nthnext</code> and <code>nthrest</code> are identical when they are not.</p>
+
+<h4>What type is a square?</h4>
+
+<p>Clojure has multiple types of sequences, <code>char-arrays</code>, <code>lists</code>, <code>vectors</code>, <code>lazy-seq</code> ,etc. To keep the visual pattern simple I&rsquo;ve not represented these types.</p>
+
+<h4>Functions applying functions</h4>
+
+<p>I&rsquo;ve purposely skipped the <code>map</code>/<code>reduce</code>/<code>remove</code>/<code>filter</code> functions as they tend to mix two patterns together. That of the core function and the applied function. The value of the patterns gets lost.</p>
+
+<h4>Brains seek patterns.</h4>
+
+<p>Do you see a pattern in the randomness? A single example might reveal a false pattern. Many examples would be required to re-enforce the randomness of the resulting patterns. Example <code>shuffle</code>.</p>
+
+<h4>Ordering</h4>
+
+<p>Colours don’t always imply a logical order. Example <code>sort</code>.</p>
+
+<h2>Sources</h2>
+
+<p>Inspired by the work of Alex McLean (<a href="https://github.com/yaxu">@yaxu</a>) using visual patterns to explain the live coding language Tidal: <a href="https://www.academia.edu/467099/TIDAL_PATTERN_LANGUAGE_FOR_LIVE_CODING_OF_MUSIC">Tidal Pattern Language for Live Coding of Music</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/art/audio-fingerprint-smudges.html">Audio Fingerprint Smudges</a></h1>
     
     
@@ -137,7 +676,7 @@
 
 
 
-<p>To try and match our generative audio to songs we will use a number of music services and some open-source audio fingerprinting tools. Most commercial audio fingerprinting algorithms are secret and patented up to the eyeballs. So there is a lot of trial and error. Some services used to evaluate a song match:</p>
+<p>To try and match our generative audio to songs we will use a number of music services and some open-source audio fingerprinting tools. Most commercial audio fingerprinting algorithms are secret and patented up to the eyeballs. So there is a lot of trial and errors. Some services used to evalute a song match:</p>
 
 
 
@@ -157,7 +696,7 @@
 
 
 
-<p>All generated tracks have comments exactly when a song was detected. The background images of the tracks are their respective <a href="https://en.wikipedia.org/wiki/Spectrogram">spectrograms</a>.</p>
+<p>All generated tracks have comments exactly when a song was detected.</p>
 
 
 
@@ -3904,422 +4443,6 @@ In part thanks to Netflix&rsquo;s hard work there is no reason you cannot write 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/clojure/creating-instruments-with-overtone.html">Creating Sampled Instruments With Overtone</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-08-26T21:28:00+01:00" pubdate data-updated="true">Aug 26<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://overtone.github.io">Overtone</a> is an open source audio environment which uses Clojure and <a href="http://supercollider.sourceforge.net/">SuperCollider</a> (an environment and programming language for real time audio synthesis and algorithmic composition).</p>
-
-<p>Overtone makes it very easy to define instruments based on sound samples from <a href="http://www.freesound.org">freesound</a>.
-We will walk through getting samples for a flute and then using them to define the flute instrument in Overtone.</p>
-
-<h2>The Flute</h2>
-
-<p><img src="/images/flute.jpg"/></p>
-
-<h3>Getting the samples</h3>
-
-<p>Firstly we need to manually grab all the IDs from freesound. Sounds are often grouped into packs making this a little less painful.</p>
-
-<p>We will be using the <a href="http://www.freesound.org/search/?q=flute&amp;f=grouping_pack%3A%229549_Transverse+Flute%3A+Tenuto+Vibrato+C4-C7%22&amp;s=score+desc&amp;advanced=0&amp;g=1">&ldquo;Transverse Flute: Tenuto Vibrato C4-C7&rdquo;</a> pack.</p>
-
-<p>A little Ruby script I use to produce a map of freesound ids to notes (which are usually in the filename of the sample):</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">#!/usr/bin/env ruby -w</span>
-</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;rubygems&#39;</span>
-</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;json&#39;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">raise</span> <span class="no">Exception</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;You must pass in the pack id!&quot;</span><span class="p">)</span> <span class="k">unless</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">pack_id</span> <span class="o">=</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
-</span><span class='line'><span class="n">note_extractor</span> <span class="o">=</span> <span class="err">λ</span><span class="p">{</span><span class="o">|</span><span class="n">filename</span><span class="o">|</span> <span class="n">filename</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/Transverse-Flute |\.wav|Tenuto|NonVibrato|-/</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/ NonVibrato/</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)}</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">data</span> <span class="o">=</span> <span class="no">JSON</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="sb">`curl --silent &quot;http://www.freesound.org/api/packs/</span><span class="si">#{</span><span class="n">pack_id</span><span class="si">}</span><span class="sb">/sounds/?api_key=47efd585321048819a2328721507ee23&quot;`</span><span class="p">)</span>
-</span><span class='line'><span class="n">number_of_pages</span> <span class="o">=</span> <span class="n">data</span><span class="o">[</span><span class="s2">&quot;num_pages&quot;</span><span class="o">]</span> <span class="o">||</span> <span class="mi">1</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">number_of_pages</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">page</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">data</span> <span class="o">=</span> <span class="no">JSON</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="sb">`curl --silent &quot;http://www.freesound.org/api/packs/</span><span class="si">#{</span><span class="n">pack_id</span><span class="si">}</span><span class="sb">/sounds/?api_key=47efd585321048819a2328721507ee23&amp;p=</span><span class="si">#{</span><span class="n">page</span> <span class="o">+</span> <span class="mi">1</span><span class="si">}</span><span class="sb">&quot;`</span><span class="p">)</span>
-</span><span class='line'>  <span class="n">sound_ids</span> <span class="o">=</span> <span class="n">data</span><span class="o">[</span><span class="s2">&quot;sounds&quot;</span><span class="o">].</span><span class="n">map</span><span class="p">{</span><span class="o">|</span><span class="n">sound</span><span class="o">|</span> <span class="n">sound</span><span class="o">[</span><span class="s2">&quot;id&quot;</span><span class="o">]</span><span class="p">}</span>
-</span><span class='line'>  <span class="n">note_names</span> <span class="o">=</span> <span class="n">data</span><span class="o">[</span><span class="s2">&quot;sounds&quot;</span><span class="o">].</span><span class="n">map</span><span class="p">{</span><span class="o">|</span><span class="n">sound</span><span class="o">|</span> <span class="n">note_extractor</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">sound</span><span class="o">[</span><span class="s2">&quot;original_filename&quot;</span><span class="o">]</span><span class="p">)}</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">sound_ids</span><span class="o">.</span><span class="n">each_with_index</span> <span class="k">do</span> <span class="o">|</span><span class="n">sound_id</span><span class="p">,</span> <span class="n">index</span><span class="o">|</span>
-</span><span class='line'>    <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">sound_id</span><span class="si">}</span><span class="s2"> :</span><span class="si">#{</span><span class="n">note_names</span><span class="o">[</span><span class="n">index</span><span class="o">]</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Adding these to our Clojure code we have a Freesound ID to note mapping:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">FREESOUND-VIBRATO-FLUTE-SAMPLES</span>
-</span><span class='line'>  <span class="s">&quot;Freesound ids for all samples in the Vibrato Transverse Flute pack&quot;</span>
-</span><span class='line'>  <span class="p">{</span><span class="mi">154274</span> <span class="ss">:C7</span>  <span class="mi">154273</span> <span class="ss">:B6</span> <span class="mi">154272</span> <span class="ss">:A#6</span> <span class="mi">154271</span> <span class="ss">:A6</span> <span class="mi">154270</span> <span class="ss">:G#6</span> <span class="mi">154269</span> <span class="ss">:G6</span>  <span class="mi">154268</span> <span class="ss">:F#6</span>
-</span><span class='line'>   <span class="mi">154267</span> <span class="ss">:F6</span>  <span class="mi">154266</span> <span class="ss">:E6</span> <span class="mi">154265</span> <span class="ss">:D#6</span> <span class="mi">154264</span> <span class="ss">:D6</span> <span class="mi">154263</span> <span class="ss">:C#6</span> <span class="mi">154262</span> <span class="ss">:C6</span>  <span class="mi">154261</span> <span class="ss">:B5</span>
-</span><span class='line'>   <span class="mi">154260</span> <span class="ss">:A#5</span> <span class="mi">154259</span> <span class="ss">:A5</span> <span class="mi">154258</span> <span class="ss">:G#5</span> <span class="mi">154257</span> <span class="ss">:G5</span> <span class="mi">154256</span> <span class="ss">:F#5</span> <span class="mi">154255</span> <span class="ss">:F5</span>  <span class="mi">154254</span> <span class="ss">:E5</span>
-</span><span class='line'>   <span class="mi">154253</span> <span class="ss">:D#5</span> <span class="mi">154252</span> <span class="ss">:D5</span> <span class="mi">154251</span> <span class="ss">:C#5</span> <span class="mi">154250</span> <span class="ss">:C5</span> <span class="mi">154249</span> <span class="ss">:B4</span>  <span class="mi">154248</span> <span class="ss">:A#4</span> <span class="mi">154247</span> <span class="ss">:A4</span>
-</span><span class='line'>   <span class="mi">154246</span> <span class="ss">:G#4</span> <span class="mi">154245</span> <span class="ss">:G4</span> <span class="mi">154244</span> <span class="ss">:F#4</span> <span class="mi">154243</span> <span class="ss">:E4</span> <span class="mi">154242</span> <span class="ss">:F4</span>  <span class="mi">154241</span> <span class="ss">:D#4</span> <span class="mi">154240</span> <span class="ss">:D4</span>
-</span><span class='line'>   <span class="mi">154239</span> <span class="ss">:C#4</span> <span class="mi">154238</span> <span class="ss">:C4</span><span class="p">})</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>These samples are cached in the asset store (usually ~/.overtone/assets) so we don&rsquo;t have to keep downloading them. We define a cache key for our downloaded samples.</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">defn- </span><span class="nv">registered-samples</span>
-</span><span class='line'>  <span class="s">&quot;Fetch flute samples from the asset store if they have been manually registered&quot;</span>
-</span><span class='line'>  <span class="p">[]</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">registered-assets</span> <span class="ss">::TransverseFluteTenutoVibrato</span><span class="p">))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Load all the samples into Overtone. This will automatically download the samples if they are not already present.</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">flute-samples</span>
-</span><span class='line'>  <span class="p">(</span><span class="nb">doall </span><span class="p">(</span><span class="nb">map </span><span class="nv">freesound-sample</span> <span class="p">(</span><span class="nb">keys </span><span class="nv">FREESOUND-VIBRATO-FLUTE-SAMPLES</span><span class="p">))))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>In order to play the samples we need to produce a mapping between the buffer that has the sound loaded and the midi pitch that buffer relates to.</p>
-
-<p>First we convert a freesound-id into a midi note (pitch)</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">defn- </span><span class="nv">buffer-&gt;midi-note</span> <span class="p">[</span><span class="nv">buf</span><span class="p">]</span>
-</span><span class='line'>  <span class="p">(</span><span class="nb">-&gt; </span><span class="nv">buf</span> <span class="ss">:freesound-id</span> <span class="nv">FREESOUND-VIBRATO-FLUTE-SAMPLES</span> <span class="nb">name </span><span class="nv">note</span><span class="p">))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now we can generate the buffer id to midi note map.</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">defn- </span><span class="nv">note-index</span>
-</span><span class='line'>  <span class="s">&quot;Returns a map of midi-note values [0-127] to buffer ids.&quot;</span>
-</span><span class='line'>  <span class="p">[</span><span class="nv">buffers</span><span class="p">]</span>
-</span><span class='line'>  <span class="p">(</span><span class="nb">reduce </span><span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nb">index </span><span class="nv">buf</span><span class="p">]</span>
-</span><span class='line'>            <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">id</span> <span class="p">(</span><span class="nb">-&gt; </span><span class="nv">buf</span> <span class="ss">:id</span><span class="p">)</span>
-</span><span class='line'>                  <span class="nv">note</span> <span class="p">(</span><span class="nf">buffer-&gt;midi-note</span> <span class="nv">buf</span><span class="p">)]</span>
-</span><span class='line'>              <span class="p">(</span><span class="nb">assoc index </span><span class="nv">note</span> <span class="nv">id</span><span class="p">)))</span>
-</span><span class='line'>          <span class="p">{}</span>
-</span><span class='line'>          <span class="nv">buffers</span><span class="p">))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And we use this to set the buffers:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="c1">;Silent buffer used to ensure all 127 buffer spaces are filled </span>
-</span><span class='line'><span class="p">(</span><span class="kd">defonce </span><span class="o">^</span><span class="ss">:private</span> <span class="nv">silent-buffer</span> <span class="p">(</span><span class="nf">buffer</span> <span class="mi">0</span><span class="p">))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="kd">defonce </span><span class="nv">index-buffer</span>
-</span><span class='line'>  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">tab</span> <span class="p">(</span><span class="nf">note-index</span> <span class="nv">flute-samples</span><span class="p">)</span>
-</span><span class='line'>        <span class="nv">buf</span> <span class="p">(</span><span class="nf">buffer</span> <span class="mi">128</span><span class="p">)]</span>
-</span><span class='line'>    <span class="p">(</span><span class="nf">buffer-fill!</span> <span class="nv">buf</span> <span class="p">(</span><span class="ss">:id</span> <span class="nv">silent-buffer</span><span class="p">))</span>
-</span><span class='line'>    <span class="p">(</span><span class="nb">doseq </span><span class="p">[[</span><span class="nv">idx</span> <span class="nv">val</span><span class="p">]</span> <span class="nv">tab</span><span class="p">]</span>
-</span><span class='line'>      <span class="p">(</span><span class="nf">buffer-set!</span> <span class="nv">buf</span> <span class="nv">idx</span> <span class="nv">val</span><span class="p">))</span>
-</span><span class='line'>    <span class="nv">buf</span><span class="p">))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Defining the Instrument</h2>
-
-<p>Now we have all our samples we define a instrument in Overtone using <code>definst</code>:</p>
-
-<p>This allows us to specify a (huge) number of options on how our samples are played.</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="nf">definst</span> <span class="nv">sampled-flute-vibrato</span>
-</span><span class='line'>  <span class="p">[</span><span class="nv">note</span> <span class="mi">60</span> <span class="nv">level</span> <span class="mi">1</span> <span class="nv">rate</span> <span class="mi">1</span> <span class="nv">loop?</span> <span class="mi">0</span> <span class="nv">attack</span> <span class="mi">0</span> <span class="nv">decay</span> <span class="mi">1</span> <span class="nv">sustain</span> <span class="mi">1</span> <span class="nv">release</span> <span class="mf">0.1</span> <span class="nv">curve</span> <span class="mi">-4</span> <span class="nv">gate</span> <span class="mi">1</span><span class="p">]</span>
-</span><span class='line'>  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">buf</span> <span class="p">(</span><span class="nf">index</span><span class="ss">:kr</span> <span class="p">(</span><span class="ss">:id</span> <span class="nv">index-buffer</span><span class="p">)</span> <span class="nv">note</span><span class="p">)</span>
-</span><span class='line'>        <span class="nv">env</span> <span class="p">(</span><span class="nf">env-gen</span> <span class="p">(</span><span class="nf">adsr</span> <span class="nv">attack</span> <span class="nv">decay</span> <span class="nv">sustain</span> <span class="nv">release</span> <span class="nv">level</span> <span class="nv">curve</span><span class="p">)</span>
-</span><span class='line'>                     <span class="ss">:gate</span> <span class="nv">gate</span>
-</span><span class='line'>                     <span class="ss">:action</span> <span class="nv">FREE</span><span class="p">)]</span>
-</span><span class='line'>    <span class="p">(</span><span class="nb">* </span><span class="nv">env</span> <span class="p">(</span><span class="nf">scaled-play-buf</span> <span class="mi">2</span> <span class="nv">buf</span> <span class="ss">:level</span> <span class="nv">level</span> <span class="ss">:loop</span> <span class="nv">loop?</span> <span class="ss">:action</span> <span class="nv">FREE</span><span class="p">))))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>There is quite a lot going on here. Lets focus on the configuration that effects how our sound samples are played.</p>
-
-<h3>Defining the Envelope Generator (env-gen).</h3>
-
-<p>An envelope generator (mapping to function <code>env-gen</code>) makes an audio signal that smoothly rises and falls. We are taking the recording of the real flute instrument as a digitized waveform, and then playing back its recordings at different speeds to produce different tones.</p>
-
-<p>The most common form of envelope generator and the one we are using here is ADSR:</p>
-
-<p>attack (A), decay (D), sustain (S) and release &#40;R)</p>
-
-<p><img src="/images/ADSR.png" /></p>
-
-<p>There are a number of other config settings in our example:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">[</span>
-</span><span class='line'> <span class="nv">note</span> <span class="mi">60</span>     <span class="c1">; Default pitch</span>
-</span><span class='line'> <span class="nv">level</span> <span class="mi">1</span>     <span class="c1">; Volume</span>
-</span><span class='line'> <span class="nv">rate</span> <span class="mi">1</span>      <span class="c1">; Playback rate </span>
-</span><span class='line'> <span class="nv">loop?</span> <span class="mi">0</span>     <span class="c1">; The note should loop after the first play</span>
-</span><span class='line'> <span class="nv">attack</span> <span class="mi">0</span>    <span class="c1">; The way a sound is initiated. Fast attack (gunshot) vs Slow attack (closing a door slowly)</span>
-</span><span class='line'> <span class="nv">decay</span> <span class="mi">1</span>     <span class="c1">; The time for notes to decay after the initial strike</span>
-</span><span class='line'> <span class="nv">sustain</span> <span class="mi">1</span>   <span class="c1">; Once a sound has reached its peak, the length of time that the sound will sustain.</span>
-</span><span class='line'> <span class="nv">release</span> <span class="mf">0.1</span> <span class="c1">; The time for notes to decay after the key is released</span>
-</span><span class='line'> <span class="nv">curve</span> <span class="mi">-4</span>    <span class="c1">; Curve factor</span>
-</span><span class='line'> <span class="nv">gate</span> <span class="mi">1</span>      <span class="c1">; note occurs when gate goes from nonpositive to positive. Note off occurs when it goes from positive to nonpositive</span>
-</span><span class='line'><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Look to the <a href="http://supercollider.sourceforge.net/">SuperCollider</a> documentation on <a href="http://doc.sccode.org/Classes/UGen.html">UGENs</a> if you want to see all possible configuration options. Overtone is really a wrapper around the extremely powerful SuperCollider.</p>
-
-<h2>Grand finale</h2>
-
-<p>Finally we can start to play music in overtone using our flute:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="nf">sampled-flute-vibrato</span> <span class="mi">60</span><span class="p">)</span> <span class="o">#</span><span class="nv">=&gt;</span> <span class="nv">pitch</span> <span class="mi">60</span>
-</span><span class='line'><span class="p">(</span><span class="nf">sampled-flute-vibrato</span> <span class="mi">61</span><span class="p">)</span> <span class="o">#</span><span class="nv">=&gt;</span> <span class="nv">pitch</span> <span class="mi">61</span>
-</span><span class='line'><span class="p">(</span><span class="nf">sampled-flute-vibrato</span> <span class="mi">60</span><span class="p">)</span> <span class="o">#</span><span class="nv">=&gt;</span> <span class="nv">pitch</span> <span class="mi">60</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Hear for yourself:</p>
-
-<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F107183072&amp;color=ff6600&amp;auto_play=false&amp;show_artwork=false"></iframe>
-
-
-<h2>The Code in Full</h2>
-
-<p>Defining an instrument in Overtone:</p>
-
-<figure class='code'><figcaption><span>Loading buffers </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">ns </span><span class="nv">overtone.samples.flute-vibrato</span>
-</span><span class='line'>  <span class="p">(</span><span class="ss">:use</span> <span class="p">[</span><span class="nv">overtone.core</span><span class="p">])</span>
-</span><span class='line'>  <span class="p">(</span><span class="ss">:require</span> <span class="p">[</span><span class="nv">clojure.string</span> <span class="ss">:as</span> <span class="nv">str</span><span class="p">]))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="kd">defn- </span><span class="nv">registered-samples</span>
-</span><span class='line'>  <span class="s">&quot;Fetch flute samples from the asset store if they have been manually</span>
-</span><span class='line'><span class="s">  registered&quot;</span>
-</span><span class='line'>  <span class="p">[]</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">registered-assets</span> <span class="ss">::TransverseFluteTenutoVibrato</span><span class="p">))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">FREESOUND-VIBRATO-FLUTE-SAMPLES</span>
-</span><span class='line'>  <span class="s">&quot;Freesound ids for all samples in the Vibrato Transverse Flute pack&quot;</span>
-</span><span class='line'>  <span class="p">{</span><span class="mi">154274</span> <span class="ss">:C7</span>  <span class="mi">154273</span> <span class="ss">:B6</span> <span class="mi">154272</span> <span class="ss">:A#6</span> <span class="mi">154271</span> <span class="ss">:A6</span> <span class="mi">154270</span> <span class="ss">:G#6</span> <span class="mi">154269</span> <span class="ss">:G6</span>  <span class="mi">154268</span> <span class="ss">:F#6</span>
-</span><span class='line'>   <span class="mi">154267</span> <span class="ss">:F6</span>  <span class="mi">154266</span> <span class="ss">:E6</span> <span class="mi">154265</span> <span class="ss">:D#6</span> <span class="mi">154264</span> <span class="ss">:D6</span> <span class="mi">154263</span> <span class="ss">:C#6</span> <span class="mi">154262</span> <span class="ss">:C6</span>  <span class="mi">154261</span> <span class="ss">:B5</span>
-</span><span class='line'>   <span class="mi">154260</span> <span class="ss">:A#5</span> <span class="mi">154259</span> <span class="ss">:A5</span> <span class="mi">154258</span> <span class="ss">:G#5</span> <span class="mi">154257</span> <span class="ss">:G5</span> <span class="mi">154256</span> <span class="ss">:F#5</span> <span class="mi">154255</span> <span class="ss">:F5</span>  <span class="mi">154254</span> <span class="ss">:E5</span>
-</span><span class='line'>   <span class="mi">154253</span> <span class="ss">:D#5</span> <span class="mi">154252</span> <span class="ss">:D5</span> <span class="mi">154251</span> <span class="ss">:C#5</span> <span class="mi">154250</span> <span class="ss">:C5</span> <span class="mi">154249</span> <span class="ss">:B4</span>  <span class="mi">154248</span> <span class="ss">:A#4</span> <span class="mi">154247</span> <span class="ss">:A4</span>
-</span><span class='line'>   <span class="mi">154246</span> <span class="ss">:G#4</span> <span class="mi">154245</span> <span class="ss">:G4</span> <span class="mi">154244</span> <span class="ss">:F#4</span> <span class="mi">154243</span> <span class="ss">:E4</span> <span class="mi">154242</span> <span class="ss">:F4</span>  <span class="mi">154241</span> <span class="ss">:D#4</span> <span class="mi">154240</span> <span class="ss">:D4</span>
-</span><span class='line'>   <span class="mi">154239</span> <span class="ss">:C#4</span> <span class="mi">154238</span> <span class="ss">:C4</span><span class="p">})</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">FLUTE-SAMPLE-IDS</span> <span class="p">(</span><span class="nb">keys </span><span class="nv">FREESOUND-VIBRATO-FLUTE-SAMPLES</span><span class="p">))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">flute-samples</span>
-</span><span class='line'>  <span class="p">(</span><span class="nb">doall </span><span class="p">(</span><span class="nb">map </span><span class="nv">freesound-sample</span> <span class="nv">FLUTE-SAMPLE-IDS</span><span class="p">)))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="kd">defn- </span><span class="nv">buffer-&gt;midi-note</span> <span class="p">[</span><span class="nv">buf</span><span class="p">]</span>
-</span><span class='line'>  <span class="p">(</span><span class="nb">-&gt; </span><span class="nv">buf</span> <span class="ss">:freesound-id</span> <span class="nv">FREESOUND-VIBRATO-FLUTE-SAMPLES</span> <span class="nb">name </span><span class="nv">note</span><span class="p">))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="kd">defn- </span><span class="nv">note-index</span>
-</span><span class='line'>  <span class="s">&quot;Returns a map of midi-note values [0-127] to buffer ids.&quot;</span>
-</span><span class='line'>  <span class="p">[</span><span class="nv">buffers</span><span class="p">]</span>
-</span><span class='line'>  <span class="p">(</span><span class="nb">reduce </span><span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nb">index </span><span class="nv">buf</span><span class="p">]</span>
-</span><span class='line'>            <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">id</span> <span class="p">(</span><span class="nb">-&gt; </span><span class="nv">buf</span> <span class="ss">:id</span><span class="p">)</span>
-</span><span class='line'>                  <span class="nv">note</span> <span class="p">(</span><span class="nf">buffer-&gt;midi-note</span> <span class="nv">buf</span><span class="p">)]</span>
-</span><span class='line'>              <span class="p">(</span><span class="nb">assoc index </span><span class="nv">note</span> <span class="nv">id</span><span class="p">)))</span>
-</span><span class='line'>          <span class="p">{}</span>
-</span><span class='line'>          <span class="nv">buffers</span><span class="p">))</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">;; Silent buffer used to fill in the gaps.</span>
-</span><span class='line'><span class="p">(</span><span class="kd">defonce </span><span class="o">^</span><span class="ss">:private</span> <span class="nv">silent-buffer</span> <span class="p">(</span><span class="nf">buffer</span> <span class="mi">0</span><span class="p">))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="kd">defonce </span><span class="nv">index-buffer</span>
-</span><span class='line'>  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">tab</span> <span class="p">(</span><span class="nf">note-index</span> <span class="nv">flute-samples</span><span class="p">)</span>
-</span><span class='line'>        <span class="nv">buf</span> <span class="p">(</span><span class="nf">buffer</span> <span class="mi">128</span><span class="p">)]</span>
-</span><span class='line'>    <span class="p">(</span><span class="nf">buffer-fill!</span> <span class="nv">buf</span> <span class="p">(</span><span class="ss">:id</span> <span class="nv">silent-buffer</span><span class="p">))</span>
-</span><span class='line'>    <span class="p">(</span><span class="nb">doseq </span><span class="p">[[</span><span class="nv">idx</span> <span class="nv">val</span><span class="p">]</span> <span class="nv">tab</span><span class="p">]</span>
-</span><span class='line'>      <span class="p">(</span><span class="nf">buffer-set!</span> <span class="nv">buf</span> <span class="nv">idx</span> <span class="nv">val</span><span class="p">))</span>
-</span><span class='line'>    <span class="nv">buf</span><span class="p">))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span>Defining the instrument </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">ns </span><span class="nv">overtone.inst.sampled-flute</span>
-</span><span class='line'>  <span class="p">(</span><span class="ss">:use</span> <span class="p">[</span><span class="nv">overtone.core</span><span class="p">])</span>
-</span><span class='line'>  <span class="p">(</span><span class="ss">:require</span>
-</span><span class='line'>   <span class="p">[</span><span class="nv">overtone.samples.flute-vibrato</span> <span class="ss">:as</span> <span class="nv">vibrato</span><span class="p">]))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="nf">definst</span> <span class="nv">sampled-flute-vibrato</span>
-</span><span class='line'>  <span class="p">[</span><span class="nv">note</span> <span class="mi">60</span> <span class="nv">level</span> <span class="mi">1</span> <span class="nv">rate</span> <span class="mi">1</span> <span class="nv">loop?</span> <span class="mi">0</span>
-</span><span class='line'>   <span class="nv">attack</span> <span class="mi">0</span> <span class="nv">decay</span> <span class="mi">1</span> <span class="nv">sustain</span> <span class="mi">1</span> <span class="nv">release</span> <span class="mf">0.1</span> <span class="nv">curve</span> <span class="mi">-4</span> <span class="nv">gate</span> <span class="mi">1</span><span class="p">]</span>
-</span><span class='line'>  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">buf</span> <span class="p">(</span><span class="nf">index</span><span class="ss">:kr</span> <span class="p">(</span><span class="ss">:id</span> <span class="nv">vibrato/index-buffer</span><span class="p">)</span> <span class="nv">note</span><span class="p">)</span>
-</span><span class='line'>        <span class="nv">env</span> <span class="p">(</span><span class="nf">env-gen</span> <span class="p">(</span><span class="nf">adsr</span> <span class="nv">attack</span> <span class="nv">decay</span> <span class="nv">sustain</span> <span class="nv">release</span> <span class="nv">level</span> <span class="nv">curve</span><span class="p">)</span>
-</span><span class='line'>                     <span class="ss">:gate</span> <span class="nv">gate</span>
-</span><span class='line'>                     <span class="ss">:action</span> <span class="nv">FREE</span><span class="p">)]</span>
-</span><span class='line'>    <span class="p">(</span><span class="nb">* </span><span class="nv">env</span> <span class="p">(</span><span class="nf">scaled-play-buf</span> <span class="mi">2</span> <span class="nv">buf</span> <span class="ss">:level</span> <span class="nv">level</span> <span class="ss">:loop</span> <span class="nv">loop?</span> <span class="ss">:action</span> <span class="nv">FREE</span><span class="p">))))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/2/">&larr; Older</a>
@@ -4333,6 +4456,10 @@ We will walk through getting samples for a flute and then using them to define t
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/clojure/functions-explained-through-patterns.html">Functions Explained Through Patterns</a>
+      </li>
     
       <li class="post">
         <a href="/art/audio-fingerprint-smudges.html">Audio Fingerprint Smudges</a>
@@ -4368,10 +4495,6 @@ We will walk through getting samples for a flute and then using them to define t
     
       <li class="post">
         <a href="/clojure/building-clojure-services-at-scale.html">Building Clojure services at scale</a>
-      </li>
-    
-      <li class="post">
-        <a href="/clojure/creating-instruments-with-overtone.html">Creating sampled instruments with Overtone</a>
       </li>
     
   </ul>

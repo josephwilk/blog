@@ -9,7 +9,7 @@
   <meta name="author" content="Joseph Wilk">
 
   
-  <meta name="description" content="Latent Semantic Analysis (LSA) is a mathematical method that tries to bring out latent relationships within a collection of documents. Rather than &hellip;">
+  <meta name="description" content="The Magically Appearing Admin Web developers using an MVC framework produce their websites playing with their models, views and controllers. Then by &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,146 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/critique/automatic-admin-systems-semantics-with-rails-and-django.html">Automatic Admin Systems - Semantics With Rails & Django</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-01-18T11:52:59+00:00" pubdate data-updated="true">Jan 18<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>The Magically Appearing Admin</h3>
+
+<p>Web developers using an MVC framework produce their websites playing with their models, views and controllers. Then by adding a few lines of magic an admin system appears which allows users to add/edit/delete/view/search their models.</p>
+
+<p>Examples:
+<a href="http://www.djangoproject.com/">Django&rsquo;s</a> Magic Admin (Also <a href="http://code.djangoproject.com/wiki/NewformsAdminBranch">NewFormsAdmin</a> &ndash; a branch of Django focused on making it easier to customise auto-admin)
+<a href="http://www.rubyonrails.org/"> Ruby on rails</a> Plugins:</p>
+
+<ul>
+<li><p>Streamlined framework &ndash; <a href="http://streamlinedframework.org/">http://streamlinedframework.org/</a></p>
+
+<ul>
+<li>Admin magic/config  &ndash; outside of the models</li>
+</ul>
+</li>
+<li><p>Auto-Admin &ndash; <a href="http://code.trebex.net/auto-admin">http://code.trebex.net/auto-admin</a></p>
+
+<ul>
+<li>Admin magic/config &ndash; inside the models</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>Limitations of Database types and Semantics</h3>
+
+<p>While we could have an admin that displayed all a models attributes as text inputs, it would be nice if it was a bit more intelligent. We need the magic admin to infer what type of form input should be used from database types.</p>
+
+<p>If within our database (and hence in the model) we have a</p>
+
+<p><code>partyDate -&gt; Datetime</code></p>
+
+<p>Then we would like the admin to display a date styled input.</p>
+
+<p><img src="http://www.joesniff.co.uk/wp-content/uploads/2008/01/datetime-form.png" alt="Django Datetime Input In Auto Admin" /></p>
+
+<p>We have a limited set of database types:</p>
+
+<ul>
+<li>varchar</li>
+<li>text</li>
+<li>integer</li>
+<li>blob</li>
+<li>datetime</li>
+<li>timestamp</li>
+<li>&hellip;</li>
+</ul>
+
+
+<p>For very simple magic admins these database types are good enough.</p>
+
+<p>But we find in more complex instances the database types are not expressive enough. Within our models we have an implicit idea about the meaning of the attributes (generally derived from our naming of variables) not just the type.</p>
+
+<p>For example we may have the concept of <em>IPAddress</em> within our model. We have a clear idea of the semantic meaning of <em>IPAddress</em> and that it should be presented as a form input in a specific way. e.g.</p>
+
+<p><img src="http://www.joesniff.co.uk/wp-content/uploads/2008/01/ipaddress-small.jpg" alt="IP Address Form" /></p>
+
+<p>The database type is just char(12), so  the database types are not enough for our magic admin to build a more complex admin.</p>
+
+<h3>Django Approach &ndash; Explicit &amp; High level</h3>
+
+<p>Within Django we explicitly define all our Model fields in Python. We can introduce high level concepts like model attributes of type &lsquo;<em>IPAddressField</em>&rsquo; and not worry about the way this maps to the db (Django deals with the transformation between <em>IPAddressField</em> and  the database types).</p>
+
+<p>[viewcode] src=../projects/python/examples/model.py geshi=python [/viewcode]</p>
+
+<h3>Ruby on Rails Approach &ndash; Implicit &amp; Low Level</h3>
+
+<p>In rails our models define relationships between themselves but we generally do not list all model fields explicitly. That&rsquo;s one of the beauty&rsquo;s of rails compared to heavy <a href="http://en.wikipedia.org/wiki/Object-relational_mapping">ORM</a> layers.</p>
+
+<p>[viewcode] src=../projects/ruby/examples/Post.rb geshi=ruby [/viewcode]</p>
+
+<p>To quote the <a href="http://ar.rubyonrails.com/classes/ActiveRecord/Base.html">Rails Active Record API</a></p>
+
+<p><em>&ldquo;Adding, removing, and changing attributes and their type is done directly in the database&rdquo;</em></p>
+
+<p>Hence we cannot easily attach metadata to attributes which are only defined in the database. We can overcome this by listing these fields in the model and attaching some metadata to describe the semantic meaning of the fields (rather than using special types for the fields in the model, keeping ActiveRecord happy).</p>
+
+<p>But does this remove the idea of having lean and simple models?</p>
+
+<h3>Thoughts</h3>
+
+<p>Django&rsquo;s high level model provides a very natural way to attach semantic meaning to model attributes which  the  admin can use. Its also all located in a single place, the model.</p>
+
+<p>Rail has lower level models embracing the database, and attaching semantic meaning requires us to add more detail to the model, which feels like its breaking the <a href="http://en.wikipedia.org/wiki/Don't_repeat_yourself">DRY</a> principle. Since Ruby embraces the idea of the only place certain model attributes are defined is in the database it feels like having the atributes mentioned in the model as-well is duplication.</p>
+
+<p>Streamlined&rsquo;s attempt (which is defined in a separate file to the model):</p>
+
+<p>[viewcode] src=../projects/ruby/examples/streamlined.rb geshi=ruby [/viewcode]</p>
+
+<p>There are potentially other ways of handling Rails representation of semantic information:</p>
+
+<ul>
+<li><p>Storing the semantics in the database.</p></li>
+<li><p>Imply semantic meaning from naming of database columns (&lsquo;myZipCode&rsquo;  should use zipcode input type in the admin).</p></li>
+<li><p>Customize Migrations to map semantic types to db types.</p></li>
+</ul>
+
+
+<p><strong>Rails has the flexibility to mirror Django, so can we find a good way for Rails to represent semantic meaning for models?</strong></p>
+
+<h3>Interesting Further Projects</h3>
+
+<p>SemanticAttributes &ndash;  <a href="http://code.google.com/p/semanticattributes/">http://code.google.com/p/semanticattributes/</a></p>
+
+<p>Semantic Web, meet Ruby on Rails &ndash; <a href="http://www.jroller.com/obie/entry/more_about_ontologies">http://www.jroller.com/obie/entry/more_about_ontologies</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1183,213 +1323,9 @@ curl_setopt($c, CURLOPT_CAINFO, 'C:/certificates/cacert.pem');
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/projects/automatic-tag-generation.html">Automatic Tag Generation</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2007-10-22T10:38:58+01:00" pubdate data-updated="true">Oct 22<span>nd</span>, 2007</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This project looked at dynamically generating suggestion tags for content. To simplify the task some constraints where introduced.</p>
-
-<ul>
-<li><p>The content which will be tagged is news articles with HTML markup.</p></li>
-<li><p>Only English content.</p></li>
-</ul>
-
-
-<p>I used the following HTML page to experiment on with suggestion tags: <a href="http://news.bbc.co.uk/1/hi/entertainment/6624223.stm">http://news.bbc.co.uk/1/hi/entertainment/6624223.stm
-</a></p>
-
-<p>To help evaluate the tagging methods I asked a sample of people to suggest what they thought the best tags would be. They came up with:</p>
-
-<pre><code>paris, hilton, paris hilton, jail, jail sentence, drink-driving
-</code></pre>
-
-<h3>Whats a tag?</h3>
-
-<p>Definition:
-<em><strong>&ldquo;</strong>A tag is a (relevant) keyword or term associated with or assigned to a piece of information (e.g. a picture, a geographic map, a blog entry, or video clip), thus describing the item and enabling keyword-based classification and search of information.<strong>&rdquo;</strong></em></p>
-
-<h3>Why tag?</h3>
-
-<ul>
-<li><p>Tag relevance draws on the wisdom of crowds</p></li>
-<li><p>Tags create social awareness</p></li>
-<li><p>Show Relevance and Popularity</p></li>
-<li><p>Community contribution</p></li>
-<li><p>Add searchable text for resources that cannot be accurately searched (videos, music, images, etc)</p></li>
-</ul>
-
-
-<h3>Examples of sites using tagging</h3>
-
-<p><a href="http://www.last.fm/">http://www.last.fm/</a></p>
-
-<p><a href="http://www.flickr.com/">http://www.flickr.com/</a></p>
-
-<p><a href="http://www.youtube.com/">http://www.youtube.com</a></p>
-
-<p><a href="http://del.icio.us/">http://del.icio.us/</a></p>
-
-<h3>Tagging vocabulary</h3>
-
-<p>The types of tagging vocabulary:</p>
-
-<ul>
-<li><p><strong>Factual</strong> &ndash; <em>Activism, Ajax, algorithms, animation, anime, art, audio, books, code, comics</em></p></li>
-<li><p><strong>Subjective</strong> &ndash; <em>Great, good, great book, ok, good game, good read, great series, pretty good, wonderful</em>.</p></li>
-<li><p><strong>Personal </strong>&ndash; <em>Seen at cinema, rented dvd, dave owns it</em></p></li>
-</ul>
-
-
-<h2>Proposed Solutions</h2>
-
-<h3>Determining Semantic Information From the Grammatical Structure.</h3>
-
-<p>I decided to use a Part of speech (Pos) Tagger to markup the grammar within the content. I discovered Pos Tagging through Satoshi Sekine Google tech talk presentation on <a href="http://video.google.com/videoplay?docid=369551663815274895&amp;q=type%3Agoogle+engEDU&amp;total=333&amp;start=30&amp;num=10&amp;so=1&amp;type=search&amp;plindex=2">On-Demand Information extraction</a> He suggests a new paradigm of Information Extraction which operates &lsquo;on demand&rsquo; in response to a user&rsquo;s query.</p>
-
-<p>The Pos tagger selected was written in perl and while we are only looking at English it does support multiple languages.</p>
-
-<p>TreeTagger: <a href="http://www.ims.uni-stuttgart.de/projekte/corplex/TreeTagger/">http://www.ims.uni-stuttgart.de/projekte/corplex/TreeTagger/</a></p>
-
-<p>The Pos markup is based on:</p>
-
-<p>Penn Treebank Tags: <a href="http://www.cis.upenn.edu/~treebank/home.html">http://www.cis.upenn.edu/~treebank/home.html</a></p>
-
-<h4>Semantics from Grammar Experiments</h4>
-
-<p>Experimentation rules:</p>
-
-<ul>
-<li><p>Extract all Proper Nouns</p></li>
-<li><p>Where Proper Nouns are adjacent to each other combine to produce one Proper Noun</p></li>
-<li><p>Order by frequency</p></li>
-</ul>
-
-
-<p>Results &ndash; (word, frequency):</p>
-
-<pre><code>[ ('Hilton', 11),
-('Paris-Hilton', 5),
-('January', 3),
-('June', 2),
-('February', 2),
-('Los-Angeles', 2),
-('Howard-Weitzman', 1),
-('Sunset-Boulevard', 1),
-('paparazzi', 1),
-('Paris-Hilton-Hilton', 1),
-('Department', 1),
-('Kathy', 1),
-('Friday', 1),
-('Los-Angeles-County-Sheriff', 1),
-('Superior-Court', 1),
-('Hilton-Hotel', 1),
-('BBC', 1),
-('David-Willis', 1),
-('Metropolitan-Courthouse', 1),
-('September', 1),
-('California-Highway-Patrol', 1),
-('Judge-Michael-Sauer', 1)]
-</code></pre>
-
-<p>We can see that by assuming a relationship between adjancent proper nouns we have produced some good tags
-(Paris-Hilton, Los-Angeles-County-Sheriff) be it that they are long. Further feasibility of joining nouns needs to be performed to see if the cases where incorrect joins are made is worth the higher quaility tags. We also note that while the highest frequency results are good &lsquo;January&rsquo; and &lsquo;Feburary&rsquo; are weaker tags than some of the lower frequency tag.</p>
-
-<h3>Name-entity Recognition</h3>
-
-<p>Taggers which can use the concept of Hidden Markov Models <a href="http://en.wikipedia.org/wiki/Hidden_Markov_model">http://en.wikipedia.org/wiki/Hidden_Markov_model</a> (HMM).</p>
-
-<p>Reform the problem to say that we have a document with names correctly marked up. This document is passed through a noisy channel which removes tags. The problem is to work out what the initial document was from the noisy data.</p>
-
-<p>The HMM introduces a reduction in complexity as we only ever need to consider the previous state when evaluating whether a word is a name.</p>
-
-<p>The Viterbi <a href="http://en.wikipedia.org/wiki/Viterbi_algorithm">http://en.wikipedia.org/wiki/Viterbi_algorithm</a> algorithm computes the most likely sequence of hidden states. Very good examples and python code in the wikipedia link.</p>
-
-<p>The emission and transition probabilities need to be set from learning from a relevant corpus.</p>
-
-<p>Application used (Java)</p>
-
-<p>Named Entity Recognition (NER) and Information Extraction (IE)
-<a href="http://nlp.stanford.edu/ner/index.shtml">http://nlp.stanford.edu/ner/index.shtml</a></p>
-
-<p>Useful Links on Name Entity taggers:</p>
-
-<p><a href="http://www-tsujii.is.s.u-tokyo.ac.jp/GENIA/tagger/">http://www-tsujii.is.s.u-tokyo.ac.jp/GENIA/tagger/</a></p>
-
-<p>Impact of automatic comma prediction on pos/name tagging of speech
-<a href="http://www.speech.sri.com/people/wwang/papers/slt06-comma-v11-newref.pdf">http://www.speech.sri.com/people/wwang/papers/slt06-comma-v11-newref.pdf</a></p>
-
-<p>Nymble model
-<a href="http://portal.acm.org/citation.cfm?doid=974557.974586">http://portal.acm.org/citation.cfm?doid=974557.974586</a></p>
-
-<h4>Experimentation rules</h4>
-
-<ul>
-<li><p>Parse using Name Entity Tagger &ndash; identifying Person, Organisation and Location</p></li>
-<li><p>reduce any adjoining Person/Organization/Location</p></li>
-<li><p>Order by frequency</p>
-
-<p>[ ((&lsquo;Ms-Hilton&rsquo;, &lsquo;PERSON&rsquo;), 10),
-((&lsquo;Paris&rsquo;, &lsquo;LOCATION&rsquo;), 3),
-((&lsquo;Los-Angeles&rsquo;, &lsquo;LOCATION&rsquo;), 3),
-((&lsquo;Hilton&rsquo;, &lsquo;PERSON&rsquo;), 3),
-((&lsquo;Paris-Hilton&rsquo;, &lsquo;LOCATION&rsquo;), 2),
-((&lsquo;Hilton-Hilton&rsquo;, &lsquo;PERSON&rsquo;), 1),
-((&lsquo;Department&rsquo;, &lsquo;ORGANIZATION&rsquo;), 1),
-((&lsquo;Sunset-Boulevard&rsquo;, &lsquo;ORGANIZATION&rsquo;), 1),
-((&lsquo;Judge-Michael-Sauer&rsquo;, &lsquo;PERSON&rsquo;), 1),
-((&lsquo;California-Highway-Patrol&rsquo;, &lsquo;ORGANIZATION&rsquo;), 1),
-((&lsquo;Kathy&rsquo;, &lsquo;PERSON&rsquo;), 1),
-((&lsquo;BBC&rsquo;, &lsquo;ORGANIZATION&rsquo;), 1),
-((&lsquo;Howard-Weitzman&rsquo;, &lsquo;PERSON&rsquo;), 1),
-((&lsquo;Superior-Court&rsquo;, &lsquo;ORGANIZATION&rsquo;), 1),
-((&lsquo;Metropolitan-Courthouse&rsquo;, &lsquo;ORGANIZATION&rsquo;), 1),
-((&lsquo;Paris-Hilton&rsquo;, &lsquo;PERSON&rsquo;), 1),
-((&lsquo;David-Willis&rsquo;, &lsquo;PERSON&rsquo;), 1)]</p></li>
-</ul>
-
-
-<p>Execution time: 5 seconds
-Limiting the select to PERSON/ORGANIZATION/LOCATION helped removed some of the weaker tags suggested in the grammar experiment (like Feburary).</p>
-
-<h3>Name-entity Recognition &ndash; Web</h3>
-
-<p>A similar solution to the Name entity Tagger but rather than using the slower Java tool I used a free web based service. I found the web service produced similar results but considerable faster (around 1 second).
-service:
-<a href="http://tagthe.net/api/?url=http://news.bbc.co.uk/1/hi/entertainment/6624223.stm">http://tagthe.net/api/?url=http://news.bbc.co.uk/1/hi/entertainment/6624223.stm</a></p>
-
-<p>[viewcode] src=../projects/xml/paris-tag-results.xml geshi=xml[/viewcode]</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/page/8/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -1402,6 +1338,10 @@ service:
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/clojure/functions-explained-through-patterns.html">Functions Explained Through Patterns</a>
+      </li>
     
       <li class="post">
         <a href="/art/audio-fingerprint-smudges.html">Audio Fingerprint Smudges</a>
@@ -1437,10 +1377,6 @@ service:
     
       <li class="post">
         <a href="/clojure/building-clojure-services-at-scale.html">Building Clojure services at scale</a>
-      </li>
-    
-      <li class="post">
-        <a href="/clojure/creating-instruments-with-overtone.html">Creating sampled instruments with Overtone</a>
       </li>
     
   </ul>

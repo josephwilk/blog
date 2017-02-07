@@ -4,7 +4,7 @@
   <title><![CDATA[Joseph Wilk]]></title>
   <link href="http://blog.josephwilk.net/atom.xml" rel="self"/>
   <link href="http://blog.josephwilk.net/"/>
-  <updated>2017-01-05T16:25:43+00:00</updated>
+  <updated>2017-02-07T14:43:09+00:00</updated>
   <id>http://blog.josephwilk.net/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -12,6 +12,517 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Functions Explained Through Patterns]]></title>
+    <link href="http://blog.josephwilk.net/clojure/functions-explained-through-patterns.html"/>
+    <updated>2017-02-07T14:00:00+00:00</updated>
+    <id>http://blog.josephwilk.net/clojure/functions-explained-through-patterns</id>
+    <content type="html"><![CDATA[<p>Exploring patterns as a means of documenting Clojure functions to aid recall and understanding.</p>
+
+<p>Whats the difference in Clojure between:
+<code>partition</code> and <code>partition-all</code>?
+<code>interpose</code> and <code>interleave</code>?
+<code>cons</code> and <code>conj</code>?</p>
+
+<h2>Documenting Functions</h2>
+
+<p>All non-side effecting functions create or alter a pattern. To explain a function&rsquo;s pattern we use a number of descriptions.</p>
+
+<ul>
+<li>A function signature:</li>
+</ul>
+
+
+<p><code>(nthrest col nth)</code></p>
+
+<ul>
+<li>A textual description:</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Returns a lazy seq of the elements of coll separated by sep.
+</span><span class='line'>Returns a stateful transducer when no collection is provided.</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Examples showing application of the function:</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="nf">interpose</span> <span class="mf">1.0</span> <span class="p">[</span><span class="mf">0.3</span> <span class="mf">0.4</span><span class="p">])</span>
+</span><span class='line'><span class="c1">;;=&gt; [0.3 1.0 0.4 1.0]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Exploration vs Recall</h2>
+
+<p>As someone with a brain far more orientated to visuals than text I struggled to remember and understand many Clojure functions: <code>nthrest</code>, <code>conj</code> <code>cons</code>, etc.
+The documentation of patterns in the Clojure documentation is all text. Even with the documentation brought into the editor I struggle. Example from <a href="https://github.com/clojure-emacs/cider">Cider</a> &amp; Emacs:</p>
+
+<p><img src="http://blog.josephwilk.net/images/emacs-cider.png"></p>
+
+<p>Clojure has a strong focus on REPL driven development. If you don&rsquo;t understand a function use an interactive REPL to explore examples.</p>
+
+<p>Critically this favours <strong>discovery over recall</strong>. I can never remember the difference between <code>conj</code> and <code>cons</code>, but I can find out through the REPL.</p>
+
+<p>To help aid memory and understanding I&rsquo;ve turn the examples of the collection orientated functions in Clojure into visual patterns. I won&rsquo;t try and make any general case on visuals vs text (Its a fuzzy research area: <a href="http://studiokayama.com/text-vs-visuals/">http://studiokayama.com/text-vs-visuals/</a>).</p>
+
+<h2>Patterns for the visual brain</h2>
+
+<p>Applying functions to collections of data using: <a href="https://github.com/josephwilk/functions-as-patterns">https://github.com/josephwilk/functions-as-patterns</a></p>
+
+<h2><code>(butlast col)</code></h2>
+
+<pre><code>Return a seq of all but the last item in coll, in linear time
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>butlast <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24butlast_arg0.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24butlast_post.png"></span>
+</div>
+
+
+<h2><code>(concat x y)</code></h2>
+
+<pre><code>Returns a lazy seq representing the concatenation of the elements
+in the supplied colls.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>concat <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24concat_arg0.png"> <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24concat_arg1.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24concat_post.png"></span>
+</div>
+
+
+<h2><code>(conj coll x) (conj coll x &amp; xs)</code></h2>
+
+<pre><code>conj[oin]. Returns a new collection with the xs
+'added'. (conj nil item) returns (item).  The 'addition' may
+happen at different 'places' depending on the concrete type.
+</code></pre>
+
+<h5><code>conj vector</code></h5>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>conj <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24conj_arg0_vec.png"> <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24conj_arg1_vec.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24conj_post_vec.png"></span>
+</div>
+
+
+<h5><code>conj list</code></h5>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>conj <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24conj_arg0_list.png"> <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24conj_arg1_list.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24conj_post_list.png"></span>
+</div>
+
+
+<h2><code>(cons x seq)</code></h2>
+
+<pre><code>Returns a new seq where x is the first element and seq is
+the rest.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>cons <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24cons_arg0.png"> <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24cons_arg1.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24cons_post.png"></span>
+</div>
+
+
+<h2><code>(distinct col)</code></h2>
+
+<pre><code>Returns a lazy sequence of the elements of coll with duplicates removed.
+Returns a stateful transducer when no collection is provided.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>distinct <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24distinct_arg0.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24distinct_post.png"></span>
+</div>
+
+
+<h2><code>(drop-last n col)</code></h2>
+
+<pre><code>Return a lazy sequence of all but the last n (default 1) items in coll
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>drop-last 2 <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24drop_last_arg1.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24drop_last_post.png"></span>
+</div>
+
+
+<h2><code>(flatten col)</code></h2>
+
+<pre><code>Takes any nested combination of sequential things (lists, vectors,
+etc.) and returns their contents as a single, flat foldable
+collection.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>flatten <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24flatten_arg0.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24flatten_post.png"></span>
+</div>
+
+
+<h2><code>(interpose col col)</code></h2>
+
+<pre><code>Returns a lazy seq of the elements of coll separated by sep.
+Returns a stateful transducer when no collection is provided.
+</code></pre>
+
+<div style="padding-bottom: 10px;">
+<span><span style="font-size: 2em;">(</span><code>interpose <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24interpose_arg0.png"> <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24interpose_arg1.png"><span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24interpose_post.png"></span>
+</div>
+
+
+<h2><code>(interleave col col)</code></h2>
+
+<pre><code>Returns a lazy seq of the first item in each coll, then the second etc.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>interleave <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24interleave_arg0.png"> <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24interleave_arg1.png"><span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24interleave_post.png"></span>
+</div>
+
+
+<h2><code>(nthnext col n)</code></h2>
+
+<pre><code>Returns the nth next of coll, (seq coll) when n is 0.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>nthnext <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24nthnext_arg0.png"> 3<span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24nthnext_post.png"></span>
+</div>
+
+
+<h2><code>(nthrest n col)</code></h2>
+
+<pre><code>Returns the nth rest of coll, coll when n is 0.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>nthrest 3 <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24nthrest_arg0.png"><span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24nthrest_post.png"></span>
+</div>
+
+
+<h2><code>(partition n col)</code></h2>
+
+<pre><code>Returns a lazy sequence of lists of n items each, at offsets step apart.
+If step is not supplied, defaults to n, i.e. the partitions do not overlap.
+If a pad collection is supplied, use its elements as necessary to complete
+last partition upto n items. In case there are not enough padding elements,
+return a partition with less than n items.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>partition 3 <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24partition_arg1.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24partition_post.png"></span>
+</div>
+
+
+<h2><code>(partition-all n col)</code></h2>
+
+<pre><code>Returns a lazy sequence of lists like partition, but may include
+partitions with fewer than n items at the end.  Returns a stateful
+transducer when no collection is provided.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>partition-all 3 <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24partition_all_arg1.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24partition_all_post.png"></span>
+</div>
+
+
+<h2><code>(replace smap col)</code></h2>
+
+<pre><code>Given a map of replacement pairs and a vector/collection, returns a vector/seq
+with any elements = a key in smap replaced with the corresponding val in smap.  
+Returns a transducer when no collection is provided.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>replace <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24replace_arg0.png"> [0 3 4] <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24replace_post.png"></span>
+</div>
+
+
+<h2><code>(rest col)</code></h2>
+
+<pre><code>Returns a possibly empty seq of the items after the first. Calls seq on its
+argument.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>rest <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24rest_arg0.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24rest_post.png"></span>
+</div>
+
+
+<h2><code>(reverse col)</code></h2>
+
+<pre><code>Returns a seq of the items in coll in reverse order. Not lazy.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>reverse <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24reverse_arg0.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24reverse_post.png"></span>
+</div>
+
+
+<h2><code>(shuffle coll)</code></h2>
+
+<pre><code>Return a random permutation of coll.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>shuffle <img style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24shuffle_arg0.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24shuffle_post.png"></span>
+</div>
+
+
+<h2><code>(sort coll)</code></h2>
+
+<pre><code>Returns a sorted sequence of the items in coll. If no comparator is
+supplied, uses compare.  comparator must implement
+java.util.Comparator.  Guaranteed to be stable: equal elements will
+not be reordered.  If coll is a Java array, it will be modified.  To
+avoid this, sort a copy of the array.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>sort <img style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24sort_arg0.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24sort_post.png"></span>
+</div>
+
+
+<h2><code>(take-nth n coll)</code></h2>
+
+<pre><code>Returns a lazy seq of every nth item in coll.
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>take-nth 3 <img style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24take_nth_arg1.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24take_nth_post.png"></span>
+</div>
+
+
+<h2><code>(split-at n col)</code></h2>
+
+<pre><code>Returns a vector of [(take n coll) (drop n coll)]
+</code></pre>
+
+<div>
+<span><span style="font-size: 2em;">(</span><code>split-at 2 <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24split_at_arg1.png"> <span style="font-size: 2em;">)</span></code></span>
+</div>
+
+
+<div><code>;;=></code></div>
+
+
+<div style="padding-bottom: 40px;">
+<span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24split_at_post.png"></span>
+</div>
+
+
+<h2>Conclusions</h2>
+
+<p>As someone who performs live coding to an audience I perhaps have a different value on recall vs exploration. Hundreds of eyes staring at you tends to have that effect.
+While some examples are stronger through patterns than others, at least for myself the use of a visual aid as part of development and documentation is beneficial. Its the only way I can the remember the oddity of <code>conj</code>.</p>
+
+<p>Within my REPL interaction I use the <a href="https://github.com/josephwilk/functions-as-patterns">functions-as-patterns</a> toolkit, providing a higher level representation of the patterns and data. I can understand a drum pattern faster through colour than I can through a 1 &amp; 0 data structure.</p>
+
+<p>In creating the cheatsheet the value of the comparison of functions through patterns also became clear. I discovered almost identical functions such as <code>nthnext</code> and <code>nthrest</code> which only differed in a special case (with an empty sequence).</p>
+
+<h3>Problems of turning data into colour</h3>
+
+<p>While this visual cheatsheet is useful there are caveats:</p>
+
+<h4>Semantic&rsquo;s of arguments</h4>
+
+<p>Its not always clear if an argument is an index or a value. If we look at the <code>replace</code> function example:</p>
+
+<p><code>(replace (take 5 (hues-of-color)) [0 3 4])</code></p>
+
+<p>0,3 &amp; 4 are references to indices within the first argument. Ideally it would be nice to replace those with the relevant colour.
+However the functions-as-patterns library cannot tell these are not values, it assumes everything is a value. Hence you end up with <code>[0 3 4]</code> drawn in shades of black:</p>
+
+<p><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24replace_arg1.png"></p>
+
+<h4>Pattern of emptyness</h4>
+
+<p>I&rsquo;ve not tried to visually represent, <code>empty</code> or <code>nil</code>. Some functions are defined by the difference in handling the empty case. The patterns might mis-lead you to think <code>nthnext</code> and <code>nthrest</code> are identical when they are not.</p>
+
+<h4>What type is a square?</h4>
+
+<p>Clojure has multiple types of sequences, <code>char-arrays</code>, <code>lists</code>, <code>vectors</code>, <code>lazy-seq</code> ,etc. To keep the visual pattern simple I&rsquo;ve not represented these types.</p>
+
+<h4>Functions applying functions</h4>
+
+<p>I&rsquo;ve purposely skipped the <code>map</code>/<code>reduce</code>/<code>remove</code>/<code>filter</code> functions as they tend to mix two patterns together. That of the core function and the applied function. The value of the patterns gets lost.</p>
+
+<h4>Brains seek patterns.</h4>
+
+<p>Do you see a pattern in the randomness? A single example might reveal a false pattern. Many examples would be required to re-enforce the randomness of the resulting patterns. Example <code>shuffle</code>.</p>
+
+<h4>Ordering</h4>
+
+<p>Colours don’t always imply a logical order. Example <code>sort</code>.</p>
+
+<h2>Sources</h2>
+
+<p>Inspired by the work of Alex McLean (<a href="https://github.com/yaxu">@yaxu</a>) using visual patterns to explain the live coding language Tidal: <a href="https://www.academia.edu/467099/TIDAL_PATTERN_LANGUAGE_FOR_LIVE_CODING_OF_MUSIC">Tidal Pattern Language for Live Coding of Music</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Audio Fingerprint Smudges]]></title>
@@ -49,7 +560,7 @@
 
 
 
-<p>To try and match our generative audio to songs we will use a number of music services and some open-source audio fingerprinting tools. Most commercial audio fingerprinting algorithms are secret and patented up to the eyeballs. So there is a lot of trial and error. Some services used to evaluate a song match:</p>
+<p>To try and match our generative audio to songs we will use a number of music services and some open-source audio fingerprinting tools. Most commercial audio fingerprinting algorithms are secret and patented up to the eyeballs. So there is a lot of trial and errors. Some services used to evalute a song match:</p>
 
 
 
@@ -69,7 +580,7 @@
 
 
 
-<p>All generated tracks have comments exactly when a song was detected. The background images of the tracks are their respective <a href="https://en.wikipedia.org/wiki/Spectrogram">spectrograms</a>.</p>
+<p>All generated tracks have comments exactly when a song was detected.</p>
 
 
 
@@ -6208,208 +6719,6 @@ Checkout this great paper on the effectiveness of different functions: <a href="
 <p>Crazy, huh?</p>
 
 <p>So what do you think?</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[A little bit of Pig]]></title>
-    <link href="http://blog.josephwilk.net/big-data/a-little-bit-of-pig.html"/>
-    <updated>2012-06-11T17:35:41+01:00</updated>
-    <id>http://blog.josephwilk.net/big-data/a-little-bit-of-pig</id>
-    <content type="html"><![CDATA[<p>Currently in the Science team at Songkick I&rsquo;ve been working with Apache Pig to generate lots of interesting metrics for our business intelligence. We use Amazon&rsquo;s MapReduce and Pig to avoid having to run complex, long running and intensive queries on our live db, we can run them on Amazon in a timely fashion instead. So lets dive into Pig and how we use it at Songkick.com.</p>
-
-<h2>Pig (whats with all these silly names)</h2>
-
-<p>The Apache project Pig is a data flow language designed for analysing large datasets. It provides a high-level platform for creating MapReduce programs used with <em>Hadoop. </em>A little bit like SQL but Pig&rsquo;s programs by their structure are suitable for <strong>parallelization</strong>, which is why they are great at  handling very large data sets.</p>
-
-<p><img src="http://blog.josephwilk.net/images/blog/2012/05/pig-300x284.gif" alt="" /></p>
-
-<p>Heres how we use Pig and ElasticMapReduce at Songkick in our Science team.</p>
-
-<h2>Data (Pig food)</h2>
-
-<p><img src="http://blog.josephwilk.net/images/blog/2012/06/pig_eating.png" alt="" /></p>
-
-<p>Lets start by uploading some huge and interesting data about Songkicks artists onto S3. We start by dumping a table from mysql (along with a lot of other tables) and then query that data with Pig on Hadoop. While we could extract all the artist data by querying the live table its actually faster to use mysqldump and dump the table as a TSV file.</p>
-
-<p>For example it took 35 minutes to dump our artist table with a sql query &lsquo;select * from artists&rsquo;. It takes 10 minutes to dump the entire table with mysqldump.</p>
-
-<p>We format the table dump as a TSV which we push to S3 as that makes it super easy to use Amazons ElasticMapReduce with Pig.</p>
-
-<pre><code>shell&gt; mysqldump --user=joe --password  --fields-optionally-enclosed-by='"'
-                  --fields-terminated-by='\t' --tab /tmp/path_to_dump/ songkick artist_trackings
-</code></pre>
-
-<p>Unfortunately this has to be run on the db machine since mysqldump needs access to the file system to save the data. If this is a problem for you there is a Ruby script for dumping tables to TSV: <a href="http://github.com/apeckham/mysqltsvdump/blob/master/mysqltsvdump.rb">http://github.com/apeckham/mysqltsvdump/blob/master/mysqltsvdump.rb</a></p>
-
-<h2>Launching (Pig catapult)</h2>
-
-<p><img src="http://blog.josephwilk.net/images/blog/2012/06/flying_pig.png" alt="" /></p>
-
-<p>We will be using Amazons Elastic MapReduce to run our Pig scripts. We can start our job in interactive Pig mode which allows us to ssh to the box and run the pig script line by line.</p>
-
-<p><img src="http://blog.josephwilk.net/images/blog/2012/05/aws_pig.png" alt="" /></p>
-
-<h2>Examples (Dancing Pigs)</h2>
-
-<p><img src="http://blog.josephwilk.net/images/blog/2012/06/dancing_pigs1.jpg" alt="" /></p>
-
-<p>An important thing to note when running pig scripts interactively is that they defer execution until they have to expose a result. This means you can get nice schema checks and validations helping ensure your PIG script is valid without actually executing it over your large dataset.</p>
-
-<p>We are going to try and calculate the average number of users tracking an artist based on the condition that we only count users who logged in, in the last 30 days.</p>
-
-<p>This is what our Pig script is doing:</p>
-
-<p><img src="http://blog.josephwilk.net/images/blog/2012/06/query6.png" alt="" /></p>
-
-<p>The Pig script:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>-- Define some useful dates we will use later
-</span><span class='line'>%default TODAYS_DATE `date  +%Y/%m/%d`
-</span><span class='line'>%default 30_DAYS_AGO `date -d "$TODAYS_DATE - 30 day" +%Y-%m-%d`
-</span><span class='line'>    
-</span><span class='line'>-- Pig is smart enough when given a folder to go and find files, decompress them if necessarily and load them.
-</span><span class='line'>-- Note we have to specify the schema as PIG does not know know this from our TSV file.
-</span><span class='line'>trackings = LOAD 's3://songkick/db/trackings/$TODAYS_DATE/' AS (id:int, artist_id:int,  user_id:int); 
-</span><span class='line'>users = LOAD 's3://songkick/db/users/$TODAYS_DATE/' AS (id:int, username:chararray, last_logged_in_at:chararray);</span></code></pre></td></tr></table></div></figure>
-
-
-<pre><code>trackings
-&lt;1, 1, 1&gt;
-&lt;2, 1, 2&gt;
-
-users
-&lt;1,'josephwilk', '11/06/2012'&gt;
-&lt;2,'elisehuard', '11/06/2012'&gt;
-&lt;3,'tycho', '11/06/2010'&gt;
-</code></pre>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>-- Filter users to only those who logged in, in the last 30 days
-</span><span class='line'>    -- Pig does not understand dates, so just treat them as strings
-</span><span class='line'>    active_users = FILTER users by last_logged_in_at gte '$30_DAYS_AGO'</span></code></pre></td></tr></table></div></figure>
-
-
-<pre><code>Users
-&lt;1,'josephwilk', '11/06/2012'&gt;
-&lt;2,'elisehuard', '11/06/2012'&gt;
-</code></pre>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>active_users_and_trackings = JOIN active_users BY id, trackings BY user_id
-</span><span class='line'>    
-</span><span class='line'>    -- group all the users tracking an artists so we can count them.
-</span><span class='line'>    active_users_and_trackings_grouped = GROUP active_users_and_trackings BY active_users::user_id;</span></code></pre></td></tr></table></div></figure>
-
-
-<pre><code>&lt;1, 1, /\{&lt;1,'josephwilk', '11/06/2012'&gt;, &lt;2,'elisehuard', '11/06/2012'&gt;\/}&gt;`
-</code></pre>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>trackings_per_artist = FOREACH active_users_and_trackings_grouped GENERATE group, COUNT($2) as number_of_trackings;</span></code></pre></td></tr></table></div></figure>
-
-
-<pre><code>`&lt;\/{&lt;1,'josephwilk', '11/06/2012'&gt;, &lt;2,'elisehuard', '11/06/2012'&gt;\/}, 2&gt;`
-</code></pre>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>-- group all the counts so we can calculate the average
-</span><span class='line'>    all_trackings_per_artist = GROUP trackings_per_artist ALL;</span></code></pre></td></tr></table></div></figure>
-
-
-<pre><code>&lt;\/{\/{&lt;1,'josephwilk', '11/06/2012'&gt;, &lt;2,'elisehuard', '11/06/2012'&gt;\/}, 2\/}&gt;
-</code></pre>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>-- Calculate the average
-</span><span class='line'>    average_artist_trackings_per_active_user = FOREACH all_trackings_per_artist
-</span><span class='line'>      GENERATE '$DATE' as dt, AVG(trackings_per_artist.number_of_trackings);</span></code></pre></td></tr></table></div></figure>
-
-
-<pre><code>&lt;{&lt;'11/062012', 2&gt;}&gt;
-</code></pre>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>--Now we have done the work store the result in S3.
-</span><span class='line'>    STORE average_artist_trackings_per_active_user INTO
-</span><span class='line'>      's3://songkick/stats/average_artist_trackings_per_active_user/$TODAYS_DATE'</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Debugging Pigs (Pig autopsy)</h2>
-
-<p><img src="http://blog.josephwilk.net/images/blog/2012/06/pig_insides.png" alt="" />
-In an interactive pig session there are two useful commands for debugging:
-<strong>DESCRIBE</strong> to see the schema.
-<strong>ILLUSTRATE</strong> to see the schema with sample data:</p>
-
-<pre><code>DESCRIBE users;
-users: {id:int, username:chararray, created_at:chararray, trackings:int}
-
-ILLUSTRATE users;
-----------------------------------------------------------------------
-| users   | id: int | username:chararray | created_at | trackings:int |
-----------------------------------------------------------------------
-|         | 18      | Joe                | 10/10/13   | 1000          |
-|         | 20      | Elise              | 10/10/14   | 2300          |
-----------------------------------------------------------------------
-</code></pre>
-
-<h2>Automating Elastic MapReduce (Pig robots)</h2>
-
-<p><img src="http://blog.josephwilk.net/images/blog/2012/06/pig_robot.png" alt="" /></p>
-
-<p>Once you are happy with your script you&rsquo;ll want to automate all of this. I currently do this by having a cron task which at regular intervals uses the  elastic-mapreduce-ruby lib to fire up a elastic map reduce job and run it with the pig script to execute.</p>
-
-<p>Its important to note that I <em>store the pig scripts on S3</em> so its easy for elastic-mapreduce to find the scripts.</p>
-
-<p>Follow the instructions to install elastic-mapreduce-ruby: <a href="https://github.com/tc/elastic-mapreduce-ruby">https://github.com/tc/elastic-mapreduce-ruby</a></p>
-
-<p>To avoid having to call elastic-mapreduce with 100s of arguments a colleague has written a little python wrapper to make it quick and easy to use: <a href="https://gist.github.com/2911006">https://gist.github.com/2911006</a></p>
-
-<p>You&rsquo;ll need to configure where you&rsquo;re elastic-mapreduce tool is installed AND where you want elastic map-reduce to log to on S3 (this means you can debug your elastic map reduce job if things go wrong!).</p>
-
-<p>Now all we need to do is pass the script the path to the pig script on S3.</p>
-
-<pre><code>./emrjob s3://songkick/lib/stats/pig/average_artist_trackings_per_active_user.pig
-</code></pre>
-
-<h2>Testing with PigUnit (Simulating Pigs)</h2>
-
-<p><img src="http://blog.josephwilk.net/images/blog/2012/06/virtual_pig.png" alt="" /></p>
-
-<p>Pig scripts can still take a long time to run even with all that Hadoop magic. Thankfully there is a testing framework PigUnit.</p>
-
-<p><a href="http://pig.apache.org/docs/r0.8.1/pigunit.html#Overview">http://pig.apache.org/docs/r0.8.1/pigunit.html#Overview</a></p>
-
-<p>Unfortunately this is where you have to step into writing Java. So I skipped it. Sshhh.</p>
-
-<h2>References</h2>
-
-<ol>
-<li><p> Apache Pig official site: <a href="http://pig.apache.org/">http://pig.apache.org</a></p></li>
-<li><p> Nearest Neighbours with Apache Pig and JRuby: <a href="http://thedatachef.blogspot.co.uk/2011/10/nearest-neighbors-with-apache-pig-and.html">http://thedatachef.blogspot.co.uk/2011/10/nearest-neighbors-with-apache-pig-and.html </a></p></li>
-<li><p> Helpers for messing with Elastic MapReduce in Ruby <a href="https://github.com/tc/elastic-mapreduce-ruby">https://github.com/tc/elastic-mapreduce-ruby</a></p></li>
-<li><p> mysqltsvdump <a href="http://github.com/apeckham/mysqltsvdump/blob/master/mysqltsvdump.rb">http://github.com/apeckham/mysqltsvdump/blob/master/mysqltsvdump.rb</a></p></li>
-</ol>
-
 ]]></content>
   </entry>
   

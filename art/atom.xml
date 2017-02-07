@@ -4,7 +4,7 @@
   <title><![CDATA[Category: art | Joseph Wilk]]></title>
   <link href="http://blog.josephwilk.net/art/atom.xml" rel="self"/>
   <link href="http://blog.josephwilk.net/"/>
-  <updated>2017-01-05T16:25:43+00:00</updated>
+  <updated>2017-02-07T14:43:09+00:00</updated>
   <id>http://blog.josephwilk.net/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -49,7 +49,7 @@
 
 
 
-<p>To try and match our generative audio to songs we will use a number of music services and some open-source audio fingerprinting tools. Most commercial audio fingerprinting algorithms are secret and patented up to the eyeballs. So there is a lot of trial and error. Some services used to evaluate a song match:</p>
+<p>To try and match our generative audio to songs we will use a number of music services and some open-source audio fingerprinting tools. Most commercial audio fingerprinting algorithms are secret and patented up to the eyeballs. So there is a lot of trial and errors. Some services used to evalute a song match:</p>
 
 
 
@@ -69,7 +69,7 @@
 
 
 
-<p>All generated tracks have comments exactly when a song was detected. The background images of the tracks are their respective <a href="https://en.wikipedia.org/wiki/Spectrogram">spectrograms</a>.</p>
+<p>All generated tracks have comments exactly when a song was detected.</p>
 
 
 
