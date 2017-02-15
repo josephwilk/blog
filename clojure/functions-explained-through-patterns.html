@@ -120,7 +120,7 @@ partition &hellip;">
 </ul>
 
 
-<p><code>(nthrest col n)</code></p>
+<p><code>(nthrest coll n)</code></p>
 
 <ul>
 <li>A textual description:</li>
@@ -162,7 +162,7 @@ The documentation of patterns in the Clojure documentation is all text. Even wit
 
 <p>Applying functions to collections of data using: <a href="https://github.com/josephwilk/functions-as-patterns">https://github.com/josephwilk/functions-as-patterns</a></p>
 
-<h2><code>(butlast col)</code></h2>
+<h2><code>(butlast coll)</code></h2>
 
 <pre><code>Return a seq of all but the last item in coll, in linear time
 </code></pre>
@@ -255,7 +255,7 @@ the rest.
 </div>
 
 
-<h2><code>(dedupe col)</code></h2>
+<h2><code>(dedupe coll)</code></h2>
 
 <pre><code>Returns a lazy sequence removing consecutive duplicates in coll.
 Returns a transducer when no collection is provided.</code></pre>
@@ -272,7 +272,7 @@ Returns a transducer when no collection is provided.</code></pre>
 </div>
 
 
-<h2><code>(distinct col)</code></h2>
+<h2><code>(distinct coll)</code></h2>
 
 <pre><code>Returns a lazy sequence of the elements of coll with duplicates removed.
 Returns a stateful transducer when no collection is provided.
@@ -291,7 +291,7 @@ Returns a stateful transducer when no collection is provided.
 </div>
 
 
-<h2><code>(drop-last n col)</code></h2>
+<h2><code>(drop-last n coll)</code></h2>
 
 <pre><code>Return a lazy sequence of all but the last n (default 1) items in coll
 </code></pre>
@@ -309,7 +309,7 @@ Returns a stateful transducer when no collection is provided.
 </div>
 
 
-<h2><code>(flatten col)</code></h2>
+<h2><code>(flatten coll)</code></h2>
 
 <pre><code>Takes any nested combination of sequential things (lists, vectors,
 etc.) and returns their contents as a single, flat foldable
@@ -329,7 +329,7 @@ collection.
 </div>
 
 
-<h2><code>(interpose sep col)</code></h2>
+<h2><code>(interpose sep coll)</code></h2>
 
 <pre><code>Returns a lazy seq of the elements of coll separated by sep.
 Returns a stateful transducer when no collection is provided.
@@ -348,7 +348,7 @@ Returns a stateful transducer when no collection is provided.
 </div>
 
 
-<h2><code>(interleave col col)</code></h2>
+<h2><code>(interleave coll coll)</code></h2>
 
 <pre><code>Returns a lazy seq of the first item in each coll, then the second etc.
 </code></pre>
@@ -366,7 +366,7 @@ Returns a stateful transducer when no collection is provided.
 </div>
 
 
-<h2><code>(nthnext col n)</code></h2>
+<h2><code>(nthnext coll n)</code></h2>
 
 <pre><code>Returns the nth next of coll, (seq coll) when n is 0.
 </code></pre>
