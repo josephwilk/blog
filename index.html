@@ -8,17 +8,17 @@
   <title>Joseph Wilk</title>
   <meta name="author" content="Joseph Wilk">
 
-  
+
   <meta name="description" content="Exploring patterns as a means of documenting Clojure functions to aid recall and understanding. Whats the difference in Clojure between:
 partition &hellip;">
-  
+
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  
+
   <link rel="canonical" href="http://blog.josephwilk.net/index.html">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -33,7 +33,7 @@ partition &hellip;">
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 
-  
+
   <script type="text/javascript">
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', 'UA-3020740-2']);
@@ -61,10 +61,10 @@ partition &hellip;">
 </header>
   <nav role="navigation"><ul class="subscription" data-subscription="rss">
   <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
+
 </ul>
-  
-  
+
+
 <ul class="main-navigation">
  <li><a href="/">Home</a></li>
  <li><a href="/about">About</a></li>
@@ -77,18 +77,17 @@ partition &hellip;">
   <div id="main">
     <div id="content">
       <div class="blog-index">
-  
-  
-  
+
+
+
     <article>
-      
+
   <header>
-    
+
       <h1 class="entry-title"><a href="/clojure/functions-explained-through-patterns.html">Functions Explained Through Patterns</a></h1>
-    
-    
+
+
       <p class="meta">
-        
 
 
 
@@ -97,13 +96,14 @@ partition &hellip;">
 
 
 
-  
+
+
 
 
 <time datetime="2017-02-07T14:00:00+00:00" pubdate data-updated="true">Feb 7<span>th</span>, 2017</time>
-        
+
       </p>
-    
+
   </header>
 
 
@@ -123,7 +123,7 @@ partition &hellip;">
 </ul>
 
 
-<p><code>(nthrest col nth)</code></p>
+<p><code>(nthrest coll n)</code></p>
 
 <ul>
 <li>A textual description:</li>
@@ -259,7 +259,7 @@ the rest.
 
 <h2><code>(dedupe col)</code></h2>
 
-<pre><code>Returns a lazy sequence removing consecutive duplicates in coll. 
+<pre><code>Returns a lazy sequence removing consecutive duplicates in coll.
 Returns a transducer when no collection is provided.</code></pre>
 
 <div>
@@ -387,13 +387,13 @@ Returns a stateful transducer when no collection is provided.
 </div>
 
 
-<h2><code>(nthrest n col)</code></h2>
+<h2><code>(nthrest coll n)</code></h2>
 
 <pre><code>Returns the nth rest of coll, coll when n is 0.
 </code></pre>
 
 <div>
-<span><span style="font-size: 2em;">(</span><code>nthrest 2 <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24nthrest_arg0.png"><span style="font-size: 2em;">)</span></code></span>
+<span><span style="font-size: 2em;">(</span><code>nthrest <img  style="vertical-align:middle" src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24nthrest_arg0.png"> 2 <span style="font-size: 2em;">)</span></code></span>
 </div>
 
 
@@ -450,7 +450,7 @@ transducer when no collection is provided.
 <h2><code>(replace smap col)</code></h2>
 
 <pre><code>Given a map of replacement pairs and a vector/collection, returns a vector/seq
-with any elements = a key in smap replaced with the corresponding val in smap.  
+with any elements = a key in smap replaced with the corresponding val in smap.
 Returns a transducer when no collection is provided.
 </code></pre>
 
@@ -628,22 +628,21 @@ However the functions-as-patterns library cannot tell these are not values, it a
 
 <p>Inspired by the work of Alex McLean (<a href="https://github.com/yaxu">@yaxu</a>) using visual patterns to explain the live coding language Tidal: <a href="https://www.academia.edu/467099/TIDAL_PATTERN_LANGUAGE_FOR_LIVE_CODING_OF_MUSIC">Tidal Pattern Language for Live Coding of Music</a></p>
 </div>
-  
-  
+
+
 
 
     </article>
-  
-  
+
+
     <article>
-      
+
   <header>
-    
+
       <h1 class="entry-title"><a href="/art/audio-fingerprint-smudges.html">Audio Fingerprint Smudges</a></h1>
-    
-    
+
+
       <p class="meta">
-        
 
 
 
@@ -652,13 +651,14 @@ However the functions-as-patterns library cannot tell these are not values, it a
 
 
 
-  
+
+
 
 
 <time datetime="2016-12-31T12:00:00+00:00" pubdate data-updated="true">Dec 31<span>st</span>, 2016</time>
-        
+
       </p>
-    
+
   </header>
 
 
@@ -961,22 +961,21 @@ Overtone Synth generator using <code>test.check</code>:</p></li>
 </ul>
 
 </div>
-  
-  
+
+
 
 
     </article>
-  
-  
+
+
     <article>
-      
+
   <header>
-    
+
       <h1 class="entry-title"><a href="/art/overtone-shader-visuals.html">Visuals With Overtone and Shadertone</a></h1>
-    
-    
+
+
       <p class="meta">
-        
 
 
 
@@ -985,13 +984,14 @@ Overtone Synth generator using <code>test.check</code>:</p></li>
 
 
 
-  
+
+
 
 
 <time datetime="2016-01-08T14:58:00+00:00" pubdate data-updated="true">Jan 8<span>th</span>, 2016</time>
-        
+
       </p>
-    
+
   </header>
 
 
@@ -1841,22 +1841,21 @@ This also gets more complicated when say we have 3 instances of the same synth r
 <p>I&rsquo;ve started to explore what a shader application might look like if it was a server and provided a state machine so the live coding language does have this complexity. In turn producing a freer and more spontaneous interaction. This project is <a href="https://github.com/josephwilk/shaderview">Shaderview</a> and steals all the good ideas of Shadertone while adding some new features like <a href="http://www.vertexshaderart.com">vertex shader art</a>. I&rsquo;ll be writing up more about Shaderview soon.</p>
 
 </div>
-  
-  
+
+
 
 
     </article>
-  
-  
+
+
     <article>
-      
+
   <header>
-    
+
       <h1 class="entry-title"><a href="/art/emacs-animation.html">Animations With Emacs</a></h1>
-    
-    
+
+
       <p class="meta">
-        
 
 
 
@@ -1865,13 +1864,14 @@ This also gets more complicated when say we have 3 instances of the same synth r
 
 
 
-  
+
+
 
 
 <time datetime="2015-10-02T15:58:00+01:00" pubdate data-updated="true">Oct 2<span>nd</span>, 2015</time>
-        
+
       </p>
-    
+
   </header>
 
 
@@ -2446,22 +2446,21 @@ A Regex matches whitespace and replaces it with a randomly increasing amount of 
 <p>While it may seem silly to bend Emacs to do things it was never intended to do, it&rsquo;s an important part of discovering for yourself how you want your tools to work. Not just doing what you are expected but breaking them apart and discovering for yourself how you want to use them.</p>
 
 </div>
-  
-  
+
+
 
 
     </article>
-  
-  
+
+
     <article>
-      
+
   <header>
-    
+
       <h1 class="entry-title"><a href="/clojure/clojure-and-kinesis-at-scale.html">Clojure and Kinesis at Scale</a></h1>
-    
-    
+
+
       <p class="meta">
-        
 
 
 
@@ -2470,13 +2469,14 @@ A Regex matches whitespace and replaces it with a randomly increasing amount of 
 
 
 
-  
+
+
 
 
 <time datetime="2015-09-30T15:58:12+01:00" pubdate data-updated="true">Sep 30<span>th</span>, 2015</time>
-        
+
       </p>
-    
+
   </header>
 
 
@@ -2890,22 +2890,21 @@ To make this feel more real I captured metrics across all the machines involved 
 
 <p>This work constitues a team effort by the Data team at SoundCloud. A lot of advice, collaboration and hard work. Kudos to everyone.</p>
 </div>
-  
-  
+
+
 
 
     </article>
-  
-  
+
+
     <article>
-      
+
   <header>
-    
+
       <h1 class="entry-title"><a href="/clojure/overtone-driving-minecraft.html">Clojure and Overtone Driving Minecraft</a></h1>
-    
-    
+
+
       <p class="meta">
-        
 
 
 
@@ -2914,13 +2913,14 @@ To make this feel more real I captured metrics across all the machines involved 
 
 
 
-  
+
+
 
 
 <time datetime="2015-03-01T14:58:12+00:00" pubdate data-updated="true">Mar 1<span>st</span>, 2015</time>
-        
+
       </p>
-    
+
   </header>
 
 
@@ -3128,22 +3128,21 @@ To make this feel more real I captured metrics across all the machines involved 
 <p>Built on the back of lots of great open source projects.
 Thanks to the Craftbukkit/Spigot contributors, <a href="https://twitter.com/cmdrdats">@CmdrDats</a> for clj-minecraft and <a href="https://twitter.com/samaaron">@samaaron</a> for Overtone and inspiring this crazy journey with the musical <a href="http://sonic-pi.net/">Sonic Pi</a> (which supports combining music and Minecraft on the RaspberryPi).</p>
 </div>
-  
-  
+
+
 
 
     </article>
-  
-  
+
+
     <article>
-      
+
   <header>
-    
+
       <h1 class="entry-title"><a href="/art/live-coding-repl-electric.html">Live Coding - Repl Electric</a></h1>
-    
-    
+
+
       <p class="meta">
-        
 
 
 
@@ -3152,13 +3151,14 @@ Thanks to the Craftbukkit/Spigot contributors, <a href="https://twitter.com/cmdr
 
 
 
-  
+
+
 
 
 <time datetime="2014-06-13T15:58:12+01:00" pubdate data-updated="true">Jun 13<span>th</span>, 2014</time>
-        
+
       </p>
-    
+
   </header>
 
 
@@ -3499,22 +3499,21 @@ Everything you need is here (<a href="https://github.com/repl-electric/cassiopei
 
 <p>But of all the code I&rsquo;ve written over the years this is one of the things I&rsquo;m most proud of. And i&rsquo;m only at the beginning of discovering what&rsquo;s possible.</p>
 </div>
-  
-  
+
+
 
 
     </article>
-  
-  
+
+
     <article>
-      
+
   <header>
-    
+
       <h1 class="entry-title"><a href="/clojure/creative_machines.html">Creative Machines</a></h1>
-    
-    
+
+
       <p class="meta">
-        
 
 
 
@@ -3523,13 +3522,14 @@ Everything you need is here (<a href="https://github.com/repl-electric/cassiopei
 
 
 
-  
+
+
 
 
 <time datetime="2014-02-23T13:23:00+00:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2014</time>
-        
+
       </p>
-    
+
   </header>
 
 
@@ -3568,22 +3568,21 @@ A space for humans and machines to learn and create music together.</p>
 </ul>
 
 </div>
-  
-  
+
+
 
 
     </article>
-  
-  
+
+
     <article>
-      
+
   <header>
-    
+
       <h1 class="entry-title"><a href="/clojure/sounds-of-the-human-brain.html">Sounds of the Human Brain</a></h1>
-    
-    
+
+
       <p class="meta">
-        
 
 
 
@@ -3592,13 +3591,14 @@ A space for humans and machines to learn and create music together.</p>
 
 
 
-  
+
+
 
 
 <time datetime="2013-12-02T13:23:00+00:00" pubdate data-updated="true">Dec 2<span>nd</span>, 2013</time>
-        
+
       </p>
-    
+
   </header>
 
 
@@ -3993,22 +3993,21 @@ This measures voltage fluctuations resulting from ionic current flows within the
 
 <p>Sound as a means of discovering patterns is a largely untapped source.</p>
 </div>
-  
-  
+
+
 
 
     </article>
-  
-  
+
+
     <article>
-      
+
   <header>
-    
+
       <h1 class="entry-title"><a href="/clojure/building-clojure-services-at-scale.html">Building Clojure Services at Scale</a></h1>
-    
-    
+
+
       <p class="meta">
-        
 
 
 
@@ -4017,13 +4016,14 @@ This measures voltage fluctuations resulting from ionic current flows within the
 
 
 
-  
+
+
 
 
 <time datetime="2013-09-13T11:00:00+01:00" pubdate data-updated="true">Sep 13<span>th</span>, 2013</time>
-        
+
       </p>
-    
+
   </header>
 
 
@@ -4056,7 +4056,7 @@ In a service reliant on other services, databases, caches any other external dep
 
 <div style="display:inline-block;">
 <img align="left" style="margin-right:5px;" src="/images/scary-eye.png" width="150px" height="150px">
-While we can think about degrading gracefully in the case of failure, ultimately we want to fix wants broken as soon as possible. An eye into the runtime system allows us to monitor exactly whats going on and take appropriate action. 
+While we can think about degrading gracefully in the case of failure, ultimately we want to fix wants broken as soon as possible. An eye into the runtime system allows us to monitor exactly whats going on and take appropriate action.
 </div>
 
 
@@ -4148,8 +4148,8 @@ Why don&rsquo;t we serve from a cache on failure, slightly stale data is better 
 
 <p><img src ="/images/hystrix.png" height="400px" width="400px"/></p>
 
-<pre><code>Hystrix is a latency and fault tolerance library designed to isolate points of access to remote systems, 
-services and 3rd party libraries, stop cascading failure and enable resilience in complex distributed systems 
+<pre><code>Hystrix is a latency and fault tolerance library designed to isolate points of access to remote systems,
+services and 3rd party libraries, stop cascading failure and enable resilience in complex distributed systems
 where failure is inevitable.
 </code></pre>
 
@@ -4454,66 +4454,66 @@ Hence we use Hystrix as our means of providing concurreny.</p>
 <p>I&rsquo;m very happy with the shape of these services running at SoundCloud. In production they are performing very well under heavy load with useful near realtime monitoring.
 In part thanks to Netflix&rsquo;s hard work there is no reason you cannot write elegant Clojure services at scale.</p>
 </div>
-  
-  
+
+
 
 
     </article>
-  
+
   <div class="pagination">
-    
+
       <a class="prev" href="/page/2/">&larr; Older</a>
-    
+
     <a href="/blog/archives">Blog Archives</a>
-    
+
   </div>
 </div>
 <aside class="sidebar">
-  
+
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
-    
+
       <li class="post">
         <a href="/clojure/functions-explained-through-patterns.html">Functions Explained Through Patterns</a>
       </li>
-    
+
       <li class="post">
         <a href="/art/audio-fingerprint-smudges.html">Audio Fingerprint Smudges</a>
       </li>
-    
+
       <li class="post">
         <a href="/art/overtone-shader-visuals.html">Visuals with Overtone and Shadertone</a>
       </li>
-    
+
       <li class="post">
         <a href="/art/emacs-animation.html">Animations with Emacs</a>
       </li>
-    
+
       <li class="post">
         <a href="/clojure/clojure-and-kinesis-at-scale.html">Clojure and Kinesis at scale</a>
       </li>
-    
+
       <li class="post">
         <a href="/clojure/overtone-driving-minecraft.html">Clojure and Overtone driving Minecraft</a>
       </li>
-    
+
       <li class="post">
         <a href="/art/live-coding-repl-electric.html">Live Coding - Repl Electric</a>
       </li>
-    
+
       <li class="post">
         <a href="/clojure/creative_machines.html">Creative Machines</a>
       </li>
-    
+
       <li class="post">
         <a href="/clojure/sounds-of-the-human-brain.html">Sounds of the human brain</a>
       </li>
-    
+
       <li class="post">
         <a href="/clojure/building-clojure-services-at-scale.html">Building Clojure services at scale</a>
       </li>
-    
+
   </ul>
 </section>
 
@@ -4522,9 +4522,9 @@ In part thanks to Netflix&rsquo;s hard work there is no reason you cannot write 
   <ul id="gh_repos">
     <li class="loading">Status updating&#8230;</li>
   </ul>
-  
+
   <a href="https://github.com/josephwilk">@josephwilk</a> on GitHub
-  
+
   <script type="text/javascript">
     $(document).ready(function(){
         if (!window.jXHR){
@@ -4550,7 +4550,7 @@ In part thanks to Netflix&rsquo;s hard work there is no reason you cannot write 
 
 
 
-  
+
 </aside>
 
     </div>
@@ -4561,14 +4561,14 @@ In part thanks to Netflix&rsquo;s hard work there is no reason you cannot write 
 </p>
 
 </footer>
-  
+
 
 <script type="text/javascript">
       var disqus_shortname = 'josephwilk';
-      
-        
+
+
         var disqus_script = 'count.js';
-      
+
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
       dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
