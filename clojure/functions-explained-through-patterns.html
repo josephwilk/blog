@@ -402,7 +402,7 @@ Returns a stateful transducer when no collection is provided.
 </div>
 
 
-<h2><code>(partition n col)</code></h2>
+<h2><code>(partition n coll)</code></h2>
 
 <pre><code>Returns a lazy sequence of lists of n items each, at offsets step apart.
 If step is not supplied, defaults to n, i.e. the partitions do not overlap.
@@ -424,7 +424,7 @@ return a partition with less than n items.
 </div>
 
 
-<h2><code>(partition-all n col)</code></h2>
+<h2><code>(partition-all n coll)</code></h2>
 
 <pre><code>Returns a lazy sequence of lists like partition, but may include
 partitions with fewer than n items at the end.  Returns a stateful
@@ -444,7 +444,7 @@ transducer when no collection is provided.
 </div>
 
 
-<h2><code>(replace smap col)</code></h2>
+<h2><code>(replace smap coll)</code></h2>
 
 <pre><code>Given a map of replacement pairs and a vector/collection, returns a vector/seq
 with any elements = a key in smap replaced with the corresponding val in smap.
@@ -464,7 +464,7 @@ Returns a transducer when no collection is provided.
 </div>
 
 
-<h2><code>(rest col)</code></h2>
+<h2><code>(rest coll)</code></h2>
 
 <pre><code>Returns a possibly empty seq of the items after the first. Calls seq on its
 argument.
@@ -483,7 +483,7 @@ argument.
 </div>
 
 
-<h2><code>(reverse col)</code></h2>
+<h2><code>(reverse coll)</code></h2>
 
 <pre><code>Returns a seq of the items in coll in reverse order. Not lazy.
 </code></pre>
@@ -559,7 +559,7 @@ avoid this, sort a copy of the array.
 </div>
 
 
-<h2><code>(split-at n col)</code></h2>
+<h2><code>(split-at n coll)</code></h2>
 
 <pre><code>Returns a vector of [(take n coll) (drop n coll)]
 </code></pre>
