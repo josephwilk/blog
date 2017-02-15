@@ -165,7 +165,7 @@ The documentation of patterns in the Clojure documentation is all text. Even wit
 
 <p>Applying functions to collections of data using: <a href="https://github.com/josephwilk/functions-as-patterns">https://github.com/josephwilk/functions-as-patterns</a></p>
 
-<h2><code>(butlast col)</code></h2>
+<h2><code>(butlast coll)</code></h2>
 
 <pre><code>Return a seq of all but the last item in coll, in linear time
 </code></pre>
@@ -257,7 +257,7 @@ the rest.
 <span><img src="https://raw.githubusercontent.com/josephwilk/functions-as-patterns/master/doc/clojure.core%24cons_post.png"></span>
 </div>
 
-<h2><code>(dedupe col)</code></h2>
+<h2><code>(dedupe coll)</code></h2>
 
 <pre><code>Returns a lazy sequence removing consecutive duplicates in coll.
 Returns a transducer when no collection is provided.</code></pre>
@@ -275,7 +275,7 @@ Returns a transducer when no collection is provided.</code></pre>
 
 
 
-<h2><code>(distinct col)</code></h2>
+<h2><code>(distinct coll)</code></h2>
 
 <pre><code>Returns a lazy sequence of the elements of coll with duplicates removed.
 Returns a stateful transducer when no collection is provided.
@@ -294,7 +294,7 @@ Returns a stateful transducer when no collection is provided.
 </div>
 
 
-<h2><code>(drop-last n col)</code></h2>
+<h2><code>(drop-last n coll)</code></h2>
 
 <pre><code>Return a lazy sequence of all but the last n (default 1) items in coll
 </code></pre>
@@ -312,7 +312,7 @@ Returns a stateful transducer when no collection is provided.
 </div>
 
 
-<h2><code>(flatten col)</code></h2>
+<h2><code>(flatten coll)</code></h2>
 
 <pre><code>Takes any nested combination of sequential things (lists, vectors,
 etc.) and returns their contents as a single, flat foldable
@@ -405,7 +405,7 @@ Returns a stateful transducer when no collection is provided.
 </div>
 
 
-<h2><code>(partition n col)</code></h2>
+<h2><code>(partition n coll)</code></h2>
 
 <pre><code>Returns a lazy sequence of lists of n items each, at offsets step apart.
 If step is not supplied, defaults to n, i.e. the partitions do not overlap.
@@ -427,7 +427,7 @@ return a partition with less than n items.
 </div>
 
 
-<h2><code>(partition-all n col)</code></h2>
+<h2><code>(partition-all n coll)</code></h2>
 
 <pre><code>Returns a lazy sequence of lists like partition, but may include
 partitions with fewer than n items at the end.  Returns a stateful
@@ -447,7 +447,7 @@ transducer when no collection is provided.
 </div>
 
 
-<h2><code>(replace smap col)</code></h2>
+<h2><code>(replace smap coll)</code></h2>
 
 <pre><code>Given a map of replacement pairs and a vector/collection, returns a vector/seq
 with any elements = a key in smap replaced with the corresponding val in smap.
@@ -467,7 +467,7 @@ Returns a transducer when no collection is provided.
 </div>
 
 
-<h2><code>(rest col)</code></h2>
+<h2><code>(rest coll)</code></h2>
 
 <pre><code>Returns a possibly empty seq of the items after the first. Calls seq on its
 argument.
@@ -486,7 +486,7 @@ argument.
 </div>
 
 
-<h2><code>(reverse col)</code></h2>
+<h2><code>(reverse coll)</code></h2>
 
 <pre><code>Returns a seq of the items in coll in reverse order. Not lazy.
 </code></pre>
@@ -562,7 +562,7 @@ avoid this, sort a copy of the array.
 </div>
 
 
-<h2><code>(split-at n col)</code></h2>
+<h2><code>(split-at n coll)</code></h2>
 
 <pre><code>Returns a vector of [(take n coll) (drop n coll)]
 </code></pre>
