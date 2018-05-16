@@ -78,6 +78,462 @@ partition &hellip;">
       <div class="blog-index">
 
 
+        <article>
+
+      <header>
+
+          <h1 class="entry-title"><a href="/art/emacs-as-a-musical-instrument.html">Emacs as a Musical Instrument</a></h1>
+          <p class="meta">
+    <time datetime="2018-05-16T14:00:00+01:00" pubdate data-updated="true">May 16<span>th</span>, 2018</time>
+          </p>
+      </header>
+
+      <div class="entry-content"><p>A simple goal, to directly connect Emacs to running hardware and software synthesisers with <strong>realtime</strong> control. Emacs as a musical instrument.</p>
+
+    <p>I already use code to control synths (as <a href="http://www.repl-electric.com/">Repl-Electric</a>) but there is a level of indirection between the code and the effect on the music. You push keys on your computer keyboard and nothing happens. Only when you run the code does the music change. I wanted to add realtime control to my performances while still remaining in code and Emacs. Bringing the performance closer to musical instruments were instant feedback is a core part of the performance experience.</p>
+
+    <p>I could use external hardware, like a MidiFighterTwister (<a href="https://www.midifighter.com/#Twister">https://www.midifighter.com/#Twister</a>) or TouchOSC <a href="https://hexler.net/software/touchosc">https://hexler.net/software/touchosc</a> but I’ve found the context switch of moving between coding to twiddling dials on hardware expensive. The code is my composition process, so it makes sense for the direct control to also be there.</p>
+
+    <h2>Playing the Emacs</h2>
+
+    <p>Sculpting sound live with Emacs.</p>
+
+    <div style="padding:75% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/270101496?color=ff0179" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>
+
+
+    <script src="https://player.vimeo.com/api/player.js"></script>
+
+
+    <h2>Scratching Samples with Emacs</h2>
+
+    <p>Doing crazy things with Emacs starts to open more doors in musical expression. Since we can control music hardware with Emacs, we can control the playhead position within a sample. Much like the needle of a record player.</p>
+
+    <p>Say we map the position of your cursor in the Emacs buffer to the position of the playback head. By moving around in your buffer you can scratch the sample.</p>
+
+    <div style="padding:28.42% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/265189088?color=ff0179" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>
+
+
+    <script src="https://player.vimeo.com/api/player.js"></script>
+
+
+    <h2>Emacs sending Musical Controls</h2>
+
+    <p>Sending messages to musical synths using midi and OSC.</p>
+
+    <h3>Emacs Communicating with Open Sound Control</h3>
+
+    <p>First we need a client within Emacs which will send OSC (<a href="https://en.wikipedia.org/wiki/Open_Sound_Control">https://en.wikipedia.org/wiki/Open_Sound_Control</a>) using UDP packets. There is thankfully already an Emacs package for this: osc: <a href="https://delysid.org/emacs/osc.html">https://delysid.org/emacs/osc.html</a></p>
+
+    <p>Creating a client and sending OSC messages:</p>
+
+    <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+    <span class='line-number'>2</span>
+    <span class='line-number'>3</span>
+    <span class='line-number'>4</span>
+    <span class='line-number'>5</span>
+    <span class='line-number'>6</span>
+    <span class='line-number'>7</span>
+    <span class='line-number'>8</span>
+    <span class='line-number'>9</span>
+    <span class='line-number'>10</span>
+    <span class='line-number'>11</span>
+    <span class='line-number'>12</span>
+    <span class='line-number'>13</span>
+    <span class='line-number'>14</span>
+    <span class='line-number'>15</span>
+    <span class='line-number'>16</span>
+    <span class='line-number'>17</span>
+    <span class='line-number'>18</span>
+    </pre></td><td class='code'><pre><code class='elisp'><span class='line'><span></span><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;osc</span><span class="p">)</span>
+    </span><span class='line'><span class="p">(</span><span class="k">defvar</span> <span class="nv">osc-client</span> <span class="no">nil</span> <span class="s">&quot;Connection to send OSC From Emacs&quot;</span><span class="p">)</span>
+    </span><span class='line'>
+    </span><span class='line'><span class="p">(</span><span class="nb">defun</span> <span class="nv">osc-make-client</span> <span class="p">(</span><span class="nv">host</span> <span class="nv">port</span><span class="p">)</span>
+    </span><span class='line'>  <span class="p">(</span><span class="nf">make-network-process</span>
+    </span><span class='line'>   <span class="nb">:name</span> <span class="s">&quot;OSC client&quot;</span>
+    </span><span class='line'>   <span class="nb">:host</span> <span class="nv">host</span>
+    </span><span class='line'>   <span class="nb">:service</span> <span class="nv">port</span>
+    </span><span class='line'>   <span class="nb">:type</span> <span class="ss">&#39;datagram</span>
+    </span><span class='line'>   <span class="nb">:family</span> <span class="ss">&#39;ipv4</span><span class="p">))</span>
+    </span><span class='line'>
+    </span><span class='line'><span class="p">(</span><span class="nb">defun</span> <span class="nv">osc-connect</span> <span class="p">()</span>
+    </span><span class='line'>  <span class="p">(</span><span class="k">if</span> <span class="nv">osc-client</span>   <span class="p">(</span><span class="nf">delete-process</span> <span class="nv">osc-client</span><span class="p">))</span>
+    </span><span class='line'>  <span class="p">(</span><span class="k">setq</span> <span class="nv">osc-client</span> <span class="p">(</span><span class="nv">osc-make-client</span> <span class="s">&quot;localhost&quot;</span> <span class="mi">4561</span><span class="p">)))</span>
+    </span><span class='line'>
+    </span><span class='line'><span class="p">(</span><span class="nv">osc-connect</span><span class="p">)</span>
+    </span><span class='line'>
+    </span><span class='line'><span class="p">(</span><span class="nv">osc-send-message</span> <span class="nv">osc-client</span> <span class="nv">ADDRESS</span> <span class="nv">*ARGUMENTS</span><span class="p">)</span>
+    </span></code></pre></td></tr></table></div></figure>
+
+
+    <h3>Emacs Communicating with Midi</h3>
+
+    <p>A lot of musical hardware and software only supports midi. We are sending OSC 😕. Hence we need a quick way of converting our OSC message to a midi message. Why don’t you send midi from Emacs directly? It&rsquo;s not a new thought (<a href="https://www.emacswiki.org/emacs/EmacsMidi">https://www.emacswiki.org/emacs/EmacsMidi</a>), but I’ve seen no examples of getting it working. My answer here is path of least resistance, and I don’t feel like implementing the midi standard in Elisp.</p>
+
+    <p>Luis Lloret (<a href="https://github.com/llloret">https://github.com/llloret</a>) has create the lovely C++ lib <code>osmid</code> (<a href="https://github.com/llloret/osmid">https://github.com/llloret/osmid</a>) for converting between midi and OSC. And its FAST.</p>
+
+    <p>It compiles into two binary servers:</p>
+
+    <ul>
+    <li>m2o &ndash; midi to OSC</li>
+    <li>o2m &ndash; OSC to midi</li>
+    </ul>
+
+
+    <p>We launch the o2m server in a shell which will be listening on port <code>4561</code> and will forward on OSC messages as midi.</p>
+
+    <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+    </pre></td><td class='code'><pre><code class='elisp'><span class='line'><span></span><span class="nv">osmid/o2m</span> <span class="nv">-b</span> <span class="nv">-i</span> <span class="mi">4561</span> <span class="nv">-O</span> <span class="mi">4562</span> <span class="nv">-m</span> <span class="mi">6</span>
+    </span></code></pre></td></tr></table></div></figure>
+
+
+    <p>Midi has a fixed argument format while OSC is very flexible. Hence this a little jiggery pokery in get the source OSC message mapping to the midi arguments.</p>
+
+    <p>OSC message format:</p>
+
+    <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+    </pre></td><td class='code'><pre><code class='elisp'><span class='line'><span></span><span class="p">(</span><span class="nv">osc-send-message</span> <span class="nv">osc-client</span> <span class="nv">MIDI_HOST</span> <span class="nv">MIDI_CHANNEL</span> <span class="nv">MIDI_CONTROL_CODE</span> <span class="nv">MIDI_VALUE</span><span class="p">)</span>
+    </span></code></pre></td></tr></table></div></figure>
+
+
+    <p>For MIDI_HOST I’m using the <code>Inter-application communication</code> (IAC) driver on Mac. This registers <code>IAC Bus 1</code> as a midi device. I’m also sending a <code>control change</code> message, shaping the parameters rather than triggering notes. This could be any of the supported midi messages (<code>note_on</code>, <code>note_off</code>, <code>pitch_bend</code>, <code>poly_pressure</code>, etc).</p>
+
+    <p>Example of OSC to midi message:</p>
+
+    <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+    </pre></td><td class='code'><pre><code class='elisp'><span class='line'><span></span><span class="p">(</span><span class="nv">osc-send-message</span> <span class="nv">osc-client</span> <span class="s">&quot;/IAC Bus 1/control_change&quot;</span> <span class="mi">9</span> <span class="mi">100</span> <span class="mi">127</span><span class="p">)</span>
+    </span></code></pre></td></tr></table></div></figure>
+
+
+    <p>The channel <code>9</code> and control code <code>100</code> seem magical. I’m routing those to synths via Ableton Live.</p>
+
+    <p><img src="/images/midi-routing.png"/></p>
+
+    <p>Any DAW would support this or you could send direct to a synth and not use <code>IAC</code>. Your MIDI_HOST would be the name your midi device registers as.</p>
+
+    <h2>Emacs GUI for Musical Controls</h2>
+
+    <p>We have the backend for sending live midi controls to hardware. Now we need some interface within Emacs to trigger it.</p>
+
+    <h3>Modelling Encoders in Emacs</h3>
+
+    <p>The design is based on the idea of dial encoders commonly found in music hardware.</p>
+
+    <p><img src="/images/pots.jpg"/></p>
+
+    <p>Our dials in code are float numbers. To turn our dials we borrow the idea from the Chrome inspector of scrolling through possible numeric values with the arrow keys.</p>
+
+    <p><img src="/images/chromeinspector.png"/></p>
+
+    <p>In our case every increment/decrement will send a live message to our synths.</p>
+
+    <p>We need to extract from the active Emacs buffer the thing we are trying to control. Finding the:</p>
+
+    <ul>
+    <li>Synth (the musical instrument)</li>
+    <li>Parameter (ie. amp, pan, lfo, filter)</li>
+    <li>Value 0-127 (whatever value we want to set param)</li>
+    </ul>
+
+
+    <p>Example changing the filter param:</p>
+
+    <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+    <span class='line-number'>2</span>
+    <span class='line-number'>3</span>
+    <span class='line-number'>4</span>
+    <span class='line-number'>5</span>
+    </pre></td><td class='code'><pre><code class='elisp'><span class='line'><span></span><span class="nv">zerocoast_cc</span> <span class="nv">lfo:</span> <span class="mf">0.49</span><span class="o">,</span> <span class="nv">filter:</span> <span class="nv">&lt;0.80&gt;</span>
+    </span><span class='line'>
+    </span><span class='line'><span class="c1">;;; Synth =&gt; zerocoast</span>
+    </span><span class='line'><span class="c1">;;; Parameter =&gt; filter</span>
+    </span><span class='line'><span class="c1">;;; Value =&gt; 101.6 (127*0.80)</span>
+    </span></code></pre></td></tr></table></div></figure>
+
+
+    <p>Here comes a lot of Elisp and some hairy regexes.</p>
+
+    <h4>Emacs Code</h4>
+
+    <p>Thingatpt (<a href="https://www.emacswiki.org/emacs/ThingAtPoint">https://www.emacswiki.org/emacs/ThingAtPoint</a>) which is part of the standard lib is extremely useful here.</p>
+
+    <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+    <span class='line-number'>2</span>
+    <span class='line-number'>3</span>
+    <span class='line-number'>4</span>
+    <span class='line-number'>5</span>
+    <span class='line-number'>6</span>
+    <span class='line-number'>7</span>
+    <span class='line-number'>8</span>
+    <span class='line-number'>9</span>
+    <span class='line-number'>10</span>
+    <span class='line-number'>11</span>
+    <span class='line-number'>12</span>
+    <span class='line-number'>13</span>
+    <span class='line-number'>14</span>
+    <span class='line-number'>15</span>
+    <span class='line-number'>16</span>
+    <span class='line-number'>17</span>
+    <span class='line-number'>18</span>
+    <span class='line-number'>19</span>
+    <span class='line-number'>20</span>
+    <span class='line-number'>21</span>
+    <span class='line-number'>22</span>
+    <span class='line-number'>23</span>
+    <span class='line-number'>24</span>
+    <span class='line-number'>25</span>
+    <span class='line-number'>26</span>
+    <span class='line-number'>27</span>
+    <span class='line-number'>28</span>
+    <span class='line-number'>29</span>
+    <span class='line-number'>30</span>
+    <span class='line-number'>31</span>
+    <span class='line-number'>32</span>
+    <span class='line-number'>33</span>
+    <span class='line-number'>34</span>
+    <span class='line-number'>35</span>
+    <span class='line-number'>36</span>
+    <span class='line-number'>37</span>
+    <span class='line-number'>38</span>
+    <span class='line-number'>39</span>
+    <span class='line-number'>40</span>
+    <span class='line-number'>41</span>
+    <span class='line-number'>42</span>
+    <span class='line-number'>43</span>
+    <span class='line-number'>44</span>
+    <span class='line-number'>45</span>
+    <span class='line-number'>46</span>
+    <span class='line-number'>47</span>
+    <span class='line-number'>48</span>
+    <span class='line-number'>49</span>
+    <span class='line-number'>50</span>
+    <span class='line-number'>51</span>
+    <span class='line-number'>52</span>
+    <span class='line-number'>53</span>
+    <span class='line-number'>54</span>
+    </pre></td><td class='code'><pre><code class='elisp'><span class='line'><span></span><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;thingatpt</span><span class="p">)</span>
+    </span><span class='line'>
+    </span><span class='line'><span class="c1">;;The patterns for matching the beginning and</span>
+    </span><span class='line'><span class="c1">;;end of something that looks like a float</span>
+    </span><span class='line'>
+    </span><span class='line'><span class="p">(</span><span class="nf">put</span> <span class="ss">&#39;float</span> <span class="ss">&#39;end-op</span>       <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span> <span class="p">(</span><span class="nf">re-search-forward</span> <span class="s">&quot;[0-9-]*\.[0-9-]*&quot;</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)))</span>
+    </span><span class='line'><span class="p">(</span><span class="nf">put</span> <span class="ss">&#39;float</span> <span class="ss">&#39;beginning-op</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">re-search-backward</span> <span class="s">&quot;[^0-9-\.]&quot;</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)</span> <span class="p">(</span><span class="nf">forward-char</span><span class="p">))))</span>
+    </span><span class='line'>
+    </span><span class='line'><span class="p">(</span><span class="nb">defun</span> <span class="nv">change-number-at-point</span> <span class="p">(</span><span class="nv">fn-float-op</span><span class="p">)</span>
+    </span><span class='line'>  <span class="s">&quot;Check if the thing under the cursor looks like a</span>
+    </span><span class='line'><span class="s">  float and if so change it with `fn-float-op`.</span>
+    </span><span class='line'><span class="s">  `fn-float-op` is passed the name of the synth,</span>
+    </span><span class='line'><span class="s">  parameter and float value.&quot;</span>
+    </span><span class='line'>
+    </span><span class='line'>  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">bounds</span> <span class="p">(</span><span class="nv">bounds-of-thing-at-point</span> <span class="ss">&#39;float</span><span class="p">))</span>
+    </span><span class='line'>         <span class="p">(</span><span class="nv">float-val</span> <span class="p">(</span><span class="nf">buffer-substring</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">bounds</span><span class="p">)</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">bounds</span><span class="p">)))</span>
+    </span><span class='line'>         <span class="p">(</span><span class="nv">cursor-point</span> <span class="p">(</span><span class="nf">point</span><span class="p">)))</span>
+    </span><span class='line'>    <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">bounds</span><span class="p">))</span>
+    </span><span class='line'>    <span class="p">(</span><span class="nf">re-search-backward</span> <span class="s">&quot;^\\([^\n]+\\): &quot;</span> <span class="p">(</span><span class="nf">line-beginning-position</span><span class="p">)</span> <span class="no">t</span><span class="p">)</span>
+    </span><span class='line'>    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">synth-str</span> <span class="p">(</span><span class="nv">match-string</span> <span class="mi">1</span> <span class="no">nil</span><span class="p">)))</span>
+    </span><span class='line'>      <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">bounds</span><span class="p">))</span>
+    </span><span class='line'>      <span class="p">(</span><span class="nf">delete-char</span> <span class="p">(</span><span class="nf">length</span> <span class="nv">float-val</span><span class="p">))</span>
+    </span><span class='line'>      <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">parts</span> <span class="p">(</span><span class="nv">split-string</span> <span class="p">(</span><span class="nv">string-trim</span> <span class="nv">synth-str</span><span class="p">)</span> <span class="s">&quot; &quot;</span><span class="p">))</span>
+    </span><span class='line'>             <span class="p">(</span><span class="nv">synth-and-param</span> <span class="p">(</span><span class="k">if</span> <span class="nv">m</span>
+    </span><span class='line'>                                  <span class="p">(</span><span class="nf">concat</span>
+    </span><span class='line'>                                    <span class="p">(</span><span class="nv">replace-regexp-in-string</span>
+    </span><span class='line'>                                     <span class="s">&quot;^#&quot;</span> <span class="s">&quot;&quot;</span> <span class="p">(</span><span class="nv">first</span> <span class="nv">parts</span><span class="p">))</span>
+    </span><span class='line'>                                     <span class="s">&quot;/&quot;</span>
+    </span><span class='line'>                                     <span class="p">(</span><span class="nv">first</span> <span class="p">(</span><span class="nf">reverse</span> <span class="nv">parts</span><span class="p">)))</span>
+    </span><span class='line'>                                 <span class="no">nil</span><span class="p">)))</span>
+    </span><span class='line'>        <span class="p">(</span><span class="nf">insert</span>
+    </span><span class='line'>         <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;%.2f&quot;</span>
+    </span><span class='line'>                 <span class="p">(</span><span class="nf">funcall</span> <span class="nv">fn-float-op</span>
+    </span><span class='line'>                   <span class="p">(</span><span class="nf">string-to-number</span> <span class="nv">float-val</span><span class="p">)</span>
+    </span><span class='line'>                   <span class="nv">synth-and-param</span><span class="p">)))))</span>
+    </span><span class='line'>    <span class="p">(</span><span class="nf">goto-char</span> <span class="nv">cursor-point</span><span class="p">)))</span>
+    </span><span class='line'>
+    </span><span class='line'><span class="p">(</span><span class="nb">defun</span> <span class="nv">inc-float-at-point</span> <span class="p">()</span>
+    </span><span class='line'>  <span class="s">&quot;Increase a float value and send OSC message.&quot;</span>
+    </span><span class='line'>  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+    </span><span class='line'>  <span class="p">(</span><span class="nv">change-number-at-point</span>
+    </span><span class='line'>    <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">float-val</span> <span class="nv">synth-and-param</span><span class="p">)</span>
+    </span><span class='line'>      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">new-float</span> <span class="p">(</span><span class="nf">min</span> <span class="mf">1.00</span> <span class="p">(</span><span class="nf">+</span> <span class="nv">float-val</span> <span class="mf">0.01</span><span class="p">))))</span>
+    </span><span class='line'>        <span class="p">(</span><span class="nv">route-osc-message</span> <span class="nv">synth-and-param</span> <span class="nv">new-float</span><span class="p">)</span>
+    </span><span class='line'>        <span class="nv">new-float</span><span class="p">))))</span>
+    </span><span class='line'>
+    </span><span class='line'><span class="p">(</span><span class="nb">defun</span> <span class="nv">dec-float-at-point</span> <span class="p">()</span>
+    </span><span class='line'>  <span class="s">&quot;Decrease a float value and send OSC message.&quot;</span>
+    </span><span class='line'>  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+    </span><span class='line'>  <span class="p">(</span><span class="nv">change-number-at-point</span>
+    </span><span class='line'>    <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">float-val</span> <span class="nv">synth-and-param</span><span class="p">)</span>
+    </span><span class='line'>      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">new-float</span> <span class="p">(</span><span class="nf">max</span> <span class="mf">0.00</span> <span class="p">(</span><span class="nf">-</span> <span class="nv">float-val</span> <span class="mf">0.01</span><span class="p">))))</span>
+    </span><span class='line'>        <span class="p">(</span><span class="nv">route-osc-message</span> <span class="nv">synth-and-param</span> <span class="nv">new-float</span><span class="p">)</span>
+    </span><span class='line'>        <span class="nv">new-float</span><span class="p">))))</span>
+    </span></code></pre></td></tr></table></div></figure>
+
+
+    <p>We map our <code>synth-and-param</code> to the correct midi port and channel.</p>
+
+    <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+    <span class='line-number'>2</span>
+    <span class='line-number'>3</span>
+    <span class='line-number'>4</span>
+    <span class='line-number'>5</span>
+    <span class='line-number'>6</span>
+    <span class='line-number'>7</span>
+    <span class='line-number'>8</span>
+    </pre></td><td class='code'><pre><code class='elisp'><span class='line'><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">route</span><span class="err">—</span><span class="nv">osc-msg</span> <span class="p">(</span><span class="nv">synth-and-param</span> <span class="nv">float-val</span><span class="p">)</span>
+    </span><span class='line'>  <span class="p">(</span><span class="nb">when</span> <span class="nv">synth-and-param</span>
+    </span><span class='line'>    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">midi-val</span> <span class="p">(</span><span class="nf">round</span> <span class="p">(</span><span class="nf">*</span> <span class="mf">127.0</span> <span class="nv">float-val</span><span class="p">)))</span>
+    </span><span class='line'>          <span class="p">(</span><span class="nv">host</span> <span class="s">&quot;/IAC Bus 1/control_change&quot;</span><span class="p">))</span>
+    </span><span class='line'>      <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">not</span> <span class="nv">osc-client</span><span class="p">)</span> <span class="p">(</span><span class="nv">osc-connect</span><span class="p">))</span>
+    </span><span class='line'>      <span class="p">(</span><span class="k">cond</span>
+    </span><span class='line'>       <span class="p">((</span><span class="nf">string-match</span> <span class="nv">synth-and-param</span> <span class="s">&quot;zerocoast/filter&quot;</span><span class="p">)</span>
+    </span><span class='line'>         <span class="p">(</span><span class="nv">osc-send-message</span> <span class="nv">osc-client</span> <span class="nv">host</span> <span class="mi">9</span> <span class="mi">100</span> <span class="nv">midi-val</span><span class="p">)))))))))</span>
+    </span></code></pre></td></tr></table></div></figure>
+
+
+    <p>Finally the keybindings that trigger our instrument mode:</p>
+
+    <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+    <span class='line-number'>2</span>
+    </pre></td><td class='code'><pre><code class='elisp'><span class='line'><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">[(</span><span class="nv">meta</span> <span class="nv">up</span><span class="p">)]</span>    <span class="ss">&#39;inc-float-at-point</span><span class="p">)</span>
+    </span><span class='line'><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">[(</span><span class="nv">meta</span> <span class="nv">down</span><span class="p">)]</span>  <span class="ss">&#39;dec-float-at-point</span><span class="p">)</span>
+    </span></code></pre></td></tr></table></div></figure>
+
+
+    <h3>Encoder ASCII Art</h3>
+
+    <p>We are almost done. For fun I’ve added a visually aid to the position of the float encoder. Midi messages are generally limited to 0-127 values, so if we map that to 0-100% we can create a visual representation of the current setting.</p>
+
+    <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+    <span class='line-number'>2</span>
+    <span class='line-number'>3</span>
+    <span class='line-number'>4</span>
+    <span class='line-number'>5</span>
+    <span class='line-number'>6</span>
+    <span class='line-number'>7</span>
+    <span class='line-number'>8</span>
+    <span class='line-number'>9</span>
+    <span class='line-number'>10</span>
+    <span class='line-number'>11</span>
+    <span class='line-number'>12</span>
+    <span class='line-number'>13</span>
+    <span class='line-number'>14</span>
+    <span class='line-number'>15</span>
+    <span class='line-number'>16</span>
+    <span class='line-number'>17</span>
+    <span class='line-number'>18</span>
+    <span class='line-number'>19</span>
+    <span class='line-number'>20</span>
+    <span class='line-number'>21</span>
+    <span class='line-number'>22</span>
+    <span class='line-number'>23</span>
+    <span class='line-number'>24</span>
+    <span class='line-number'>25</span>
+    <span class='line-number'>26</span>
+    <span class='line-number'>27</span>
+    <span class='line-number'>28</span>
+    <span class='line-number'>29</span>
+    <span class='line-number'>30</span>
+    <span class='line-number'>31</span>
+    <span class='line-number'>32</span>
+    <span class='line-number'>33</span>
+    <span class='line-number'>34</span>
+    <span class='line-number'>35</span>
+    <span class='line-number'>36</span>
+    <span class='line-number'>37</span>
+    <span class='line-number'>38</span>
+    <span class='line-number'>39</span>
+    <span class='line-number'>40</span>
+    <span class='line-number'>41</span>
+    <span class='line-number'>42</span>
+    <span class='line-number'>43</span>
+    <span class='line-number'>44</span>
+    <span class='line-number'>45</span>
+    <span class='line-number'>46</span>
+    <span class='line-number'>47</span>
+    <span class='line-number'>48</span>
+    <span class='line-number'>49</span>
+    <span class='line-number'>50</span>
+    <span class='line-number'>51</span>
+    <span class='line-number'>52</span>
+    <span class='line-number'>53</span>
+    <span class='line-number'>54</span>
+    </pre></td><td class='code'><pre><code class='elisp'><span class='line'><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">code-&gt;pots</span> <span class="p">(</span><span class="nv">beg</span> <span class="nv">end</span><span class="p">)</span>
+    </span><span class='line'>  <span class="s">&quot;Add a ASCII encoder bar to anything that looks like a tweakable float&quot;</span>
+    </span><span class='line'>
+    </span><span class='line'>  <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;r&quot;</span><span class="p">)</span>
+    </span><span class='line'>  <span class="p">(</span><span class="k">save-excursion</span>
+    </span><span class='line'>    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">inhibit-read-only</span> <span class="no">t</span><span class="p">))</span>
+    </span><span class='line'>      <span class="p">(</span><span class="nf">remove-text-properties</span> <span class="nv">beg</span> <span class="nv">end</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">read-only</span> <span class="no">t</span><span class="p">))</span>
+    </span><span class='line'>      <span class="p">(</span><span class="nf">goto-char</span> <span class="nv">end</span><span class="p">)</span>
+    </span><span class='line'>      <span class="p">(</span><span class="k">setq</span> <span class="nv">i</span> <span class="mi">0</span><span class="p">)</span>
+    </span><span class='line'>      <span class="p">(</span><span class="k">while</span> <span class="p">(</span><span class="nf">re-search-backward</span> <span class="s">&quot;_cc .+:\s*\\([0-9]*.[0-9]+\\)\s*\n&quot;</span> <span class="nv">beg</span> <span class="no">t</span><span class="p">)</span>
+    </span><span class='line'>        <span class="p">(</span><span class="k">setq</span> <span class="nv">i</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="nv">i</span><span class="p">))</span>
+    </span><span class='line'>        <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">full</span>     <span class="p">(</span><span class="nf">round</span> <span class="p">(</span><span class="nf">*</span> <span class="nv">MAX-LENGTH</span> <span class="p">(</span><span class="nf">string-to-number</span> <span class="p">(</span><span class="nv">match-string</span> <span class="mi">1</span><span class="p">))))))</span>
+    </span><span class='line'>          <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">empty</span>  <span class="p">(</span><span class="nf">-</span> <span class="nv">MAX-LENGTH</span> <span class="nv">full</span><span class="p">)))</span>
+    </span><span class='line'>            <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">match-beginning</span> <span class="mi">0</span><span class="p">))</span>
+    </span><span class='line'>            <span class="p">(</span><span class="nf">end-of-line</span><span class="p">)</span>
+    </span><span class='line'>            <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">start-pnt</span> <span class="p">(</span><span class="nf">point</span><span class="p">))</span>
+    </span><span class='line'>                  <span class="p">(</span><span class="nv">pad</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">&gt;=</span> <span class="nv">empty</span> <span class="mi">0</span><span class="p">)</span>
+    </span><span class='line'>                           <span class="p">(</span><span class="nf">make-string</span> <span class="nv">empty</span> <span class="sc">?╌</span><span class="p">)</span>
+    </span><span class='line'>                         <span class="s">&quot;&quot;</span><span class="p">)))</span>
+    </span><span class='line'>              <span class="p">(</span><span class="nf">insert</span> <span class="p">(</span><span class="nf">concat</span> <span class="s">&quot; #╟&quot;</span>
+    </span><span class='line'>                              <span class="p">(</span><span class="nf">make-string</span> <span class="nv">full</span> <span class="sc">?▓</span><span class="p">)</span>
+    </span><span class='line'>                              <span class="s">&quot;▒░&quot;</span>
+    </span><span class='line'>                              <span class="nv">pad</span>
+    </span><span class='line'>                              <span class="s">&quot;╢&quot;</span><span class="p">))</span>
+    </span><span class='line'>              <span class="p">(</span><span class="nf">put-text-property</span> <span class="nv">start-pnt</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span> <span class="ss">&#39;read-only</span> <span class="no">t</span><span class="p">)))))</span>
+    </span><span class='line'>      <span class="p">(</span><span class="nv">align-regexp</span> <span class="nv">beg</span> <span class="p">(</span><span class="nf">+</span> <span class="p">(</span><span class="nf">*</span> <span class="nv">i</span> <span class="mi">106</span><span class="p">)</span> <span class="nv">end</span><span class="p">)</span> <span class="s">&quot;\\(\\s-*\\)#&quot;</span><span class="p">))))</span>
+    </span><span class='line'>
+    </span><span class='line'><span class="p">(</span><span class="nb">defun</span> <span class="nv">pots-update</span> <span class="p">(</span><span class="nv">new-float</span> <span class="nv">old-float</span><span class="p">)</span>
+    </span><span class='line'>  <span class="s">&quot;Update ASCII encoder bar for float being changed&quot;</span>
+    </span><span class='line'>
+    </span><span class='line'>  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+    </span><span class='line'>  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">not</span> <span class="p">(</span><span class="nf">=</span> <span class="nv">new-float</span> <span class="nv">old-float</span><span class="p">))</span>
+    </span><span class='line'>      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">old-full</span> <span class="p">(</span><span class="nf">round</span> <span class="p">(</span><span class="nf">*</span> <span class="mf">100.0</span> <span class="nv">old-float</span><span class="p">)))</span>
+    </span><span class='line'>            <span class="p">(</span><span class="nv">full</span>     <span class="p">(</span><span class="nf">round</span> <span class="p">(</span><span class="nf">*</span> <span class="mf">100.0</span> <span class="nv">new-float</span><span class="p">))))</span>
+    </span><span class='line'>        <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">empty</span>  <span class="p">(</span><span class="nf">-</span> <span class="nv">MAX-LENGTH</span> <span class="nv">full</span><span class="p">))</span>
+    </span><span class='line'>              <span class="p">(</span><span class="nv">movement</span> <span class="p">(</span><span class="nf">-</span> <span class="nv">full</span> <span class="nv">old-full</span><span class="p">))</span>
+    </span><span class='line'>              <span class="p">(</span><span class="nv">bmovement</span> <span class="p">(</span><span class="nf">-</span> <span class="nv">old-full</span> <span class="nv">full</span><span class="p">)))</span>
+    </span><span class='line'>          <span class="p">(</span><span class="k">save-excursion</span>
+    </span><span class='line'>            <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">re-search-forward</span> <span class="s">&quot;#╟&quot;</span> <span class="p">(</span><span class="nf">line-end-position</span><span class="p">)</span> <span class="no">t</span><span class="p">)</span>
+    </span><span class='line'>              <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">match-end</span> <span class="mi">0</span><span class="p">))</span>
+    </span><span class='line'>              <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">inhibit-read-only</span> <span class="no">t</span><span class="p">)</span>
+    </span><span class='line'>                    <span class="p">(</span><span class="nv">start-pnt</span> <span class="p">(</span><span class="nf">point</span><span class="p">)))</span>
+    </span><span class='line'>                <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">&gt;</span> <span class="nv">new-number</span> <span class="nv">old-float</span><span class="p">)</span>
+    </span><span class='line'>                    <span class="p">(</span><span class="k">progn</span> <span class="c1">;;forwards</span>
+    </span><span class='line'>                      <span class="p">(</span><span class="nf">forward-char</span> <span class="nv">old-full</span><span class="p">)</span>
+    </span><span class='line'>                      <span class="p">(</span><span class="nf">insert</span> <span class="p">(</span><span class="nf">make-string</span> <span class="nv">movement</span> <span class="sc">?▓</span><span class="p">))</span>
+    </span><span class='line'>                      <span class="p">(</span><span class="nf">forward-char</span> <span class="mi">2</span><span class="p">)</span>
+    </span><span class='line'>                      <span class="p">(</span><span class="nf">delete-char</span> <span class="nv">movement</span><span class="p">))</span>
+    </span><span class='line'>                  <span class="p">(</span><span class="k">progn</span> <span class="c1">;;backwards</span>
+    </span><span class='line'>                    <span class="p">(</span><span class="nf">forward-char</span> <span class="p">(</span><span class="nf">-</span> <span class="nv">old-full</span> <span class="nv">bmovement</span><span class="p">))</span>
+    </span><span class='line'>                    <span class="p">(</span><span class="nf">delete-char</span> <span class="nv">bmovement</span><span class="p">)</span>
+    </span><span class='line'>                    <span class="p">(</span><span class="nf">forward-char</span> <span class="mi">2</span><span class="p">)</span>
+    </span><span class='line'>                    <span class="p">(</span><span class="nf">insert</span> <span class="p">(</span><span class="nf">make-string</span> <span class="nv">bmovement</span> <span class="sc">?╌</span><span class="p">))))</span>
+    </span><span class='line'>                <span class="p">(</span><span class="nf">put-text-property</span> <span class="nv">start-pnt</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span> <span class="ss">&#39;read-only</span> <span class="no">t</span><span class="p">))))))))</span>
+    </span></code></pre></td></tr></table></div></figure>
+
+
+    <p>The Ascii dials:</p>
+
+    <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+    <span class='line-number'>2</span>
+    </pre></td><td class='code'><pre><code class='elisp'><span class='line'><span></span><span class="nv">zerocoast_cc</span> <span class="nv">amp:</span> <span class="mf">0.18</span> <span class="err">#╟▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒░╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╢</span>
+    </span><span class='line'><span class="nv">zerocoast_cc</span> <span class="nv">amp:</span> <span class="mf">1.00</span> <span class="err">#╟▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒░╢</span>
+    </span></code></pre></td></tr></table></div></figure>
+
+
+    <h2>Binding into a Performance</h2>
+
+    <p>All this work was used in my recent performance:</p>
+
+    <p>“You Fall into Your Screen”: <a href="https://vimeo.com/replelectric/you-fall-into-your-screen">https://vimeo.com/replelectric/you-fall-into-your-screen</a></p>
+
+    <p>I’m using Emacs to simultaneous control Synths and Unity3D in much the same way discussed in this post. It feels pretty amazing to augment the performance with this live control.</p>
+    </div>
+
+
+        </article>
+
+
 
     <article>
 
@@ -3998,467 +4454,6 @@ This measures voltage fluctuations resulting from ionic current flows within the
 
     </article>
 
-
-    <article>
-
-  <header>
-
-      <h1 class="entry-title"><a href="/clojure/building-clojure-services-at-scale.html">Building Clojure Services at Scale</a></h1>
-
-
-      <p class="meta">
-
-
-
-
-
-
-
-
-
-
-
-
-<time datetime="2013-09-13T11:00:00+01:00" pubdate data-updated="true">Sep 13<span>th</span>, 2013</time>
-
-      </p>
-
-  </header>
-
-
-  <div class="entry-content"><p>At SoundCloud I&rsquo;ve been experimenting over the last year with how we build the services that power a number of heavily loaded areas across our site. All these services have been built in Clojure with bits of Java tacked on the sides. Here are some of my personal thoughts on how to build Clojure services:</p>
-
-<h2>Netflix or Twitter</h2>
-
-<p><img alt="choose your own adventure" src="/images/adventure.jpg"></p>
-
-<p>At some-point when you require a sufficient level of scaling you turn to the open source work of <a href="https://github.com/twitter">Twitter</a> with <a href="http://twitter.github.io/finagle">Finagle</a> or <a href="https://github.com/Netflix">Netflix</a> with <a href="https://github.com/Netflix/Hystrix">Hystrix</a>/<a href="https://github.com/Netflix/RxJava">RxJava</a>.
-Netflix libs are written in Java while Twitters are written in Scala. Both are easy to use from any JVM based language but the Finagle route will bring in an extra dependency on Scala. I&rsquo;ve heard little from people using interop between Clojure &amp; Scala and that extra Scala dependency makes me nervous. Further I like the simplicity of Netflix&rsquo;s libs and they have been putting a lot of effort into pushing support for many JVM based languages.</p>
-
-<p>Hence with Clojure, Netflix projects are my preference. (I should add we do use Finagle with Scala at SoundCloud as well).</p>
-
-<h2>Failure, Monitoring &amp; Composition Complexity</h2>
-
-<div style="display:inline-block;">
-<img align="left" style="margin-right:5px;" src="/images/failure.jpg" width="150px" height="150px">
-
-In a service reliant on other services, databases, caches any other external dependencies its a guarantee at some-point some of those will fail. When working with critical services we want to gracefully provide a degraded service.
-</div>
-
-
-
-
-<p></p>
-
-
-
-
-<div style="display:inline-block;">
-<img align="left" style="margin-right:5px;" src="/images/scary-eye.png" width="150px" height="150px">
-While we can think about degrading gracefully in the case of failure, ultimately we want to fix wants broken as soon as possible. An eye into the runtime system allows us to monitor exactly whats going on and take appropriate action.
-</div>
-
-
-
-
-<p></p>
-
-
-
-
-<div style="display:inline-block;">
-<img align="left" style="margin-right:5px;" src="/images/complexity.png" width="150px" height="150px">
-
-Your service needs to call other services. Dependent on those service results you might need to call other services which in turn might require calls to other services. Composing service calls is hard to get right without a tangle of complex code.
-</div>
-
-
-
-
-<p></p>
-
-
-<h3>Fault Tolerance</h3>
-
-<p>How should we build fault tolerance into our Clojure services?</p>
-
-<h4>Single thread pool</h4>
-
-<p>Consider you have this line within a service response:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">{</span><span class="ss">:body</span> <span class="err">@</span><span class="p">(</span><span class="nf">future</span> <span class="p">(</span><span class="nf">client/get</span> <span class="s">&quot;http://soundcloud.com/blah/wah&quot;</span><span class="p">))</span> <span class="ss">:status</span> <span class="mi">200</span><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now <code>http://soundcloud.com/blah/wah</code> goes down and those client requests start getting blocked on the request. In Clojure all <code>future</code> calls acquire a thread from the same thread pool. In our example the service is blocked up, is pilling new requests onto the blocked pool and we are in trouble.</p>
-
-<p>My first solution to this problem was to introduce circuit breakers (<a href="https://github.com/josephwilk/circuit-breaker">https://github.com/josephwilk/circuit-breaker</a>).
-I also stop using <code>@</code> to dereference futures and used <code>deref</code> <a href="http://clojuredocs.org/clojure_core/clojure.core/deref">http://clojuredocs.org/clojure_core/clojure.core/deref</a> which supports defaults and timeouts.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="nf">defncircuitbreaker</span> <span class="ss">:blah-http</span> <span class="p">{</span><span class="ss">:timeout</span> <span class="mi">30</span> <span class="ss">:threshold</span> <span class="mi">2</span><span class="p">})</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">future-timeout</span> <span class="mi">1000</span><span class="p">)</span>
-</span><span class='line'><span class="p">(</span><span class="k">def </span><span class="nv">timeout-value</span> <span class="nv">nil</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="kd">defn </span><span class="nv">http-get</span> <span class="p">[</span><span class="nv">url</span><span class="p">]</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">with-circuit-breaker</span> <span class="ss">:blah-http</span> <span class="p">{</span>
-</span><span class='line'>    <span class="ss">:connected</span> <span class="p">(</span><span class="k">fn </span><span class="p">[]</span> <span class="p">(</span><span class="nf">client/get</span> <span class="s">&quot;http://soundcloud.com/blah/wah&quot;</span><span class="p">))</span>
-</span><span class='line'>    <span class="ss">:tripped</span> <span class="p">(</span><span class="k">fn </span><span class="p">[]</span> <span class="nv">nil</span><span class="p">)}))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">{</span><span class="ss">:body</span> <span class="p">(</span><span class="nf">http-get</span> <span class="nv">http</span><span class="ss">://www.soundcloud.com/blah/wah</span><span class="p">)</span> <span class="ss">:status</span> <span class="mi">200</span><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Problem solved, now even though the thread pool may become blocked we back off the following requests and avoid pilling more work onto the blocked thread pool.</p>
-
-<p>This worked pretty well, but then we decided we would to try and go even further in gracefully degrading.
-Why don&rsquo;t we serve from a cache on failure, slightly stale data is better than none.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">defn </span><span class="nv">http-get</span> <span class="p">[</span><span class="nv">url</span><span class="p">]</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">with-circuit-breaker</span> <span class="ss">:blah-http</span> <span class="p">{</span>
-</span><span class='line'>    <span class="ss">:connected</span> <span class="p">(</span><span class="k">fn </span><span class="p">[]</span> <span class="p">(</span><span class="nf">client/get</span> <span class="s">&quot;http://soundcloud.com/blah/wah&quot;</span><span class="p">))</span>
-</span><span class='line'>    <span class="ss">:tripped</span> <span class="p">(</span><span class="k">fn </span><span class="p">[]</span> <span class="p">(</span><span class="nf">memcache/get</span> <span class="nv">client</span> <span class="nv">url</span><span class="p">))}))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now consider <code>(client/get "http://soundcloud.com/blah/wah")</code> starts failing, the thread pool gets blocked up, the circuit trigger flips and <code>(memcache/get client url)</code> is now fighting to get threads from the blocked thread pool.</p>
-
-<p>Pants.</p>
-
-<h5>Scheduling over thread pools: Hystrix</h5>
-
-<p><a href="https://github.com/Netflix/Hystrix">Hystrix</a> is Netflix library which I think of as circuit breakers on steroids.</p>
-
-<p><img src ="/images/hystrix.png" height="400px" width="400px"/></p>
-
-<pre><code>Hystrix is a latency and fault tolerance library designed to isolate points of access to remote systems,
-services and 3rd party libraries, stop cascading failure and enable resilience in complex distributed systems
-where failure is inevitable.
-</code></pre>
-
-<p>Dave Ray (<a href="http://darevay.com">http://darevay.com</a>) has been doing lots of excellent work on producing <a href="https://github.com/Netflix/Hystrix/tree/master/hystrix-contrib/hystrix-clj">Clojure bindings for Hystrix</a>:</p>
-
-<p>Hystrix gives me 2 big wins:</p>
-
-<h5>1. Separation of thread pools</h5>
-
-<p>Hystrix creates a separate thread pool for each Clojure namespace, if one thread pool becomes blocked due to a failure, a circuit breaker can be triggered with a fallback that uses a different thread pool.</p>
-
-<p>This however does come with a cost:</p>
-
-<ol>
-<li> We have a performance hit due to moving to a scheduling based method for executing Hystrix commands.</li>
-<li> We cannot use Clojure&rsquo;s concurrency primitives (futures/promises/agents).</li>
-</ol>
-
-
-<p>Here is an example of our service rewritten with Hystrix:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">ns </span><span class="nv">example</span>
-</span><span class='line'>  <span class="p">(</span><span class="ss">:require</span> <span class="p">[[</span><span class="nv">com.netflix.hystrix.core</span> <span class="ss">:as</span> <span class="nv">hystrix</span><span class="p">]]))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="nf">hystrix/defcommand</span> <span class="nv">http-get</span>
-</span><span class='line'>  <span class="p">{</span><span class="ss">:hystrix/fallback-fn</span> <span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">url</span><span class="p">]</span> <span class="p">(</span><span class="nf">memcache-get</span> <span class="nv">url</span><span class="p">)}</span>
-</span><span class='line'>  <span class="p">[</span><span class="nv">url</span><span class="p">]</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">client/get</span> <span class="nv">url</span><span class="p">))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="nf">hystrix/defcommand</span> <span class="nv">memcache-get</span>
-</span><span class='line'>  <span class="p">{</span><span class="ss">:hystrix/fallback-fn</span> <span class="p">(</span><span class="nb">constantly </span><span class="nv">nil</span><span class="p">)}</span>
-</span><span class='line'>  <span class="p">[</span><span class="nv">url</span><span class="p">]</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">memcache/get</span> <span class="nv">client</span> <span class="nv">key</span><span class="p">))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="kd">defn </span><span class="nv">http-get</span> <span class="p">[</span><span class="nv">url</span><span class="p">]</span>
-</span><span class='line'>   <span class="p">{</span><span class="ss">:body</span> <span class="p">(</span><span class="nf">http/get</span> <span class="s">&quot;http://soundcloud.com/blah/wah&quot;</span><span class="p">)</span> <span class="ss">:status</span> <span class="mi">200</span><span class="p">})</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Beautiful, Just adding the <code>defcommand</code> brings us fault tolerance with no other changes to the shape of our code.</p>
-
-<p>See the Hystrix Clojure adapter for all the possible configuration: <a href="https://github.com/Netflix/Hystrix/tree/master/hystrix-contrib/hystrix-clj">https://github.com/Netflix/Hystrix/tree/master/hystrix-contrib/hystrix-clj</a></p>
-
-<h5>2.  Monitoring</h5>
-
-<p>Hystrix supports exposing metrics on all circuit breakers within a process. It exposes these calls through an event stream.</p>
-
-<p>How you expose that Hystrix event stream depends slightly on which web server you are using with your Clojure app.</p>
-
-<h4>Netty and Hystrix Event Streams (without servlets)</h4>
-
-<p><a href="https://github.com/josephwilk/hystrix-event-stream-clj">https://github.com/josephwilk/hystrix-event-stream-clj</a></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="ss">:require</span> <span class="p">[</span><span class="nv">hystrix-event-stream-clj.core</span> <span class="nv">as</span> <span class="nv">hystrix-event</span><span class="p">])</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="nf">defroutes</span> <span class="nv">app</span> <span class="p">(</span><span class="nf">GET</span> <span class="s">&quot;/hystrix.stream&quot;</span> <span class="p">(</span><span class="nf">hystrix-event/stream</span><span class="p">))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Jetty and Hystrix Event Streams (with servlets)</h4>
-
-<p>If they are using Jetty you will need to change your app to add your main web app as a servlet. Then we can also add the Hystrix event stream servlet.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">ns </span><span class="nv">sc-clj-kit.hystrix.jetty</span>
-</span><span class='line'>  <span class="p">(</span><span class="ss">:import</span> <span class="p">[</span><span class="nv">com.netflix.hystrix.contrib.metrics.eventstream</span> <span class="nv">HystrixMetricsStreamServlet</span><span class="p">])</span>
-</span><span class='line'>  <span class="p">(</span><span class="ss">:import</span> <span class="p">[</span><span class="nv">org.eclipse.jetty.server</span> <span class="nv">Server</span><span class="p">])</span>
-</span><span class='line'>  <span class="p">(</span><span class="ss">:import</span> <span class="p">[</span><span class="nv">org.eclipse.jetty.servlet</span> <span class="nv">ServletContextHandler</span><span class="p">])</span>
-</span><span class='line'>  <span class="p">(</span><span class="ss">:import</span> <span class="p">[</span><span class="nv">org.eclipse.jetty.servlet</span> <span class="nv">ServletHolder</span><span class="p">])</span>
-</span><span class='line'>  <span class="p">(</span><span class="ss">:import</span> <span class="p">[</span><span class="nv">org.eclipse.jetty.server.bio</span> <span class="nv">SocketConnector</span><span class="p">])</span>
-</span><span class='line'>  <span class="p">(</span><span class="ss">:import</span> <span class="p">[</span><span class="nv">org.eclipse.jetty.server.ssl</span> <span class="nv">SslSocketConnector</span><span class="p">])</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="p">(</span><span class="ss">:import</span> <span class="p">(</span><span class="nf">org.eclipse.jetty.server</span> <span class="nv">Server</span> <span class="nv">Request</span><span class="p">)</span>
-</span><span class='line'>           <span class="p">(</span><span class="nf">org.eclipse.jetty.server.handler</span> <span class="nv">AbstractHandler</span><span class="p">)</span>
-</span><span class='line'>           <span class="p">(</span><span class="nf">org.eclipse.jetty.server.nio</span> <span class="nv">SelectChannelConnector</span><span class="p">)</span>
-</span><span class='line'>           <span class="p">(</span><span class="nf">org.eclipse.jetty.server.ssl</span> <span class="nv">SslSelectChannelConnector</span><span class="p">)</span>
-</span><span class='line'>           <span class="p">(</span><span class="nf">org.eclipse.jetty.util.thread</span> <span class="nv">QueuedThreadPool</span><span class="p">)</span>
-</span><span class='line'>           <span class="p">(</span><span class="nf">org.eclipse.jetty.util.ssl</span> <span class="nv">SslContextFactory</span><span class="p">)</span>
-</span><span class='line'>           <span class="p">(</span><span class="nf">javax.servlet.http</span> <span class="nv">HttpServletRequest</span> <span class="nv">HttpServletResponse</span><span class="p">))</span>
-</span><span class='line'>  <span class="p">(</span><span class="ss">:require</span>
-</span><span class='line'>   <span class="p">[</span><span class="nv">compojure.core</span>          <span class="ss">:refer</span> <span class="ss">:all</span><span class="p">]</span>
-</span><span class='line'>   <span class="p">[</span><span class="nv">ring.adapter.jetty</span>      <span class="ss">:as</span> <span class="nv">jetty</span><span class="p">]</span>
-</span><span class='line'>   <span class="p">[</span><span class="nv">ring.util.servlet</span> <span class="ss">:as</span> <span class="nv">servlet</span><span class="p">]))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="kd">defn </span><span class="nv">run-jetty-with-hystrix-stream</span> <span class="p">[</span><span class="nv">app</span> <span class="nv">options</span><span class="p">]</span>
-</span><span class='line'>  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="o">^</span><span class="nv">Server</span> <span class="nv">server</span> <span class="p">(</span><span class="o">#</span><span class="ss">&#39;jetty/create-server</span> <span class="p">(</span><span class="nb">dissoc </span><span class="nv">options</span> <span class="ss">:configurator</span><span class="p">))</span>
-</span><span class='line'>        <span class="o">^</span><span class="nv">QueuedThreadPool</span> <span class="nv">pool</span> <span class="p">(</span><span class="nf">QueuedThreadPool.</span> <span class="o">^</span><span class="nv">Integer</span> <span class="p">(</span><span class="nf">options</span> <span class="ss">:max-threads</span> <span class="mi">50</span><span class="p">))]</span>
-</span><span class='line'>    <span class="p">(</span><span class="nb">when </span><span class="p">(</span><span class="ss">:daemon?</span> <span class="nv">options</span> <span class="nv">false</span><span class="p">)</span> <span class="p">(</span><span class="nf">.setDaemon</span> <span class="nv">pool</span> <span class="nv">true</span><span class="p">))</span>
-</span><span class='line'>    <span class="p">(</span><span class="nb">doto </span><span class="nv">server</span> <span class="p">(</span><span class="nf">.setThreadPool</span> <span class="nv">pool</span><span class="p">))</span>
-</span><span class='line'>    <span class="p">(</span><span class="nb">when-let </span><span class="p">[</span><span class="nv">configurator</span> <span class="p">(</span><span class="ss">:configurator</span> <span class="nv">options</span><span class="p">)]</span>
-</span><span class='line'>      <span class="p">(</span><span class="nf">configurator</span> <span class="nv">server</span><span class="p">))</span>
-</span><span class='line'>    <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">hystrix-holder</span>  <span class="p">(</span><span class="nf">ServletHolder.</span> <span class="nv">HystrixMetricsStreamServlet</span><span class="p">)</span>
-</span><span class='line'>          <span class="nv">app-holder</span> <span class="p">(</span><span class="nf">ServletHolder.</span> <span class="p">(</span><span class="nf">servlet/servlet</span> <span class="nv">app</span><span class="p">))</span>
-</span><span class='line'>          <span class="nv">context</span> <span class="p">(</span><span class="nf">ServletContextHandler.</span> <span class="nv">server</span> <span class="s">&quot;/&quot;</span> <span class="nv">ServletContextHandler/SESSIONS</span><span class="p">)]</span>
-</span><span class='line'>      <span class="p">(</span><span class="nf">.addServlet</span> <span class="nv">context</span> <span class="nv">hystrix-holder</span> <span class="s">&quot;/hystrix.stream&quot;</span><span class="p">)</span>
-</span><span class='line'>      <span class="p">(</span><span class="nf">.addServlet</span> <span class="nv">context</span> <span class="nv">app-holder</span> <span class="s">&quot;/&quot;</span><span class="p">))</span>
-</span><span class='line'>    <span class="p">(</span><span class="nf">.start</span> <span class="nv">server</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">(</span><span class="nb">when </span><span class="p">(</span><span class="ss">:join?</span> <span class="nv">options</span> <span class="nv">true</span><span class="p">)</span> <span class="p">(</span><span class="nf">.join</span> <span class="nv">server</span><span class="p">))</span>
-</span><span class='line'>    <span class="nv">server</span><span class="p">))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="nf">defroutes</span> <span class="nv">app</span> <span class="p">(</span><span class="nf">GET</span> <span class="s">&quot;/hello&quot;</span> <span class="p">[]</span> <span class="p">{</span><span class="ss">:status</span> <span class="mi">200</span> <span class="ss">:body</span> <span class="s">&quot;Hello&quot;</span><span class="p">})</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="nf">run-jetty-with-hystrix</span> <span class="nv">app</span> <span class="p">{</span><span class="ss">:port</span> <span class="nv">http-port</span> <span class="ss">:join?</span> <span class="nv">false</span><span class="p">})</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Aggregation and discovery</h4>
-
-<p>While you can monitor a single process using Hystrix in our example we have many processes serving an endpoint. To aggregate all these Hystrix metric services we use <a href="https://github.com/Netflix/Turbine">Turbine</a>.</p>
-
-<p>Physical endpoints for a service at SoundCloud are discovered using DNS lookup. We configured Turbine to use this method to auto discover which machines are serving an endpoint.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">ns </span><span class="nv">sc-turbine.discovery</span>
-</span><span class='line'>  <span class="p">(</span><span class="ss">:import</span> <span class="p">[</span><span class="nv">org.xbill.DNS</span> <span class="nv">Type</span><span class="p">]</span>
-</span><span class='line'>           <span class="p">[</span><span class="nv">com.netflix.turbine.discovery</span> <span class="nv">InstanceDiscovery</span> <span class="nv">Instance</span><span class="p">])</span>
-</span><span class='line'>  <span class="p">(</span><span class="ss">:require</span> <span class="p">[</span><span class="nv">clj-dns.core</span> <span class="ss">:refer</span> <span class="ss">:all</span><span class="p">]))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="nf">gen-class</span>
-</span><span class='line'>   <span class="ss">:name</span> <span class="nv">ScInstanceDiscovery</span>
-</span><span class='line'>   <span class="ss">:implements</span> <span class="p">[</span><span class="nv">com.netflix.turbine.discovery.InstanceDiscovery</span><span class="p">])</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="kd">defn </span><span class="nv">-getInstanceList</span> <span class="p">[</span><span class="nv">this</span><span class="p">]</span>
-</span><span class='line'>  <span class="p">(</span><span class="nb">map </span><span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">instance</span><span class="p">]</span>
-</span><span class='line'>         <span class="p">(</span><span class="nf">Instance.</span> <span class="p">(</span><span class="nb">str </span><span class="p">(</span><span class="ss">:host</span> <span class="nv">instance</span><span class="p">)</span> <span class="s">&quot;:&quot;</span> <span class="p">(</span><span class="ss">:port</span> <span class="nv">instance</span><span class="p">))</span> <span class="s">&quot;example-prod&quot;</span> <span class="nv">true</span><span class="p">))</span>
-</span><span class='line'>       <span class="p">(</span><span class="nb">map </span><span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">answer</span><span class="p">]</span> <span class="p">{</span><span class="ss">:host</span> <span class="p">(</span><span class="nb">-&gt; </span><span class="nv">answer</span> <span class="nv">.getTarget</span> <span class="nv">str</span><span class="p">)</span> <span class="ss">:port</span> <span class="p">(</span><span class="nf">.getPort</span> <span class="nv">answer</span><span class="p">)})</span>
-</span><span class='line'>            <span class="p">(</span><span class="ss">:answers</span> <span class="p">(</span><span class="nf">dns-lookup</span> <span class="s">&quot;&quot;</span> <span class="nv">Type/SRV</span><span class="p">)))))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And the config.properties:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="nv">InstanceDiscovery.impl=ScInstanceDiscovery</span>
-</span><span class='line'><span class="nv">turbine.aggregator.clusterConfig=example-prod</span>
-</span><span class='line'><span class="nv">turbine.instanceUrlSuffix=/hystrix.stream</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Putting this all together our monitoring looks like this:</p>
-
-<p><img src="/images/service_discovery.png"></p>
-
-<h4>Pretty graphs: Hystrix Dashboard</h4>
-
-<p>Finally we run the <a href="https://github.com/Netflix/Hystrix/tree/master/hystrix-dashboard">Hystrix Dashboard</a> and watch our circuit breakers live.</p>
-
-<p><img src="/images/hystrix_dashboard.png"></p>
-
-<p>And heres an example with triggered circuit breakers:</p>
-
-<p><img src="/images/hystrix_dashboard_failures.jpg"></p>
-
-<p>Since I cannot show you the dashboard running, you will have to make do with music generated from the metrics. I normalize the live Hystrix metrics to piano pitches and play the notes as the arrive from the stream.</p>
-
-<h4>Hystrix Metrics as Sounds</h4>
-
-<div>
-<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F109115434&amp;color=ff6600&amp;auto_play=false&amp;show_artwork=false"></iframe>
-</div>
-
-
-
-
-<p></p>
-
-
-<h3>Complexity &amp; Composition</h3>
-
-<p>Working with many services, composition of service calls becomes hard to think and write about. Callbacks try to solve this but nested callbacks leave us with a mess.</p>
-
-<p><a href="https://github.com/Netflix/RxJava">RxJava</a> tries to solve this using the Reactive Functional model. While RxJava provides lots of features I see it primarily as a way of expressing concurrent actions as a directed graph which provides a single callback on success or failure. The graph is expressed in terms or maps/reduces/filters/etc, things we are familiar with in the functional world.</p>
-
-<p>To separate the request thread from the response thread we use RxJava with <a href="http://netty.io">Netty</a> and <a href="https://github.com/ztellman/aleph">Aleph</a>.</p>
-
-<p>Here is a very simple example firing 2 concurrent requests and then joining the results into a single map response:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="c1">;;Hystrix integrates with RxJava and can return Observables for use with Rx.</span>
-</span><span class='line'><span class="p">(</span><span class="kd">defn- </span><span class="nv">find-user-observable</span> <span class="p">[</span><span class="nv">id</span><span class="p">]</span> <span class="p">(</span><span class="nf">hystrix/observe</span> <span class="o">#</span><span class="ss">&#39;find-user</span> <span class="nv">id</span><span class="p">))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="kd">defn- </span><span class="nv">meta-data</span> <span class="p">[</span><span class="nv">user-urn</span><span class="p">]</span>
-</span><span class='line'>  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">user-observable</span> <span class="p">(</span><span class="nb">-&gt; </span><span class="p">(</span><span class="nf">find-user-observable</span> <span class="nv">id</span><span class="p">)</span> <span class="p">(</span><span class="nf">.map</span> <span class="p">(</span><span class="err">λ</span> <span class="p">[</span><span class="nv">user</span><span class="p">]</span> <span class="nv">...</span><span class="p">)))</span>
-</span><span class='line'>        <span class="nv">meta-observable</span> <span class="p">(</span><span class="nb">-&gt; </span><span class="p">(</span><span class="nf">find-user-meta-observable</span> <span class="nv">id</span><span class="p">)</span> <span class="p">(</span><span class="nf">.map</span> <span class="p">(</span><span class="err">λ</span> <span class="p">[</span><span class="nv">subscription</span><span class="p">]</span> <span class="nv">...</span><span class="p">))))</span>
-</span><span class='line'>    <span class="p">(</span><span class="nb">-&gt; </span><span class="p">(</span><span class="nf">Observable/zip</span> <span class="nv">user-observable</span>
-</span><span class='line'>                        <span class="nv">meta-observable</span>
-</span><span class='line'>                        <span class="p">(</span><span class="err">λ</span> <span class="p">[</span><span class="o">&amp;</span> <span class="nv">maps</span><span class="p">]</span> <span class="p">{</span><span class="ss">:user</span> <span class="p">(</span><span class="nb">apply merge </span><span class="nv">maps</span><span class="p">)}))))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The function <code>meta-data</code> returns an Observerable which we subscribe to and using Aleph return the resulting JSON to a channel.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='clojure'><span class='line'><span class="p">(</span><span class="kd">defn- </span><span class="nv">subscribe-request</span> <span class="p">[</span><span class="nv">channel</span> <span class="nv">request</span><span class="p">]</span>
-</span><span class='line'>  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">id</span> <span class="p">(</span><span class="nf">get-in</span> <span class="nv">request</span> <span class="p">[</span><span class="ss">:route-params</span> <span class="ss">:id</span><span class="p">])]</span>
-</span><span class='line'>    <span class="p">(</span><span class="nb">-&gt; </span><span class="p">(</span><span class="nf">meta-data</span> <span class="nv">id</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">(</span><span class="nf">.subscribe</span>
-</span><span class='line'>          <span class="o">#</span><span class="p">(</span><span class="nf">enqueue</span> <span class="nv">channel</span> <span class="p">{</span><span class="ss">:status</span> <span class="mi">200</span> <span class="ss">:body</span> <span class="nv">%</span><span class="p">}))</span>
-</span><span class='line'>          <span class="o">#</span><span class="p">(</span><span class="nf">logging/exception</span> <span class="nv">%</span><span class="p">))))))</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="nf">defroutes</span> <span class="nv">app</span>
-</span><span class='line'>  <span class="p">(</span><span class="nf">GET</span> <span class="s">&quot;/users/:id&quot;</span> <span class="p">[</span><span class="nv">id</span><span class="p">]</span> <span class="p">(</span><span class="nf">wrap-aleph-handler</span> <span class="nv">subscribe-request</span><span class="p">)))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The shape of the <a href="https://github.com/Netflix/RxJava/tree/master/language-adaptors/rxjava-clojure">RxJava Clojure bindings</a> are still under development.</p>
-
-<h4>That single thread pool again&hellip;</h4>
-
-<p>With RxJava we are also in a situation were we cannot use Clojure&rsquo;s <code>future</code>. In order for RxJava to block optimally we don&rsquo;t want to use a single thread pool.
-Hence we use Hystrix as our means of providing concurreny.</p>
-
-<h2>Clojure services at scale</h2>
-
-<p>I&rsquo;m very happy with the shape of these services running at SoundCloud. In production they are performing very well under heavy load with useful near realtime monitoring.
-In part thanks to Netflix&rsquo;s hard work there is no reason you cannot write elegant Clojure services at scale.</p>
-</div>
-
-
-
-
-    </article>
-
   <div class="pagination">
 
       <a class="prev" href="/page/2/">&larr; Older</a>
@@ -4472,6 +4467,10 @@ In part thanks to Netflix&rsquo;s hard work there is no reason you cannot write 
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+  <li class="post">
+    <a href="/art/emacs-as-a-musical-instrument.html">Emacs as a musical instrument</a>
+  </li>
+
 
       <li class="post">
         <a href="/clojure/functions-explained-through-patterns.html">Functions Explained Through Patterns</a>
