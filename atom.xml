@@ -4,7 +4,7 @@
   <title><![CDATA[Joseph Wilk]]></title>
   <link href="http://blog.josephwilk.net/atom.xml" rel="self"/>
   <link href="http://blog.josephwilk.net/"/>
-  <updated>2017-02-07T14:43:09+00:00</updated>
+  <updated>2018-05-16T17:29:56+01:00</updated>
   <id>http://blog.josephwilk.net/</id>
   <author>
     <name><![CDATA[Joseph Wilk]]></name>
@@ -12,6 +12,450 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Emacs as a musical instrument]]></title>
+    <link href="http://blog.josephwilk.net/art/emacs-as-a-musical-instrument.html"/>
+    <updated>2018-05-16T14:00:00+01:00</updated>
+    <id>http://blog.josephwilk.net/art/emacs-as-a-musical-instrument</id>
+    <content type="html"><![CDATA[<p>A simple goal, to directly connect Emacs to running hardware and software synthesisers with <strong>realtime</strong> control. Emacs as a musical instrument.</p>
+
+<p>I already use code to control synths (as <a href="http://www.repl-electric.com/">Repl-Electric</a>) but there is a level of indirection between the code and the effect on the music. You push keys on your computer keyboard and nothing happens. Only when you run the code does the music change. I wanted to add realtime control to my performances while still remaining in code and Emacs. Bringing the performance closer to musical instruments were instant feedback is a core part of the performance experience.</p>
+
+<p>I could use external hardware, like a MidiFighterTwister (<a href="https://www.midifighter.com/#Twister">https://www.midifighter.com/#Twister</a>) or TouchOSC <a href="https://hexler.net/software/touchosc">https://hexler.net/software/touchosc</a> but I’ve found the context switch of moving between coding to twiddling dials on hardware expensive. The code is my composition process, so it makes sense for the direct control to also be there.</p>
+
+<h2>Playing the Emacs</h2>
+
+<p>Sculpting sound live with Emacs.</p>
+
+<div class="embed-container"><iframe src="https://player.vimeo.com/video/270101496?color=ff0179" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>
+
+
+<h2>Scratching Samples with Emacs</h2>
+
+<p>Doing crazy things with Emacs starts to open more doors in musical expression. Since we can control music hardware with Emacs, we can control the playhead position within a sample. Much like the needle of a record player.</p>
+
+<p>Say we map the position of your cursor in the Emacs buffer to the position of the playback head. By moving around in your buffer you can scratch the sample.</p>
+
+<div class="embed-container"><iframe src="https://player.vimeo.com/video/265189088?color=ff0179" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>
+
+
+<h2>Emacs sending Musical Controls</h2>
+
+<p>Sending messages to musical synths using midi and OSC.</p>
+
+<h3>Emacs Communicating with Open Sound Control</h3>
+
+<p>First we need a client within Emacs which will send OSC (<a href="https://en.wikipedia.org/wiki/Open_Sound_Control">https://en.wikipedia.org/wiki/Open_Sound_Control</a>) using UDP packets. There is thankfully already an Emacs package for this: osc: <a href="https://delysid.org/emacs/osc.html">https://delysid.org/emacs/osc.html</a></p>
+
+<p>Creating a client and sending OSC messages:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='elisp'><span class='line'><span></span><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;osc</span><span class="p">)</span>
+</span><span class='line'><span class="p">(</span><span class="k">defvar</span> <span class="nv">osc-client</span> <span class="no">nil</span> <span class="s">&quot;Connection to send OSC From Emacs&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="nb">defun</span> <span class="nv">osc-make-client</span> <span class="p">(</span><span class="nv">host</span> <span class="nv">port</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">make-network-process</span>
+</span><span class='line'>   <span class="nb">:name</span> <span class="s">&quot;OSC client&quot;</span>
+</span><span class='line'>   <span class="nb">:host</span> <span class="nv">host</span>
+</span><span class='line'>   <span class="nb">:service</span> <span class="nv">port</span>
+</span><span class='line'>   <span class="nb">:type</span> <span class="ss">&#39;datagram</span>
+</span><span class='line'>   <span class="nb">:family</span> <span class="ss">&#39;ipv4</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="nb">defun</span> <span class="nv">osc-connect</span> <span class="p">()</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">if</span> <span class="nv">osc-client</span>   <span class="p">(</span><span class="nf">delete-process</span> <span class="nv">osc-client</span><span class="p">))</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">setq</span> <span class="nv">osc-client</span> <span class="p">(</span><span class="nv">osc-make-client</span> <span class="s">&quot;localhost&quot;</span> <span class="mi">4561</span><span class="p">)))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="nv">osc-connect</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="nv">osc-send-message</span> <span class="nv">osc-client</span> <span class="nv">ADDRESS</span> <span class="nv">*ARGUMENTS</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Emacs Communicating with Midi</h3>
+
+<p>A lot of musical hardware and software only supports midi. We are sending OSC 😕. Hence we need a quick way of converting our OSC message to a midi message. Why don’t you send midi from Emacs directly? It&rsquo;s not a new thought (<a href="https://www.emacswiki.org/emacs/EmacsMidi">https://www.emacswiki.org/emacs/EmacsMidi</a>), but I’ve seen no examples of getting it working. My answer here is path of least resistance, and I don’t feel like implementing the midi standard in Elisp.</p>
+
+<p>Luis Lloret (<a href="https://github.com/llloret">https://github.com/llloret</a>) has create the lovely C++ lib <code>osmid</code> (<a href="https://github.com/llloret/osmid">https://github.com/llloret/osmid</a>) for converting between midi and OSC. And its FAST.</p>
+
+<p>It compiles into two binary servers:</p>
+
+<ul>
+<li>m2o &ndash; midi to OSC</li>
+<li>o2m &ndash; OSC to midi</li>
+</ul>
+
+
+<p>We launch the o2m server in a shell which will be listening on port <code>4561</code> and will forward on OSC messages as midi.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='elisp'><span class='line'><span></span><span class="nv">osmid/o2m</span> <span class="nv">-b</span> <span class="nv">-i</span> <span class="mi">4561</span> <span class="nv">-O</span> <span class="mi">4562</span> <span class="nv">-m</span> <span class="mi">6</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Midi has a fixed argument format while OSC is very flexible. Hence this a little jiggery pokery in get the source OSC message mapping to the midi arguments.</p>
+
+<p>OSC message format:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='elisp'><span class='line'><span></span><span class="p">(</span><span class="nv">osc-send-message</span> <span class="nv">osc-client</span> <span class="nv">MIDI_HOST</span> <span class="nv">MIDI_CHANNEL</span> <span class="nv">MIDI_CONTROL_CODE</span> <span class="nv">MIDI_VALUE</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>For MIDI_HOST I’m using the <code>Inter-application communication</code> (IAC) driver on Mac. This registers <code>IAC Bus 1</code> as a midi device. I’m also sending a <code>control change</code> message, shaping the parameters rather than triggering notes. This could be any of the supported midi messages (<code>note_on</code>, <code>note_off</code>, <code>pitch_bend</code>, <code>poly_pressure</code>, etc).</p>
+
+<p>Example of OSC to midi message:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='elisp'><span class='line'><span></span><span class="p">(</span><span class="nv">osc-send-message</span> <span class="nv">osc-client</span> <span class="s">&quot;/IAC Bus 1/control_change&quot;</span> <span class="mi">9</span> <span class="mi">100</span> <span class="mi">127</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The channel <code>9</code> and control code <code>100</code> seem magical. I’m routing those to synths via Ableton Live.</p>
+
+<p><img src="http://blog.josephwilk.net/images/midi-routing.png"/></p>
+
+<p>Any DAW would support this or you could send direct to a synth and not use <code>IAC</code>. Your MIDI_HOST would be the name your midi device registers as.</p>
+
+<h2>Emacs GUI for Musical Controls</h2>
+
+<p>We have the backend for sending live midi controls to hardware. Now we need some interface within Emacs to trigger it.</p>
+
+<h3>Modelling Encoders in Emacs</h3>
+
+<p>The design is based on the idea of dial encoders commonly found in music hardware.</p>
+
+<p><img src="http://blog.josephwilk.net/images/pots.jpg"/></p>
+
+<p>Our dials in code are float numbers. To turn our dials we borrow the idea from the Chrome inspector of scrolling through possible numeric values with the arrow keys.</p>
+
+<p><img src="http://blog.josephwilk.net/images/chromeinspector.png"/></p>
+
+<p>In our case every increment/decrement will send a live message to our synths.</p>
+
+<p>We need to extract from the active Emacs buffer the thing we are trying to control. Finding the:</p>
+
+<ul>
+<li>Synth (the musical instrument)</li>
+<li>Parameter (ie. amp, pan, lfo, filter)</li>
+<li>Value 0-127 (whatever value we want to set param)</li>
+</ul>
+
+
+<p>Example changing the filter param:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='elisp'><span class='line'><span></span><span class="nv">zerocoast_cc</span> <span class="nv">lfo:</span> <span class="mf">0.49</span><span class="o">,</span> <span class="nv">filter:</span> <span class="nv">&lt;0.80&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">;;; Synth =&gt; zerocoast</span>
+</span><span class='line'><span class="c1">;;; Parameter =&gt; filter</span>
+</span><span class='line'><span class="c1">;;; Value =&gt; 101.6 (127*0.80)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here comes a lot of Elisp and some hairy regexes.</p>
+
+<h4>Emacs Code</h4>
+
+<p>Thingatpt (<a href="https://www.emacswiki.org/emacs/ThingAtPoint">https://www.emacswiki.org/emacs/ThingAtPoint</a>) which is part of the standard lib is extremely useful here.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+</pre></td><td class='code'><pre><code class='elisp'><span class='line'><span></span><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;thingatpt</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">;;The patterns for matching the beginning and</span>
+</span><span class='line'><span class="c1">;;end of something that looks like a float</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="nf">put</span> <span class="ss">&#39;float</span> <span class="ss">&#39;end-op</span>       <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span> <span class="p">(</span><span class="nf">re-search-forward</span> <span class="s">&quot;[0-9-]*\.[0-9-]*&quot;</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)))</span>
+</span><span class='line'><span class="p">(</span><span class="nf">put</span> <span class="ss">&#39;float</span> <span class="ss">&#39;beginning-op</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">re-search-backward</span> <span class="s">&quot;[^0-9-\.]&quot;</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)</span> <span class="p">(</span><span class="nf">forward-char</span><span class="p">))))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="nb">defun</span> <span class="nv">change-number-at-point</span> <span class="p">(</span><span class="nv">fn-float-op</span><span class="p">)</span>
+</span><span class='line'>  <span class="s">&quot;Check if the thing under the cursor looks like a</span>
+</span><span class='line'><span class="s">  float and if so change it with `fn-float-op`.</span>
+</span><span class='line'><span class="s">  `fn-float-op` is passed the name of the synth,</span>
+</span><span class='line'><span class="s">  parameter and float value.&quot;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">bounds</span> <span class="p">(</span><span class="nv">bounds-of-thing-at-point</span> <span class="ss">&#39;float</span><span class="p">))</span>
+</span><span class='line'>         <span class="p">(</span><span class="nv">float-val</span> <span class="p">(</span><span class="nf">buffer-substring</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">bounds</span><span class="p">)</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">bounds</span><span class="p">)))</span>
+</span><span class='line'>         <span class="p">(</span><span class="nv">cursor-point</span> <span class="p">(</span><span class="nf">point</span><span class="p">)))</span>
+</span><span class='line'>    <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">bounds</span><span class="p">))</span>
+</span><span class='line'>    <span class="p">(</span><span class="nf">re-search-backward</span> <span class="s">&quot;^\\([^\n]+\\): &quot;</span> <span class="p">(</span><span class="nf">line-beginning-position</span><span class="p">)</span> <span class="no">t</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">synth-str</span> <span class="p">(</span><span class="nv">match-string</span> <span class="mi">1</span> <span class="no">nil</span><span class="p">)))</span>
+</span><span class='line'>      <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">bounds</span><span class="p">))</span>
+</span><span class='line'>      <span class="p">(</span><span class="nf">delete-char</span> <span class="p">(</span><span class="nf">length</span> <span class="nv">float-val</span><span class="p">))</span>
+</span><span class='line'>      <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">parts</span> <span class="p">(</span><span class="nv">split-string</span> <span class="p">(</span><span class="nv">string-trim</span> <span class="nv">synth-str</span><span class="p">)</span> <span class="s">&quot; &quot;</span><span class="p">))</span>
+</span><span class='line'>             <span class="p">(</span><span class="nv">synth-and-param</span> <span class="p">(</span><span class="k">if</span> <span class="nv">m</span>
+</span><span class='line'>                                  <span class="p">(</span><span class="nf">concat</span>
+</span><span class='line'>                                    <span class="p">(</span><span class="nv">replace-regexp-in-string</span>
+</span><span class='line'>                                     <span class="s">&quot;^#&quot;</span> <span class="s">&quot;&quot;</span> <span class="p">(</span><span class="nv">first</span> <span class="nv">parts</span><span class="p">))</span>
+</span><span class='line'>                                     <span class="s">&quot;/&quot;</span>
+</span><span class='line'>                                     <span class="p">(</span><span class="nv">first</span> <span class="p">(</span><span class="nf">reverse</span> <span class="nv">parts</span><span class="p">)))</span>
+</span><span class='line'>                                 <span class="no">nil</span><span class="p">)))</span>
+</span><span class='line'>        <span class="p">(</span><span class="nf">insert</span>
+</span><span class='line'>         <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;%.2f&quot;</span>
+</span><span class='line'>                 <span class="p">(</span><span class="nf">funcall</span> <span class="nv">fn-float-op</span>
+</span><span class='line'>                   <span class="p">(</span><span class="nf">string-to-number</span> <span class="nv">float-val</span><span class="p">)</span>
+</span><span class='line'>                   <span class="nv">synth-and-param</span><span class="p">)))))</span>
+</span><span class='line'>    <span class="p">(</span><span class="nf">goto-char</span> <span class="nv">cursor-point</span><span class="p">)))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="nb">defun</span> <span class="nv">inc-float-at-point</span> <span class="p">()</span>
+</span><span class='line'>  <span class="s">&quot;Increase a float value and send OSC message.&quot;</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">(</span><span class="nv">change-number-at-point</span>
+</span><span class='line'>    <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">float-val</span> <span class="nv">synth-and-param</span><span class="p">)</span>
+</span><span class='line'>      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">new-float</span> <span class="p">(</span><span class="nf">min</span> <span class="mf">1.00</span> <span class="p">(</span><span class="nf">+</span> <span class="nv">float-val</span> <span class="mf">0.01</span><span class="p">))))</span>
+</span><span class='line'>        <span class="p">(</span><span class="nv">route-osc-message</span> <span class="nv">synth-and-param</span> <span class="nv">new-float</span><span class="p">)</span>
+</span><span class='line'>        <span class="nv">new-float</span><span class="p">))))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="nb">defun</span> <span class="nv">dec-float-at-point</span> <span class="p">()</span>
+</span><span class='line'>  <span class="s">&quot;Decrease a float value and send OSC message.&quot;</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">(</span><span class="nv">change-number-at-point</span>
+</span><span class='line'>    <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">float-val</span> <span class="nv">synth-and-param</span><span class="p">)</span>
+</span><span class='line'>      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">new-float</span> <span class="p">(</span><span class="nf">max</span> <span class="mf">0.00</span> <span class="p">(</span><span class="nf">-</span> <span class="nv">float-val</span> <span class="mf">0.01</span><span class="p">))))</span>
+</span><span class='line'>        <span class="p">(</span><span class="nv">route-osc-message</span> <span class="nv">synth-and-param</span> <span class="nv">new-float</span><span class="p">)</span>
+</span><span class='line'>        <span class="nv">new-float</span><span class="p">))))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We map our <code>synth-and-param</code> to the correct midi port and channel.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='elisp'><span class='line'><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">route</span><span class="err">—</span><span class="nv">osc-msg</span> <span class="p">(</span><span class="nv">synth-and-param</span> <span class="nv">float-val</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">(</span><span class="nb">when</span> <span class="nv">synth-and-param</span>
+</span><span class='line'>    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">midi-val</span> <span class="p">(</span><span class="nf">round</span> <span class="p">(</span><span class="nf">*</span> <span class="mf">127.0</span> <span class="nv">float-val</span><span class="p">)))</span>
+</span><span class='line'>          <span class="p">(</span><span class="nv">host</span> <span class="s">&quot;/IAC Bus 1/control_change&quot;</span><span class="p">))</span>
+</span><span class='line'>      <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">not</span> <span class="nv">osc-client</span><span class="p">)</span> <span class="p">(</span><span class="nv">osc-connect</span><span class="p">))</span>
+</span><span class='line'>      <span class="p">(</span><span class="k">cond</span>
+</span><span class='line'>       <span class="p">((</span><span class="nf">string-match</span> <span class="nv">synth-and-param</span> <span class="s">&quot;zerocoast/filter&quot;</span><span class="p">)</span>
+</span><span class='line'>         <span class="p">(</span><span class="nv">osc-send-message</span> <span class="nv">osc-client</span> <span class="nv">host</span> <span class="mi">9</span> <span class="mi">100</span> <span class="nv">midi-val</span><span class="p">)))))))))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Finally the keybindings that trigger our instrument mode:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='elisp'><span class='line'><span></span><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">[(</span><span class="nv">meta</span> <span class="nv">up</span><span class="p">)]</span>    <span class="ss">&#39;inc-float-at-point</span><span class="p">)</span>
+</span><span class='line'><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">[(</span><span class="nv">meta</span> <span class="nv">down</span><span class="p">)]</span>  <span class="ss">&#39;dec-float-at-point</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Encoder ASCII Art</h3>
+
+<p>We are almost done. For fun I’ve added a visually aid to the position of the float encoder. Midi messages are generally limited to 0-127 values, so if we map that to 0-100% we can create a visual representation of the current setting.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+</pre></td><td class='code'><pre><code class='elisp'><span class='line'><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">code-&gt;pots</span> <span class="p">(</span><span class="nv">beg</span> <span class="nv">end</span><span class="p">)</span>
+</span><span class='line'>  <span class="s">&quot;Add a ASCII encoder bar to anything that looks like a tweakable float&quot;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="p">(</span><span class="k">interactive</span> <span class="s">&quot;r&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">save-excursion</span>
+</span><span class='line'>    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">inhibit-read-only</span> <span class="no">t</span><span class="p">))</span>
+</span><span class='line'>      <span class="p">(</span><span class="nf">remove-text-properties</span> <span class="nv">beg</span> <span class="nv">end</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">read-only</span> <span class="no">t</span><span class="p">))</span>
+</span><span class='line'>      <span class="p">(</span><span class="nf">goto-char</span> <span class="nv">end</span><span class="p">)</span>
+</span><span class='line'>      <span class="p">(</span><span class="k">setq</span> <span class="nv">i</span> <span class="mi">0</span><span class="p">)</span>
+</span><span class='line'>      <span class="p">(</span><span class="k">while</span> <span class="p">(</span><span class="nf">re-search-backward</span> <span class="s">&quot;_cc .+:\s*\\([0-9]*.[0-9]+\\)\s*\n&quot;</span> <span class="nv">beg</span> <span class="no">t</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">(</span><span class="k">setq</span> <span class="nv">i</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="nv">i</span><span class="p">))</span>
+</span><span class='line'>        <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">full</span>     <span class="p">(</span><span class="nf">round</span> <span class="p">(</span><span class="nf">*</span> <span class="nv">MAX-LENGTH</span> <span class="p">(</span><span class="nf">string-to-number</span> <span class="p">(</span><span class="nv">match-string</span> <span class="mi">1</span><span class="p">))))))</span>
+</span><span class='line'>          <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">empty</span>  <span class="p">(</span><span class="nf">-</span> <span class="nv">MAX-LENGTH</span> <span class="nv">full</span><span class="p">)))</span>
+</span><span class='line'>            <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">match-beginning</span> <span class="mi">0</span><span class="p">))</span>
+</span><span class='line'>            <span class="p">(</span><span class="nf">end-of-line</span><span class="p">)</span>
+</span><span class='line'>            <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">start-pnt</span> <span class="p">(</span><span class="nf">point</span><span class="p">))</span>
+</span><span class='line'>                  <span class="p">(</span><span class="nv">pad</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">&gt;=</span> <span class="nv">empty</span> <span class="mi">0</span><span class="p">)</span>
+</span><span class='line'>                           <span class="p">(</span><span class="nf">make-string</span> <span class="nv">empty</span> <span class="sc">?╌</span><span class="p">)</span>
+</span><span class='line'>                         <span class="s">&quot;&quot;</span><span class="p">)))</span>
+</span><span class='line'>              <span class="p">(</span><span class="nf">insert</span> <span class="p">(</span><span class="nf">concat</span> <span class="s">&quot; #╟&quot;</span>
+</span><span class='line'>                              <span class="p">(</span><span class="nf">make-string</span> <span class="nv">full</span> <span class="sc">?▓</span><span class="p">)</span>
+</span><span class='line'>                              <span class="s">&quot;▒░&quot;</span>
+</span><span class='line'>                              <span class="nv">pad</span>
+</span><span class='line'>                              <span class="s">&quot;╢&quot;</span><span class="p">))</span>
+</span><span class='line'>              <span class="p">(</span><span class="nf">put-text-property</span> <span class="nv">start-pnt</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span> <span class="ss">&#39;read-only</span> <span class="no">t</span><span class="p">)))))</span>
+</span><span class='line'>      <span class="p">(</span><span class="nv">align-regexp</span> <span class="nv">beg</span> <span class="p">(</span><span class="nf">+</span> <span class="p">(</span><span class="nf">*</span> <span class="nv">i</span> <span class="mi">106</span><span class="p">)</span> <span class="nv">end</span><span class="p">)</span> <span class="s">&quot;\\(\\s-*\\)#&quot;</span><span class="p">))))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="nb">defun</span> <span class="nv">pots-update</span> <span class="p">(</span><span class="nv">new-float</span> <span class="nv">old-float</span><span class="p">)</span>
+</span><span class='line'>  <span class="s">&quot;Update ASCII encoder bar for float being changed&quot;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="p">(</span><span class="k">interactive</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">not</span> <span class="p">(</span><span class="nf">=</span> <span class="nv">new-float</span> <span class="nv">old-float</span><span class="p">))</span>
+</span><span class='line'>      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">old-full</span> <span class="p">(</span><span class="nf">round</span> <span class="p">(</span><span class="nf">*</span> <span class="mf">100.0</span> <span class="nv">old-float</span><span class="p">)))</span>
+</span><span class='line'>            <span class="p">(</span><span class="nv">full</span>     <span class="p">(</span><span class="nf">round</span> <span class="p">(</span><span class="nf">*</span> <span class="mf">100.0</span> <span class="nv">new-float</span><span class="p">))))</span>
+</span><span class='line'>        <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">empty</span>  <span class="p">(</span><span class="nf">-</span> <span class="nv">MAX-LENGTH</span> <span class="nv">full</span><span class="p">))</span>
+</span><span class='line'>              <span class="p">(</span><span class="nv">movement</span> <span class="p">(</span><span class="nf">-</span> <span class="nv">full</span> <span class="nv">old-full</span><span class="p">))</span>
+</span><span class='line'>              <span class="p">(</span><span class="nv">bmovement</span> <span class="p">(</span><span class="nf">-</span> <span class="nv">old-full</span> <span class="nv">full</span><span class="p">)))</span>
+</span><span class='line'>          <span class="p">(</span><span class="k">save-excursion</span>
+</span><span class='line'>            <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">re-search-forward</span> <span class="s">&quot;#╟&quot;</span> <span class="p">(</span><span class="nf">line-end-position</span><span class="p">)</span> <span class="no">t</span><span class="p">)</span>
+</span><span class='line'>              <span class="p">(</span><span class="nf">goto-char</span> <span class="p">(</span><span class="nf">match-end</span> <span class="mi">0</span><span class="p">))</span>
+</span><span class='line'>              <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">inhibit-read-only</span> <span class="no">t</span><span class="p">)</span>
+</span><span class='line'>                    <span class="p">(</span><span class="nv">start-pnt</span> <span class="p">(</span><span class="nf">point</span><span class="p">)))</span>
+</span><span class='line'>                <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">&gt;</span> <span class="nv">new-number</span> <span class="nv">old-float</span><span class="p">)</span>
+</span><span class='line'>                    <span class="p">(</span><span class="k">progn</span> <span class="c1">;;forwards</span>
+</span><span class='line'>                      <span class="p">(</span><span class="nf">forward-char</span> <span class="nv">old-full</span><span class="p">)</span>
+</span><span class='line'>                      <span class="p">(</span><span class="nf">insert</span> <span class="p">(</span><span class="nf">make-string</span> <span class="nv">movement</span> <span class="sc">?▓</span><span class="p">))</span>
+</span><span class='line'>                      <span class="p">(</span><span class="nf">forward-char</span> <span class="mi">2</span><span class="p">)</span>
+</span><span class='line'>                      <span class="p">(</span><span class="nf">delete-char</span> <span class="nv">movement</span><span class="p">))</span>
+</span><span class='line'>                  <span class="p">(</span><span class="k">progn</span> <span class="c1">;;backwards</span>
+</span><span class='line'>                    <span class="p">(</span><span class="nf">forward-char</span> <span class="p">(</span><span class="nf">-</span> <span class="nv">old-full</span> <span class="nv">bmovement</span><span class="p">))</span>
+</span><span class='line'>                    <span class="p">(</span><span class="nf">delete-char</span> <span class="nv">bmovement</span><span class="p">)</span>
+</span><span class='line'>                    <span class="p">(</span><span class="nf">forward-char</span> <span class="mi">2</span><span class="p">)</span>
+</span><span class='line'>                    <span class="p">(</span><span class="nf">insert</span> <span class="p">(</span><span class="nf">make-string</span> <span class="nv">bmovement</span> <span class="sc">?╌</span><span class="p">))))</span>
+</span><span class='line'>                <span class="p">(</span><span class="nf">put-text-property</span> <span class="nv">start-pnt</span> <span class="p">(</span><span class="nf">point</span><span class="p">)</span> <span class="ss">&#39;read-only</span> <span class="no">t</span><span class="p">))))))))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The Ascii dials:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='elisp'><span class='line'><span></span><span class="nv">zerocoast_cc</span> <span class="nv">amp:</span> <span class="mf">0.18</span> <span class="err">#╟▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒░╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╢</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">zerocoast_cc</span> <span class="nv">amp:</span> <span class="mf">1.00</span> <span class="err">#╟▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒░╢</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Binding into a Performance</h2>
+
+<p>All this work was used in my recent performance:</p>
+
+<p>“You Fall into Your Screen”: <a href="https://vimeo.com/replelectric/you-fall-into-your-screen">https://vimeo.com/replelectric/you-fall-into-your-screen</a></p>
+
+<p>I’m using Emacs to simultaneous control Synths and Unity3D in much the same way discussed in this post. It feels pretty amazing to augment the performance with this live control.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Functions Explained Through Patterns]]></title>
@@ -34,7 +478,7 @@
 </ul>
 
 
-<p><code>(nthrest col nth)</code></p>
+<p><code>(nthrest n col)</code></p>
 
 <ul>
 <li>A textual description:</li>
@@ -6603,122 +7047,6 @@ Checkout this great paper on the effectiveness of different functions: <a href="
 <h2>Source code</h2>
 
 <p><a href="http://github.com/josephwilk/fake_execution">http://github.com/josephwilk/fake_execution</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Conferences and the Cult of Celebrity]]></title>
-    <link href="http://blog.josephwilk.net/conferences/conferences-and-the-cult-of-celebrity.html"/>
-    <updated>2012-06-19T13:58:56+01:00</updated>
-    <id>http://blog.josephwilk.net/conferences/conferences-and-the-cult-of-celebrity</id>
-    <content type="html"><![CDATA[<p>How much should character be a factor for a conference talk being selected?  Big names sell conference tickets. Yet I believe that we can do a lot more to help promote conferences where content takes greater weight than character and in the process help people who have never spoken before start speaking at conferences.</p>
-
-<h2>Risk.</h2>
-
-<p>Conference organisers take a big risk running a conference.</p>
-
-<p>Will they cover their venue cost?</p>
-
-<p>Which ultimately leads on to will they sell enough tickets?</p>
-
-<p>Once they have enough tickets, will it be a good conference?</p>
-
-<p>Other successful conferences define a pattern of how a conference is laid out. One obviously way of dealing with Risk is to follow an example of a success.</p>
-
-<p>I really respect people who organise conferences, they are putting a lot of effort and their own time to make a successful event.</p>
-
-<p>But I wondering if maybe we could be focusing more on content and less on character.</p>
-
-<h2>Selling a presentation</h2>
-
-<p>When you submit a talk an aspect of convincing the organisers to allow you to talk is who you are. Persuasion by character (Ethos if you like your ancient Greek).</p>
-
-<p>Most submissions forms give you plenty of space to sell yourself.</p>
-
-<p><img src="http://blog.josephwilk.net/images/blog/2012/06/example_submission.png" alt="" /></p>
-
-<h2>Content not character.</h2>
-
-<p><img src="http://blog.josephwilk.net/images/blog/2012/06/nordicruby1.png" alt="" /></p>
-
-<p>For NordicRuby 2012 the organisers took a step pushing for interesting content over character. They recognised that conscious and subconscious persuasion by character is a powerful means of convincing.</p>
-
-<p>During most of their reviewing process <strong>they removed all the names from the proposals</strong>.</p>
-
-<blockquote><p><em>&ldquo;Another thing we’re doing differently this year is that we’re starting out with anonymous proposals. Each card in Trello just shows the proposal’s title and description. No information about the speaker. We do this to avoid bias in the first stages.&rdquo;</em></p></blockquote>
-
-<p>Talks where selected based on the content. Only later once the talks had been whittled down did they introduce the speaker names. Character was considered, it was just delayed to the late selection stage.</p>
-
-<p>This tweet caught my attention as it highlighted that for Jsconf.com.au proposals are selected without names attached. Content is king, character does not matter!</p>
-
-<p><img src="http://blog.josephwilk.net/images/blog/2012/06/tweet.png" alt="" /></p>
-
-<p>Lonestar Ruby conference submissions, your name, your email, no big bio to sell how great you are. Content rules.</p>
-
-<p><img src="http://blog.josephwilk.net/images/blog/2012/06/logo-adjusted-7293a1d3bfb1dac006dd14619c2efe07.png" alt="" /></p>
-
-<p><img src="http://blog.josephwilk.net/images/blog/2012/06/Screen-Shot-2012-06-18-at-13.53.08.png" alt="" /></p>
-
-<h2>Keynotes: where character is King</h2>
-
-<p>The keynote of a conference is the stable diet of most conferences. Its where the big names are rolled out, luminaries of our industry share their wise thoughts with us.</p>
-
-<p>Akin to live music, they are the headline act we pay for, the others are the  support acts. We might skip them, or give them half of our attention.</p>
-
-<p><strong>What effect does having two tiers of talks at a conference have?</strong></p>
-
-<p>The keynote talk is more important irrelevant of content because of the <strong>character of the speaker</strong>. Often we don&rsquo;t even know what they will be talking about, just that they are keynoting.</p>
-
-<p>Some examples (I&rsquo;m not focusing any blame on these examples, I respect the conferences and the organisers involved. They just help illustrate my point)</p>
-
-<p><img src="http://blog.josephwilk.net/images/blog/2012/06/Screen-Shot-2012-06-19-at-13.11.59.png" alt="" /></p>
-
-<p><a href="http://blog.josephwilk.net/images/blog/2012/06/Screen-Shot-2012-06-18-at-14.23.55.png"><img src="http://blog.josephwilk.net/images/blog/2012/06/Screen-Shot-2012-06-18-at-14.23.55.png" alt="" /></a></p>
-
-<p>We assume (based on authority) that important people will have important things to tell us (and sometimes they do have important ideas to share with us).</p>
-
-<p>Are the other, non-keynote talks of the conference of lesser importance? This is where content starts to win because all these speakers are non-keynoters, we don&rsquo;t have as many leading assumptions about their authority or character. <strong>We go to the talks where the content interests us.</strong></p>
-
-<p>Maybe all talks should be driven by the <strong>content</strong> and less by <strong>character</strong>. Maybe all talks are as important as each other.</p>
-
-<p>Conferences are already starting to kill of this idea of having to have a Keynote to sell your conference. FutureRuby and NordicRuby are two examples of conferences that have no Keynote yet produced conferences that are highly regarded by those who attended.</p>
-
-<p><strong>Will a keynote really make your conference better?</strong></p>
-
-<h2>The Content Conference</h2>
-
-<p>Lets see if we can take this a step further and define the content conference.</p>
-
-<ol>
-<li><p>Talks authors are not revealed during review/selection. (There is <strong>no bias by character</strong>)</p></li>
-<li><p>Only publish the talk titles and content on the conference website. (Sell the conference on its <strong>content not its characters</strong>.)</p></li>
-<li><p>No keynotes. <strong>All talks are equal</strong>.</p></li>
-</ol>
-
-
-<h2>Conference Mentors</h2>
-
-<p>If we want to focus on content and remove character (as much as possible) we have to deal with people with little experience but with great ideas. We need to help make it easier to give feedback and help mentor those people so they can best express their ideas.</p>
-
-<p><strong>Being accepted to speak is not the end of contact its the start</strong>.</p>
-
-<p>A group of experience speakers acting as mentors who give feedback and help people give the best presentations they can.</p>
-
-<h2>Final Words</h2>
-
-<p>There is a place in the conference world for events which focus on bringing big names to an audience. Looking back at the 30 conferences I&rsquo;ve spoken at so far I&rsquo;ve come to the conclusion that the conferences I really valued where those that pushed for content over character. Conferences are popping up all the time that follow the content conference ideas and <strong>understand the concious and subconsious bias of character</strong>.</p>
-
-<p>I feel if we try and push for content over character and improve the proposal/speaker setup we can help find new people with great, interesting, crazy ideas and encourage them to submit proposals and speak.</p>
-
-<p>I hope these ideas about the content conference might help conference organisers think about how they structure their conference and proposal system.</p>
-
-<p><strong>I am offering my time to mentor anyone who wants help writing their first conference proposal</strong>.</p>
-
-<p>I am also happy to join any conference that wants a set of experienced speakers to help new speakers get the best out of their presentations.</p>
-
-<p>Crazy, huh?</p>
-
-<p>So what do you think?</p>
 ]]></content>
   </entry>
   
